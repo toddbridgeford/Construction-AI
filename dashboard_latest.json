@@ -1,0 +1,365 @@
+{
+  "version": 1,
+  "generated_at": "2026-02-25T18:00:00Z",
+  "executive": {
+    "headline": "Credit tightening modestly; regional housing divergence widening",
+    "confidence": "Medium\u2013High",
+    "summary": "Lending standards remain restrictive while rate volatility cools. Sunbelt permits stabilize; West remains soft. Focus on margin protection and backlog quality."
+  },
+  "capital": {
+    "pressure_index": 61,
+    "band": "Restrictive",
+    "history": [
+      {
+        "date": "2025-12-10",
+        "value": 59.5
+      },
+      {
+        "date": "2025-12-17",
+        "value": 61.8
+      },
+      {
+        "date": "2025-12-24",
+        "value": 65.2
+      },
+      {
+        "date": "2025-12-31",
+        "value": 64.0
+      },
+      {
+        "date": "2026-01-07",
+        "value": 64.3
+      },
+      {
+        "date": "2026-01-14",
+        "value": 62.9
+      },
+      {
+        "date": "2026-01-21",
+        "value": 59.8
+      },
+      {
+        "date": "2026-01-28",
+        "value": 57.0
+      },
+      {
+        "date": "2026-02-04",
+        "value": 55.2
+      },
+      {
+        "date": "2026-02-11",
+        "value": 56.3
+      },
+      {
+        "date": "2026-02-18",
+        "value": 56.4
+      },
+      {
+        "date": "2026-02-25",
+        "value": 57.9
+      }
+    ]
+  },
+  "signals": [
+    {
+      "name": "30Y Mortgage Rate (US)",
+      "region": "United States",
+      "yoy": 0.14,
+      "units": "%",
+      "history": [
+        {
+          "date": "2025-12-10",
+          "value": 7.2
+        },
+        {
+          "date": "2025-12-17",
+          "value": 8.4
+        },
+        {
+          "date": "2025-12-24",
+          "value": 8.4
+        },
+        {
+          "date": "2025-12-31",
+          "value": 8.0
+        },
+        {
+          "date": "2026-01-07",
+          "value": 6.9
+        },
+        {
+          "date": "2026-01-14",
+          "value": 7.1
+        },
+        {
+          "date": "2026-01-21",
+          "value": 6.3
+        },
+        {
+          "date": "2026-01-28",
+          "value": 8.0
+        },
+        {
+          "date": "2026-02-04",
+          "value": 6.2
+        },
+        {
+          "date": "2026-02-11",
+          "value": 6.5
+        },
+        {
+          "date": "2026-02-18",
+          "value": 8.0
+        },
+        {
+          "date": "2026-02-25",
+          "value": 6.9
+        }
+      ]
+    },
+    {
+      "name": "Building Permits YoY%",
+      "region": "South",
+      "yoy": 2.9,
+      "units": "%",
+      "history": [
+        {
+          "date": "2025-12-10",
+          "value": 0.8
+        },
+        {
+          "date": "2025-12-17",
+          "value": 3.9
+        },
+        {
+          "date": "2025-12-24",
+          "value": 4.2
+        },
+        {
+          "date": "2025-12-31",
+          "value": 5.7
+        },
+        {
+          "date": "2026-01-07",
+          "value": 4.3
+        },
+        {
+          "date": "2026-01-14",
+          "value": 5.3
+        },
+        {
+          "date": "2026-01-21",
+          "value": 1.4
+        },
+        {
+          "date": "2026-01-28",
+          "value": -0.6
+        },
+        {
+          "date": "2026-02-04",
+          "value": 0.2
+        },
+        {
+          "date": "2026-02-11",
+          "value": -2.8
+        },
+        {
+          "date": "2026-02-18",
+          "value": -1.2
+        },
+        {
+          "date": "2026-02-25",
+          "value": -1.6
+        }
+      ]
+    },
+    {
+      "name": "Building Permits YoY%",
+      "region": "West",
+      "yoy": -4.8,
+      "units": "%",
+      "history": [
+        {
+          "date": "2025-12-10",
+          "value": -3.0
+        },
+        {
+          "date": "2025-12-17",
+          "value": -1.6
+        },
+        {
+          "date": "2025-12-24",
+          "value": -0.2
+        },
+        {
+          "date": "2025-12-31",
+          "value": 0.5
+        },
+        {
+          "date": "2026-01-07",
+          "value": 0.7
+        },
+        {
+          "date": "2026-01-14",
+          "value": 0.2
+        },
+        {
+          "date": "2026-01-21",
+          "value": -2.4
+        },
+        {
+          "date": "2026-01-28",
+          "value": -4.7
+        },
+        {
+          "date": "2026-02-04",
+          "value": -6.2
+        },
+        {
+          "date": "2026-02-11",
+          "value": -7.2
+        },
+        {
+          "date": "2026-02-18",
+          "value": -7.1
+        },
+        {
+          "date": "2026-02-25",
+          "value": -7.0
+        }
+      ]
+    },
+    {
+      "name": "Nonresidential Starts YoY%",
+      "region": "Midwest",
+      "yoy": 1.6,
+      "units": "%",
+      "history": [
+        {
+          "date": "2025-12-10",
+          "value": 1.3
+        },
+        {
+          "date": "2025-12-17",
+          "value": 1.5
+        },
+        {
+          "date": "2025-12-24",
+          "value": 2.8
+        },
+        {
+          "date": "2025-12-31",
+          "value": 3.3
+        },
+        {
+          "date": "2026-01-07",
+          "value": 1.9
+        },
+        {
+          "date": "2026-01-14",
+          "value": 3.0
+        },
+        {
+          "date": "2026-01-21",
+          "value": 2.2
+        },
+        {
+          "date": "2026-01-28",
+          "value": -1.2
+        },
+        {
+          "date": "2026-02-04",
+          "value": -2.2
+        },
+        {
+          "date": "2026-02-11",
+          "value": -2.4
+        },
+        {
+          "date": "2026-02-18",
+          "value": -1.3
+        },
+        {
+          "date": "2026-02-25",
+          "value": -2.2
+        }
+      ]
+    },
+    {
+      "name": "Credit Spreads (BBB)",
+      "region": "US",
+      "yoy": 0.08,
+      "units": "pp",
+      "history": [
+        {
+          "date": "2025-12-10",
+          "value": 1.6
+        },
+        {
+          "date": "2025-12-17",
+          "value": 2.1
+        },
+        {
+          "date": "2025-12-24",
+          "value": 2.8
+        },
+        {
+          "date": "2025-12-31",
+          "value": 1.9
+        },
+        {
+          "date": "2026-01-07",
+          "value": 3.3
+        },
+        {
+          "date": "2026-01-14",
+          "value": 0.8
+        },
+        {
+          "date": "2026-01-21",
+          "value": 2.4
+        },
+        {
+          "date": "2026-01-28",
+          "value": 0.7
+        },
+        {
+          "date": "2026-02-04",
+          "value": 2.0
+        },
+        {
+          "date": "2026-02-11",
+          "value": 2.9
+        },
+        {
+          "date": "2026-02-18",
+          "value": 2.3
+        },
+        {
+          "date": "2026-02-25",
+          "value": 1.4
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "title": "Distributor inventory normalization",
+      "why_it_matters": "Order patterns may stay choppy for 4\u20136 weeks as stock levels rebalance.",
+      "severity": "watch"
+    },
+    {
+      "title": "Regional mix risk",
+      "why_it_matters": "West softness could offset South gains; monitor quote-to-order by region weekly.",
+      "severity": "monitor"
+    }
+  ],
+  "deep_analysis": {
+    "what_changed": "Mortgage rates stabilized, but financing remains tight. Permits improved in the South while West multi-family continues to drag.",
+    "what_to_do_next": [
+      "Prioritize accounts with predictable pull-through and short lead times.",
+      "Lean into South/Southeast builders; protect price in West with value messaging.",
+      "Weekly check: cancellations, credit holds, and distributor turns."
+    ]
+  }
+}
