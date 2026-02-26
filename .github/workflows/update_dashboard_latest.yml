@@ -1,0 +1,57 @@
+name: Update dashboard_latest.json (FRED)
+
+on:
+  workflow_dispatch:
+    inputs:
+      series_id:
+        description: "FRED series_id (default: MORTGAGE30US)"
+        required: false
+        default: "MORTGAGE30US"
+      observation_start:
+        description: "Observation start date YYYY-MM-DD"
+        required: false
+        default: "2020-01-01"
+
+  schedule:
+    # Every hour (safe + reliable). You can tighten later if you want.
+    - cron: "7 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-dashboard-latest
+  cancel-in-progress: true
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build dashboard_latest.json
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          FRED_SERIES_ID: ${{ inputs.series_id || 'MORTGAGE30US' }}
+          FRED_OBSERVATION_START: ${{ inputs.observation_start || '2020-01-01' }}
+          OUT_PATH: dashboard_latest.json
+        run: node scripts/build_dashboard_latest.mjs
+
+      - name: Commit if changed
+        run: |
+          git status --porcelain
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add dashboard_latest.json
+            git commit -m "Update dashboard_latest.json (FRED)"
+            git push
+          else
+            echo "No changes to commit."
+          fi
