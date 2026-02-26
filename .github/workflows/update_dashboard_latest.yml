@@ -48,23 +48,16 @@ jobs:
           OUT_PATH: dashboard_latest.json
 
           # Defaults for scheduled runs (inputs don't exist on schedule events)
-          
-          env:
-  
-  FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-  OUT_PATH: dashboard_latest.json
+          FRED_CPI_SERIES_ID: CPIAUCSL
+          FRED_UNRATE_SERIES_ID: UNRATE
+          FRED_HOUST_SERIES_ID: HOUST
+          FRED_PERMIT_SERIES_ID: PERMIT
 
-  # Defaults for scheduled runs
-  FRED_CPI_SERIES_ID: CPIAUCSL
-  FRED_UNRATE_SERIES_ID: UNRATE
-  FRED_HOUST_SERIES_ID: HOUST
-  FRED_PERMIT_SERIES_ID: PERMIT
-
-  # ✅ Regional permits (C)
-  FRED_PERMIT_NE_SERIES_ID: PERMITNE
-  FRED_PERMIT_MW_SERIES_ID: PERMITMW
-  FRED_PERMIT_S_SERIES_ID: PERMITS
-  FRED_PERMIT_W_SERIES_ID: PERMITW
+          # Regional permits (C)
+          FRED_PERMIT_NE_SERIES_ID: PERMITNE
+          FRED_PERMIT_MW_SERIES_ID: PERMITMW
+          FRED_PERMIT_S_SERIES_ID: PERMITS
+          FRED_PERMIT_W_SERIES_ID: PERMITW
         run: |
           # Inputs exist only for workflow_dispatch. For schedule, these come through empty.
           SERIES_ID="${{ github.event.inputs.series_id }}"
