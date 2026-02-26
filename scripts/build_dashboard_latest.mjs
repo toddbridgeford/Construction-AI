@@ -1,14 +1,22 @@
 // scripts/build_dashboard_latest.mjs
 import fs from "fs";
 
-// --- Env ---
 const API_KEY = process.env.FRED_API_KEY;
+
+// Primary signal (workflow input fallback handled in workflow bash)
 const SERIES_ID = process.env.FRED_SERIES_ID || "MORTGAGE30US";
 
+// Base signals
 const CPI_SERIES_ID = process.env.FRED_CPI_SERIES_ID || "CPIAUCSL";
 const UNRATE_SERIES_ID = process.env.FRED_UNRATE_SERIES_ID || "UNRATE";
 const HOUST_SERIES_ID = process.env.FRED_HOUST_SERIES_ID || "HOUST";
 const PERMIT_SERIES_ID = process.env.FRED_PERMIT_SERIES_ID || "PERMIT";
+
+// Regional permits (C)
+const PERMIT_NE_SERIES_ID = process.env.FRED_PERMIT_NE_SERIES_ID || "PERMITNE";
+const PERMIT_MW_SERIES_ID = process.env.FRED_PERMIT_MW_SERIES_ID || "PERMITMW";
+const PERMIT_S_SERIES_ID = process.env.FRED_PERMIT_S_SERIES_ID || "PERMITS";
+const PERMIT_W_SERIES_ID = process.env.FRED_PERMIT_W_SERIES_ID || "PERMITW";
 
 const OBS_START = process.env.FRED_OBSERVATION_START || "2020-01-01";
 const OUT_PATH = process.env.OUT_PATH || "dashboard_latest.json";
@@ -18,195 +26,307 @@ if (!API_KEY) {
   process.exit(1);
 }
 
-// --- Helpers ---
 function toNumberSafe(x) {
   const n = Number(x);
   return Number.isFinite(n) ? n : null;
 }
 
-function roundTo(n, decimals = 2) {
-  if (n === null) return null;
-  const p = Math.pow(10, decimals);
-  return Math.round(n * p) / p;
+function clamp01(x) {
+  if (x < 0) return 0;
+  if (x > 1) return 1;
+  return x;
 }
 
-// Normalize FRED observations -> [{date, value}]
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function parseDate(yyyy_mm_dd) {
+  // FRED dates are "YYYY-MM-DD"
+  return new Date(`${yyyy_mm_dd}T00:00:00Z`);
+}
+
 function normalizeHistory(observations) {
-  if (!Array.isArray(observations)) return [];
-  const out = [];
-  for (const o of observations) {
-    const v = toNumberSafe(o.value);
-    if (v === null) continue;
-    out.push({ date: o.date, value: v });
-  }
-  return out;
+  return (Array.isArray(observations) ? observations : [])
+    .map(o => ({ date: o.date, value: toNumberSafe(o.value) }))
+    .filter(p => p.value !== null);
 }
 
-function lastTwoValues(history) {
-  if (!history || history.length === 0) return { last: null, prev: null, delta: null };
-  if (history.length === 1) return { last: history[0].value, prev: null, delta: null };
+function lastValue(history) {
+  if (!history || history.length === 0) return null;
+  return history[history.length - 1].value;
+}
+
+function lastTwo(history) {
+  if (!history || history.length < 2) return { prev: null, last: null, delta: null };
   const last = history[history.length - 1].value;
   const prev = history[history.length - 2].value;
-  return { last, prev, delta: last - prev };
+  return { prev, last, delta: last - prev };
 }
 
-// Simple band mapping (stable)
-function bandFromPressureIndex(v) {
-  if (v === null) return "Unknown";
-  if (v >= 6.0) return "Restrictive";
-  if (v >= 5.0) return "Tight";
-  if (v >= 4.0) return "Neutral";
+// Find the value closest to ~365 days ago (stable, works across weekly/monthly)
+function yoyFromHistory(history) {
+  if (!history || history.length < 10) return null;
+
+  const lastPt = history[history.length - 1];
+  const lastDt = parseDate(lastPt.date);
+  const target = new Date(lastDt.getTime() - 365 * 24 * 3600 * 1000);
+
+  // find point with minimal abs day distance to target
+  let best = null;
+  let bestAbsDays = Infinity;
+
+  for (const p of history) {
+    const d = parseDate(p.date);
+    const absDays = Math.abs((d - target) / (24 * 3600 * 1000));
+    if (absDays < bestAbsDays) {
+      bestAbsDays = absDays;
+      best = p;
+    }
+  }
+
+  // if the closest point is too far, skip (prevents nonsense on short histories)
+  if (!best || bestAbsDays > 45) return null;
+
+  const prev = best.value;
+  const last = lastPt.value;
+  if (prev === 0) return null;
+
+  return (last / prev - 1) * 100.0;
+}
+
+// Scale a series to a 0–100 “pressure” score based on last 36 months min/max.
+// Higher score = more restrictive.
+function pressureScoreFromLevel(history, invert = false) {
+  if (!history || history.length < 10) return null;
+
+  const lastPt = history[history.length - 1];
+  const lastDt = parseDate(lastPt.date);
+  const cutoff = new Date(lastDt.getTime() - 36 * 30 * 24 * 3600 * 1000); // ~36 months
+
+  const window = history
+    .filter(p => parseDate(p.date) >= cutoff)
+    .map(p => p.value);
+
+  if (window.length < 10) return null;
+
+  const min = Math.min(...window);
+  const max = Math.max(...window);
+  const last = lastPt.value;
+
+  const span = Math.max(1e-9, max - min);
+  let t = (last - min) / span; // 0..1
+  t = clamp01(t);
+
+  if (invert) t = 1 - t;
+
+  return Math.round(t * 100);
+}
+
+function bandFromPressureIndex(pi) {
+  if (pi === null || pi === undefined) return "Unknown";
+  if (pi >= 70) return "Restrictive";
+  if (pi >= 55) return "Tight";
+  if (pi >= 40) return "Neutral";
   return "Easy";
 }
 
-// Alerts (simple + stable)
-function buildAlerts({ mortgageDelta, cpiDelta, unrateDelta }) {
+function confidenceFromSignals({ generatedAtISO, componentScores }) {
+  // Simple & stable:
+  // - If missing lots of components => Low
+  // - If generated within 24h and have most components => Medium/High
+  const available = componentScores.filter(x => typeof x === "number");
+  if (available.length < 3) return "Low";
+
+  const gen = new Date(generatedAtISO);
+  const hours = (Date.now() - gen.getTime()) / 3600000;
+  if (hours > 72) return "Low";
+
+  // volatility proxy: spread across components
+  const min = Math.min(...available);
+  const max = Math.max(...available);
+  const spread = max - min;
+
+  if (hours < 24 && spread < 35) return "High";
+  return "Medium";
+}
+
+function buildAlerts({ permitsSouthYoY, permitsWestYoY }) {
   const alerts = [];
 
-  if (mortgageDelta !== null) {
-    if (mortgageDelta > 0.05) {
+  if (typeof permitsSouthYoY === "number" && typeof permitsWestYoY === "number") {
+    if (permitsSouthYoY > 0 && permitsWestYoY < 0) {
       alerts.push({
-        title: "Mortgage rates rising",
-        why_it_matters: "Higher financing costs can slow starts and extend decision cycles.",
-        severity: "watch",
-      });
-    } else if (mortgageDelta < -0.05) {
-      alerts.push({
-        title: "Mortgage rates easing",
-        why_it_matters: "Lower financing costs can improve affordability and project viability.",
-        severity: "monitor",
+        title: "Regional mix risk: South stronger than West",
+        why_it_matters: "South permits improving while West remains soft; monitor mix weekly.",
+        severity: "monitor"
       });
     }
   }
 
-  if (cpiDelta !== null && cpiDelta > 0) {
+  if (typeof permitsWestYoY === "number" && permitsWestYoY < -5) {
     alerts.push({
-      title: "Inflation ticked up",
-      why_it_matters: "Inflation pressure can keep rates higher for longer and raise input costs.",
-      severity: "monitor",
+      title: "West permits weakening",
+      why_it_matters: "Sustained West softness can offset national improvement; watch cancellations and pricing pressure.",
+      severity: "watch"
     });
   }
 
-  if (unrateDelta !== null && unrateDelta > 0) {
-    alerts.push({
-      title: "Unemployment rising",
-      why_it_matters: "Cooling labor conditions can signal demand softening and slower growth.",
-      severity: "info",
-    });
-  }
-
-  return alerts;
+  return alerts.slice(0, 3);
 }
 
-function buildDeepAnalysis({ mortgageDelta, cpiDelta, unrateDelta }) {
-  const bullets = [];
-  if (mortgageDelta !== null)
-    bullets.push(`Mortgage rate delta: ${mortgageDelta >= 0 ? "+" : ""}${mortgageDelta.toFixed(2)} pts`);
-  if (cpiDelta !== null)
-    bullets.push(`CPI delta: ${cpiDelta >= 0 ? "+" : ""}${cpiDelta.toFixed(2)}`);
-  if (unrateDelta !== null)
-    bullets.push(`Unemployment delta: ${unrateDelta >= 0 ? "+" : ""}${unrateDelta.toFixed(2)} pts`);
+async function fredObservations(seriesId) {
+  const url = new URL("https://api.stlouisfed.org/fred/series/observations");
+  url.searchParams.set("series_id", seriesId);
+  url.searchParams.set("api_key", API_KEY);
+  url.searchParams.set("file_type", "json");
+  url.searchParams.set("sort_order", "asc");
+  url.searchParams.set("observation_start", OBS_START);
 
+  const res = await fetch(url.toString(), { headers: { Accept: "application/json" } });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`FRED failed (${res.status}) for ${seriesId}: ${text}`);
+  }
+  return res.json();
+}
+
+function makeSignal({ name, region, units, history }) {
+  const yoy = yoyFromHistory(history);
   return {
-    what_changed: bullets.length ? bullets.join(" • ") : "Insufficient delta data for change summary.",
-    what_to_do_next: [
-      "Monitor financing conditions and bid discipline on long-duration projects.",
-      "Watch CPI trend for rate path implications.",
-      "Prioritize backlog quality and renegotiate risk clauses where possible.",
-    ],
+    name,
+    region,
+    yoy,
+    units,
+    history
   };
 }
 
-// --- FRED call ---
-async function fredObservations(seriesId) {
-  const url = new URL("https://api.stlouisfed.org/fred/series/observations");
-  url.searchParams.set("api_key", API_KEY);
-  url.searchParams.set("file_type", "json");
-  url.searchParams.set("series_id", seriesId);
-  url.searchParams.set("observation_start", OBS_START);
+function buildDashboard({
+  mortgageHist,
+  cpiHist,
+  unrateHist,
+  houstHist,
+  permitHist,
+  permitNEHist,
+  permitMWHist,
+  permitSHist,
+  permitWHist
+}) {
+  // B) YoY computed per signal below
+  const signals = [
+    makeSignal({ name: "30Y Mortgage Rate", region: "US", units: "%", history: mortgageHist }),
+    makeSignal({ name: "CPI (All Urban Consumers)", region: "US", units: "index", history: cpiHist }),
+    makeSignal({ name: "Unemployment Rate", region: "US", units: "%", history: unrateHist }),
+    makeSignal({ name: "Housing Starts", region: "US", units: "thousands", history: houstHist }),
+    makeSignal({ name: "Building Permits", region: "US", units: "thousands", history: permitHist }),
 
-  const res = await fetch(url.toString(), {
-    headers: { "User-Agent": "Construction-AI Dashboard Builder" },
+    // C) Regional divergence signals
+    makeSignal({ name: "Building Permits", region: "Northeast", units: "thousands", history: permitNEHist }),
+    makeSignal({ name: "Building Permits", region: "Midwest", units: "thousands", history: permitMWHist }),
+    makeSignal({ name: "Building Permits", region: "South", units: "thousands", history: permitSHist }),
+    makeSignal({ name: "Building Permits", region: "West", units: "thousands", history: permitWHist }),
+  ];
+
+  // A) Composite pressure index 0–100
+  const mortgageScore = pressureScoreFromLevel(mortgageHist, false); // higher mortgage => restrictive
+  const cpiYoY = yoyFromHistory(cpiHist);
+  const cpiScore = (typeof cpiYoY === "number")
+    ? Math.round(clamp01((cpiYoY + 2) / 8) * 100) // map ~[-2..+6] to 0..100 (stable heuristic)
+    : null;
+
+  const unrateScore = pressureScoreFromLevel(unrateHist, false);     // higher unemployment => restrictive
+  const permitsScore = pressureScoreFromLevel(permitHist, true);     // lower permits => restrictive (invert)
+  const startsScore  = pressureScoreFromLevel(houstHist, true);      // lower starts => restrictive (invert)
+
+  const components = [
+    { w: 0.35, v: mortgageScore },
+    { w: 0.20, v: cpiScore },
+    { w: 0.15, v: unrateScore },
+    { w: 0.15, v: permitsScore },
+    { w: 0.15, v: startsScore }
+  ];
+
+  const usable = components.filter(x => typeof x.v === "number");
+  const pi = usable.length
+    ? Math.round(usable.reduce((acc, x) => acc + x.w * x.v, 0) / usable.reduce((acc, x) => acc + x.w, 0))
+    : null;
+
+  const band = bandFromPressureIndex(pi);
+
+  // D) Confidence
+  const generated_at = new Date().toISOString();
+  const confidence = confidenceFromSignals({
+    generatedAtISO: generated_at,
+    componentScores: [mortgageScore, cpiScore, unrateScore, permitsScore, startsScore]
   });
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`FRED error (${seriesId}) ${res.status}: ${text}`);
-  }
-  return await res.json();
-}
-
-// --- Build dashboard JSON ---
-function buildDashboard({ mortgage, cpi, unrate, houst, permit }) {
-  const mortgageHistory = normalizeHistory(mortgage);
-  const cpiHistory = normalizeHistory(cpi);
-  const unrateHistory = normalizeHistory(unrate);
-  const houstHistory = normalizeHistory(houst);
-  const permitHistory = normalizeHistory(permit);
-
-  const m = lastTwoValues(mortgageHistory);
-  const c = lastTwoValues(cpiHistory);
-  const u = lastTwoValues(unrateHistory);
-
-  // pressure_index uses primary series latest value (stable + matches your UI)
-  const pressureIndex = roundTo(m.last, 2);
-  const band = bandFromPressureIndex(pressureIndex);
-
-  const alerts = buildAlerts({
-    mortgageDelta: m.delta,
-    cpiDelta: c.delta,
-    unrateDelta: u.delta,
-  });
+  // Alerts keyed to regional YoY divergence
+  const permitsSouthYoY = yoyFromHistory(permitSHist);
+  const permitsWestYoY  = yoyFromHistory(permitWHist);
+  const alerts = buildAlerts({ permitsSouthYoY, permitsWestYoY });
 
   return {
     version: 1,
-    generated_at: new Date().toISOString(),
+    generated_at,
 
     executive: {
-      headline: "Mortgage rates: watch for continued pressure",
-      confidence: "Medium",
-      summary: "Auto-updated from FRED every run.",
+      headline: "Macro conditions auto-updated; watch regional divergence",
+      confidence,
+      summary: "Auto-updated from FRED every run."
     },
 
     capital: {
-      pressure_index: pressureIndex,
+      pressure_index: pi ?? 0,
       band,
-      history: mortgageHistory,
+      history: (mortgageHist || []).slice(-60) // keep CPI history lightweight for UI
     },
 
-    signals: [
-      { name: "30Y Mortgage Rate", region: "US", yoy: null, units: "%", history: mortgageHistory },
-      { name: "CPI (All Urban Consumers)", region: "US", yoy: null, units: "index", history: cpiHistory },
-      { name: "Unemployment Rate", region: "US", yoy: null, units: "%", history: unrateHistory },
-      { name: "Housing Starts", region: "US", yoy: null, units: "thousands", history: houstHistory },
-      { name: "Building Permits", region: "US", yoy: null, units: "thousands", history: permitHistory },
-    ],
-
+    signals,
     alerts,
-    deep_analysis: buildDeepAnalysis({
-      mortgageDelta: m.delta,
-      cpiDelta: c.delta,
-      unrateDelta: u.delta,
-    }),
+
+    deep_analysis: {
+      what_changed: "YoY and composite pressure index recalculated automatically each run.",
+      what_to_do_next: [
+        "Track permits divergence (South vs West) weekly.",
+        "Use CPI/UNRATE trend to anticipate rate path and project starts.",
+        "Prioritize backlog quality and margin protection in restrictive regimes."
+      ]
+    }
   };
 }
 
-// --- Main ---
 (async () => {
-  const [mortgageData, cpiData, unrateData, houstData, permitData] = await Promise.all([
+  const [
+    mortgageData, cpiData, unrateData, houstData, permitData,
+    permitNEData, permitMWData, permitSData, permitWData
+  ] = await Promise.all([
     fredObservations(SERIES_ID),
     fredObservations(CPI_SERIES_ID),
     fredObservations(UNRATE_SERIES_ID),
     fredObservations(HOUST_SERIES_ID),
     fredObservations(PERMIT_SERIES_ID),
+
+    fredObservations(PERMIT_NE_SERIES_ID),
+    fredObservations(PERMIT_MW_SERIES_ID),
+    fredObservations(PERMIT_S_SERIES_ID),
+    fredObservations(PERMIT_W_SERIES_ID),
   ]);
 
+  const mortgageHist = normalizeHistory(mortgageData.observations);
+  const cpiHist      = normalizeHistory(cpiData.observations);
+  const unrateHist   = normalizeHistory(unrateData.observations);
+  const houstHist    = normalizeHistory(houstData.observations);
+  const permitHist   = normalizeHistory(permitData.observations);
+
+  const permitNEHist = normalizeHistory(permitNEData.observations);
+  const permitMWHist = normalizeHistory(permitMWData.observations);
+  const permitSHist  = normalizeHistory(permitSData.observations);
+  const permitWHist  = normalizeHistory(permitWData.observations);
+
   const dashboard = buildDashboard({
-    mortgage: Array.isArray(mortgageData.observations) ? mortgageData.observations : [],
-    cpi: Array.isArray(cpiData.observations) ? cpiData.observations : [],
-    unrate: Array.isArray(unrateData.observations) ? unrateData.observations : [],
-    houst: Array.isArray(houstData.observations) ? houstData.observations : [],
-    permit: Array.isArray(permitData.observations) ? permitData.observations : [],
+    mortgageHist, cpiHist, unrateHist, houstHist, permitHist,
+    permitNEHist, permitMWHist, permitSHist, permitWHist
   });
 
   fs.writeFileSync(OUT_PATH, JSON.stringify(dashboard, null, 2), "utf8");
