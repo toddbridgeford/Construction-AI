@@ -48,10 +48,7 @@ jobs:
           OUT_PATH: dashboard_latest.json
 
           # Defaults for scheduled runs (inputs don't exist on schedule events)
-          FRED_CPI_SERIES_ID: CPIAUCSL
-          FRED_UNRATE_SERIES_ID: UNRATE
-          FRED_HOUST_SERIES_ID: HOUST
-          FRED_PERMIT_SERIES_ID: PERMIT
+          
           env:
   
   FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
