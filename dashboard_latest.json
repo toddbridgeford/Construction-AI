@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-02-26T20:51:20.177Z",
+  "generated_at": "2026-02-26T21:20:04.872Z",
   "executive": {
     "headline": "Mortgage rates: watch for continued pressure",
     "confidence": "Medium",
@@ -3784,8 +3784,8 @@
   ],
   "alerts": [
     {
-      "title": "Inflation pressure rising",
-      "why_it_matters": "Persistent inflation can keep rates higher for longer and pressure margins.",
+      "title": "Inflation ticked up",
+      "why_it_matters": "Inflation pressure can keep rates higher for longer and raise input costs.",
       "severity": "monitor"
     }
   ],
