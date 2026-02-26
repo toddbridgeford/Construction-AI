@@ -13,7 +13,7 @@ on:
         default: "2020-01-01"
 
   schedule:
-    - cron: "7 * * * *"
+    - cron: "7 * * * *"   # hourly at minute 7
 
 permissions:
   contents: write
@@ -26,7 +26,6 @@ jobs:
   build-and-commit:
     runs-on: ubuntu-latest
 
-    # ✅ Put env HERE (job-level)
     env:
       FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       FRED_SERIES_ID: ${{ inputs.series_id || 'MORTGAGE30US' }}
@@ -53,8 +52,8 @@ jobs:
         run: |
           set -e
 
-          # Make sure we're up to date first (prevents "fetch first" push failures)
-          git pull --rebase origin "${GITHUB_REF_NAME}"
+          # Ensure we're up to date before deciding what to commit
+          git pull --rebase
 
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
@@ -62,7 +61,12 @@ jobs:
 
             git add dashboard_latest.json
             git commit -m "Update dashboard_latest.json (FRED)"
-            git push origin "${GITHUB_REF_NAME}"
+
+            # Rebase again in case another run landed a commit
+            git pull --rebase
+
+            # Push back to the same branch this workflow ran on
+            git push origin HEAD:${GITHUB_REF_NAME}
           else
             echo "No changes."
           fi
