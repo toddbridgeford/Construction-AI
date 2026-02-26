@@ -1,10 +1,12 @@
 // scripts/build_dashboard_latest.mjs
 import fs from "fs";
 
+// ---- Env ----
 const API_KEY = process.env.FRED_API_KEY;
 
-// Primary signal (workflow input fallback handled in workflow bash)
-const SERIES_ID = process.env.FRED_SERIES_ID || "MORTGAGE30US";
+const SERIES_ID = process.env.FRED_SERIES_ID || "MORTGAGE30US"; // primary
+const OBS_START = process.env.FRED_OBSERVATION_START || "2020-01-01";
+const OUT_PATH = process.env.OUT_PATH || "dashboard_latest.json";
 
 // Base signals
 const CPI_SERIES_ID = process.env.FRED_CPI_SERIES_ID || "CPIAUCSL";
@@ -18,15 +20,14 @@ const PERMIT_MW_SERIES_ID = process.env.FRED_PERMIT_MW_SERIES_ID || "PERMITMW";
 const PERMIT_S_SERIES_ID = process.env.FRED_PERMIT_S_SERIES_ID || "PERMITS";
 const PERMIT_W_SERIES_ID = process.env.FRED_PERMIT_W_SERIES_ID || "PERMITW";
 
-const OBS_START = process.env.FRED_OBSERVATION_START || "2020-01-01";
-const OUT_PATH = process.env.OUT_PATH || "dashboard_latest.json";
-
 if (!API_KEY) {
   console.error("Missing FRED_API_KEY (set it as a GitHub Actions secret).");
   process.exit(1);
 }
 
+// ---- Helpers ----
 function toNumberSafe(x) {
+  // FRED sometimes returns "." or strings
   const n = Number(x);
   return Number.isFinite(n) ? n : null;
 }
@@ -37,12 +38,7 @@ function clamp01(x) {
   return x;
 }
 
-function lerp(a, b, t) {
-  return a + (b - a) * t;
-}
-
 function parseDate(yyyy_mm_dd) {
-  // FRED dates are "YYYY-MM-DD"
   return new Date(`${yyyy_mm_dd}T00:00:00Z`);
 }
 
@@ -52,11 +48,6 @@ function normalizeHistory(observations) {
     .filter(p => p.value !== null);
 }
 
-function lastValue(history) {
-  if (!history || history.length === 0) return null;
-  return history[history.length - 1].value;
-}
-
 function lastTwo(history) {
   if (!history || history.length < 2) return { prev: null, last: null, delta: null };
   const last = history[history.length - 1].value;
@@ -64,7 +55,7 @@ function lastTwo(history) {
   return { prev, last, delta: last - prev };
 }
 
-// Find the value closest to ~365 days ago (stable, works across weekly/monthly)
+// B) YoY: find point closest to ~365 days ago (works for weekly/monthly)
 function yoyFromHistory(history) {
   if (!history || history.length < 10) return null;
 
@@ -72,7 +63,6 @@ function yoyFromHistory(history) {
   const lastDt = parseDate(lastPt.date);
   const target = new Date(lastDt.getTime() - 365 * 24 * 3600 * 1000);
 
-  // find point with minimal abs day distance to target
   let best = null;
   let bestAbsDays = Infinity;
 
@@ -85,7 +75,6 @@ function yoyFromHistory(history) {
     }
   }
 
-  // if the closest point is too far, skip (prevents nonsense on short histories)
   if (!best || bestAbsDays > 45) return null;
 
   const prev = best.value;
@@ -95,14 +84,14 @@ function yoyFromHistory(history) {
   return (last / prev - 1) * 100.0;
 }
 
-// Scale a series to a 0–100 “pressure” score based on last 36 months min/max.
-// Higher score = more restrictive.
+// A) Pressure score 0–100 from last ~36 months of LEVELS
+// invert=true means lower level => higher restrictiveness
 function pressureScoreFromLevel(history, invert = false) {
   if (!history || history.length < 10) return null;
 
   const lastPt = history[history.length - 1];
   const lastDt = parseDate(lastPt.date);
-  const cutoff = new Date(lastDt.getTime() - 36 * 30 * 24 * 3600 * 1000); // ~36 months
+  const cutoff = new Date(lastDt.getTime() - 36 * 30 * 24 * 3600 * 1000);
 
   const window = history
     .filter(p => parseDate(p.date) >= cutoff)
@@ -115,9 +104,8 @@ function pressureScoreFromLevel(history, invert = false) {
   const last = lastPt.value;
 
   const span = Math.max(1e-9, max - min);
-  let t = (last - min) / span; // 0..1
+  let t = (last - min) / span;
   t = clamp01(t);
-
   if (invert) t = 1 - t;
 
   return Math.round(t * 100);
@@ -131,23 +119,16 @@ function bandFromPressureIndex(pi) {
   return "Easy";
 }
 
-function confidenceFromSignals({ generatedAtISO, componentScores }) {
-  // Simple & stable:
-  // - If missing lots of components => Low
-  // - If generated within 24h and have most components => Medium/High
+// D) Confidence based on component availability + spread
+function confidenceFromSignals({ componentScores }) {
   const available = componentScores.filter(x => typeof x === "number");
   if (available.length < 3) return "Low";
 
-  const gen = new Date(generatedAtISO);
-  const hours = (Date.now() - gen.getTime()) / 3600000;
-  if (hours > 72) return "Low";
-
-  // volatility proxy: spread across components
   const min = Math.min(...available);
   const max = Math.max(...available);
   const spread = max - min;
 
-  if (hours < 24 && spread < 35) return "High";
+  if (spread < 35) return "High";
   return "Medium";
 }
 
@@ -183,6 +164,7 @@ async function fredObservations(seriesId) {
   url.searchParams.set("sort_order", "asc");
   url.searchParams.set("observation_start", OBS_START);
 
+  // Node 20 has global fetch. If runner ever changes, this is the first thing that breaks.
   const res = await fetch(url.toString(), { headers: { Accept: "application/json" } });
   if (!res.ok) {
     const text = await res.text();
@@ -192,11 +174,10 @@ async function fredObservations(seriesId) {
 }
 
 function makeSignal({ name, region, units, history }) {
-  const yoy = yoyFromHistory(history);
   return {
     name,
     region,
-    yoy,
+    yoy: yoyFromHistory(history),
     units,
     history
   };
@@ -213,7 +194,7 @@ function buildDashboard({
   permitSHist,
   permitWHist
 }) {
-  // B) YoY computed per signal below
+  // Signals (Top 5 + regional permits)
   const signals = [
     makeSignal({ name: "30Y Mortgage Rate", region: "US", units: "%", history: mortgageHist }),
     makeSignal({ name: "CPI (All Urban Consumers)", region: "US", units: "index", history: cpiHist }),
@@ -221,23 +202,24 @@ function buildDashboard({
     makeSignal({ name: "Housing Starts", region: "US", units: "thousands", history: houstHist }),
     makeSignal({ name: "Building Permits", region: "US", units: "thousands", history: permitHist }),
 
-    // C) Regional divergence signals
+    // C) Regional divergence
     makeSignal({ name: "Building Permits", region: "Northeast", units: "thousands", history: permitNEHist }),
     makeSignal({ name: "Building Permits", region: "Midwest", units: "thousands", history: permitMWHist }),
     makeSignal({ name: "Building Permits", region: "South", units: "thousands", history: permitSHist }),
-    makeSignal({ name: "Building Permits", region: "West", units: "thousands", history: permitWHist }),
+    makeSignal({ name: "Building Permits", region: "West", units: "thousands", history: permitWHist })
   ];
 
-  // A) Composite pressure index 0–100
-  const mortgageScore = pressureScoreFromLevel(mortgageHist, false); // higher mortgage => restrictive
+  // A) Composite pressure index (0–100)
+  const mortgageScore = pressureScoreFromLevel(mortgageHist, false);
   const cpiYoY = yoyFromHistory(cpiHist);
-  const cpiScore = (typeof cpiYoY === "number")
-    ? Math.round(clamp01((cpiYoY + 2) / 8) * 100) // map ~[-2..+6] to 0..100 (stable heuristic)
-    : null;
+  const cpiScore =
+    (typeof cpiYoY === "number")
+      ? Math.round(clamp01((cpiYoY + 2) / 8) * 100) // heuristic mapping [-2..+6] => 0..100
+      : null;
 
-  const unrateScore = pressureScoreFromLevel(unrateHist, false);     // higher unemployment => restrictive
-  const permitsScore = pressureScoreFromLevel(permitHist, true);     // lower permits => restrictive (invert)
-  const startsScore  = pressureScoreFromLevel(houstHist, true);      // lower starts => restrictive (invert)
+  const unrateScore = pressureScoreFromLevel(unrateHist, false);
+  const permitsScore = pressureScoreFromLevel(permitHist, true);
+  const startsScore = pressureScoreFromLevel(houstHist, true);
 
   const components = [
     { w: 0.35, v: mortgageScore },
@@ -249,7 +231,10 @@ function buildDashboard({
 
   const usable = components.filter(x => typeof x.v === "number");
   const pi = usable.length
-    ? Math.round(usable.reduce((acc, x) => acc + x.w * x.v, 0) / usable.reduce((acc, x) => acc + x.w, 0))
+    ? Math.round(
+        usable.reduce((acc, x) => acc + x.w * x.v, 0) /
+        usable.reduce((acc, x) => acc + x.w, 0)
+      )
     : null;
 
   const band = bandFromPressureIndex(pi);
@@ -257,14 +242,23 @@ function buildDashboard({
   // D) Confidence
   const generated_at = new Date().toISOString();
   const confidence = confidenceFromSignals({
-    generatedAtISO: generated_at,
     componentScores: [mortgageScore, cpiScore, unrateScore, permitsScore, startsScore]
   });
 
   // Alerts keyed to regional YoY divergence
   const permitsSouthYoY = yoyFromHistory(permitSHist);
-  const permitsWestYoY  = yoyFromHistory(permitWHist);
+  const permitsWestYoY = yoyFromHistory(permitWHist);
   const alerts = buildAlerts({ permitsSouthYoY, permitsWestYoY });
+
+  // Delta snippets for deep analysis
+  const m = lastTwo(mortgageHist);
+  const c = lastTwo(cpiHist);
+  const u = lastTwo(unrateHist);
+
+  const bullets = [];
+  if (typeof m.delta === "number") bullets.push(`Mortgage Δ: ${m.delta >= 0 ? "+" : ""}${m.delta.toFixed(2)} pts`);
+  if (typeof c.delta === "number") bullets.push(`CPI Δ: ${c.delta >= 0 ? "+" : ""}${c.delta.toFixed(2)}`);
+  if (typeof u.delta === "number") bullets.push(`Unemployment Δ: ${u.delta >= 0 ? "+" : ""}${u.delta.toFixed(2)} pts`);
 
   return {
     version: 1,
@@ -277,16 +271,18 @@ function buildDashboard({
     },
 
     capital: {
+      // 0–100 composite
       pressure_index: pi ?? 0,
       band,
-      history: (mortgageHist || []).slice(-60) // keep CPI history lightweight for UI
+      // keep it lightweight for UI charts
+      history: (cpiHist || []).slice(-60)
     },
 
     signals,
     alerts,
 
     deep_analysis: {
-      what_changed: "YoY and composite pressure index recalculated automatically each run.",
+      what_changed: bullets.length ? bullets.join(" • ") : "YoY and composite pressure index recalculated automatically each run.",
       what_to_do_next: [
         "Track permits divergence (South vs West) weekly.",
         "Use CPI/UNRATE trend to anticipate rate path and project starts.",
@@ -296,6 +292,7 @@ function buildDashboard({
   };
 }
 
+// ---- Main ----
 (async () => {
   const [
     mortgageData, cpiData, unrateData, houstData, permitData,
@@ -310,19 +307,19 @@ function buildDashboard({
     fredObservations(PERMIT_NE_SERIES_ID),
     fredObservations(PERMIT_MW_SERIES_ID),
     fredObservations(PERMIT_S_SERIES_ID),
-    fredObservations(PERMIT_W_SERIES_ID),
+    fredObservations(PERMIT_W_SERIES_ID)
   ]);
 
   const mortgageHist = normalizeHistory(mortgageData.observations);
-  const cpiHist      = normalizeHistory(cpiData.observations);
-  const unrateHist   = normalizeHistory(unrateData.observations);
-  const houstHist    = normalizeHistory(houstData.observations);
-  const permitHist   = normalizeHistory(permitData.observations);
+  const cpiHist = normalizeHistory(cpiData.observations);
+  const unrateHist = normalizeHistory(unrateData.observations);
+  const houstHist = normalizeHistory(houstData.observations);
+  const permitHist = normalizeHistory(permitData.observations);
 
   const permitNEHist = normalizeHistory(permitNEData.observations);
   const permitMWHist = normalizeHistory(permitMWData.observations);
-  const permitSHist  = normalizeHistory(permitSData.observations);
-  const permitWHist  = normalizeHistory(permitWData.observations);
+  const permitSHist = normalizeHistory(permitSData.observations);
+  const permitWHist = normalizeHistory(permitWData.observations);
 
   const dashboard = buildDashboard({
     mortgageHist, cpiHist, unrateHist, houstHist, permitHist,
