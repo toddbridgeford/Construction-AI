@@ -1,4 +1,13 @@
 // scripts/build_dashboard_latest.mjs
+      - name: Build dashboard_latest.json
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          FRED_SERIES_ID: ${{ github.event.inputs.series_id || 'MORTGAGE30US' }}
+          FRED_CPI_SERIES_ID: CPIAUCSL
+          FRED_OBSERVATION_START: ${{ github.event.inputs.observation_start || '2020-01-01' }}
+          OUT_PATH: dashboard_latest.json
+        run: node scripts/build_dashboard_latest.mjs
+
 import fs from "fs";
 
 const API_KEY = process.env.FRED_API_KEY;
