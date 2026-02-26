@@ -25,16 +25,17 @@ concurrency:
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # IMPORTANT: pull first so pushes don't get rejected
+      # Pull latest first so pushes don't get rejected (safe for concurrent runs)
       - name: Sync branch
         run: |
-          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -44,18 +45,41 @@ jobs:
       - name: Build dashboard_latest.json
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          FRED_SERIES_ID: ${{ github.event.inputs.series_id || 'MORTGAGE30US' }}
-          FRED_OBSERVATION_START: ${{ github.event.inputs.observation_start || '2020-01-01' }}
           OUT_PATH: dashboard_latest.json
-        run: node scripts/build_dashboard_latest.mjs
+
+          # Defaults for scheduled runs (inputs don't exist on schedule events)
+          FRED_CPI_SERIES_ID: CPIAUCSL
+          FRED_UNRATE_SERIES_ID: UNRATE
+          FRED_HOUST_SERIES_ID: HOUST
+          FRED_PERMIT_SERIES_ID: PERMIT
+        run: |
+          # Inputs exist only for workflow_dispatch. For schedule, these come through empty.
+          SERIES_ID="${{ github.event.inputs.series_id }}"
+          OBS_START="${{ github.event.inputs.observation_start }}"
+
+          if [ -z "$SERIES_ID" ]; then SERIES_ID="MORTGAGE30US"; fi
+          if [ -z "$OBS_START" ]; then OBS_START="2020-01-01"; fi
+
+          echo "Using SERIES_ID=$SERIES_ID"
+          echo "Using OBS_START=$OBS_START"
+
+          export FRED_SERIES_ID="$SERIES_ID"
+          export FRED_OBSERVATION_START="$OBS_START"
+
+          node scripts/build_dashboard_latest.mjs
 
       - name: Commit & push if changed
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
+
             git add dashboard_latest.json
             git commit -m "Update dashboard_latest.json (FRED)"
+
+            # Pull/rebase one more time right before pushing (extra safety)
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+
             git push origin "HEAD:${GITHUB_REF_NAME}"
           else
             echo "No changes."
