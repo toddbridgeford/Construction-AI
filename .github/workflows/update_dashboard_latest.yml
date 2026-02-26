@@ -13,7 +13,7 @@ on:
         default: "2020-01-01"
 
   schedule:
-    - cron: "7 * * * *"   # hourly at minute 7
+    - cron: "7 * * * *" # every hour at :07
 
 permissions:
   contents: write
@@ -25,19 +25,16 @@ concurrency:
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
-
-    env:
-      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-      FRED_SERIES_ID: ${{ inputs.series_id || 'MORTGAGE30US' }}
-      FRED_CPI_SERIES_ID: CPIAUCSL
-      FRED_OBSERVATION_START: ${{ inputs.observation_start || '2020-01-01' }}
-      OUT_PATH: dashboard_latest.json
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      # IMPORTANT: pull first so pushes don't get rejected
+      - name: Sync branch
+        run: |
+          git pull --rebase origin "${GITHUB_REF_NAME}"
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -45,28 +42,21 @@ jobs:
           node-version: "20"
 
       - name: Build dashboard_latest.json
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          FRED_SERIES_ID: ${{ github.event.inputs.series_id || 'MORTGAGE30US' }}
+          FRED_OBSERVATION_START: ${{ github.event.inputs.observation_start || '2020-01-01' }}
+          OUT_PATH: dashboard_latest.json
         run: node scripts/build_dashboard_latest.mjs
 
       - name: Commit & push if changed
-        shell: bash
         run: |
-          set -e
-
-          # Ensure we're up to date before deciding what to commit
-          git pull --rebase
-
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
-
             git add dashboard_latest.json
             git commit -m "Update dashboard_latest.json (FRED)"
-
-            # Rebase again in case another run landed a commit
-            git pull --rebase
-
-            # Push back to the same branch this workflow ran on
-            git push origin HEAD:${GITHUB_REF_NAME}
+            git push origin "HEAD:${GITHUB_REF_NAME}"
           else
             echo "No changes."
           fi
