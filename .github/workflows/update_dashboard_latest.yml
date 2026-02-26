@@ -35,6 +35,15 @@ jobs:
         with:
           node-version: "20"
 
+          - name: Build dashboard_latest.json
+  env:
+    FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+    FRED_SERIES_ID: ${{ inputs.series_id || 'MORTGAGE30US' }}
+    FRED_CPI_SERIES_ID: CPIAUCSL
+    FRED_OBSERVATION_START: ${{ inputs.observation_start || '2020-01-01' }}
+    OUT_PATH: dashboard_latest.json
+  run: node scripts/build_dashboard_latest.mjs
+
       - name: Build dashboard_latest.json
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
