@@ -13,7 +13,6 @@ on:
         default: "2020-01-01"
 
   schedule:
-    # Every hour at minute 7 (UTC)
     - cron: "7 * * * *"
 
 permissions:
@@ -27,6 +26,14 @@ jobs:
   build-and-commit:
     runs-on: ubuntu-latest
 
+    # ✅ Put env HERE (job-level)
+    env:
+      FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      FRED_SERIES_ID: ${{ inputs.series_id || 'MORTGAGE30US' }}
+      FRED_CPI_SERIES_ID: CPIAUCSL
+      FRED_OBSERVATION_START: ${{ inputs.observation_start || '2020-01-01' }}
+      OUT_PATH: dashboard_latest.json
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,21 +46,15 @@ jobs:
           node-version: "20"
 
       - name: Build dashboard_latest.json
-        env:
-          FRED_API_KEY: "${{ secrets.FRED_API_KEY }}"
-          FRED_SERIES_ID: "${{ inputs.series_id || 'MORTGAGE30US' }}"
-          FRED_CPI_SERIES_ID: "CPIAUCSL"
-          FRED_OBSERVATION_START: "${{ inputs.observation_start || '2020-01-01' }}"
-          OUT_PATH: "dashboard_latest.json"
         run: node scripts/build_dashboard_latest.mjs
 
-      - name: Commit if changed
+      - name: Commit & push if changed
         shell: bash
         run: |
           set -e
 
-          # Ensure we're up-to-date (prevents push rejection if branch moved)
-          git pull --rebase --autostash
+          # Make sure we're up to date first (prevents "fetch first" push failures)
+          git pull --rebase origin "${GITHUB_REF_NAME}"
 
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
@@ -61,11 +62,7 @@ jobs:
 
             git add dashboard_latest.json
             git commit -m "Update dashboard_latest.json (FRED)"
-
-            # Pull again in case another run/commit landed while we were building
-            git pull --rebase --autostash
-
-            git push
+            git push origin "${GITHUB_REF_NAME}"
           else
             echo "No changes."
           fi
