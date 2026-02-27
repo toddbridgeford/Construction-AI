@@ -12,7 +12,9 @@
       "id": "build_dashboard_latest",
       "type": "node_script",
       "script": "scripts/build_dashboard_latest.mjs",
-      "outputs": ["dashboard_latest.json"]
+      "outputs": [
+        "dashboard_latest.json"
+      ]
     }
   ],
   "outputs": {
