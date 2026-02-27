@@ -25,6 +25,7 @@ jobs:
         run: |
           set -e
           test -f scripts/build_dashboard_latest.mjs
+          test -f config/fred_signals.json
           test -f config/state_permits.json
           test -f config/msa_permits.json
           test -f framework/national_autonomous_run_orchestrator_v1.json
@@ -33,6 +34,7 @@ jobs:
 
       - name: Validate JSON Structure
         run: |
+          node -e "JSON.parse(require('fs').readFileSync('config/fred_signals.json','utf8')); console.log('fred_signals.json OK ✅')"
           node -e "JSON.parse(require('fs').readFileSync('config/state_permits.json','utf8')); console.log('state_permits.json OK ✅')"
           node -e "JSON.parse(require('fs').readFileSync('config/msa_permits.json','utf8')); console.log('msa_permits.json OK ✅')"
           node -e "JSON.parse(require('fs').readFileSync('framework/national_autonomous_run_orchestrator_v1.json','utf8')); console.log('orchestrator OK ✅')"
@@ -48,7 +50,6 @@ jobs:
 
       - name: Validate Output JSON
         run: |
-          set -e
           test -f dashboard_latest.json
           node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8')); console.log('dashboard_latest.json OK ✅')"
 
