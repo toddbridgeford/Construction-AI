@@ -1,35 +1,10 @@
 {
-  "max_msas": 12,
-  "msas": [
-    {
-      "code": "DAL",
-      "name": "Dallas–Fort Worth–Arlington, TX",
-      "series_id": "DALL148BPPRIVSA"
-    },
-    {
-      "code": "HOU",
-      "name": "Houston–The Woodlands–Sugar Land, TX",
-      "series_id": "HOUS448BPPRIVSA"
-    },
-    {
-      "code": "MIA",
-      "name": "Miami–Fort Lauderdale–Pompano Beach, FL",
-      "series_id": "MIAM112BPPRIVSA"
-    },
-    {
-      "code": "LA",
-      "name": "Los Angeles–Long Beach–Anaheim, CA",
-      "series_id": "LOSA106BPPRIVSA"
-    },
-    {
-      "code": "ATL",
-      "name": "Atlanta–Sandy Springs–Alpharetta, GA",
-      "series_id": "ATLA013BPPRIVSA"
-    },
-    {
-      "code": "CLT",
-      "name": "Charlotte–Concord–Gastonia, NC–SC",
-      "series_id": "CHAR737BPPRIVSA"
-    }
+  "max_states": 12,
+  "states": [
+    { "code": "TX", "name": "Texas", "series_id": "TXBPPRIVSA" },
+    { "code": "FL", "name": "Florida", "series_id": "FLBPPRIVSA" },
+    { "code": "CA", "name": "California", "series_id": "CABPPRIVSA" },
+    { "code": "GA", "name": "Georgia", "series_id": "GABPPRIVSA" },
+    { "code": "NC", "name": "North Carolina", "series_id": "NCBPPRIVSA" }
   ]
 }
