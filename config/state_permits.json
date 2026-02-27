@@ -7,7 +7,6 @@
     { "code": "GA", "name": "Georgia", "series_id": "" },
     { "code": "NC", "name": "North Carolina", "series_id": "" }
   ]
-}
 // ---- Phase 2: Orchestrator + Precedence Matrix ----
 
 const ORCHESTRATOR_PATH =
