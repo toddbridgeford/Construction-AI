@@ -1,0 +1,30 @@
+{
+  "max_msas": 25,
+  "msas": [
+    { "name": "New York-Newark-Jersey City, NY-NJ-PA", "series_id": "" },
+    { "name": "Los Angeles-Long Beach-Anaheim, CA", "series_id": "" },
+    { "name": "Chicago-Naperville-Elgin, IL-IN-WI", "series_id": "" },
+    { "name": "Dallas-Fort Worth-Arlington, TX", "series_id": "" },
+    { "name": "Houston-The Woodlands-Sugar Land, TX", "series_id": "" },
+    { "name": "Washington-Arlington-Alexandria, DC-VA-MD-WV", "series_id": "" },
+    { "name": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD", "series_id": "" },
+    { "name": "Miami-Fort Lauderdale-West Palm Beach, FL", "series_id": "" },
+    { "name": "Atlanta-Sandy Springs-Alpharetta, GA", "series_id": "" },
+    { "name": "Boston-Cambridge-Newton, MA-NH", "series_id": "" },
+    { "name": "Phoenix-Mesa-Chandler, AZ", "series_id": "" },
+    { "name": "San Francisco-Oakland-Berkeley, CA", "series_id": "" },
+    { "name": "Riverside-San Bernardino-Ontario, CA", "series_id": "" },
+    { "name": "Detroit-Warren-Dearborn, MI", "series_id": "" },
+    { "name": "Seattle-Tacoma-Bellevue, WA", "series_id": "" },
+    { "name": "Minneapolis-St. Paul-Bloomington, MN-WI", "series_id": "" },
+    { "name": "San Diego-Chula Vista-Carlsbad, CA", "series_id": "" },
+    { "name": "Tampa-St. Petersburg-Clearwater, FL", "series_id": "" },
+    { "name": "Denver-Aurora-Lakewood, CO", "series_id": "" },
+    { "name": "Baltimore-Columbia-Towson, MD", "series_id": "" },
+    { "name": "St. Louis, MO-IL", "series_id": "" },
+    { "name": "Charlotte-Concord-Gastonia, NC-SC", "series_id": "" },
+    { "name": "Orlando-Kissimmee-Sanford, FL", "series_id": "" },
+    { "name": "San Antonio-New Braunfels, TX", "series_id": "" },
+    { "name": "Portland-Vancouver-Hillsboro, OR-WA", "series_id": "" }
+  ]
+}
