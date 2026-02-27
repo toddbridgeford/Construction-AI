@@ -1,10 +1,17 @@
 {
   "max_states": 12,
   "states": [
+    { "code": "CA", "name": "California", "series_id": "CABPPRIVSA" },
     { "code": "TX", "name": "Texas", "series_id": "TXBPPRIVSA" },
-    { "code": "FL", "name": "Florida", "series_id": "" },
-    { "code": "CA", "name": "California", "series_id": "" },
-    { "code": "GA", "name": "Georgia", "series_id": "" },
-    { "code": "NC", "name": "North Carolina", "series_id": "" }
+    { "code": "FL", "name": "Florida", "series_id": "FLBPPRIVSA" },
+    { "code": "NY", "name": "New York", "series_id": "NYBPPRIVSA" },
+    { "code": "PA", "name": "Pennsylvania", "series_id": "PABPPRIVSA" },
+    { "code": "IL", "name": "Illinois", "series_id": "ILBPPRIVSA" },
+    { "code": "OH", "name": "Ohio", "series_id": "OHBPPRIVSA" },
+    { "code": "GA", "name": "Georgia", "series_id": "GABPPRIVSA" },
+    { "code": "NC", "name": "North Carolina", "series_id": "NCBPPRIVSA" },
+    { "code": "MI", "name": "Michigan", "series_id": "MIBPPRIVSA" },
+    { "code": "NJ", "name": "New Jersey", "series_id": "NJBPPRIVSA" },
+    { "code": "VA", "name": "Virginia", "series_id": "VABPPRIVSA" }
   ]
 }
