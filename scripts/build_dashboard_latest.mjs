@@ -20,6 +20,9 @@ const PERMIT_MW_SERIES_ID = process.env.FRED_PERMIT_MW_SERIES_ID || "PERMITMW";
 const PERMIT_S_SERIES_ID = process.env.FRED_PERMIT_S_SERIES_ID || "PERMITS";
 const PERMIT_W_SERIES_ID = process.env.FRED_PERMIT_W_SERIES_ID || "PERMITW";
 
+// 3C: State permits config file
+const STATE_CONFIG_PATH = "config/state_permits.json";
+
 if (!API_KEY) {
   console.error("Missing FRED_API_KEY (set it as a GitHub Actions secret).");
   process.exit(1);
@@ -27,7 +30,6 @@ if (!API_KEY) {
 
 // ---- Helpers ----
 function toNumberSafe(x) {
-  // FRED sometimes returns "." or strings
   const n = Number(x);
   return Number.isFinite(n) ? n : null;
 }
@@ -55,7 +57,7 @@ function lastTwo(history) {
   return { prev, last, delta: last - prev };
 }
 
-// B) YoY: find point closest to ~365 days ago (works for weekly/monthly)
+// YoY: find point closest to ~365 days ago
 function yoyFromHistory(history) {
   if (!history || history.length < 10) return null;
 
@@ -84,8 +86,7 @@ function yoyFromHistory(history) {
   return (last / prev - 1) * 100.0;
 }
 
-// A) Pressure score 0–100 from last ~36 months of LEVELS
-// invert=true means lower level => higher restrictiveness
+// Pressure score 0–100 from last ~36 months of LEVELS
 function pressureScoreFromLevel(history, invert = false) {
   if (!history || history.length < 10) return null;
 
@@ -119,7 +120,6 @@ function bandFromPressureIndex(pi) {
   return "Easy";
 }
 
-// D) Confidence based on component availability + spread
 function confidenceFromSignals({ componentScores }) {
   const available = componentScores.filter(x => typeof x === "number");
   if (available.length < 3) return "Low";
@@ -164,7 +164,6 @@ async function fredObservations(seriesId) {
   url.searchParams.set("sort_order", "asc");
   url.searchParams.set("observation_start", OBS_START);
 
-  // Node 20 has global fetch. If runner ever changes, this is the first thing that breaks.
   const res = await fetch(url.toString(), { headers: { Accept: "application/json" } });
   if (!res.ok) {
     const text = await res.text();
@@ -183,6 +182,67 @@ function makeSignal({ name, region, units, history }) {
   };
 }
 
+// 3C: Read config safely
+function readStateConfig() {
+  try {
+    if (!fs.existsSync(STATE_CONFIG_PATH)) return { max_states: 0, states: [] };
+    const raw = fs.readFileSync(STATE_CONFIG_PATH, "utf8");
+    const parsed = JSON.parse(raw);
+    const states = Array.isArray(parsed.states) ? parsed.states : [];
+    const max_states =
+      typeof parsed.max_states === "number" ? parsed.max_states : 12;
+
+    // Only keep entries that have a non-empty series_id
+    const usable = states
+      .filter(s => s && typeof s.series_id === "string" && s.series_id.trim().length > 0)
+      .map(s => ({
+        code: String(s.code || "").trim(),
+        name: String(s.name || s.code || "").trim(),
+        series_id: String(s.series_id).trim()
+      }))
+      .filter(s => s.series_id.length > 0);
+
+    return { max_states, states: usable };
+  } catch {
+    return { max_states: 0, states: [] };
+  }
+}
+
+async function fetchStatePermitSignals() {
+  const cfg = readStateConfig();
+  const limit = Math.max(0, Math.min(cfg.max_states || 0, 50));
+  const states = (cfg.states || []).slice(0, limit);
+
+  if (!states.length) return { signals: [], loaded: 0, expected: 0 };
+
+  const results = await Promise.all(
+    states.map(async (s) => {
+      try {
+        const data = await fredObservations(s.series_id);
+        const hist = normalizeHistory(data.observations);
+        if (hist.length < 2) return null;
+
+        const regionLabel = s.name || s.code || "State";
+        return makeSignal({
+          name: "Building Permits",
+          region: regionLabel,
+          units: "thousands",
+          history: hist
+        });
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  const usableSignals = results.filter(Boolean);
+  return {
+    signals: usableSignals,
+    loaded: usableSignals.length,
+    expected: states.length
+  };
+}
+
 function buildDashboard({
   mortgageHist,
   cpiHist,
@@ -192,9 +252,12 @@ function buildDashboard({
   permitNEHist,
   permitMWHist,
   permitSHist,
-  permitWHist
+  permitWHist,
+  stateSignalsInfo
 }) {
-  // Signals (Top 5 + regional permits)
+  const stateSignals = stateSignalsInfo?.signals || [];
+
+  // Signals (Top 5 + regional + states)
   const signals = [
     makeSignal({ name: "30Y Mortgage Rate", region: "US", units: "%", history: mortgageHist }),
     makeSignal({ name: "CPI (All Urban Consumers)", region: "US", units: "index", history: cpiHist }),
@@ -202,19 +265,22 @@ function buildDashboard({
     makeSignal({ name: "Housing Starts", region: "US", units: "thousands", history: houstHist }),
     makeSignal({ name: "Building Permits", region: "US", units: "thousands", history: permitHist }),
 
-    // C) Regional divergence
+    // Regional divergence
     makeSignal({ name: "Building Permits", region: "Northeast", units: "thousands", history: permitNEHist }),
     makeSignal({ name: "Building Permits", region: "Midwest", units: "thousands", history: permitMWHist }),
     makeSignal({ name: "Building Permits", region: "South", units: "thousands", history: permitSHist }),
-    makeSignal({ name: "Building Permits", region: "West", units: "thousands", history: permitWHist })
+    makeSignal({ name: "Building Permits", region: "West", units: "thousands", history: permitWHist }),
+
+    // 3C: State permits (from config)
+    ...stateSignals
   ];
 
-  // A) Composite pressure index (0–100)
+  // Composite pressure index (0–100)
   const mortgageScore = pressureScoreFromLevel(mortgageHist, false);
   const cpiYoY = yoyFromHistory(cpiHist);
   const cpiScore =
     (typeof cpiYoY === "number")
-      ? Math.round(clamp01((cpiYoY + 2) / 8) * 100) // heuristic mapping [-2..+6] => 0..100
+      ? Math.round(clamp01((cpiYoY + 2) / 8) * 100)
       : null;
 
   const unrateScore = pressureScoreFromLevel(unrateHist, false);
@@ -239,18 +305,15 @@ function buildDashboard({
 
   const band = bandFromPressureIndex(pi);
 
-  // D) Confidence
   const generated_at = new Date().toISOString();
   const confidence = confidenceFromSignals({
     componentScores: [mortgageScore, cpiScore, unrateScore, permitsScore, startsScore]
   });
 
-  // Alerts keyed to regional YoY divergence
   const permitsSouthYoY = yoyFromHistory(permitSHist);
   const permitsWestYoY = yoyFromHistory(permitWHist);
   const alerts = buildAlerts({ permitsSouthYoY, permitsWestYoY });
 
-  // Delta snippets for deep analysis
   const m = lastTwo(mortgageHist);
   const c = lastTwo(cpiHist);
   const u = lastTwo(unrateHist);
@@ -260,6 +323,14 @@ function buildDashboard({
   if (typeof c.delta === "number") bullets.push(`CPI Δ: ${c.delta >= 0 ? "+" : ""}${c.delta.toFixed(2)}`);
   if (typeof u.delta === "number") bullets.push(`Unemployment Δ: ${u.delta >= 0 ? "+" : ""}${u.delta.toFixed(2)} pts`);
 
+  const statesLoaded = stateSignalsInfo?.loaded ?? 0;
+  const statesExpected = stateSignalsInfo?.expected ?? 0;
+
+  const stateNote =
+    statesExpected > 0
+      ? ` • State permits loaded: ${statesLoaded}/${statesExpected}`
+      : "";
+
   return {
     version: 1,
     generated_at,
@@ -267,14 +338,12 @@ function buildDashboard({
     executive: {
       headline: "Macro conditions auto-updated; watch regional divergence",
       confidence,
-      summary: "Auto-updated from FRED every run."
+      summary: `Auto-updated from FRED every run.${stateNote}`
     },
 
     capital: {
-      // 0–100 composite
       pressure_index: pi ?? 0,
       band,
-      // keep it lightweight for UI charts
       history: (cpiHist || []).slice(-60)
     },
 
@@ -282,7 +351,9 @@ function buildDashboard({
     alerts,
 
     deep_analysis: {
-      what_changed: bullets.length ? bullets.join(" • ") : "YoY and composite pressure index recalculated automatically each run.",
+      what_changed: bullets.length
+        ? (bullets.join(" • ") + stateNote)
+        : ("YoY and composite pressure index recalculated automatically each run." + stateNote),
       what_to_do_next: [
         "Track permits divergence (South vs West) weekly.",
         "Use CPI/UNRATE trend to anticipate rate path and project starts.",
@@ -294,6 +365,8 @@ function buildDashboard({
 
 // ---- Main ----
 (async () => {
+  const stateSignalsInfo = await fetchStatePermitSignals();
+
   const [
     mortgageData, cpiData, unrateData, houstData, permitData,
     permitNEData, permitMWData, permitSData, permitWData
@@ -323,11 +396,12 @@ function buildDashboard({
 
   const dashboard = buildDashboard({
     mortgageHist, cpiHist, unrateHist, houstHist, permitHist,
-    permitNEHist, permitMWHist, permitSHist, permitWHist
+    permitNEHist, permitMWHist, permitSHist, permitWHist,
+    stateSignalsInfo
   });
 
   fs.writeFileSync(OUT_PATH, JSON.stringify(dashboard, null, 2), "utf8");
-  console.log(`Wrote ${OUT_PATH} (primary=${SERIES_ID})`);
+  console.log(`Wrote ${OUT_PATH} (primary=${SERIES_ID}) stateSignals=${stateSignalsInfo.loaded}/${stateSignalsInfo.expected}`);
 })().catch((err) => {
   console.error(err);
   process.exit(1);
