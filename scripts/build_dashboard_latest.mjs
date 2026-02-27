@@ -8,27 +8,24 @@ const SERIES_ID = process.env.FRED_SERIES_ID || "MORTGAGE30US"; // primary
 const OBS_START = process.env.FRED_OBSERVATION_START || "2020-01-01";
 const OUT_PATH = process.env.OUT_PATH || "dashboard_latest.json";
 
-// Base signals (A)
+// Base signals
 const CPI_SERIES_ID = process.env.FRED_CPI_SERIES_ID || "CPIAUCSL";
 const UNRATE_SERIES_ID = process.env.FRED_UNRATE_SERIES_ID || "UNRATE";
 const HOUST_SERIES_ID = process.env.FRED_HOUST_SERIES_ID || "HOUST";
 const PERMIT_SERIES_ID = process.env.FRED_PERMIT_SERIES_ID || "PERMIT";
 
-// Regional permits (B)
+// Regional permits (C)
 const PERMIT_NE_SERIES_ID = process.env.FRED_PERMIT_NE_SERIES_ID || "PERMITNE";
 const PERMIT_MW_SERIES_ID = process.env.FRED_PERMIT_MW_SERIES_ID || "PERMITMW";
 const PERMIT_S_SERIES_ID = process.env.FRED_PERMIT_S_SERIES_ID || "PERMITS";
 const PERMIT_W_SERIES_ID = process.env.FRED_PERMIT_W_SERIES_ID || "PERMITW";
 
-// Phase 3C + 3D config files
+// Config files
 const STATE_CONFIG_PATH = "config/state_permits.json";
 const MSA_CONFIG_PATH = "config/msa_permits.json";
 
-// Phase 2 governance files
-const ORCHESTRATOR_PATH =
-  "framework/orchestrators/national_autonomous_run_orchestrator_v1.json";
-const PRECEDENCE_PATH =
-  "framework/national_execution_precedence_matrix_v1.json";
+// Phase 2 governance (optional)
+const PRECEDENCE_PATH = "framework/national_execution_precedence_matrix_v1.json";
 
 if (!API_KEY) {
   console.error("Missing FRED_API_KEY (set it as a GitHub Actions secret).");
@@ -127,17 +124,6 @@ function bandFromPressureIndex(pi) {
   return "Easy";
 }
 
-// ---- Phase 2: Governance (confidence floor/ceiling) ----
-function readJSONSafe(path) {
-  try {
-    if (!fs.existsSync(path)) return null;
-    const raw = fs.readFileSync(path, "utf8");
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
 function confidenceFromSignals({ componentScores }) {
   const available = componentScores.filter(x => typeof x === "number");
   if (available.length < 3) return "Low";
@@ -150,16 +136,30 @@ function confidenceFromSignals({ componentScores }) {
   return "Medium";
 }
 
-function applyConfidenceGovernance(rawConfidenceLabel, precedence) {
+function readJSONSafe(path) {
+  try {
+    if (!fs.existsSync(path)) return null;
+    return JSON.parse(fs.readFileSync(path, "utf8"));
+  } catch {
+    return null;
+  }
+}
+
+// Optional: governance clamps confidence labels using precedence matrix
+function applyConfidenceGovernance(rawConfidenceLabel) {
+  const precedence = readJSONSafe(PRECEDENCE_PATH);
   if (!precedence || !precedence.confidence_stacking_order) return rawConfidenceLabel;
 
   const floor = precedence.confidence_stacking_order.final_floor ?? 0.4;
   const ceiling = precedence.confidence_stacking_order.final_ceiling ?? 0.9;
 
-  // Label → numeric midpoint
-  const map = { Low: 0.45, Medium: 0.65, High: 0.85 };
-  let numeric = map[rawConfidenceLabel] ?? 0.6;
+  const map = precedence.confidence_stacking_order.label_midpoints || {
+    Low: 0.45,
+    Medium: 0.65,
+    High: 0.85
+  };
 
+  let numeric = map[rawConfidenceLabel] ?? 0.6;
   numeric = Math.max(floor, Math.min(ceiling, numeric));
 
   if (numeric >= 0.8) return "High";
@@ -167,7 +167,6 @@ function applyConfidenceGovernance(rawConfidenceLabel, precedence) {
   return "Low";
 }
 
-// ---- Alerts ----
 function buildAlerts({ permitsSouthYoY, permitsWestYoY }) {
   const alerts = [];
 
@@ -192,7 +191,6 @@ function buildAlerts({ permitsSouthYoY, permitsWestYoY }) {
   return alerts.slice(0, 3);
 }
 
-// ---- FRED ----
 async function fredObservations(seriesId) {
   const url = new URL("https://api.stlouisfed.org/fred/series/observations");
   url.searchParams.set("series_id", seriesId);
@@ -219,57 +217,55 @@ function makeSignal({ name, region, units, history }) {
   };
 }
 
-// ---- Config readers (3C + 3D) ----
-function readPermitConfig(path, defaultMax = 12) {
-  try {
-    if (!fs.existsSync(path)) return { max_items: 0, items: [] };
-    const raw = fs.readFileSync(path, "utf8");
-    const parsed = JSON.parse(raw);
+function readStateConfig() {
+  const parsed = readJSONSafe(STATE_CONFIG_PATH);
+  const states = Array.isArray(parsed?.states) ? parsed.states : [];
+  const max_states = typeof parsed?.max_states === "number" ? parsed.max_states : 12;
 
-    const arr = Array.isArray(parsed.items) ? parsed.items : Array.isArray(parsed.states) ? parsed.states : Array.isArray(parsed.msas) ? parsed.msas : [];
-    const max_items =
-      typeof parsed.max_items === "number" ? parsed.max_items :
-      typeof parsed.max_states === "number" ? parsed.max_states :
-      typeof parsed.max_msas === "number" ? parsed.max_msas :
-      defaultMax;
+  const usable = states
+    .filter(s => s && typeof s.series_id === "string" && s.series_id.trim().length > 0)
+    .map(s => ({
+      code: String(s.code || "").trim(),
+      name: String(s.name || s.code || "").trim(),
+      series_id: String(s.series_id).trim()
+    }));
 
-    const usable = arr
-      .filter(x => x && typeof x.series_id === "string" && x.series_id.trim().length > 0)
-      .map(x => ({
-        code: String(x.code || "").trim(),
-        name: String(x.name || x.code || "").trim(),
-        series_id: String(x.series_id).trim()
-      }))
-      .filter(x => x.series_id.length > 0);
-
-    return { max_items, items: usable };
-  } catch {
-    return { max_items: 0, items: [] };
-  }
+  return { max_states, states: usable };
 }
 
-async function fetchPermitSignalsFromConfig({
-  configPath,
-  limitCap = 50,
-  regionPrefix = ""
-}) {
-  const cfg = readPermitConfig(configPath, 12);
-  const limit = Math.max(0, Math.min(cfg.max_items || 0, limitCap));
-  const items = (cfg.items || []).slice(0, limit);
+function readMsaConfig() {
+  const parsed = readJSONSafe(MSA_CONFIG_PATH);
+  const msas = Array.isArray(parsed?.msas) ? parsed.msas : [];
+  const max_msas = typeof parsed?.max_msas === "number" ? parsed.max_msas : 25;
 
-  if (!items.length) return { signals: [], loaded: 0, expected: 0 };
+  const usable = msas
+    .filter(m => m && typeof m.series_id === "string" && m.series_id.trim().length > 0)
+    .map(m => ({
+      code: String(m.code || "").trim(),
+      name: String(m.name || m.code || "").trim(),
+      series_id: String(m.series_id).trim()
+    }));
+
+  return { max_msas, msas: usable };
+}
+
+async function fetchStatePermitSignals() {
+  const cfg = readStateConfig();
+  const limit = Math.max(0, Math.min(cfg.max_states || 0, 50));
+  const states = (cfg.states || []).slice(0, limit);
+
+  if (!states.length) return { signals: [], loaded: 0, expected: 0 };
 
   const results = await Promise.all(
-    items.map(async (x) => {
+    states.map(async (s) => {
       try {
-        const data = await fredObservations(x.series_id);
+        const data = await fredObservations(s.series_id);
         const hist = normalizeHistory(data.observations);
         if (hist.length < 2) return null;
 
-        const regionLabel = x.name || x.code || "Region";
         return makeSignal({
-          name: "Building Permits",
-          region: regionPrefix ? `${regionPrefix}: ${regionLabel}` : regionLabel,
+          name: "Building Permits (State)",
+          region: s.name || s.code || "State",
           units: "units",
           history: hist
         });
@@ -280,14 +276,39 @@ async function fetchPermitSignalsFromConfig({
   );
 
   const usableSignals = results.filter(Boolean);
-  return {
-    signals: usableSignals,
-    loaded: usableSignals.length,
-    expected: items.length
-  };
+  return { signals: usableSignals, loaded: usableSignals.length, expected: states.length };
 }
 
-// ---- Dashboard builder ----
+async function fetchMsaPermitSignals() {
+  const cfg = readMsaConfig();
+  const limit = Math.max(0, Math.min(cfg.max_msas || 0, 100));
+  const msas = (cfg.msas || []).slice(0, limit);
+
+  if (!msas.length) return { signals: [], loaded: 0, expected: 0 };
+
+  const results = await Promise.all(
+    msas.map(async (m) => {
+      try {
+        const data = await fredObservations(m.series_id);
+        const hist = normalizeHistory(data.observations);
+        if (hist.length < 2) return null;
+
+        return makeSignal({
+          name: "Building Permits (MSA)",
+          region: m.name || m.code || "MSA",
+          units: "units",
+          history: hist
+        });
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  const usableSignals = results.filter(Boolean);
+  return { signals: usableSignals, loaded: usableSignals.length, expected: msas.length };
+}
+
 function buildDashboard({
   mortgageHist,
   cpiHist,
@@ -299,32 +320,27 @@ function buildDashboard({
   permitSHist,
   permitWHist,
   stateSignalsInfo,
-  msaSignalsInfo,
-  orchestrator,
-  precedence
+  msaSignalsInfo
 }) {
   const stateSignals = stateSignalsInfo?.signals || [];
   const msaSignals = msaSignalsInfo?.signals || [];
 
-  // A + B + C + D signals
+  // Signals (Top 5 + regional + state + msa)
   const signals = [
-    // A) Macro (Top 5)
     makeSignal({ name: "30Y Mortgage Rate", region: "US", units: "%", history: mortgageHist }),
     makeSignal({ name: "CPI (All Urban Consumers)", region: "US", units: "index", history: cpiHist }),
     makeSignal({ name: "Unemployment Rate", region: "US", units: "%", history: unrateHist }),
     makeSignal({ name: "Housing Starts", region: "US", units: "thousands", history: houstHist }),
     makeSignal({ name: "Building Permits", region: "US", units: "thousands", history: permitHist }),
 
-    // B) Regional divergence
-    makeSignal({ name: "Building Permits", region: "Northeast", units: "thousands", history: permitNEHist }),
-    makeSignal({ name: "Building Permits", region: "Midwest", units: "thousands", history: permitMWHist }),
-    makeSignal({ name: "Building Permits", region: "South", units: "thousands", history: permitSHist }),
-    makeSignal({ name: "Building Permits", region: "West", units: "thousands", history: permitWHist }),
+    // Regional divergence
+    makeSignal({ name: "Building Permits (Region)", region: "Northeast", units: "thousands", history: permitNEHist }),
+    makeSignal({ name: "Building Permits (Region)", region: "Midwest", units: "thousands", history: permitMWHist }),
+    makeSignal({ name: "Building Permits (Region)", region: "South", units: "thousands", history: permitSHist }),
+    makeSignal({ name: "Building Permits (Region)", region: "West", units: "thousands", history: permitWHist }),
 
-    // C) States
+    // Config-driven expansions
     ...stateSignals,
-
-    // D) MSAs
     ...msaSignals
   ];
 
@@ -358,18 +374,17 @@ function buildDashboard({
 
   const band = bandFromPressureIndex(pi);
 
-  // Confidence + governance
-  const rawConfidence = confidenceFromSignals({
+  const generated_at = new Date().toISOString();
+
+  let confidence = confidenceFromSignals({
     componentScores: [mortgageScore, cpiScore, unrateScore, permitsScore, startsScore]
   });
-  const governedConfidence = applyConfidenceGovernance(rawConfidence, precedence);
+  confidence = applyConfidenceGovernance(confidence);
 
-  // Alerts keyed to regional YoY divergence
   const permitsSouthYoY = yoyFromHistory(permitSHist);
   const permitsWestYoY = yoyFromHistory(permitWHist);
   const alerts = buildAlerts({ permitsSouthYoY, permitsWestYoY });
 
-  // What changed bullets
   const m = lastTwo(mortgageHist);
   const c = lastTwo(cpiHist);
   const u = lastTwo(unrateHist);
@@ -384,13 +399,10 @@ function buildDashboard({
   const msasLoaded = msaSignalsInfo?.loaded ?? 0;
   const msasExpected = msaSignalsInfo?.expected ?? 0;
 
-  const stateNote = statesExpected > 0 ? ` • States loaded: ${statesLoaded}/${statesExpected}` : "";
-  const msaNote = msasExpected > 0 ? ` • MSAs loaded: ${msasLoaded}/${msasExpected}` : "";
-
-  const generated_at = new Date().toISOString();
-
-  const orchestratorVersion = orchestrator?.version ? `orchestrator_v${orchestrator.version}` : "orchestrator_v1";
-  const precedenceVersion = precedence?.version ? `precedence_v${precedence.version}` : "precedence_v1";
+  const noteParts = [];
+  if (statesExpected > 0) noteParts.push(`State permits loaded: ${statesLoaded}/${statesExpected}`);
+  if (msasExpected > 0) noteParts.push(`MSA permits loaded: ${msasLoaded}/${msasExpected}`);
+  const expansionNote = noteParts.length ? ` • ${noteParts.join(" • ")}` : "";
 
   return {
     version: 1,
@@ -398,11 +410,10 @@ function buildDashboard({
 
     executive: {
       headline: "Macro conditions auto-updated; watch regional divergence",
-      confidence: governedConfidence,
-      summary: `Auto-updated from FRED every run. (${orchestratorVersion} • ${precedenceVersion}${stateNote}${msaNote})`
+      confidence,
+      summary: `Auto-updated from FRED every run.${expansionNote}`
     },
 
-    // CPI history powers your CPI trend/sparkline in the UI
     capital: {
       pressure_index: pi ?? 0,
       band,
@@ -414,12 +425,11 @@ function buildDashboard({
 
     deep_analysis: {
       what_changed: bullets.length
-        ? (bullets.join(" • ") + stateNote + msaNote)
-        : ("YoY and composite pressure index recalculated automatically each run." + stateNote + msaNote),
+        ? (bullets.join(" • ") + expansionNote)
+        : ("YoY and composite pressure index recalculated automatically each run." + expansionNote),
       what_to_do_next: [
         "Track permits divergence (South vs West) weekly.",
         "Use CPI/UNRATE trend to anticipate rate path and project starts.",
-        "Use state + MSA permits to identify where volume is accelerating or breaking down.",
         "Prioritize backlog quality and margin protection in restrictive regimes."
       ]
     }
@@ -428,20 +438,10 @@ function buildDashboard({
 
 // ---- Main ----
 (async () => {
-  const orchestrator = readJSONSafe(ORCHESTRATOR_PATH);
-  const precedence = readJSONSafe(PRECEDENCE_PATH);
-
-  const stateSignalsInfo = await fetchPermitSignalsFromConfig({
-    configPath: STATE_CONFIG_PATH,
-    limitCap: 50,
-    regionPrefix: "State"
-  });
-
-  const msaSignalsInfo = await fetchPermitSignalsFromConfig({
-    configPath: MSA_CONFIG_PATH,
-    limitCap: 50,
-    regionPrefix: "MSA"
-  });
+  const [stateSignalsInfo, msaSignalsInfo] = await Promise.all([
+    fetchStatePermitSignals(),
+    fetchMsaPermitSignals()
+  ]);
 
   const [
     mortgageData, cpiData, unrateData, houstData, permitData,
@@ -474,16 +474,12 @@ function buildDashboard({
     mortgageHist, cpiHist, unrateHist, houstHist, permitHist,
     permitNEHist, permitMWHist, permitSHist, permitWHist,
     stateSignalsInfo,
-    msaSignalsInfo,
-    orchestrator,
-    precedence
+    msaSignalsInfo
   });
 
   fs.writeFileSync(OUT_PATH, JSON.stringify(dashboard, null, 2), "utf8");
   console.log(
-    `Wrote ${OUT_PATH} (primary=${SERIES_ID}) ` +
-    `states=${stateSignalsInfo.loaded}/${stateSignalsInfo.expected} ` +
-    `msas=${msaSignalsInfo.loaded}/${msaSignalsInfo.expected}`
+    `Wrote ${OUT_PATH} (primary=${SERIES_ID}) states=${stateSignalsInfo.loaded}/${stateSignalsInfo.expected} msas=${msaSignalsInfo.loaded}/${msaSignalsInfo.expected}`
   );
 })().catch((err) => {
   console.error(err);
