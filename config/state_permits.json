@@ -1,13 +1,5 @@
 {
-  "max_states": 12,
-  "states": [
-    { "code": "TX", "name": "Texas", "series_id": "" },
-    { "code": "FL", "name": "Florida", "series_id": "" },
-    { "code": "CA", "name": "California", "series_id": "" },
-    { "code": "GA", "name": "Georgia", "series_id": "" },
-    { "code": "NC", "name": "North Carolina", "series_id": "" }
-  ]
-// ---- Phase 2: Orchestrator + Precedence Matrix ----
+  // ---- Phase 2: Orchestrator + Precedence Matrix ----
 
 const ORCHESTRATOR_PATH =
   "framework/orchestrators/national_autonomous_run_orchestrator_v1.json";
@@ -48,3 +40,12 @@ function applyConfidenceGovernance(rawConfidenceLabel, precedence) {
   if (numeric >= 0.6) return "Medium";
   return "Low";
 }
+  "max_states": 12,
+  "states": [
+    { "code": "TX", "name": "Texas", "series_id": "" },
+    { "code": "FL", "name": "Florida", "series_id": "" },
+    { "code": "CA", "name": "California", "series_id": "" },
+    { "code": "GA", "name": "Georgia", "series_id": "" },
+    { "code": "NC", "name": "North Carolina", "series_id": "" }
+  ]
+]
