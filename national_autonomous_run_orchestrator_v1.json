@@ -1,0 +1,41 @@
+{
+  "id": "national_autonomous_run_orchestrator_v1",
+  "version": 1,
+  "purpose": "National autonomous refresh run: fetch -> compute -> validate -> publish dashboard artifacts.",
+  "entrypoint": {
+    "runner": "github_actions",
+    "workflow": ".github/workflows/build_dashboard.yml"
+  },
+  "steps": [
+    {
+      "id": "fetch_fred",
+      "type": "data_fetch",
+      "source": "FRED",
+      "required_env": ["FRED_API_KEY"],
+      "notes": "Uses scripts/build_dashboard_latest.mjs to fetch series observations."
+    },
+    {
+      "id": "compute_dashboard",
+      "type": "transform",
+      "script": "scripts/build_dashboard_latest.mjs",
+      "outputs": ["dashboard_latest.json"],
+      "notes": "Builds executive headline, capital pressure index, signals, alerts."
+    },
+    {
+      "id": "validate_contract",
+      "type": "validate",
+      "contract": "framework/contracts/dashboard_ui_contract_v1.json",
+      "on_fail": "stop"
+    },
+    {
+      "id": "publish",
+      "type": "publish",
+      "strategy": "commit_to_repo",
+      "paths": ["dashboard_latest.json"],
+      "commit_message": "Update dashboard_latest.json (national autonomous run)"
+    }
+  ],
+  "governance_refs": [
+    "framework/national_execution_precedence_matrix_v1.json"
+  ]
+}
