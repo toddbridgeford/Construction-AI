@@ -5,14 +5,6 @@
     { "code": "FL", "name": "Florida", "series_id": "FLBPPRIVSA" },
     { "code": "CA", "name": "California", "series_id": "CABPPRIVSA" },
     { "code": "GA", "name": "Georgia", "series_id": "GABPPRIVSA" },
-    { "code": "NC", "name": "North Carolina", "series_id": "NCBPPRIVSA" },
-
-    { "code": "NY", "name": "New York", "series_id": "NYBPPRIVSA" },
-    { "code": "PA", "name": "Pennsylvania", "series_id": "PABPPRIVSA" },
-    { "code": "IL", "name": "Illinois", "series_id": "ILBPPRIVSA" },
-    { "code": "OH", "name": "Ohio", "series_id": "OHBPPRIVSA" },
-    { "code": "AZ", "name": "Arizona", "series_id": "AZBPPRIVSA" },
-
-    { "code": "TX-DFW", "name": "Dallas–Fort Worth–Arlington, TX (MSA)", "series_id": "DALL148BPPRIVSA" }
+    { "code": "NC", "name": "North Carolina", "series_id": "NCBPPRIVSA" }
   ]
 }
