@@ -27,11 +27,8 @@ jobs:
           test -f scripts/build_dashboard_latest.mjs
           test -f config/state_permits.json
           test -f config/msa_permits.json
-
-          # Your repo currently stores these at framework/* (no orchestrators folder)
           test -f framework/national_autonomous_run_orchestrator_v1.json
           test -f framework/national_execution_precedence_matrix_v1.json
-
           echo "All required files exist ✅"
 
       - name: Validate JSON Structure
@@ -51,6 +48,7 @@ jobs:
 
       - name: Validate Output JSON
         run: |
+          set -e
           test -f dashboard_latest.json
           node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8')); console.log('dashboard_latest.json OK ✅')"
 
