@@ -8,3 +8,44 @@
     { "code": "NC", "name": "North Carolina", "series_id": "" }
   ]
 }
+// ---- Phase 2: Orchestrator + Precedence Matrix ----
+
+const ORCHESTRATOR_PATH =
+  "framework/orchestrators/national_autonomous_run_orchestrator_v1.json";
+
+const PRECEDENCE_PATH =
+  "framework/national_execution_precedence_matrix_v1.json";
+
+function readJSONSafe(path) {
+  try {
+    if (!fs.existsSync(path)) return null;
+    const raw = fs.readFileSync(path, "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function applyConfidenceGovernance(rawConfidenceLabel, precedence) {
+  if (!precedence || !precedence.confidence_stacking_order) {
+    return rawConfidenceLabel;
+  }
+
+  const floor = precedence.confidence_stacking_order.final_floor ?? 0.4;
+  const ceiling = precedence.confidence_stacking_order.final_ceiling ?? 0.9;
+
+  // Map label → numeric midpoint
+  const map = {
+    Low: 0.45,
+    Medium: 0.65,
+    High: 0.85
+  };
+
+  let numeric = map[rawConfidenceLabel] ?? 0.6;
+
+  numeric = Math.max(floor, Math.min(ceiling, numeric));
+
+  if (numeric >= 0.8) return "High";
+  if (numeric >= 0.6) return "Medium";
+  return "Low";
+}
