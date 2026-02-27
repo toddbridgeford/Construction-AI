@@ -1,137 +1,24 @@
 {
-  "framework_name": "National Execution Precedence Matrix",
-  "version": "v1.0.2026-02-26",
-  "purpose": "Defines deterministic override hierarchy, conflict resolution, confidence stacking order, and alert persistence across all intelligence layers.",
-
-  "override_hierarchy": {
-    "description": "Higher layers override lower layers when directional or regime conflicts exist.",
-    "order_highest_to_lowest": [
-      "Tier0_Direction_Locks",
-      "Governance_Capital_Preservation_Override",
-      "Liquidity_Regime_Model",
-      "Supply_Regime_Model",
-      "Fusion_Direction_Output",
-      "Predictive_Shift_Engine",
-      "Acceleration_Index",
-      "Macro_NCCI_TPR",
-      "Raw_Ecosystem_Signals"
-    ],
-    "rule": "If a higher layer sets a hard state (e.g., contraction lock), lower layers may not contradict it."
-  },
-
-  "direction_resolution_rules": [
-    {
-      "id": "TIER0_LOCK",
-      "if": "Tier0 lock active",
-      "action": "Force fusion_direction to lock state regardless of macro phase"
-    },
-    {
-      "id": "LIQUIDITY_COMPRESSION_OVERRIDE",
-      "if": "liquidity_regime == LIQUIDITY_COMPRESSION AND predictive_direction == Expansion",
-      "action": "Cap final_direction at Stabilizing"
-    },
-    {
-      "id": "SUPPLY_TIGHTENING_MODIFIER",
-      "if": "supply_regime == SUPPLY_TIGHTENING AND acceleration_index >= 75",
-      "action": "Maintain expansion classification but increase channel_stress weighting by +10%"
-    },
-    {
-      "id": "REGIME_CONFLICT_ALERT",
-      "if": "macro_phase != fusion_direction",
-      "action": "Emit Level_2_Operational alert type=REGIME_CONFLICT"
-    }
-  ],
-
+  "id": "national_execution_precedence_matrix_v1",
+  "version": 1,
   "confidence_stacking_order": {
-    "description": "Confidence adjustments apply in strict order to prevent double-penalty instability.",
-    "sequence": [
-      "Base_Model_Confidence",
-      "Macro_Data_Freshness_Adjustment",
-      "Fusion_Missing_Weight_Adjustment",
-      "Liquidity_Regime_Adjustment",
-      "Supply_Regime_Adjustment",
-      "Acceleration_Adjustments",
-      "Governance_Confidence_Governor_Final"
-    ],
-    "final_floor": 0.40,
-    "final_ceiling": 0.90,
-    "rule": "Final confidence = clamp(sequential_result, floor, ceiling)"
+    "final_floor": 0.4,
+    "final_ceiling": 0.9,
+    "label_midpoints": {
+      "Low": 0.45,
+      "Medium": 0.65,
+      "High": 0.85
+    }
   },
-
-  "alert_persistence_rules": {
-    "description": "Prevents oscillation and alert volatility.",
-    "rules": [
-      {
-        "id": "MARKET_ACCELERATION_COLLAPSE",
-        "trigger": "acceleration_index_drop >= 20",
-        "persistence_required_cycles": 2,
-        "immediate_if_drop_gte": 30
-      },
-      {
-        "id": "REGIME_FLIP",
-        "trigger": "cycle_phase changed",
-        "persistence_required_cycles": 1
-      },
-      {
-        "id": "HOTSPOT_EMERGENCE",
-        "trigger": "density_score >= 80",
-        "persistence_required_cycles": 2
-      },
-      {
-        "id": "CONFIDENCE_DROP",
-        "trigger": "confidence_delta <= -0.15",
-        "persistence_required_cycles": 1
-      }
-    ]
+  "source_precedence": [
+    { "source": "FRED", "priority": 1 },
+    { "source": "BLS", "priority": 2 },
+    { "source": "Census", "priority": 3 },
+    { "source": "Other", "priority": 9 }
+  ],
+  "dedupe_policy": {
+    "key": "name|region",
+    "preference": "most_recent_generated_at"
   },
-
-  "cross_layer_conflict_matrix": {
-    "description": "Defines deterministic resolution when layers disagree.",
-    "cases": [
-      {
-        "case": "Acceleration High + Liquidity Compression",
-        "final_classification": "Moderate Acceleration",
-        "confidence_modifier": -0.10
-      },
-      {
-        "case": "Macro Expansion + Fusion Contraction",
-        "final_direction": "Contraction",
-        "alert": "REGIME_CONFLICT"
-      },
-      {
-        "case": "Supply Tightening + High Opportunity Market",
-        "final_action": "Proceed with margin-protection strategy",
-        "increase_channel_stress_index_points": 5
-      },
-      {
-        "case": "Low Data Freshness + Strong Predictive Signal",
-        "final_confidence_cap": 0.70
-      }
-    ]
-  },
-
-  "execution_sequence_lock": {
-    "description": "Enforces mandatory layer order during each national cycle.",
-    "required_sequence": [
-      "Macro Cycle",
-      "Fusion Engine",
-      "Predictive Shift",
-      "Capital Flow Overlay",
-      "Supply Overlay",
-      "Acceleration Index",
-      "Account Early Warning",
-      "Governance Evaluation",
-      "Confidence Governor",
-      "Snapshot Write",
-      "Dashboard Snapshot Emit"
-    ],
-    "rule": "No layer may emit dashboard objects before Governance and Confidence Governor finalize state."
-  },
-
-  "stability_guards": {
-    "max_regime_changes_per_30_days": 3,
-    "min_cycles_between_major_direction_flips": 2,
-    "prevent_double_penalty_confidence": true,
-    "require_evidence_for_level3": true
-  }
+  "notes": "Used to keep confidence labels within governed bounds and to prevent duplicate signals from being treated as separate items."
 }
