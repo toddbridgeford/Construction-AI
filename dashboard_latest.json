@@ -1,10 +1,12 @@
 {
-  "version": 1,
-  "generated_at": "2026-02-27T15:51:09.054Z",
+  "schema_version": "3.0.0",
+  "generated_at": "2026-02-27T16:17:06.215Z",
+  "orchestrator": "national_autonomous_run_orchestrator_v1",
+  "precedence_matrix": "national_execution_precedence_matrix_v1",
   "executive": {
-    "headline": "Macro conditions auto-updated; watch regional divergence",
+    "headline": "Macro conditions auto-updated; state/MSA permits added; Phase 3 structure active",
     "confidence": "Medium",
-    "summary": "Auto-updated from FRED every run. • State permits loaded: 5/5 • MSA permits loaded: 6/6"
+    "summary": "Auto-updated from FRED. State permits loaded: 5/5 • MSA permits loaded: 6/6"
   },
   "capital": {
     "pressure_index": 41,
@@ -254,10 +256,27 @@
   },
   "signals": [
     {
+      "key": "mortgage30",
       "name": "30Y Mortgage Rate",
-      "region": "US",
-      "yoy": -11.538461538461531,
+      "series_id": "MORTGAGE30US",
       "units": "%",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "national",
+        "geo_id": "US",
+        "geo_name": "United States",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -0.02999999999999936,
+        "mom_pct": -0.49916805324458174,
+        "yoy_pct": -11.538461538461531,
+        "ma_3": 6.026666666666666,
+        "ma_6": 6.063333333333333,
+        "trend_3m_slope": -0.054999999999999716,
+        "trend_arrow": "down"
+      },
       "history": [
         {
           "date": "2020-01-02",
@@ -1550,10 +1569,27 @@
       ]
     },
     {
+      "key": "cpi",
       "name": "CPI (All Urban Consumers)",
-      "region": "US",
-      "yoy": 2.391201432150014,
+      "series_id": "CPIAUCSL",
       "units": "index",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "national",
+        "geo_id": "US",
+        "geo_name": "United States",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": 0.5570000000000164,
+        "mom_pct": 0.1708426499320667,
+        "yoy_pct": 2.391201432150014,
+        "ma_3": 325.894,
+        "ma_6": 324.5645,
+        "trend_3m_slope": 0.762500000000017,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -1846,10 +1882,27 @@
       ]
     },
     {
+      "key": "unrate",
       "name": "Unemployment Rate",
-      "region": "US",
-      "yoy": 7.499999999999996,
+      "series_id": "UNRATE",
       "units": "%",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "national",
+        "geo_id": "US",
+        "geo_name": "United States",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -0.10000000000000053,
+        "mom_pct": -2.2727272727272845,
+        "yoy_pct": 7.499999999999996,
+        "ma_3": 4.3999999999999995,
+        "ma_6": 4.366666666666666,
+        "trend_3m_slope": -0.10000000000000009,
+        "trend_arrow": "down"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -2142,10 +2195,27 @@
       ]
     },
     {
+      "key": "houst",
       "name": "Housing Starts",
-      "region": "US",
-      "yoy": -7.265521796565388,
+      "series_id": "HOUST",
       "units": "thousands",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "national",
+        "geo_id": "US",
+        "geo_name": "United States",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": 82,
+        "mom_pct": 6.202723146747353,
+        "yoy_pct": -7.265521796565388,
+        "ma_3": 1332.6666666666667,
+        "ma_6": 1339.5,
+        "trend_3m_slope": 66,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -2438,10 +2508,27 @@
       ]
     },
     {
+      "key": "permit",
       "name": "Building Permits",
-      "region": "US",
-      "yoy": -2.1621621621621623,
+      "series_id": "PERMIT",
       "units": "thousands",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "national",
+        "geo_id": "US",
+        "geo_name": "United States",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": 60,
+        "mom_pct": 4.322766570605188,
+        "yoy_pct": -2.1621621621621623,
+        "ma_3": 1415.6666666666667,
+        "ma_6": 1392.3333333333333,
+        "trend_3m_slope": 18.5,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -2734,1194 +2821,966 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "Northeast",
-      "yoy": 17.361111111111114,
-      "units": "thousands",
+      "key": "ttlccons",
+      "name": "Construction Spending (Total)",
+      "series_id": "TTLCONS",
+      "units": "millions",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "national",
+        "geo_id": "US",
+        "geo_name": "United States",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": 5656,
+        "mom_pct": 0.26147428782235277,
+        "yoy_pct": -0.3614282918366962,
+        "ma_3": 2166612.6666666665,
+        "ma_6": 2169177.1666666665,
+        "trend_3m_slope": 415.5,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
-          "value": 171
+          "value": 1491029
         },
         {
           "date": "2020-02-01",
-          "value": 131
+          "value": 1498750
         },
         {
           "date": "2020-03-01",
-          "value": 113
+          "value": 1502330
         },
         {
           "date": "2020-04-01",
-          "value": 65
+          "value": 1459363
         },
         {
           "date": "2020-05-01",
-          "value": 104
+          "value": 1449765
         },
         {
           "date": "2020-06-01",
-          "value": 135
+          "value": 1460368
         },
         {
           "date": "2020-07-01",
-          "value": 150
+          "value": 1474508
         },
         {
           "date": "2020-08-01",
-          "value": 120
+          "value": 1489581
         },
         {
           "date": "2020-09-01",
-          "value": 171
+          "value": 1512309
         },
         {
           "date": "2020-10-01",
-          "value": 147
+          "value": 1538356
         },
         {
           "date": "2020-11-01",
-          "value": 165
+          "value": 1552503
         },
         {
           "date": "2020-12-01",
-          "value": 149
+          "value": 1577213
         },
         {
           "date": "2021-01-01",
-          "value": 186
+          "value": 1599028
         },
         {
           "date": "2021-02-01",
-          "value": 173
+          "value": 1575321
         },
         {
           "date": "2021-03-01",
-          "value": 156
+          "value": 1610208
         },
         {
           "date": "2021-04-01",
-          "value": 176
+          "value": 1614849
         },
         {
           "date": "2021-05-01",
-          "value": 151
+          "value": 1627889
         },
         {
           "date": "2021-06-01",
-          "value": 139
+          "value": 1639031
         },
         {
           "date": "2021-07-01",
-          "value": 133
+          "value": 1661485
         },
         {
           "date": "2021-08-01",
-          "value": 154
+          "value": 1664988
         },
         {
           "date": "2021-09-01",
-          "value": 134
+          "value": 1673006
         },
         {
           "date": "2021-10-01",
-          "value": 130
+          "value": 1689011
         },
         {
           "date": "2021-11-01",
-          "value": 157
+          "value": 1731866
         },
         {
           "date": "2021-12-01",
-          "value": 282
+          "value": 1763060
         },
         {
           "date": "2022-01-01",
-          "value": 144
+          "value": 1808519
         },
         {
           "date": "2022-02-01",
-          "value": 189
+          "value": 1844343
         },
         {
           "date": "2022-03-01",
-          "value": 196
+          "value": 1876116
         },
         {
           "date": "2022-04-01",
-          "value": 177
+          "value": 1911323
         },
         {
           "date": "2022-05-01",
-          "value": 140
+          "value": 1925882
         },
         {
           "date": "2022-06-01",
-          "value": 178
+          "value": 1917963
         },
         {
           "date": "2022-07-01",
-          "value": 160
+          "value": 1924328
         },
         {
           "date": "2022-08-01",
-          "value": 147
+          "value": 1917606
         },
         {
           "date": "2022-09-01",
-          "value": 154
+          "value": 1919931
         },
         {
           "date": "2022-10-01",
-          "value": 121
+          "value": 1916369
         },
         {
           "date": "2022-11-01",
-          "value": 135
+          "value": 1918913
         },
         {
           "date": "2022-12-01",
-          "value": 141
+          "value": 1928393
         },
         {
           "date": "2023-01-01",
-          "value": 136
+          "value": 1957962
         },
         {
           "date": "2023-02-01",
-          "value": 149
+          "value": 1976696
         },
         {
           "date": "2023-03-01",
-          "value": 169
+          "value": 1996401
         },
         {
           "date": "2023-04-01",
-          "value": 130
+          "value": 2023621
         },
         {
           "date": "2023-05-01",
-          "value": 169
+          "value": 2054535
         },
         {
           "date": "2023-06-01",
-          "value": 136
+          "value": 2071559
         },
         {
           "date": "2023-07-01",
-          "value": 122
+          "value": 2085773
         },
         {
           "date": "2023-08-01",
-          "value": 155
+          "value": 2108277
         },
         {
           "date": "2023-09-01",
-          "value": 131
+          "value": 2123480
         },
         {
           "date": "2023-10-01",
-          "value": 150
+          "value": 2142735
         },
         {
           "date": "2023-11-01",
-          "value": 114
+          "value": 2167301
         },
         {
           "date": "2023-12-01",
-          "value": 127
+          "value": 2176796
         },
         {
           "date": "2024-01-01",
-          "value": 148
+          "value": 2161405
         },
         {
           "date": "2024-02-01",
-          "value": 224
+          "value": 2184616
         },
         {
           "date": "2024-03-01",
-          "value": 139
+          "value": 2174863
         },
         {
           "date": "2024-04-01",
-          "value": 152
+          "value": 2206494
         },
         {
           "date": "2024-05-01",
-          "value": 120
+          "value": 2215350
         },
         {
           "date": "2024-06-01",
-          "value": 118
+          "value": 2199846
         },
         {
           "date": "2024-07-01",
-          "value": 140
+          "value": 2200746
         },
         {
           "date": "2024-08-01",
-          "value": 142
+          "value": 2205322
         },
         {
           "date": "2024-09-01",
-          "value": 123
+          "value": 2197940
         },
         {
           "date": "2024-10-01",
-          "value": 137
+          "value": 2197116
         },
         {
           "date": "2024-11-01",
-          "value": 134
+          "value": 2192932
         },
         {
           "date": "2024-12-01",
-          "value": 144
+          "value": 2176642
         },
         {
           "date": "2025-01-01",
-          "value": 133
+          "value": 2169595
         },
         {
           "date": "2025-02-01",
-          "value": 117
+          "value": 2165431
         },
         {
           "date": "2025-03-01",
-          "value": 119
+          "value": 2150847
         },
         {
           "date": "2025-04-01",
-          "value": 136
+          "value": 2153440
         },
         {
           "date": "2025-05-01",
-          "value": 123
+          "value": 2149124
         },
         {
           "date": "2025-06-01",
-          "value": 103
+          "value": 2160743
         },
         {
           "date": "2025-07-01",
-          "value": 125
+          "value": 2168482
         },
         {
           "date": "2025-08-01",
-          "value": 121
+          "value": 2177240
         },
         {
           "date": "2025-09-01",
-          "value": 147
+          "value": 2169503
         },
         {
           "date": "2025-10-01",
-          "value": 147
+          "value": 2167944
         },
         {
           "date": "2025-11-01",
-          "value": 117
+          "value": 2163119
         },
         {
           "date": "2025-12-01",
-          "value": 169
+          "value": 2168775
         }
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "Midwest",
-      "yoy": -4.977375565610864,
-      "units": "thousands",
+      "key": "tlrescons",
+      "name": "Construction Spending (Residential)",
+      "series_id": "TLRESCONS",
+      "units": "millions",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "national",
+        "geo_id": "US",
+        "geo_name": "United States",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": 13329,
+        "mom_pct": 1.4565271078610285,
+        "yoy_pct": -1.2006589098617293,
+        "ma_3": 919524,
+        "ma_6": 920305.5,
+        "trend_3m_slope": 6726,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
-          "value": 212
+          "value": 606865
         },
         {
           "date": "2020-02-01",
-          "value": 194
+          "value": 615730
         },
         {
           "date": "2020-03-01",
-          "value": 161
+          "value": 624159
         },
         {
           "date": "2020-04-01",
-          "value": 144
+          "value": 603115
         },
         {
           "date": "2020-05-01",
-          "value": 171
+          "value": 593736
         },
         {
           "date": "2020-06-01",
-          "value": 195
+          "value": 599249
         },
         {
           "date": "2020-07-01",
-          "value": 244
+          "value": 620266
         },
         {
           "date": "2020-08-01",
-          "value": 198
+          "value": 651042
         },
         {
           "date": "2020-09-01",
-          "value": 219
+          "value": 673737
         },
         {
           "date": "2020-10-01",
-          "value": 221
+          "value": 696270
         },
         {
           "date": "2020-11-01",
-          "value": 233
+          "value": 714207
         },
         {
           "date": "2020-12-01",
-          "value": 257
+          "value": 735727
         },
         {
           "date": "2021-01-01",
-          "value": 244
+          "value": 756380
         },
         {
           "date": "2021-02-01",
-          "value": 243
+          "value": 746026
         },
         {
           "date": "2021-03-01",
-          "value": 236
+          "value": 764767
         },
         {
           "date": "2021-04-01",
-          "value": 224
+          "value": 776307
         },
         {
           "date": "2021-05-01",
-          "value": 224
+          "value": 790176
         },
         {
           "date": "2021-06-01",
-          "value": 212
+          "value": 800589
         },
         {
           "date": "2021-07-01",
-          "value": 218
+          "value": 817080
         },
         {
           "date": "2021-08-01",
-          "value": 215
+          "value": 821571
         },
         {
           "date": "2021-09-01",
-          "value": 219
+          "value": 831778
         },
         {
           "date": "2021-10-01",
-          "value": 233
+          "value": 843194
         },
         {
           "date": "2021-11-01",
-          "value": 215
+          "value": 867312
         },
         {
           "date": "2021-12-01",
-          "value": 262
+          "value": 895699
         },
         {
           "date": "2022-01-01",
-          "value": 272
+          "value": 923595
         },
         {
           "date": "2022-02-01",
-          "value": 233
+          "value": 944418
         },
         {
           "date": "2022-03-01",
-          "value": 239
+          "value": 963823
         },
         {
           "date": "2022-04-01",
-          "value": 253
+          "value": 974556
         },
         {
           "date": "2022-05-01",
-          "value": 231
+          "value": 988269
         },
         {
           "date": "2022-06-01",
-          "value": 203
+          "value": 964347
         },
         {
           "date": "2022-07-01",
-          "value": 222
+          "value": 942248
         },
         {
           "date": "2022-08-01",
-          "value": 203
+          "value": 926427
         },
         {
           "date": "2022-09-01",
-          "value": 213
+          "value": 909346
         },
         {
           "date": "2022-10-01",
-          "value": 221
+          "value": 898393
         },
         {
           "date": "2022-11-01",
-          "value": 199
+          "value": 882720
         },
         {
           "date": "2022-12-01",
-          "value": 180
+          "value": 871124
         },
         {
           "date": "2023-01-01",
-          "value": 177
+          "value": 863557
         },
         {
           "date": "2023-02-01",
-          "value": 192
+          "value": 859624
         },
         {
           "date": "2023-03-01",
-          "value": 202
+          "value": 853359
         },
         {
           "date": "2023-04-01",
-          "value": 181
+          "value": 854124
         },
         {
           "date": "2023-05-01",
-          "value": 201
+          "value": 871099
         },
         {
           "date": "2023-06-01",
-          "value": 200
+          "value": 878384
         },
         {
           "date": "2023-07-01",
-          "value": 199
+          "value": 892997
         },
         {
           "date": "2023-08-01",
-          "value": 213
+          "value": 893316
         },
         {
           "date": "2023-09-01",
-          "value": 201
+          "value": 897219
         },
         {
           "date": "2023-10-01",
-          "value": 174
+          "value": 897269
         },
         {
           "date": "2023-11-01",
-          "value": 199
+          "value": 902002
         },
         {
           "date": "2023-12-01",
-          "value": 202
+          "value": 904580
         },
         {
           "date": "2024-01-01",
-          "value": 220
+          "value": 912796
         },
         {
           "date": "2024-02-01",
-          "value": 234
+          "value": 925821
         },
         {
           "date": "2024-03-01",
-          "value": 196
+          "value": 919502
         },
         {
           "date": "2024-04-01",
-          "value": 170
+          "value": 947059
         },
         {
           "date": "2024-05-01",
-          "value": 183
+          "value": 963902
         },
         {
           "date": "2024-06-01",
-          "value": 208
+          "value": 952517
         },
         {
           "date": "2024-07-01",
-          "value": 194
+          "value": 946982
         },
         {
           "date": "2024-08-01",
-          "value": 209
+          "value": 943874
         },
         {
           "date": "2024-09-01",
-          "value": 204
+          "value": 938409
         },
         {
           "date": "2024-10-01",
-          "value": 200
+          "value": 937550
         },
         {
           "date": "2024-11-01",
-          "value": 221
+          "value": 935625
         },
         {
           "date": "2024-12-01",
-          "value": 221
+          "value": 939734
         },
         {
           "date": "2025-01-01",
-          "value": 220
+          "value": 923551
         },
         {
           "date": "2025-02-01",
-          "value": 239
+          "value": 920572
         },
         {
           "date": "2025-03-01",
-          "value": 209
+          "value": 909661
         },
         {
           "date": "2025-04-01",
-          "value": 194
+          "value": 906503
         },
         {
           "date": "2025-05-01",
-          "value": 217
+          "value": 903854
         },
         {
           "date": "2025-06-01",
-          "value": 218
+          "value": 913515
         },
         {
           "date": "2025-07-01",
-          "value": 221
+          "value": 919504
         },
         {
           "date": "2025-08-01",
-          "value": 202
+          "value": 928293
         },
         {
           "date": "2025-09-01",
-          "value": 203
+          "value": 915464
         },
         {
           "date": "2025-10-01",
-          "value": 198
+          "value": 914999
         },
         {
           "date": "2025-11-01",
-          "value": 197
+          "value": 915122
         },
         {
           "date": "2025-12-01",
-          "value": 210
+          "value": 928451
         }
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "South",
-      "yoy": -10.945273631840791,
-      "units": "thousands",
+      "key": "tlnrescons",
+      "name": "Construction Spending (Nonresidential)",
+      "series_id": "TLNRESCONS",
+      "units": "millions",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "national",
+        "geo_id": "US",
+        "geo_name": "United States",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -7673,
+        "mom_pct": -0.6148251958939004,
+        "yoy_pct": 0.2760914505432588,
+        "ma_3": 1247088.6666666667,
+        "ma_6": 1248871.5,
+        "trend_3m_slope": -6310.5,
+        "trend_arrow": "down"
+      },
       "history": [
         {
           "date": "2020-01-01",
-          "value": 741
+          "value": 884163
         },
         {
           "date": "2020-02-01",
-          "value": 759
+          "value": 883020
         },
         {
           "date": "2020-03-01",
-          "value": 732
+          "value": 878172
         },
         {
           "date": "2020-04-01",
-          "value": 616
+          "value": 856248
         },
         {
           "date": "2020-05-01",
-          "value": 682
+          "value": 856029
         },
         {
           "date": "2020-06-01",
-          "value": 697
+          "value": 861119
         },
         {
           "date": "2020-07-01",
-          "value": 777
+          "value": 854243
         },
         {
           "date": "2020-08-01",
-          "value": 836
+          "value": 838539
         },
         {
           "date": "2020-09-01",
-          "value": 861
+          "value": 838572
         },
         {
           "date": "2020-10-01",
-          "value": 856
+          "value": 842086
         },
         {
           "date": "2020-11-01",
-          "value": 904
+          "value": 838297
         },
         {
           "date": "2020-12-01",
-          "value": 900
+          "value": 841486
         },
         {
           "date": "2021-01-01",
-          "value": 944
+          "value": 842648
         },
         {
           "date": "2021-02-01",
-          "value": 866
+          "value": 829296
         },
         {
           "date": "2021-03-01",
-          "value": 934
+          "value": 845441
         },
         {
           "date": "2021-04-01",
-          "value": 900
+          "value": 838542
         },
         {
           "date": "2021-05-01",
-          "value": 921
+          "value": 837714
         },
         {
           "date": "2021-06-01",
-          "value": 917
+          "value": 838443
         },
         {
           "date": "2021-07-01",
-          "value": 878
+          "value": 844405
         },
         {
           "date": "2021-08-01",
-          "value": 926
+          "value": 843417
         },
         {
           "date": "2021-09-01",
-          "value": 896
+          "value": 841229
         },
         {
           "date": "2021-10-01",
-          "value": 896
+          "value": 845817
         },
         {
           "date": "2021-11-01",
-          "value": 954
+          "value": 864553
         },
         {
           "date": "2021-12-01",
-          "value": 949
+          "value": 867361
         },
         {
           "date": "2022-01-01",
-          "value": 1028
+          "value": 884924
         },
         {
           "date": "2022-02-01",
-          "value": 959
+          "value": 899925
         },
         {
           "date": "2022-03-01",
-          "value": 980
+          "value": 912293
         },
         {
           "date": "2022-04-01",
-          "value": 995
+          "value": 936767
         },
         {
           "date": "2022-05-01",
-          "value": 931
+          "value": 937613
         },
         {
           "date": "2022-06-01",
-          "value": 933
+          "value": 953616
         },
         {
           "date": "2022-07-01",
-          "value": 935
+          "value": 982080
         },
         {
           "date": "2022-08-01",
-          "value": 836
+          "value": 991179
         },
         {
           "date": "2022-09-01",
-          "value": 860
+          "value": 1010585
         },
         {
           "date": "2022-10-01",
-          "value": 912
+          "value": 1017976
         },
         {
           "date": "2022-11-01",
-          "value": 790
+          "value": 1036194
         },
         {
           "date": "2022-12-01",
-          "value": 769
+          "value": 1057270
         },
         {
           "date": "2023-01-01",
-          "value": 794
+          "value": 1094405
         },
         {
           "date": "2023-02-01",
-          "value": 892
+          "value": 1117072
         },
         {
           "date": "2023-03-01",
-          "value": 789
+          "value": 1143042
         },
         {
           "date": "2023-04-01",
-          "value": 817
+          "value": 1169497
         },
         {
           "date": "2023-05-01",
-          "value": 847
+          "value": 1183436
         },
         {
           "date": "2023-06-01",
-          "value": 794
+          "value": 1193175
         },
         {
           "date": "2023-07-01",
-          "value": 853
+          "value": 1192776
         },
         {
           "date": "2023-08-01",
-          "value": 828
+          "value": 1214961
         },
         {
           "date": "2023-09-01",
-          "value": 859
+          "value": 1226261
         },
         {
           "date": "2023-10-01",
-          "value": 865
+          "value": 1245466
         },
         {
           "date": "2023-11-01",
-          "value": 811
+          "value": 1265298
         },
         {
           "date": "2023-12-01",
-          "value": 856
+          "value": 1272216
         },
         {
           "date": "2024-01-01",
-          "value": 826
+          "value": 1248609
         },
         {
           "date": "2024-02-01",
-          "value": 796
+          "value": 1258796
         },
         {
           "date": "2024-03-01",
-          "value": 798
+          "value": 1255361
         },
         {
           "date": "2024-04-01",
-          "value": 836
+          "value": 1259435
         },
         {
           "date": "2024-05-01",
-          "value": 781
+          "value": 1251447
         },
         {
           "date": "2024-06-01",
-          "value": 809
+          "value": 1247329
         },
         {
           "date": "2024-07-01",
-          "value": 787
+          "value": 1253764
         },
         {
           "date": "2024-08-01",
-          "value": 813
+          "value": 1261448
         },
         {
           "date": "2024-09-01",
-          "value": 769
+          "value": 1259531
         },
         {
           "date": "2024-10-01",
-          "value": 761
+          "value": 1259566
         },
         {
           "date": "2024-11-01",
-          "value": 814
+          "value": 1257306
         },
         {
           "date": "2024-12-01",
-          "value": 804
+          "value": 1236909
         },
         {
           "date": "2025-01-01",
-          "value": 796
+          "value": 1246043
         },
         {
           "date": "2025-02-01",
-          "value": 803
+          "value": 1244859
         },
         {
           "date": "2025-03-01",
-          "value": 834
+          "value": 1241186
         },
         {
           "date": "2025-04-01",
-          "value": 762
+          "value": 1246937
         },
         {
           "date": "2025-05-01",
-          "value": 742
+          "value": 1245271
         },
         {
           "date": "2025-06-01",
-          "value": 775
+          "value": 1247227
         },
         {
           "date": "2025-07-01",
-          "value": 742
+          "value": 1248978
         },
         {
           "date": "2025-08-01",
-          "value": 699
+          "value": 1248947
         },
         {
           "date": "2025-09-01",
-          "value": 756
+          "value": 1254038
         },
         {
           "date": "2025-10-01",
-          "value": 729
+          "value": 1252945
         },
         {
           "date": "2025-11-01",
-          "value": 747
+          "value": 1247997
         },
         {
           "date": "2025-12-01",
-          "value": 716
+          "value": 1240324
         }
       ]
     },
     {
+      "key": "permits_state_tx",
       "name": "Building Permits",
-      "region": "West",
-      "yoy": 13.5048231511254,
-      "units": "thousands",
-      "history": [
-        {
-          "date": "2020-01-01",
-          "value": 371
-        },
-        {
-          "date": "2020-02-01",
-          "value": 371
-        },
-        {
-          "date": "2020-03-01",
-          "value": 340
-        },
-        {
-          "date": "2020-04-01",
-          "value": 251
-        },
-        {
-          "date": "2020-05-01",
-          "value": 293
-        },
-        {
-          "date": "2020-06-01",
-          "value": 307
-        },
-        {
-          "date": "2020-07-01",
-          "value": 375
-        },
-        {
-          "date": "2020-08-01",
-          "value": 379
-        },
-        {
-          "date": "2020-09-01",
-          "value": 385
-        },
-        {
-          "date": "2020-10-01",
-          "value": 389
-        },
-        {
-          "date": "2020-11-01",
-          "value": 401
-        },
-        {
-          "date": "2020-12-01",
-          "value": 446
-        },
-        {
-          "date": "2021-01-01",
-          "value": 481
-        },
-        {
-          "date": "2021-02-01",
-          "value": 429
-        },
-        {
-          "date": "2021-03-01",
-          "value": 430
-        },
-        {
-          "date": "2021-04-01",
-          "value": 421
-        },
-        {
-          "date": "2021-05-01",
-          "value": 407
-        },
-        {
-          "date": "2021-06-01",
-          "value": 386
-        },
-        {
-          "date": "2021-07-01",
-          "value": 429
-        },
-        {
-          "date": "2021-08-01",
-          "value": 441
-        },
-        {
-          "date": "2021-09-01",
-          "value": 391
-        },
-        {
-          "date": "2021-10-01",
-          "value": 448
-        },
-        {
-          "date": "2021-11-01",
-          "value": 439
-        },
-        {
-          "date": "2021-12-01",
-          "value": 426
-        },
-        {
-          "date": "2022-01-01",
-          "value": 476
-        },
-        {
-          "date": "2022-02-01",
-          "value": 476
-        },
-        {
-          "date": "2022-03-01",
-          "value": 453
-        },
-        {
-          "date": "2022-04-01",
-          "value": 434
-        },
-        {
-          "date": "2022-05-01",
-          "value": 402
-        },
-        {
-          "date": "2022-06-01",
-          "value": 423
-        },
-        {
-          "date": "2022-07-01",
-          "value": 386
-        },
-        {
-          "date": "2022-08-01",
-          "value": 371
-        },
-        {
-          "date": "2022-09-01",
-          "value": 373
-        },
-        {
-          "date": "2022-10-01",
-          "value": 340
-        },
-        {
-          "date": "2022-11-01",
-          "value": 277
-        },
-        {
-          "date": "2022-12-01",
-          "value": 320
-        },
-        {
-          "date": "2023-01-01",
-          "value": 303
-        },
-        {
-          "date": "2023-02-01",
-          "value": 385
-        },
-        {
-          "date": "2023-03-01",
-          "value": 320
-        },
-        {
-          "date": "2023-04-01",
-          "value": 346
-        },
-        {
-          "date": "2023-05-01",
-          "value": 358
-        },
-        {
-          "date": "2023-06-01",
-          "value": 334
-        },
-        {
-          "date": "2023-07-01",
-          "value": 348
-        },
-        {
-          "date": "2023-08-01",
-          "value": 365
-        },
-        {
-          "date": "2023-09-01",
-          "value": 346
-        },
-        {
-          "date": "2023-10-01",
-          "value": 339
-        },
-        {
-          "date": "2023-11-01",
-          "value": 379
-        },
-        {
-          "date": "2023-12-01",
-          "value": 334
-        },
-        {
-          "date": "2024-01-01",
-          "value": 351
-        },
-        {
-          "date": "2024-02-01",
-          "value": 323
-        },
-        {
-          "date": "2024-03-01",
-          "value": 343
-        },
-        {
-          "date": "2024-04-01",
-          "value": 301
-        },
-        {
-          "date": "2024-05-01",
-          "value": 323
-        },
-        {
-          "date": "2024-06-01",
-          "value": 326
-        },
-        {
-          "date": "2024-07-01",
-          "value": 315
-        },
-        {
-          "date": "2024-08-01",
-          "value": 312
-        },
-        {
-          "date": "2024-09-01",
-          "value": 338
-        },
-        {
-          "date": "2024-10-01",
-          "value": 330
-        },
-        {
-          "date": "2024-11-01",
-          "value": 339
-        },
-        {
-          "date": "2024-12-01",
-          "value": 311
-        },
-        {
-          "date": "2025-01-01",
-          "value": 311
-        },
-        {
-          "date": "2025-02-01",
-          "value": 295
-        },
-        {
-          "date": "2025-03-01",
-          "value": 319
-        },
-        {
-          "date": "2025-04-01",
-          "value": 330
-        },
-        {
-          "date": "2025-05-01",
-          "value": 312
-        },
-        {
-          "date": "2025-06-01",
-          "value": 297
-        },
-        {
-          "date": "2025-07-01",
-          "value": 274
-        },
-        {
-          "date": "2025-08-01",
-          "value": 308
-        },
-        {
-          "date": "2025-09-01",
-          "value": 309
-        },
-        {
-          "date": "2025-10-01",
-          "value": 337
-        },
-        {
-          "date": "2025-11-01",
-          "value": 327
-        },
-        {
-          "date": "2025-12-01",
-          "value": 353
-        }
-      ]
-    },
-    {
-      "name": "Building Permits",
-      "region": "Texas",
-      "yoy": -19.938598200067847,
+      "series_id": "TXBPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "state",
+        "geo_id": "TX",
+        "geo_name": "Texas",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -3553.311186635199,
+        "mom_pct": -18.305597432242266,
+        "yoy_pct": -19.938598200067847,
+        "ma_3": 16180.705442646266,
+        "ma_6": 17081.552569281517,
+        "trend_3m_slope": 1292.2262682029505,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -4206,10 +4065,27 @@
       ]
     },
     {
+      "key": "permits_state_fl",
       "name": "Building Permits",
-      "region": "Florida",
-      "yoy": 13.253440325866661,
+      "series_id": "FLBPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "state",
+        "geo_id": "FL",
+        "geo_name": "Florida",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": 1346.268415643999,
+        "mom_pct": 9.439215359542903,
+        "yoy_pct": 13.253440325866661,
+        "ma_3": 14182.181692423133,
+        "ma_6": 14681.388558693849,
+        "trend_3m_slope": 1466.75104146175,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -4494,10 +4370,27 @@
       ]
     },
     {
+      "key": "permits_state_ca",
       "name": "Building Permits",
-      "region": "California",
-      "yoy": 2.3406979117710724,
+      "series_id": "CABPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "state",
+        "geo_id": "CA",
+        "geo_name": "California",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -468.4061195518989,
+        "mom_pct": -4.995944726693074,
+        "yoy_pct": 2.3406979117710724,
+        "ma_3": 8826.560322580386,
+        "ma_6": 8438.423729109538,
+        "trend_3m_slope": 355.3433233003652,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -4782,10 +4675,27 @@
       ]
     },
     {
+      "key": "permits_state_ga",
       "name": "Building Permits",
-      "region": "Georgia",
-      "yoy": 32.837063578901414,
+      "series_id": "GABPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "state",
+        "geo_id": "GA",
+        "geo_name": "Georgia",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": 479.6079898812095,
+        "mom_pct": 8.952156333766753,
+        "yoy_pct": 32.837063578901414,
+        "ma_3": 5017.32088736675,
+        "ma_6": 4957.402881251241,
+        "trend_3m_slope": 989.8132266220748,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -5070,10 +4980,27 @@
       ]
     },
     {
+      "key": "permits_state_nc",
       "name": "Building Permits",
-      "region": "North Carolina",
-      "yoy": -13.419719559266552,
+      "series_id": "NCBPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "state",
+        "geo_id": "NC",
+        "geo_name": "North Carolina",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -626.0206821747497,
+        "mom_pct": -8.830010857925243,
+        "yoy_pct": -13.419719559266552,
+        "ma_3": 6684.273483892571,
+        "ma_6": 6826.2629004886185,
+        "trend_3m_slope": -17.891060089054918,
+        "trend_arrow": "down"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -5358,10 +5285,27 @@
       ]
     },
     {
-      "name": "Building Permits (MSA)",
-      "region": "Dallas–Fort Worth, TX",
-      "yoy": -14.84689573618807,
+      "key": "permits_msa_dallas",
+      "name": "Building Permits",
+      "series_id": "DALL148BPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "msa",
+        "geo_id": "DALLAS",
+        "geo_name": "Dallas–Fort Worth, TX",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -991.1013409287998,
+        "mom_pct": -17.163122800678106,
+        "yoy_pct": -14.84689573618807,
+        "ma_3": 5178.010629427334,
+        "ma_6": 5457.004419741929,
+        "trend_3m_slope": -96.22032926369957,
+        "trend_arrow": "down"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -5646,10 +5590,27 @@
       ]
     },
     {
-      "name": "Building Permits (MSA)",
-      "region": "Miami–Fort Lauderdale, FL",
-      "yoy": -4.551469816792697,
+      "key": "permits_msa_miami",
+      "name": "Building Permits",
+      "series_id": "MIAM112BPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "msa",
+        "geo_id": "MIAMI",
+        "geo_name": "Miami–Fort Lauderdale, FL",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -338.0199539453199,
+        "mom_pct": -19.57230698664182,
+        "yoy_pct": -4.551469816792697,
+        "ma_3": 1310.707120567972,
+        "ma_6": 1893.6191439223028,
+        "trend_3m_slope": 286.466975476922,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -5934,10 +5895,27 @@
       ]
     },
     {
-      "name": "Building Permits (MSA)",
-      "region": "Los Angeles–Long Beach, CA",
-      "yoy": 14.64704566307895,
+      "key": "permits_msa_losangeles",
+      "name": "Building Permits",
+      "series_id": "LOSA106BPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "msa",
+        "geo_id": "LOSANGELES",
+        "geo_name": "Los Angeles–Long Beach, CA",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": 264.18129959091993,
+        "mom_pct": 11.830194375462904,
+        "yoy_pct": 14.64704566307895,
+        "ma_3": 2386.5204303763803,
+        "ma_6": 2236.4002386301167,
+        "trend_3m_slope": 34.06623693757001,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -6222,10 +6200,27 @@
       ]
     },
     {
-      "name": "Building Permits (MSA)",
-      "region": "Atlanta, GA",
-      "yoy": 15.75587163848915,
+      "key": "permits_msa_atlanta",
+      "name": "Building Permits",
+      "series_id": "ATLA013BPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "msa",
+        "geo_id": "ATLANTA",
+        "geo_name": "Atlanta, GA",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -473.56913650524984,
+        "mom_pct": -13.35299104793938,
+        "yoy_pct": 15.75587163848915,
+        "ma_3": 2842.6797454012703,
+        "ma_6": 2747.6259633500504,
+        "trend_3m_slope": 582.2208836049201,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -6510,10 +6505,27 @@
       ]
     },
     {
-      "name": "Building Permits (MSA)",
-      "region": "Charlotte, NC",
-      "yoy": 6.241874870679043,
+      "key": "permits_msa_charlotte",
+      "name": "Building Permits",
+      "series_id": "CHAR737BPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "msa",
+        "geo_id": "CHARLOTTE",
+        "geo_name": "Charlotte, NC",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": 172.25701211746014,
+        "mom_pct": 10.469744540452261,
+        "yoy_pct": 6.241874870679043,
+        "ma_3": 1675.0915216118835,
+        "ma_6": 1778.4897165979917,
+        "trend_3m_slope": 127.54544821032505,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -6798,10 +6810,27 @@
       ]
     },
     {
-      "name": "Building Permits (MSA)",
-      "region": "Houston, TX",
-      "yoy": -19.36921938639209,
+      "key": "permits_msa_houston",
+      "name": "Building Permits",
+      "series_id": "HOUS448BPPRIVSA",
       "units": "units",
+      "dimensions": {
+        "frequency": "monthly",
+        "sa_flag": "SA",
+        "geo_level": "msa",
+        "geo_id": "HOUSTON",
+        "geo_name": "Houston, TX",
+        "segment": "total"
+      },
+      "derived": {
+        "mom_change": -154.8644455550002,
+        "mom_pct": -2.8307477144130297,
+        "yoy_pct": -19.36921938639209,
+        "ma_3": 4831.430791409003,
+        "ma_6": 5158.920700448518,
+        "trend_3m_slope": 804.1840469116999,
+        "trend_arrow": "up"
+      },
       "history": [
         {
           "date": "2020-01-01",
@@ -7087,12 +7116,17 @@
     }
   ],
   "alerts": [],
+  "panels": {
+    "public_market": {
+      "rows": []
+    }
+  },
   "deep_analysis": {
     "what_changed": "Mortgage Δ: -0.03 pts • CPI Δ: +0.56 • Unemployment Δ: -0.10 pts • State permits loaded: 5/5 • MSA permits loaded: 6/6",
     "what_to_do_next": [
-      "Track permits divergence (South vs West) weekly.",
-      "Use CPI/UNRATE trend to anticipate rate path and project starts.",
-      "Prioritize backlog quality and margin protection in restrictive regimes."
+      "Use trend_arrow + yoy_pct to detect inflections earlier than headlines.",
+      "Compare permits across states vs MSAs to spot concentration and divergence.",
+      "Add a market snapshot (optional) to fill Panel A without new dependencies."
     ]
   }
 }
