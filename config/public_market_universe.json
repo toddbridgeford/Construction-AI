@@ -1,19 +1,90 @@
 {
   "version": 1,
-  "tickers": [
-    { "ticker": "FLR", "company_name": "Fluor", "subsector": "EPC", "exposure_tags": ["industrial", "energy", "government"] },
-    { "ticker": "J", "company_name": "Jacobs Solutions", "subsector": "EPC", "exposure_tags": ["infrastructure", "government"] },
-    { "ticker": "ACM", "company_name": "AECOM", "subsector": "EPC", "exposure_tags": ["infrastructure", "commercial"] },
-    { "ticker": "KBR", "company_name": "KBR", "subsector": "EPC", "exposure_tags": ["government", "energy"] },
-    { "ticker": "TPC", "company_name": "Tutor Perini", "subsector": "Heavy Civil", "exposure_tags": ["infrastructure"] },
-    { "ticker": "GVA", "company_name": "Granite Construction", "subsector": "Heavy Civil", "exposure_tags": ["infrastructure"] },
-    { "ticker": "STRL", "company_name": "Sterling Infrastructure", "subsector": "Heavy Civil", "exposure_tags": ["infrastructure"] },
-
-    { "ticker": "EME", "company_name": "EMCOR", "subsector": "Specialty", "exposure_tags": ["MEP", "commercial"] },
-    { "ticker": "PWR", "company_name": "Quanta Services", "subsector": "Specialty", "exposure_tags": ["electrification", "grid"] },
-    { "ticker": "FIX", "company_name": "Comfort Systems USA", "subsector": "Specialty", "exposure_tags": ["HVAC", "commercial"] },
-    { "ticker": "MTZ", "company_name": "MasTec", "subsector": "Specialty", "exposure_tags": ["energy", "infrastructure"] },
-
-    { "ticker": "PHM", "company_name": "PulteGroup", "subsector": "Homebuilder", "exposure_tags": ["residential", "rate_sensitive"] }
+  "asof": "2026-02-27",
+  "rows": [
+    {
+      "ticker": "FLR",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "J",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "ACM",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "KBR",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "TPC",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "GVA",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "STRL",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "EME",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "PWR",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "FIX",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "MTZ",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    },
+    {
+      "ticker": "PHM",
+      "price_change_1w": null,
+      "price_change_1m": null,
+      "price_change_ytd": null,
+      "signal_flag": null
+    }
   ]
 }
