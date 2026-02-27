@@ -1,0 +1,181 @@
+{
+  "framework_name": "National Autonomous Run Orchestrator",
+  "version": "v1.0.2026-02-26",
+  "purpose": "Deterministic conductor that executes national intelligence layers in strict order, applies precedence/confidence rules, and emits a UI-ready dashboard snapshot.",
+
+  "inputs": {
+    "scope": "US",
+    "run_mode": "scheduled",
+    "time_horizon_months": 36,
+    "smoothing": {
+      "type": "rolling_average",
+      "window_months": 3
+    }
+  },
+
+  "references": {
+    "precedence_matrix": "framework/national_execution_precedence_matrix_v1.json",
+
+    "governance": "autonomous_command_governance_v1.json",
+    "auto_trigger_policy": "auto_trigger_refresh_and_delta_thresholds_policy_v1.json",
+    "snapshot_layer": "snapshot_versioning_and_replay_layer_v1.json",
+
+    "macro_engine": "national_macro_cycle_engine_v1.json",
+    "fusion_engine": "universal_fusion_engine_v2.json",
+    "predictive_engine": "predictive_starter_engine_v1.json",
+    "predictive_extension": "predictive_autonomous_intelligence_extension_v1.json",
+    "acceleration_engine": "rule_based_construction_acceleration_index_v1.json",
+    "transmission_matrix": "transmission_matrix_and_lags_v2.json",
+
+    "ui_contract": "dashboard_ui_contract_v1.json",
+    "views_spec": "dashboard_views_spec_apple_v1.json"
+  },
+
+  "execution_contract": {
+    "must_run_in_order": true,
+    "no_dashboard_emit_before": [
+      "Governance Evaluation",
+      "Confidence Governor",
+      "Snapshot Write"
+    ],
+    "override_hierarchy_source": "references.precedence_matrix"
+  },
+
+  "run_sequence": [
+    {
+      "step": 1,
+      "name": "Macro Cycle",
+      "engine_ref": "references.macro_engine",
+      "produces": ["macro_state", "macro_phase", "tpr_score", "macro_confidence", "macro_inputs_used"]
+    },
+    {
+      "step": 2,
+      "name": "Fusion Engine",
+      "engine_ref": "references.fusion_engine",
+      "consumes": ["macro_state", "tpr_score"],
+      "produces": ["fusion_direction", "fusion_score", "fusion_confidence", "dominant_drivers", "missing_weight_mass"]
+    },
+    {
+      "step": 3,
+      "name": "Predictive Shift",
+      "engine_ref": "references.predictive_engine",
+      "consumes": ["macro_state", "fusion_direction", "dominant_drivers"],
+      "produces": ["predictive_direction", "predictive_shift_score", "predictive_confidence"]
+    },
+    {
+      "step": 4,
+      "name": "Predictive Extension",
+      "engine_ref": "references.predictive_extension",
+      "consumes": ["predictive_direction", "predictive_shift_score"],
+      "produces": ["forecast_90d", "risk_flags_90d"]
+    },
+    {
+      "step": 5,
+      "name": "Acceleration Index",
+      "engine_ref": "references.acceleration_engine",
+      "consumes": ["macro_state", "predictive_direction"],
+      "produces": ["acceleration_index", "hotspots", "acceleration_confidence"]
+    },
+    {
+      "step": 6,
+      "name": "Apply Transmission Lags",
+      "engine_ref": "references.transmission_matrix",
+      "consumes": ["macro_state", "fusion_direction", "predictive_direction"],
+      "produces": ["lag_adjusted_impacts", "expected_turning_windows"]
+    },
+    {
+      "step": 7,
+      "name": "Governance Evaluation",
+      "engine_ref": "references.governance",
+      "consumes": [
+        "macro_state",
+        "fusion_direction",
+        "predictive_direction",
+        "acceleration_index",
+        "risk_flags_90d",
+        "missing_weight_mass"
+      ],
+      "produces": ["governance_actions", "hard_overrides", "alert_candidates"]
+    },
+    {
+      "step": 8,
+      "name": "Confidence Governor",
+      "engine_ref": "references.precedence_matrix",
+      "consumes": [
+        "macro_confidence",
+        "fusion_confidence",
+        "predictive_confidence",
+        "acceleration_confidence",
+        "missing_weight_mass",
+        "hard_overrides"
+      ],
+      "produces": ["final_confidence", "confidence_label"]
+    },
+    {
+      "step": 9,
+      "name": "Alert Persistence Filter",
+      "engine_ref": "references.precedence_matrix",
+      "consumes": ["alert_candidates"],
+      "produces": ["final_alerts"]
+    },
+    {
+      "step": 10,
+      "name": "Snapshot Write",
+      "engine_ref": "references.snapshot_layer",
+      "consumes": [
+        "macro_state",
+        "fusion_direction",
+        "predictive_direction",
+        "acceleration_index",
+        "final_confidence",
+        "final_alerts"
+      ],
+      "produces": ["snapshot_id", "snapshot_timestamp", "delta_summary"]
+    },
+    {
+      "step": 11,
+      "name": "Dashboard Snapshot Emit",
+      "engine_ref": "references.ui_contract",
+      "consumes": [
+        "snapshot_timestamp",
+        "final_confidence",
+        "macro_state",
+        "fusion_direction",
+        "predictive_direction",
+        "acceleration_index",
+        "final_alerts",
+        "delta_summary"
+      ],
+      "produces": ["dashboard_latest_json"]
+    }
+  ],
+
+  "outputs": {
+    "primary_dashboard_file": "dashboard_latest.json",
+    "required_fields": [
+      "version",
+      "generated_at",
+      "executive.headline",
+      "executive.confidence",
+      "executive.summary",
+      "capital.pressure_index",
+      "capital.band",
+      "capital.history",
+      "signals"
+    ],
+    "recommended_meta": {
+      "include_refresh_timestamps": true,
+      "fields": ["meta.last_macro_refresh", "meta.last_ecosystem_refresh"]
+    }
+  },
+
+  "stability_rules": {
+    "conflict_detection": {
+      "emit_regime_conflict_alert_if": "macro_phase != fusion_direction"
+    },
+    "confidence_floor": 0.4,
+    "confidence_ceiling": 0.9,
+    "max_regime_changes_per_30_days": 3,
+    "min_cycles_between_major_direction_flips": 2
+  }
+}
