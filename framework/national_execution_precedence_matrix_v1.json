@@ -6,14 +6,7 @@
     "final_ceiling": 0.9
   },
   "rules": {
-    "prefer_primary_macro_sources": [
-      "FRED",
-      "BLS",
-      "Census"
-    ],
-    "fallback_order": [
-      "cache",
-      "last_successful_snapshot"
-    ]
+    "prefer_primary_macro_sources": ["FRED", "BLS", "Census"],
+    "fallback_order": ["cache", "last_successful_snapshot"]
   }
 }
