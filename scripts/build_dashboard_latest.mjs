@@ -8,6 +8,7 @@ const OBS_START = process.env.FRED_OBSERVATION_START || null;
 
 const FRED_CONFIG_PATH = "config/fred_signals.json";
 const STATE_CONFIG_PATH = "config/state_permits.json";
+const MSA_CONFIG_PATH = "config/msa_permits.json";
 
 const PRECEDENCE_PATH = "framework/national_execution_precedence_matrix_v1.json";
 
@@ -41,7 +42,7 @@ function normalizeHistory(observations) {
     .filter(p => p.value !== null);
 }
 
-// YoY: find the observation closest to ~365 days ago (stable across weekly/monthly)
+// YoY: closest point to ~365 days ago
 function yoyFromHistory(history) {
   if (!history || history.length < 10) return null;
 
@@ -61,7 +62,7 @@ function yoyFromHistory(history) {
     }
   }
 
-  if (!best || bestAbsDays > 45) return null; // avoid nonsense on short histories
+  if (!best || bestAbsDays > 45) return null;
   if (best.value === 0) return null;
 
   return (lastPt.value / best.value - 1) * 100.0;
@@ -73,14 +74,13 @@ function clamp01(x) {
   return x;
 }
 
-// 0–100 “pressure” score from last ~36 months min/max.
-// invert=true means lower level = more restrictive (permits/starts/spending)
+// 0–100 pressure score from last ~36 months
 function pressureScoreFromLevel(history, invert = false) {
   if (!history || history.length < 10) return null;
 
   const lastPt = history[history.length - 1];
   const lastDt = parseDate(lastPt.date);
-  const cutoff = new Date(lastDt.getTime() - 36 * 30 * 24 * 3600 * 1000); // ~36 months
+  const cutoff = new Date(lastDt.getTime() - 36 * 30 * 24 * 3600 * 1000);
 
   const window = history
     .filter(p => parseDate(p.date) >= cutoff)
@@ -120,7 +120,7 @@ function confidenceFromComponents(componentScores) {
   return "Medium";
 }
 
-// Phase 2 governance: apply floor/ceiling from precedence matrix
+// Governance (optional)
 function applyConfidenceGovernance(rawConfidenceLabel, precedence) {
   if (!precedence || !precedence.confidence_stacking_order) return rawConfidenceLabel;
 
@@ -163,24 +163,40 @@ function makeSignal({ name, region, units, history }) {
   };
 }
 
+// -------- Config readers --------
 function readStateConfig() {
   const parsed = readJSONSafe(STATE_CONFIG_PATH);
   if (!parsed) return { max_states: 0, states: [] };
 
-  const max_states = typeof parsed.max_states === "number" ? parsed.max_states : 12;
+  const max_states = typeof parsed.max_states === "number" ? parsed.max_states : 50;
   const states = Array.isArray(parsed.states) ? parsed.states : [];
 
-  const usable = states
-    .filter(s => s && typeof s.series_id === "string" && s.series_id.trim().length > 0)
-    .map(s => ({
-      code: String(s.code || "").trim(),
-      name: String(s.name || s.code || "").trim(),
-      series_id: String(s.series_id).trim()
-    }));
+  // Keep all, even if series missing — fetch will soft-fail per item
+  const usable = states.map(s => ({
+    code: String(s.code || "").trim(),
+    name: String(s.name || s.code || "").trim(),
+    series_id: String(s.series_id || "").trim()
+  }));
 
   return { max_states, states: usable };
 }
 
+function readMSAConfig() {
+  const parsed = readJSONSafe(MSA_CONFIG_PATH);
+  if (!parsed) return { max_msas: 0, msas: [] };
+
+  const max_msas = typeof parsed.max_msas === "number" ? parsed.max_msas : 25;
+  const msas = Array.isArray(parsed.msas) ? parsed.msas : [];
+
+  const usable = msas.map(m => ({
+    name: String(m.name || "").trim(),
+    series_id: String(m.series_id || "").trim()
+  }));
+
+  return { max_msas, msas: usable };
+}
+
+// -------- Fetchers (soft-fail) --------
 async function fetchStatePermitSignals(observationStart) {
   const cfg = readStateConfig();
   const limit = Math.max(0, Math.min(cfg.max_states || 0, 50));
@@ -190,6 +206,7 @@ async function fetchStatePermitSignals(observationStart) {
 
   const results = await Promise.all(
     states.map(async (s) => {
+      if (!s.series_id) return null;
       try {
         const data = await fredObservations(s.series_id, observationStart);
         const hist = normalizeHistory(data.observations);
@@ -208,12 +225,84 @@ async function fetchStatePermitSignals(observationStart) {
   );
 
   const usableSignals = results.filter(Boolean);
-  return { signals: usableSignals, loaded: usableSignals.length, expected: states.length };
+  return { signals: usableSignals, loaded: usableSignals.length, expected: states.filter(s => !!s.series_id).length };
+}
+
+async function fetchMSAPermitSignals(observationStart) {
+  const cfg = readMSAConfig();
+  const limit = Math.max(0, Math.min(cfg.max_msas || 0, 200));
+  const msas = (cfg.msas || []).slice(0, limit);
+
+  if (!msas.length) return { signals: [], loaded: 0, expected: 0 };
+
+  const results = await Promise.all(
+    msas.map(async (m) => {
+      if (!m.series_id) return null;
+      try {
+        const data = await fredObservations(m.series_id, observationStart);
+        const hist = normalizeHistory(data.observations);
+        if (hist.length < 2) return null;
+
+        return makeSignal({
+          name: "Building Permits",
+          region: m.name,
+          units: "units",
+          history: hist
+        });
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  const usableSignals = results.filter(Boolean);
+  return { signals: usableSignals, loaded: usableSignals.length, expected: msas.filter(m => !!m.series_id).length };
+}
+
+// -------- Ranking + Divergence Alerts (A3) --------
+function buildGeoAlerts({ stateSignalsInfo, msaSignalsInfo }) {
+  const alerts = [];
+
+  function rankSignals(signals, label) {
+    const usable = (signals || [])
+      .map(s => ({ region: s.region || "Unknown", yoy: typeof s.yoy === "number" ? s.yoy : null }))
+      .filter(x => typeof x.yoy === "number");
+
+    usable.sort((a, b) => b.yoy - a.yoy);
+
+    if (usable.length >= 5) {
+      const top3 = usable.slice(0, 3);
+      const bot3 = usable.slice(-3).reverse();
+
+      const topText = top3.map(x => `${x.region} ${x.yoy.toFixed(1)}%`).join(", ");
+      const botText = bot3.map(x => `${x.region} ${x.yoy.toFixed(1)}%`).join(", ");
+
+      alerts.push({
+        title: `${label} permits leaders`,
+        why_it_matters: `Top YoY: ${topText}. Laggards: ${botText}.`,
+        severity: "monitor"
+      });
+
+      const spread = top3[0].yoy - bot3[0].yoy;
+      if (spread >= 10) {
+        alerts.push({
+          title: `${label} divergence widening`,
+          why_it_matters: `YoY spread between best and worst is ~${spread.toFixed(1)} pts; adjust territory focus.`,
+          severity: "watch"
+        });
+      }
+    }
+  }
+
+  rankSignals(stateSignalsInfo?.signals || [], "State");
+  rankSignals(msaSignalsInfo?.signals || [], "MSA");
+
+  return alerts.slice(0, 5);
 }
 
 // ---------------- Build Dashboard ----------------
-function buildDashboard({ signalsMap, stateSignalsInfo, precedence }) {
-  // Pull key histories for CPI index + pressure index components
+function buildDashboard({ signalsMap, stateSignalsInfo, msaSignalsInfo, precedence }) {
+  // Core histories for PI components
   const mortgageHist = signalsMap.mortgage30?.history || [];
   const cpiHist = signalsMap.cpi?.history || [];
   const unrateHist = signalsMap.unrate?.history || [];
@@ -224,7 +313,7 @@ function buildDashboard({ signalsMap, stateSignalsInfo, precedence }) {
   const mortgageScore = pressureScoreFromLevel(mortgageHist, false);
   const cpiYoY = yoyFromHistory(cpiHist);
   const cpiScore = (typeof cpiYoY === "number")
-    ? Math.round(clamp01((cpiYoY + 2) / 8) * 100) // heuristic map
+    ? Math.round(clamp01((cpiYoY + 2) / 8) * 100)
     : null;
 
   const unrateScore = pressureScoreFromLevel(unrateHist, false);
@@ -252,33 +341,34 @@ function buildDashboard({ signalsMap, stateSignalsInfo, precedence }) {
   const rawConfidence = confidenceFromComponents([mortgageScore, cpiScore, unrateScore, permitsScore, startsScore]);
   const confidence = applyConfidenceGovernance(rawConfidence, precedence);
 
-  const headline =
-    pi >= 70
-      ? "Restrictive regime: protect margin and backlog quality"
-      : pi >= 55
-      ? "Tight conditions: disciplined growth required"
-      : pi >= 40
-      ? "Neutral cycle: selective expansion"
-      : "Easy capital environment: opportunity expansion";
-
   const statesLoaded = stateSignalsInfo?.loaded ?? 0;
   const statesExpected = stateSignalsInfo?.expected ?? 0;
-  const stateNote = statesExpected > 0 ? ` • State permits loaded: ${statesLoaded}/${statesExpected}` : "";
+  const msasLoaded = msaSignalsInfo?.loaded ?? 0;
+  const msasExpected = msaSignalsInfo?.expected ?? 0;
 
-  // Signals: all config signals + state signals
+  const noteParts = [];
+  if (statesExpected > 0) noteParts.push(`States: ${statesLoaded}/${statesExpected}`);
+  if (msasExpected > 0) noteParts.push(`MSAs: ${msasLoaded}/${msasExpected}`);
+  const geoNote = noteParts.length ? ` • ${noteParts.join(" • ")}` : "";
+
+  // Signals: config signals + geo signals
   const signals = [
     ...Object.values(signalsMap).map(x => x.signal),
-    ...(stateSignalsInfo?.signals || [])
+    ...(stateSignalsInfo?.signals || []),
+    ...(msaSignalsInfo?.signals || [])
   ];
 
+  // A3 alerts
+  const geoAlerts = buildGeoAlerts({ stateSignalsInfo, msaSignalsInfo });
+
   return {
-    version: 2,
+    version: 3,
     generated_at: new Date().toISOString(),
 
     executive: {
-      headline,
+      headline: "Macro auto-updated; geo divergence surfaced (states + MSAs)",
       confidence,
-      summary: `Auto-updated from FRED every run.${stateNote}`
+      summary: `Auto-updated from FRED every run.${geoNote}`
     },
 
     capital: {
@@ -288,14 +378,14 @@ function buildDashboard({ signalsMap, stateSignalsInfo, precedence }) {
     },
 
     signals,
-    alerts: [],
+    alerts: geoAlerts,
 
     deep_analysis: {
-      what_changed: `Composite PI + YoY recomputed automatically.${stateNote}`,
+      what_changed: `Composite PI + YoY recalculated. Geo ranking + divergence alerts enabled.${geoNote}`,
       what_to_do_next: [
-        "Track permits divergence (South vs West) weekly.",
-        "Use CPI/UNRATE trend to anticipate rate path and project starts.",
-        "Prioritize backlog quality and margin protection in restrictive regimes."
+        "Use state/metro leaders to prioritize territory coverage.",
+        "Watch widening dispersion: rebalance resources weekly.",
+        "Keep pricing discipline in restrictive bands."
       ]
     }
   };
@@ -315,10 +405,11 @@ function buildDashboard({ signalsMap, stateSignalsInfo, precedence }) {
     fredCfg.observation_start_default ||
     "2020-01-01";
 
-  // Fetch state signals in parallel
-  const stateSignalsInfoPromise = fetchStatePermitSignals(observationStart);
+  // Fetch geo signals in parallel
+  const stateSignalsPromise = fetchStatePermitSignals(observationStart);
+  const msaSignalsPromise = fetchMSAPermitSignals(observationStart);
 
-  // Fetch configured signals
+  // Fetch core configured signals
   const fetched = await Promise.all(
     fredCfg.signals.map(async (s) => {
       const data = await fredObservations(s.series_id, observationStart);
@@ -336,12 +427,13 @@ function buildDashboard({ signalsMap, stateSignalsInfo, precedence }) {
   const signalsMap = {};
   for (const item of fetched) signalsMap[item.key] = item;
 
-  const stateSignalsInfo = await stateSignalsInfoPromise;
+  const stateSignalsInfo = await stateSignalsPromise;
+  const msaSignalsInfo = await msaSignalsPromise;
 
-  const dashboard = buildDashboard({ signalsMap, stateSignalsInfo, precedence });
+  const dashboard = buildDashboard({ signalsMap, stateSignalsInfo, msaSignalsInfo, precedence });
 
   fs.writeFileSync(OUT_PATH, JSON.stringify(dashboard, null, 2), "utf8");
-  console.log(`Wrote ${OUT_PATH} with ${dashboard.signals.length} signals (states: ${stateSignalsInfo.loaded}/${stateSignalsInfo.expected})`);
+  console.log(`Wrote ${OUT_PATH} signals=${dashboard.signals.length} states=${stateSignalsInfo.loaded}/${stateSignalsInfo.expected} msas=${msaSignalsInfo.loaded}/${msaSignalsInfo.expected}`);
 })().catch((err) => {
   console.error(err);
   process.exit(1);
