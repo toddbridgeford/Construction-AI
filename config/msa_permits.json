@@ -1,11 +1,11 @@
 {
   "max_msas": 12,
   "msas": [
-    { "code": "DAL", "name": "Dallas–Fort Worth–Arlington, TX", "series_id": "DALL148BPPRIVSA" },
-    { "code": "HOU", "name": "Houston–The Woodlands–Sugar Land, TX", "series_id": "HOUS448BPPRIVSA" },
-    { "code": "MIA", "name": "Miami–Fort Lauderdale–Pompano Beach, FL", "series_id": "MIAM112BPPRIVSA" },
-    { "code": "LAX", "name": "Los Angeles–Long Beach–Anaheim, CA", "series_id": "LOSA106BPPRIVSA" },
-    { "code": "ATL", "name": "Atlanta–Sandy Springs–Alpharetta, GA", "series_id": "ATLA013BPPRIVSA" },
-    { "code": "CLT", "name": "Charlotte–Concord–Gastonia, NC–SC", "series_id": "CHAR737BPPRIVSA" }
+    { "code": "DAL", "name": "Dallas–Fort Worth–Arlington, TX (MSA)", "series_id": "DALL148BPPRIVSA" },
+    { "code": "HOU", "name": "Houston–The Woodlands–Sugar Land, TX (MSA)", "series_id": "HOUS448BPPRIVSA" },
+    { "code": "MIA", "name": "Miami–Fort Lauderdale–Pompano Beach, FL (MSA)", "series_id": "MIAM112BPPRIVSA" },
+    { "code": "LA",  "name": "Los Angeles–Long Beach–Anaheim, CA (MSA)", "series_id": "LOSA106BPPRIVSA" },
+    { "code": "ATL", "name": "Atlanta–Sandy Springs–Alpharetta, GA (MSA)", "series_id": "ATLA013BPPRIVSA" },
+    { "code": "CLT", "name": "Charlotte–Concord–Gastonia, NC–SC (MSA)", "series_id": "CHAR737BPPRIVSA" }
   ]
 }
