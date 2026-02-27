@@ -2,91 +2,49 @@ name: Update dashboard_latest.json (FRED)
 
 on:
   workflow_dispatch:
-    inputs:
-      series_id:
-        description: "FRED series_id (default: MORTGAGE30US)"
-        required: false
-        default: "MORTGAGE30US"
-      observation_start:
-        description: "Observation start date YYYY-MM-DD"
-        required: false
-        default: "2020-01-01"
-
   schedule:
-    - cron: "7 * * * *" # every hour at :07
-
-permissions:
-  contents: write
-
-concurrency:
-  group: update-dashboard-latest
-  cancel-in-progress: true
+    - cron: '0 11 * * 1-5'  # 6AM EST weekdays (adjust as needed)
 
 jobs:
-  build-and-commit:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      # Pull latest first so pushes don't get rejected (safe for concurrent runs)
-      - name: Sync branch
-        run: |
-          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
 
-      - name: Build dashboard_latest.json
+      - name: Validate Required Files
+        run: |
+          test -f framework/orchestrators/national_autonomous_run_orchestrator_v1.json
+          test -f framework/orchestrators/national_execution_precedence_matrix_v1.json
+          test -f config/state_permits.json
+          test -f config/msa_permits.json
+
+      - name: Validate JSON Structure
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('config/state_permits.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('config/msa_permits.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('framework/orchestrators/national_autonomous_run_orchestrator_v1.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('framework/orchestrators/national_execution_precedence_matrix_v1.json'))"
+
+      - name: Run Build Script
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-          OUT_PATH: dashboard_latest.json
+        run: node scripts/build_dashboard_latest.mjs
 
-          # Defaults for scheduled runs (inputs don't exist on schedule events)
-          FRED_CPI_SERIES_ID: CPIAUCSL
-          FRED_UNRATE_SERIES_ID: UNRATE
-          FRED_HOUST_SERIES_ID: HOUST
-          FRED_PERMIT_SERIES_ID: PERMIT
-
-          # Regional permits (C)
-          FRED_PERMIT_NE_SERIES_ID: PERMITNE
-          FRED_PERMIT_MW_SERIES_ID: PERMITMW
-          FRED_PERMIT_S_SERIES_ID: PERMITS
-          FRED_PERMIT_W_SERIES_ID: PERMITW
+      - name: Validate Output JSON
         run: |
-          # Inputs exist only for workflow_dispatch. For schedule, these come through empty.
-          SERIES_ID="${{ github.event.inputs.series_id }}"
-          OBS_START="${{ github.event.inputs.observation_start }}"
+          node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json'))"
 
-          if [ -z "$SERIES_ID" ]; then SERIES_ID="MORTGAGE30US"; fi
-          if [ -z "$OBS_START" ]; then OBS_START="2020-01-01"; fi
-
-          echo "Using SERIES_ID=$SERIES_ID"
-          echo "Using OBS_START=$OBS_START"
-
-          export FRED_SERIES_ID="$SERIES_ID"
-          export FRED_OBSERVATION_START="$OBS_START"
-
-          node scripts/build_dashboard_latest.mjs
-
-      - name: Commit & push if changed
+      - name: Commit changes
         run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-
-            git add dashboard_latest.json
-            git commit -m "Update dashboard_latest.json (FRED)"
-
-            # Pull/rebase one more time right before pushing (extra safety)
-            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
-
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          else
-            echo "No changes."
-          fi
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add dashboard_latest.json
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update dashboard_latest.json"
+          git push
