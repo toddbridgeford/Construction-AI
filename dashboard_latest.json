@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-02-27T14:06:47.841Z",
+  "generated_at": "2026-02-27T14:41:06.313Z",
   "executive": {
     "headline": "Macro conditions auto-updated; watch regional divergence",
     "confidence": "Medium",
@@ -3918,7 +3918,7 @@
       ]
     },
     {
-      "name": "Building Permits (State)",
+      "name": "Building Permits",
       "region": "Texas",
       "yoy": -19.938598200067847,
       "units": "units",
@@ -4206,7 +4206,7 @@
       ]
     },
     {
-      "name": "Building Permits (State)",
+      "name": "Building Permits",
       "region": "Florida",
       "yoy": 13.253440325866661,
       "units": "units",
@@ -4494,7 +4494,7 @@
       ]
     },
     {
-      "name": "Building Permits (State)",
+      "name": "Building Permits",
       "region": "California",
       "yoy": 2.3406979117710724,
       "units": "units",
@@ -4782,7 +4782,7 @@
       ]
     },
     {
-      "name": "Building Permits (State)",
+      "name": "Building Permits",
       "region": "Georgia",
       "yoy": 32.837063578901414,
       "units": "units",
@@ -5070,7 +5070,7 @@
       ]
     },
     {
-      "name": "Building Permits (State)",
+      "name": "Building Permits",
       "region": "North Carolina",
       "yoy": -13.419719559266552,
       "units": "units",
@@ -7092,7 +7092,7 @@
     "what_to_do_next": [
       "Track permits divergence (South vs West) weekly.",
       "Use CPI/UNRATE trend to anticipate rate path and project starts.",
-      "Watch state + MSA dispersion for demand pockets and supply constraints."
+      "Prioritize backlog quality and margin protection in restrictive regimes."
     ]
   }
 }
