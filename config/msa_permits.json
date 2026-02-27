@@ -2,7 +2,7 @@
   "max_msas": 12,
   "msas": [
     {
-      "code": "DFW",
+      "code": "DAL",
       "name": "Dallas–Fort Worth–Arlington, TX",
       "series_id": "DALL148BPPRIVSA"
     },
@@ -17,7 +17,7 @@
       "series_id": "MIAM112BPPRIVSA"
     },
     {
-      "code": "LAX",
+      "code": "LA",
       "name": "Los Angeles–Long Beach–Anaheim, CA",
       "series_id": "LOSA106BPPRIVSA"
     },
@@ -30,31 +30,6 @@
       "code": "CLT",
       "name": "Charlotte–Concord–Gastonia, NC–SC",
       "series_id": "CHAR737BPPRIVSA"
-    },
-    {
-      "code": "PHX",
-      "name": "Phoenix–Mesa–Chandler, AZ",
-      "series_id": ""
-    },
-    {
-      "code": "TPA",
-      "name": "Tampa–St. Petersburg–Clearwater, FL",
-      "series_id": ""
-    },
-    {
-      "code": "ORL",
-      "name": "Orlando–Kissimmee–Sanford, FL",
-      "series_id": ""
-    },
-    {
-      "code": "AUS",
-      "name": "Austin–Round Rock–Georgetown, TX",
-      "series_id": ""
-    },
-    {
-      "code": "SAT",
-      "name": "San Antonio–New Braunfels, TX",
-      "series_id": ""
     }
   ]
 }
