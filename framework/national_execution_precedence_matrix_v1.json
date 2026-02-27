@@ -1,24 +1,12 @@
 {
-  "id": "national_execution_precedence_matrix_v1",
   "version": 1,
+  "name": "national_execution_precedence_matrix_v1",
   "confidence_stacking_order": {
     "final_floor": 0.4,
-    "final_ceiling": 0.9,
-    "label_midpoints": {
-      "Low": 0.45,
-      "Medium": 0.65,
-      "High": 0.85
-    }
+    "final_ceiling": 0.9
   },
-  "source_precedence": [
-    { "source": "FRED", "priority": 1 },
-    { "source": "BLS", "priority": 2 },
-    { "source": "Census", "priority": 3 },
-    { "source": "Other", "priority": 9 }
-  ],
-  "dedupe_policy": {
-    "key": "name|region",
-    "preference": "most_recent_generated_at"
-  },
-  "notes": "Used to keep confidence labels within governed bounds and to prevent duplicate signals from being treated as separate items."
+  "rules": {
+    "prefer_primary_macro_sources": ["FRED", "BLS", "Census"],
+    "fallback_order": ["cache", "last_successful_snapshot"]
+  }
 }
