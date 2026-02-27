@@ -1,0 +1,10 @@
+{
+  "max_states": 12,
+  "states": [
+    { "code": "TX", "name": "Texas", "series_id": "" },
+    { "code": "FL", "name": "Florida", "series_id": "" },
+    { "code": "CA", "name": "California", "series_id": "" },
+    { "code": "GA", "name": "Georgia", "series_id": "" },
+    { "code": "NC", "name": "North Carolina", "series_id": "" }
+  ]
+}
