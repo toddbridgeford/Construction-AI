@@ -3,7 +3,11 @@ name: Update dashboard_latest.json (FRED)
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 11 * * 1-5'  # 6AM EST weekdays (adjust as needed)
+    - cron: "15 * * * *"  # hourly at :15
+
+defaults:
+  run:
+    working-directory: Predictive-Model
 
 jobs:
   build:
@@ -12,39 +16,53 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
       - name: Validate Required Files
         run: |
           test -f framework/orchestrators/national_autonomous_run_orchestrator_v1.json
-          test -f framework/orchestrators/national_execution_precedence_matrix_v1.json
+          test -f framework/national_execution_precedence_matrix_v1.json
+          test -f scripts/build_dashboard_latest.mjs
           test -f config/state_permits.json
           test -f config/msa_permits.json
 
       - name: Validate JSON Structure
         run: |
-          node -e "JSON.parse(require('fs').readFileSync('config/state_permits.json'))"
-          node -e "JSON.parse(require('fs').readFileSync('config/msa_permits.json'))"
-          node -e "JSON.parse(require('fs').readFileSync('framework/orchestrators/national_autonomous_run_orchestrator_v1.json'))"
-          node -e "JSON.parse(require('fs').readFileSync('framework/orchestrators/national_execution_precedence_matrix_v1.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('framework/orchestrators/national_autonomous_run_orchestrator_v1.json','utf8')); console.log('OK orchestrator')"
+          node -e "JSON.parse(require('fs').readFileSync('framework/national_execution_precedence_matrix_v1.json','utf8')); console.log('OK precedence')"
+          node -e "JSON.parse(require('fs').readFileSync('config/state_permits.json','utf8')); console.log('OK state config')"
+          node -e "JSON.parse(require('fs').readFileSync('config/msa_permits.json','utf8')); console.log('OK msa config')"
 
       - name: Run Build Script
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: node scripts/build_dashboard_latest.mjs
+          OUT_PATH: dashboard_latest.json
+          FRED_OBSERVATION_START: "2020-01-01"
+        run: |
+          node scripts/build_dashboard_latest.mjs
 
       - name: Validate Output JSON
         run: |
-          node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json'))"
+          test -f dashboard_latest.json
+          node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8')); console.log('OK output')"
 
       - name: Commit changes
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          git config user.name "todd-dashboard-bot"
+          git config user.email "actions@users.noreply.github.com"
+
           git add dashboard_latest.json
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update dashboard_latest.json"
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Update dashboard_latest.json"
           git push
