@@ -1,12 +1,12 @@
 {
   "max_states": 12,
   "states": [
-    { "code": "TX", "name": "Texas (Statewide)", "series_id": "TXBPPRIVSA" },
-    { "code": "DFW", "name": "Dallas–Fort Worth–Arlington, TX (MSA)", "series_id": "DALL148BPPRIVSA" },
-
+    { "code": "TX", "name": "Texas", "series_id": "TXBPPRIVSA" },
     { "code": "FL", "name": "Florida", "series_id": "FLBPPRIVSA" },
     { "code": "CA", "name": "California", "series_id": "CABPPRIVSA" },
     { "code": "GA", "name": "Georgia", "series_id": "GABPPRIVSA" },
-    { "code": "NC", "name": "North Carolina", "series_id": "NCBPPRIVSA" }
+    { "code": "NC", "name": "North Carolina", "series_id": "NCBPPRIVSA" },
+
+    { "code": "TX-DFW", "name": "Dallas–Fort Worth–Arlington, TX (MSA)", "series_id": "DALL148BPPRIVSA" }
   ]
 }
