@@ -3,7 +3,7 @@ name: Update dashboard_latest.json (FRED)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 * * * *"   # hourly at :15 (adjust as you like)
+    - cron: "15 * * * *"
 
 permissions:
   contents: write
@@ -28,15 +28,16 @@ jobs:
           test -f config/state_permits.json
           test -f config/msa_permits.json
           test -f framework/orchestrators/national_autonomous_run_orchestrator_v1.json
-          test -f framework/orchestrators/national_execution_precedence_matrix_v1.json
+          test -f framework/national_execution_precedence_matrix_v1.json
           echo "All required files exist ✅"
 
       - name: Validate JSON Structure
         run: |
-          node -e "JSON.parse(require('fs').readFileSync('config/state_permits.json','utf8')); console.log('state_permits.json OK ✅')"
-          node -e "JSON.parse(require('fs').readFileSync('config/msa_permits.json','utf8')); console.log('msa_permits.json OK ✅')"
-          node -e "JSON.parse(require('fs').readFileSync('framework/orchestrators/national_autonomous_run_orchestrator_v1.json','utf8')); console.log('orchestrator OK ✅')"
-          node -e "JSON.parse(require('fs').readFileSync('framework/orchestrators/national_execution_precedence_matrix_v1.json','utf8')); console.log('precedence OK ✅')"
+          node -e "JSON.parse(require('fs').readFileSync('config/state_permits.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('config/msa_permits.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('framework/orchestrators/national_autonomous_run_orchestrator_v1.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('framework/national_execution_precedence_matrix_v1.json','utf8'))"
+          echo "All JSON files valid ✅"
 
       - name: Run Build Script
         env:
@@ -49,7 +50,8 @@ jobs:
       - name: Validate Output JSON
         run: |
           test -f dashboard_latest.json
-          node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8')); console.log('dashboard_latest.json OK ✅')"
+          node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8'))"
+          echo "dashboard_latest.json valid ✅"
 
       - name: Commit changes (if any)
         run: |
