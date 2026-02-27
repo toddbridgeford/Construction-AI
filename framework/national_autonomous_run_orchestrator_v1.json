@@ -3,7 +3,7 @@
   "name": "national_autonomous_run_orchestrator_v1",
   "mode": "autonomous",
   "inputs": {
-    "precedence_matrix_path": "framework/national_execution_precedence_matrix_v1.json",
+    "precedence_matrix_path": "framework/orchestrators/national_execution_precedence_matrix_v1.json",
     "state_permits_config_path": "config/state_permits.json",
     "msa_permits_config_path": "config/msa_permits.json"
   },
