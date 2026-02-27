@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-02-27T07:11:41.474Z",
+  "generated_at": "2026-02-27T07:23:25.130Z",
   "executive": {
     "headline": "Macro conditions auto-updated; watch regional divergence",
     "confidence": "Medium",
@@ -3918,8 +3918,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "State: Texas",
+      "name": "Building Permits (State)",
+      "region": "Texas",
       "yoy": -19.938598200067847,
       "units": "units",
       "history": [
@@ -4206,8 +4206,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "State: Florida",
+      "name": "Building Permits (State)",
+      "region": "Florida",
       "yoy": 13.253440325866661,
       "units": "units",
       "history": [
@@ -4494,8 +4494,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "State: California",
+      "name": "Building Permits (State)",
+      "region": "California",
       "yoy": 2.3406979117710724,
       "units": "units",
       "history": [
@@ -4782,8 +4782,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "State: Georgia",
+      "name": "Building Permits (State)",
+      "region": "Georgia",
       "yoy": 32.837063578901414,
       "units": "units",
       "history": [
@@ -5070,8 +5070,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "State: North Carolina",
+      "name": "Building Permits (State)",
+      "region": "North Carolina",
       "yoy": -13.419719559266552,
       "units": "units",
       "history": [
@@ -5358,8 +5358,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "MSA: Dallas–Fort Worth, TX",
+      "name": "Building Permits (MSA)",
+      "region": "Dallas–Fort Worth, TX",
       "yoy": -14.84689573618807,
       "units": "units",
       "history": [
@@ -5646,8 +5646,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "MSA: Miami–Fort Lauderdale, FL",
+      "name": "Building Permits (MSA)",
+      "region": "Miami–Fort Lauderdale, FL",
       "yoy": -4.551469816792697,
       "units": "units",
       "history": [
@@ -5934,8 +5934,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "MSA: Los Angeles–Long Beach, CA",
+      "name": "Building Permits (MSA)",
+      "region": "Los Angeles–Long Beach, CA",
       "yoy": 14.64704566307895,
       "units": "units",
       "history": [
@@ -6222,8 +6222,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "MSA: Atlanta, GA",
+      "name": "Building Permits (MSA)",
+      "region": "Atlanta, GA",
       "yoy": 15.75587163848915,
       "units": "units",
       "history": [
@@ -6510,8 +6510,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "MSA: Charlotte, NC",
+      "name": "Building Permits (MSA)",
+      "region": "Charlotte, NC",
       "yoy": 6.241874870679043,
       "units": "units",
       "history": [
@@ -6798,8 +6798,8 @@
       ]
     },
     {
-      "name": "Building Permits",
-      "region": "MSA: Houston, TX",
+      "name": "Building Permits (MSA)",
+      "region": "Houston, TX",
       "yoy": -19.36921938639209,
       "units": "units",
       "history": [
@@ -7092,7 +7092,7 @@
     "what_to_do_next": [
       "Track permits divergence (South vs West) weekly.",
       "Use CPI/UNRATE trend to anticipate rate path and project starts.",
-      "Prioritize backlog quality and margin protection in restrictive regimes."
+      "Watch state + MSA dispersion for demand pockets and supply constraints."
     ]
   }
 }
