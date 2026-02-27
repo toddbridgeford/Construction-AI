@@ -4,9 +4,9 @@
     { "code": "TX", "name": "Texas (Statewide)", "series_id": "TXBPPRIVSA" },
     { "code": "DFW", "name": "Dallas–Fort Worth–Arlington, TX (MSA)", "series_id": "DALL148BPPRIVSA" },
 
-    { "code": "FL", "name": "Florida", "series_id": "" },
-    { "code": "CA", "name": "California", "series_id": "" },
-    { "code": "GA", "name": "Georgia", "series_id": "" },
-    { "code": "NC", "name": "North Carolina", "series_id": "" }
+    { "code": "FL", "name": "Florida", "series_id": "FLBPPRIVSA" },
+    { "code": "CA", "name": "California", "series_id": "CABPPRIVSA" },
+    { "code": "GA", "name": "Georgia", "series_id": "GABPPRIVSA" },
+    { "code": "NC", "name": "North Carolina", "series_id": "NCBPPRIVSA" }
   ]
 }
