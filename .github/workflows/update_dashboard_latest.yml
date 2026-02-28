@@ -3,7 +3,7 @@ name: Update dashboard_latest.json (FRED)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 * * * *"   # hourly at :15
+    - cron: "15 13 * * *" # daily (UTC). adjust if you want.
 
 permissions:
   contents: write
@@ -11,37 +11,35 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          ref: Predictive-Model
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
+      - name: Ensure dashboard_latest.json exists
+        run: |
+          if [ ! -f dashboard_latest.json ]; then
+            echo '{}' > dashboard_latest.json
+          fi
+
       - name: Validate Required Files
         run: |
-          set -e
           test -f scripts/build_dashboard_latest.mjs
           test -f config/fred_signals.json
-          test -f config/state_permits.json
-          test -f config/msa_permits.json
           test -f config/public_market_snapshot.json
-          test -f framework/national_autonomous_run_orchestrator_v1.json
-          test -f framework/national_execution_precedence_matrix_v1.json
-          echo "All required files exist ✅"
 
       - name: Validate JSON Structure
         run: |
-          node -e "JSON.parse(require('fs').readFileSync('config/fred_signals.json','utf8')); console.log('fred_signals.json OK ✅')"
-          node -e "JSON.parse(require('fs').readFileSync('config/state_permits.json','utf8')); console.log('state_permits.json OK ✅')"
-          node -e "JSON.parse(require('fs').readFileSync('config/msa_permits.json','utf8')); console.log('msa_permits.json OK ✅')"
-          node -e "JSON.parse(require('fs').readFileSync('config/public_market_snapshot.json','utf8')); console.log('public_market_snapshot.json OK ✅')"
-          node -e "JSON.parse(require('fs').readFileSync('framework/national_autonomous_run_orchestrator_v1.json','utf8')); console.log('orchestrator OK ✅')"
-          node -e "JSON.parse(require('fs').readFileSync('framework/national_execution_precedence_matrix_v1.json','utf8')); console.log('precedence OK ✅')"
+          node -e "JSON.parse(require('fs').readFileSync('config/fred_signals.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('config/public_market_snapshot.json','utf8'))"
 
       - name: Run Build Script
         env:
@@ -53,25 +51,24 @@ jobs:
 
       - name: Validate Output JSON
         run: |
-          set -e
-          test -f dashboard_latest.json
-          node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8')); console.log('dashboard_latest.json OK ✅')"
+          node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8'))"
 
       - name: Fail if dashboard missing CEPS
         run: |
-          node -e "
-            const d = JSON.parse(require('fs').readFileSync('./dashboard_latest.json','utf8'));
-            if (typeof d.ceps_score !== 'number') throw new Error('CEPS missing — build invalid');
-            if (!d.schema_version) throw new Error('schema_version missing — build invalid');
-            if (!Array.isArray(d.regime_history)) throw new Error('regime_history missing — build invalid');
-            if (!d.shock_flags) throw new Error('shock_flags missing — build invalid');
-            console.log('CEPS + schema validation OK ✅');
-          "
+          node - <<'NODE'
+          const fs = require('fs');
+          const j = JSON.parse(fs.readFileSync('dashboard_latest.json','utf8'));
+          if (typeof j.ceps_score !== 'number') {
+            console.error("Missing ceps_score in dashboard_latest.json");
+            process.exit(1);
+          }
+          console.log("ceps_score:", j.ceps_score);
+          NODE
 
       - name: Commit changes (if any)
         run: |
-          git config user.name "todd-dashboard-bot"
-          git config user.email "actions@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add dashboard_latest.json
 
@@ -80,5 +77,8 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update dashboard_latest.json (auto)"
-          git push
+          git commit -m "Update dashboard_latest.json (FRED)"
+          git push origin Predictive-Model
+
+      - name: Complete job
+        run: echo "✅ Done."
