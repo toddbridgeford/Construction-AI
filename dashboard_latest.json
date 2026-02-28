@@ -1,5 +1,7 @@
 {
   "schema_version": "3.4.0",
+  "version": 1,
+  "asof": "2026-02-28",
   "panels": {
     "public_market": {
       "rows": [
@@ -67,6 +69,24 @@
           "signal_flag": "MONITOR"
         },
         {
+          "ticker": "FAST",
+          "company_name": "Fastenal",
+          "subsector": "Distributors",
+          "price_change_1w": -0.3,
+          "price_change_1m": 1,
+          "price_change_ytd": 3.1,
+          "signal_flag": "MONITOR"
+        },
+        {
+          "ticker": "GWW",
+          "company_name": "W.W. Grainger",
+          "subsector": "Distributors",
+          "price_change_1w": 0.1,
+          "price_change_1m": 0.8,
+          "price_change_ytd": 2.6,
+          "signal_flag": "MONITOR"
+        },
+        {
           "ticker": "WCC",
           "company_name": "WESCO International",
           "subsector": "Distributors",
@@ -103,12 +123,21 @@
           "signal_flag": "MONITOR"
         },
         {
-          "ticker": "AWI",
-          "company_name": "Armstrong World Industries",
-          "subsector": "Building Products",
-          "price_change_1w": -0.3,
-          "price_change_1m": 1,
-          "price_change_ytd": 3.8,
+          "ticker": "X",
+          "company_name": "United States Steel",
+          "subsector": "Materials",
+          "price_change_1w": -0.7,
+          "price_change_1m": 0.6,
+          "price_change_ytd": 1.9,
+          "signal_flag": "WATCH"
+        },
+        {
+          "ticker": "NUE",
+          "company_name": "Nucor",
+          "subsector": "Materials",
+          "price_change_1w": -0.2,
+          "price_change_1m": 0.9,
+          "price_change_ytd": 2.4,
           "signal_flag": "MONITOR"
         },
         {
@@ -128,6 +157,33 @@
           "price_change_1m": 1.3,
           "price_change_ytd": 4.1,
           "signal_flag": "MONITOR"
+        },
+        {
+          "ticker": "AWI",
+          "company_name": "Armstrong World Industries",
+          "subsector": "Building Products",
+          "price_change_1w": -0.3,
+          "price_change_1m": 1,
+          "price_change_ytd": 3.8,
+          "signal_flag": "MONITOR"
+        },
+        {
+          "ticker": "FBIN",
+          "company_name": "Fortune Brands Innovations",
+          "subsector": "Building Products",
+          "price_change_1w": -0.6,
+          "price_change_1m": 0.9,
+          "price_change_ytd": 2.7,
+          "signal_flag": "MONITOR"
+        },
+        {
+          "ticker": "OC",
+          "company_name": "Owens Corning",
+          "subsector": "Building Products",
+          "price_change_1w": -0.8,
+          "price_change_1m": 1.2,
+          "price_change_ytd": 3.4,
+          "signal_flag": "WATCH"
         },
         {
           "ticker": "PWR",
@@ -155,60 +211,6 @@
           "price_change_1m": 1.4,
           "price_change_ytd": 4.7,
           "signal_flag": "MONITOR"
-        },
-        {
-          "ticker": "FAST",
-          "company_name": "Fastenal",
-          "subsector": "Distributors",
-          "price_change_1w": -0.3,
-          "price_change_1m": 1,
-          "price_change_ytd": 3.1,
-          "signal_flag": "MONITOR"
-        },
-        {
-          "ticker": "GWW",
-          "company_name": "W.W. Grainger",
-          "subsector": "Distributors",
-          "price_change_1w": 0.1,
-          "price_change_1m": 0.8,
-          "price_change_ytd": 2.6,
-          "signal_flag": "MONITOR"
-        },
-        {
-          "ticker": "X",
-          "company_name": "United States Steel",
-          "subsector": "Materials",
-          "price_change_1w": -0.7,
-          "price_change_1m": 0.6,
-          "price_change_ytd": 1.9,
-          "signal_flag": "WATCH"
-        },
-        {
-          "ticker": "NUE",
-          "company_name": "Nucor",
-          "subsector": "Materials",
-          "price_change_1w": -0.2,
-          "price_change_1m": 0.9,
-          "price_change_ytd": 2.4,
-          "signal_flag": "MONITOR"
-        },
-        {
-          "ticker": "FBIN",
-          "company_name": "Fortune Brands Innovations",
-          "subsector": "Building Products",
-          "price_change_1w": -0.6,
-          "price_change_1m": 0.9,
-          "price_change_ytd": 2.7,
-          "signal_flag": "MONITOR"
-        },
-        {
-          "ticker": "OC",
-          "company_name": "Owens Corning",
-          "subsector": "Building Products",
-          "price_change_1w": -0.8,
-          "price_change_1m": 1.2,
-          "price_change_ytd": 3.4,
-          "signal_flag": "WATCH"
         },
         {
           "ticker": "ACM",
@@ -290,8 +292,34 @@
       }
     ]
   },
-  "version": 1,
-  "asof": "2026-02-28",
+  "regime_history": [
+    {
+      "date": "2026-02-28",
+      "ceps": 55,
+      "ceps_residential": 52,
+      "ceps_institutional": 51,
+      "bmi": 50,
+      "cpi": 53,
+      "cpi_residential": 54,
+      "cpi_institutional": 51,
+      "volatility": "NORMAL",
+      "regime": "NEUTRAL"
+    }
+  ],
+  "trends": {
+    "cpi": {
+      "delta_1w": null,
+      "delta_1m": null
+    },
+    "ceps": {
+      "delta_1w": null,
+      "delta_1m": null
+    },
+    "bmi": {
+      "delta_1w": null,
+      "delta_1m": null
+    }
+  },
   "construction_equity": {
     "sector_averages": [
       {
@@ -326,67 +354,27 @@
       }
     ]
   },
+  "builder_momentum": {
+    "value": 50
+  },
   "ceps_score": 55,
+  "ceps_split": {
+    "residential": 52,
+    "institutional": 51
+  },
   "correlations": {
     "cpi_vs_builders": 0,
     "regime": "NEUTRAL"
   },
-  "risk_mode": false,
   "volatility_regime": "NORMAL",
   "shock_flags": {
     "rate_shock": false,
     "equity_drawdown": false,
     "volatility_spike": false
   },
-  "regime_history": [
-    {
-      "date": "2026-02-28",
-      "ceps": 55,
-      "cpi": 0,
-      "volatility": "NORMAL",
-      "regime": "NEUTRAL"
-    }
-  ],
-  "builder_momentum": {
-    "value": 50
-  },
-  "ceps_split": {
-    "residential": 52,
-    "institutional": 51
-  },
-  "trends": {
-    "ceps": {
-      "delta_1w": null,
-      "delta_1m": null
-    },
-    "cpi": {
-      "delta_1w": null,
-      "delta_1m": null
-    },
-    "bmi": {
-      "delta_1w": null,
-      "delta_1m": null
-    }
-  },
+  "risk_mode": false,
   "risk_thermometer_mode": false,
   "acceleration_engine": {
-  "divergence": ...,
-  "deltas": {
-    "cpi_7d": ...,
-    "cpi_30d": ...,
-    "ceps_7d": ...,
-    "ceps_30d": ...,
-    "bmi_7d": ...,
-    "bmi_30d": ...
-  },
-  "flags": {
-    "cpi_accelerating_7d": ...,
-    "cpi_accelerating_30d": ...,
-    "builder_early_warning": ...,
-    ...
-  },
-  "alert_level": "MONITOR" | "WATCH" | "ELEVATED"
-}"acceleration_engine": {
     "divergence": 2,
     "deltas": {
       "cpi_7d": null,
