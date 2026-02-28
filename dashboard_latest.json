@@ -394,5 +394,53 @@
       "builder_early_warning": false
     },
     "alert_level": "MONITOR"
+  },
+  "forward_risk_30d": {
+    "projected_cpi_30d": 53,
+    "prob_cpi_ge_70": 0.2217,
+    "band": "LOW",
+    "drivers": {
+      "cpi": 53,
+      "cpi_delta_30d": 0,
+      "cpi_delta_7d": 0,
+      "vix": 18.22,
+      "us10y_chg_bps": 4,
+      "bmi": 50
+    }
+  },
+  "builder_stress_monitor": {
+    "stress_score": 3,
+    "severity": "NORMAL",
+    "flags": {
+      "liquidity_stress": false,
+      "margin_pressure": false,
+      "order_book_rolloff": false
+    },
+    "context": {
+      "bmi": 50,
+      "builders_avg_1w": -0.98,
+      "builders_avg_1m": 2.38,
+      "cpi": 53,
+      "divergence": 2,
+      "vix": 18.22,
+      "us10y_chg_bps": 4
+    }
+  },
+  "regime_probability_matrix": {
+    "asof": "2026-02-28",
+    "probabilities": {
+      "TIGHTENING": 0.3396,
+      "NEUTRAL": 0.4601,
+      "EASING": 0.2003
+    },
+    "implied": "NEUTRAL",
+    "inputs": {
+      "cpi": 53,
+      "ceps": 55,
+      "vix": 18.22,
+      "us10y_chg_bps": 4,
+      "bmi": 50,
+      "divergence": 2
+    }
   }
 }
