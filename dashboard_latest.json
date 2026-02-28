@@ -370,6 +370,23 @@
   },
   "risk_thermometer_mode": false,
   "acceleration_engine": {
+  "divergence": ...,
+  "deltas": {
+    "cpi_7d": ...,
+    "cpi_30d": ...,
+    "ceps_7d": ...,
+    "ceps_30d": ...,
+    "bmi_7d": ...,
+    "bmi_30d": ...
+  },
+  "flags": {
+    "cpi_accelerating_7d": ...,
+    "cpi_accelerating_30d": ...,
+    "builder_early_warning": ...,
+    ...
+  },
+  "alert_level": "MONITOR" | "WATCH" | "ELEVATED"
+}"acceleration_engine": {
     "divergence": 2,
     "deltas": {
       "cpi_7d": null,
