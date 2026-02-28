@@ -1,6 +1,6 @@
 // =====================================================
 // Construction-AI Institutional Builder
-// Schema v3.3.0 — Temporal + Shock-Aware + FRED CPI (No deps)
+// Schema v3.4.0 — Acceleration + Divergence Engine (No deps)
 // =====================================================
 
 import fs from "fs";
@@ -45,7 +45,7 @@ function correlation(a, b) {
   for (let i = 0; i < a.length; i++) {
     numerator += (a[i] - meanA) * (b[i] - meanB);
     denomA += Math.pow(a[i] - meanA, 2);
-    denomB += Math.pow(b[i] - meanB, 2);
+    denomB += Math.pow(a[i] - meanB, 2);
   }
 
   return denomA && denomB ? numerator / Math.sqrt(denomA * denomB) : 0;
@@ -57,7 +57,7 @@ function safeReadJSON(filePath) {
     const txt = fs.readFileSync(filePath, "utf8").trim();
     if (!txt) return {};
     return JSON.parse(txt);
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -111,15 +111,16 @@ function getDeltaFromHistory(history, daysBack) {
   if (!Array.isArray(history) || history.length < 2) return null;
   const targetDate = daysAgoISO(daysBack);
 
-  // Find nearest entry on/after targetDate
+  // Find earliest entry on/after targetDate
   const older = history.find((h) => String(h.date) >= targetDate);
   const latest = history.at(-1);
 
   if (!older || !latest) return null;
-  const dv = Number(latest.value ?? latest.ceps ?? 0);
-  const ov = Number(older.value ?? older.ceps ?? 0);
-  if (!Number.isFinite(dv) || !Number.isFinite(ov)) return null;
 
+  const dv = Number(latest.value ?? 0);
+  const ov = Number(older.value ?? 0);
+
+  if (!Number.isFinite(dv) || !Number.isFinite(ov)) return null;
   return dv - ov;
 }
 
@@ -135,6 +136,7 @@ function assertDashboardShape(obj) {
   if (!obj.capital || typeof obj.capital !== "object") throw new Error("Missing capital");
   if (typeof obj.capital.pressure_index !== "number") throw new Error("Missing capital.pressure_index");
   if (!Array.isArray(obj.capital.history)) throw new Error("Missing capital.history");
+  if (!obj.acceleration_engine) throw new Error("Missing acceleration_engine");
 }
 
 // -----------------------------------------------------
@@ -149,9 +151,8 @@ function httpsGetJSON(url) {
         res.on("data", (chunk) => (data += chunk));
         res.on("end", () => {
           try {
-            const json = JSON.parse(data);
-            resolve(json);
-          } catch (e) {
+            resolve(JSON.parse(data));
+          } catch {
             reject(new Error("Invalid JSON response"));
           }
         });
@@ -176,18 +177,14 @@ async function fetchFredSeriesObservations({ seriesId, apiKey, observationStart 
   const json = await httpsGetJSON(url);
   const obs = Array.isArray(json?.observations) ? json.observations : [];
 
-  // Keep only numeric values
   return obs
     .map((o) => ({ date: o.date, value: Number(o.value) }))
     .filter((o) => o.date && Number.isFinite(o.value));
 }
 
-// Score mapping: convert YoY % change (or level delta) to 0–100 pressure
-function scoreFromYoY(pctYoY, { midpoint = 0, scale = 2.5, invert = false } = {}) {
-  // Simple logistic-ish clamp without dependencies
-  // pctYoY near midpoint -> ~50, higher -> >50 (unless invert)
-  const x = (pctYoY - midpoint) / scale;
-  let s = 50 + x * 10; // linear slope
+function scoreFromLevel(level, { midpoint = 0, scale = 1.0, invert = false } = {}) {
+  const x = (level - midpoint) / scale;
+  let s = 50 + x * 10;
   if (invert) s = 100 - s;
   return clamp(Math.round(s), 0, 100);
 }
@@ -197,9 +194,11 @@ function yoyPct(series) {
   const latest = series.at(-1);
   const yearAgo = series.at(-13);
   if (!latest || !yearAgo) return null;
+
   const lv = Number(latest.value);
   const yv = Number(yearAgo.value);
   if (!Number.isFinite(lv) || !Number.isFinite(yv) || yv === 0) return null;
+
   return ((lv - yv) / yv) * 100;
 }
 
@@ -219,17 +218,16 @@ if (raw === null) {
   raw = {};
 }
 
-raw.schema_version = "3.3.0";
+raw.schema_version = "3.4.0";
+raw.version ??= 1;
+raw.asof ??= todayISO();
 
-// Required structure
 raw.panels ??= {};
 raw.capital ??= {};
 raw.executive ??= {};
 raw.market_overview ??= {};
-raw.version ??= 1;
-raw.asof ??= todayISO();
-
 raw.regime_history ??= [];
+raw.trends ??= {};
 
 // Panels
 raw.panels.public_market ??= {};
@@ -241,14 +239,13 @@ raw.panels.public_market.rows ??= [];
 
 const snap = safeReadJSON(snapAbs);
 if (snap === null) throw new Error("config/public_market_snapshot.json missing or invalid JSON");
-const snapRows = snap?.rows || [];
 
-const mergedRows = mergePublicMarketRows(raw.panels.public_market.rows, snapRows);
+const mergedRows = mergePublicMarketRows(raw.panels.public_market.rows, snap?.rows || []);
 raw.panels.public_market.rows = mergedRows;
 raw.panels.public_market.as_of = snap?.asof || raw.asof;
 
 // -----------------------------------------------------
-// MARKET OVERVIEW (still stubbed — deterministic)
+// MARKET OVERVIEW (stubbed values – deterministic)
 // -----------------------------------------------------
 
 raw.market_overview = {
@@ -269,7 +266,7 @@ const tenYearMove = raw.market_overview.indices.find((i) => i.ticker === "US10Y"
 // Sector Averages + Builder Momentum Index (BMI)
 // -----------------------------------------------------
 
-const rows = raw?.panels?.public_market?.rows || [];
+const rows = raw.panels.public_market.rows || [];
 const grouped = {};
 
 for (const r of rows) {
@@ -278,17 +275,15 @@ for (const r of rows) {
   grouped[sector].push(r);
 }
 
-const sectorAverages = Object.keys(grouped)
-  .sort()
-  .map((sector) => {
-    const list = grouped[sector];
-    return {
-      sector,
-      avg_1w: avg(list.map((r) => Number(r.price_change_1w ?? 0) || 0)),
-      avg_1m: avg(list.map((r) => Number(r.price_change_1m ?? 0) || 0)),
-      avg_ytd: avg(list.map((r) => Number(r.price_change_ytd ?? 0) || 0))
-    };
-  });
+const sectorAverages = Object.keys(grouped).sort().map((sector) => {
+  const list = grouped[sector];
+  return {
+    sector,
+    avg_1w: avg(list.map((r) => Number(r.price_change_1w ?? 0) || 0)),
+    avg_1m: avg(list.map((r) => Number(r.price_change_1m ?? 0) || 0)),
+    avg_ytd: avg(list.map((r) => Number(r.price_change_ytd ?? 0) || 0))
+  };
+});
 
 raw.construction_equity = { sector_averages: sectorAverages };
 
@@ -304,9 +299,7 @@ const avgBuilders1W = builders.avg_1w;
 const avgBuilders1M = builders.avg_1m;
 
 const bmi = clamp(Math.round(50 + (avgBuilders1W * 2.0) + (avgBuilders1M * 1.0)), 0, 100);
-raw.builder_momentum = {
-  value: bmi
-};
+raw.builder_momentum = { value: bmi };
 
 // -----------------------------------------------------
 // FRED CPI ingestion + Residential/Institutional subindices
@@ -318,23 +311,19 @@ if (fredCfg === null) throw new Error("config/fred_signals.json missing or inval
 const apiKey = process.env.FRED_API_KEY || "";
 const obsStart = process.env.FRED_OBSERVATION_START || fredCfg?.observation_start_default || "2020-01-01";
 
-raw.capital ??= {};
 raw.capital.subindices ??= {};
 raw.capital.history ??= Array.isArray(raw.capital.history) ? raw.capital.history : [];
 
 let fredStatus = { ok: false, reason: null };
 
-let compositeCPI = Number(raw.capital.pressure_index ?? 0) || 0;
 let resCPI = Number(raw.capital.subindices.residential ?? 0) || 0;
 let instCPI = Number(raw.capital.subindices.institutional ?? 0) || 0;
-
-let cpiDelta = 0;
+let compositeCPI = Number(raw.capital.pressure_index ?? 0) || 0;
 
 if (!apiKey) {
   fredStatus = { ok: false, reason: "FRED_API_KEY missing (secrets not configured)" };
 } else {
   try {
-    // Pull only what we need (by key) from config
     const keyToSeries = {};
     for (const s of fredCfg?.signals || []) keyToSeries[s.key] = s.series_id;
 
@@ -356,22 +345,20 @@ if (!apiKey) {
       });
     }
 
-    // Residential pressures
-    // mortgage30: higher rate = higher pressure (invert=false)
-    // permit/houst: falling activity = higher pressure (invert=true because higher YoY = easing)
+    // Residential pressure
     const mortgageLevel = latestLevel(seriesData.mortgage30);
     const permitYoY = yoyPct(seriesData.permit);
     const houstYoY = yoyPct(seriesData.houst);
     const resSpendYoY = yoyPct(seriesData.tlrescons);
 
     const mortgageScore =
-      mortgageLevel == null ? 50 : scoreFromYoY(mortgageLevel, { midpoint: 6.0, scale: 1.0, invert: false });
+      mortgageLevel == null ? 50 : scoreFromLevel(mortgageLevel, { midpoint: 6.0, scale: 1.0, invert: false });
     const permitScore =
-      permitYoY == null ? 50 : scoreFromYoY(permitYoY, { midpoint: 0, scale: 5.0, invert: true });
+      permitYoY == null ? 50 : scoreFromLevel(permitYoY, { midpoint: 0.0, scale: 5.0, invert: true });
     const houstScore =
-      houstYoY == null ? 50 : scoreFromYoY(houstYoY, { midpoint: 0, scale: 5.0, invert: true });
+      houstYoY == null ? 50 : scoreFromLevel(houstYoY, { midpoint: 0.0, scale: 5.0, invert: true });
     const resSpendScore =
-      resSpendYoY == null ? 50 : scoreFromYoY(resSpendYoY, { midpoint: 0, scale: 5.0, invert: true });
+      resSpendYoY == null ? 50 : scoreFromLevel(resSpendYoY, { midpoint: 0.0, scale: 5.0, invert: true });
 
     resCPI = clamp(Math.round(
       (mortgageScore * 0.40) +
@@ -380,25 +367,18 @@ if (!apiKey) {
       (resSpendScore * 0.15)
     ), 0, 100);
 
-    // Institutional pressures
-    // unrate: higher unemployment = higher pressure (invert=false)
-    // nonres spend: falling = higher pressure (invert=true)
+    // Institutional pressure
     const unrateLevel = latestLevel(seriesData.unrate);
     const instSpendYoY = yoyPct(seriesData.tlnrescons);
 
     const unrateScore =
-      unrateLevel == null ? 50 : scoreFromYoY(unrateLevel, { midpoint: 4.0, scale: 1.0, invert: false });
+      unrateLevel == null ? 50 : scoreFromLevel(unrateLevel, { midpoint: 4.0, scale: 1.0, invert: false });
     const instSpendScore =
-      instSpendYoY == null ? 50 : scoreFromYoY(instSpendYoY, { midpoint: 0, scale: 5.0, invert: true });
+      instSpendYoY == null ? 50 : scoreFromLevel(instSpendYoY, { midpoint: 0.0, scale: 5.0, invert: true });
 
     instCPI = clamp(Math.round((unrateScore * 0.45) + (instSpendScore * 0.55)), 0, 100);
 
-    // Composite CPI (Construction Pressure Index) = blend
     compositeCPI = clamp(Math.round((resCPI * 0.60) + (instCPI * 0.40)), 0, 100);
-
-    // History delta (for CEPS momentum)
-    const hist = raw.capital.history.map((h) => Number(h.value ?? 0) || 0);
-    cpiDelta = hist.length >= 2 ? (hist.at(-1) - hist.at(-2)) : 0;
 
     fredStatus = { ok: true, reason: null };
   } catch (e) {
@@ -420,9 +400,12 @@ raw.capital.source_status = fredStatus;
   }
 }
 
+// CPI delta from history (for CEPS momentum)
+const cpiHistoryValues = raw.capital.history.map((h) => Number(h.value ?? 0) || 0);
+const cpiDelta = cpiHistoryValues.length >= 2 ? (cpiHistoryValues.at(-1) - cpiHistoryValues.at(-2)) : 0;
+
 // -----------------------------------------------------
 // CEPS v2 — Nonlinear Institutional Model (Shock-Aware)
-// now uses cpiDelta (from capital.history) + 10Y move
 // -----------------------------------------------------
 
 const shockMultiplier = (vix >= 25 ? 1.25 : 1.0);
@@ -444,7 +427,7 @@ ceps = ceps * shockMultiplier * momentumPersistence;
 ceps = clamp(Math.round(ceps), 0, 100);
 raw.ceps_score = ceps;
 
-// Residential vs Institutional CEPS splits (equity proxies + CPI subs)
+// CEPS split (macro subs + equity proxies)
 const resCeps = clamp(Math.round(
   50 +
   (avgBuilders1W * 0.45) +
@@ -459,10 +442,7 @@ const instCeps = clamp(Math.round(
   (tenYearMove * 0.20)
 ), 0, 100);
 
-raw.ceps_split = {
-  residential: resCeps,
-  institutional: instCeps
-};
+raw.ceps_split = { residential: resCeps, institutional: instCeps };
 
 // -----------------------------------------------------
 // Correlation Engine
@@ -472,47 +452,25 @@ const builderHistory = rows
   .filter((r) => String(r.subsector || "").toLowerCase().includes("home"))
   .map((r) => Number(r.price_change_1m ?? 0) || 0);
 
-const cpiHistory = raw.capital.history.map((h) => Number(h.value ?? 0) || 0);
-const corrWindow = Math.min(cpiHistory.length, builderHistory.length);
+const corrWindow = Math.min(raw.capital.history.length, builderHistory.length);
 
 raw.correlations = {
-  cpi_vs_builders: correlation(cpiHistory.slice(-corrWindow), builderHistory.slice(-corrWindow)),
+  cpi_vs_builders: correlation(
+    raw.capital.history.slice(-corrWindow).map((h) => Number(h.value ?? 0) || 0),
+    builderHistory.slice(-corrWindow)
+  ),
   regime: ceps >= 70 ? "TIGHTENING" : ceps <= 30 ? "EASING" : "NEUTRAL"
 };
 
 // -----------------------------------------------------
-// Trend Arrows (1w / 1m deltas) for CPI + CEPS + BMI
+// Volatility regime + shocks
 // -----------------------------------------------------
 
-raw.trends ??= {};
-
-raw.trends.ceps = {
-  delta_1w: getDeltaFromHistory(raw.regime_history.map((h) => ({ date: h.date, value: h.ceps })), 7),
-  delta_1m: getDeltaFromHistory(raw.regime_history.map((h) => ({ date: h.date, value: h.ceps })), 30)
-};
-
-raw.trends.cpi = {
-  delta_1w: getDeltaFromHistory(raw.capital.history, 7),
-  delta_1m: getDeltaFromHistory(raw.capital.history, 30)
-};
-
-// BMI deltas (derived from regime_history snapshots we store below)
-raw.trends.bmi = { delta_1w: null, delta_1m: null };
-
-// -----------------------------------------------------
-// Risk Mode + Risk Thermometer Mode
-// -----------------------------------------------------
-
-raw.risk_mode = (raw.capital.pressure_index >= 70) || (avgBuilders1W <= -5) || (vix >= 25);
-raw.risk_thermometer_mode = raw.capital.pressure_index >= 70;
-
-// Volatility regime
 raw.volatility_regime =
   vix >= 30 ? "HIGH" :
   vix >= 20 ? "ELEVATED" :
   "NORMAL";
 
-// Shock flags
 raw.shock_flags = {
   rate_shock: Math.abs(tenYearMove) > 25,
   equity_drawdown: avgBuilders1W <= -8,
@@ -520,8 +478,14 @@ raw.shock_flags = {
 };
 
 // -----------------------------------------------------
-// Regime History Tracker (Daily append, no duplicates)
-// Also store BMI so we can compute deltas later
+// Risk Mode + Thermometer
+// -----------------------------------------------------
+
+raw.risk_mode = (raw.capital.pressure_index >= 70) || (avgBuilders1W <= -5) || (vix >= 25);
+raw.risk_thermometer_mode = raw.capital.pressure_index >= 70;
+
+// -----------------------------------------------------
+// Regime History (store CEPS/CPI/BMI splits daily)
 // -----------------------------------------------------
 
 {
@@ -542,24 +506,85 @@ raw.shock_flags = {
       regime: raw.correlations.regime
     });
   }
-
-  // Now that we store BMI, compute BMI deltas from history
-  const bmiHist = raw.regime_history.map((h) => ({ date: h.date, value: Number(h.bmi ?? 0) || 0 }));
-  raw.trends.bmi.delta_1w = getDeltaFromHistory(bmiHist, 7);
-  raw.trends.bmi.delta_1m = getDeltaFromHistory(bmiHist, 30);
 }
 
 // -----------------------------------------------------
-// Write + Assert shape
+// Trend Arrows (1w / 1m deltas)
+// -----------------------------------------------------
+
+raw.trends.cpi = {
+  delta_1w: getDeltaFromHistory(raw.capital.history, 7),
+  delta_1m: getDeltaFromHistory(raw.capital.history, 30)
+};
+
+const cepsHist = raw.regime_history.map((h) => ({ date: h.date, value: Number(h.ceps ?? 0) || 0 }));
+raw.trends.ceps = {
+  delta_1w: getDeltaFromHistory(cepsHist, 7),
+  delta_1m: getDeltaFromHistory(cepsHist, 30)
+};
+
+const bmiHist = raw.regime_history.map((h) => ({ date: h.date, value: Number(h.bmi ?? 0) || 0 }));
+raw.trends.bmi = {
+  delta_1w: getDeltaFromHistory(bmiHist, 7),
+  delta_1m: getDeltaFromHistory(bmiHist, 30)
+};
+
+// -----------------------------------------------------
+// ACCELERATION + DIVERGENCE ENGINE (THE UPGRADE)
+// -----------------------------------------------------
+
+const cpi_d7 = raw.trends.cpi.delta_1w;
+const cpi_d30 = raw.trends.cpi.delta_1m;
+const ceps_d7 = raw.trends.ceps.delta_1w;
+const ceps_d30 = raw.trends.ceps.delta_1m;
+
+const divergence = Number(raw.ceps_score) - Number(raw.capital.pressure_index); // + = equities looser, - = equities tighter
+
+const flags = {
+  cpi_accelerating_7d: (cpi_d7 != null) && (cpi_d7 >= 3),
+  cpi_accelerating_30d: (cpi_d30 != null) && (cpi_d30 >= 6),
+
+  ceps_accelerating_7d: (ceps_d7 != null) && (ceps_d7 >= 3),
+  ceps_accelerating_30d: (ceps_d30 != null) && (ceps_d30 >= 6),
+
+  equity_tightening_divergence: divergence <= -6, // markets pricing worse than macro
+  equity_easing_divergence: divergence >= 6,      // markets pricing better than macro
+
+  builder_early_warning: (bmi < 45) && ((cpi_d7 != null && cpi_d7 >= 2) || (cpi_d30 != null && cpi_d30 >= 4))
+};
+
+// Executive alert level (clean and deterministic)
+let alert_level = "MONITOR";
+if (flags.cpi_accelerating_7d || flags.cpi_accelerating_30d) alert_level = "WATCH";
+if ((flags.cpi_accelerating_7d || flags.cpi_accelerating_30d) && (flags.builder_early_warning || flags.equity_tightening_divergence)) {
+  alert_level = "ELEVATED";
+}
+
+raw.acceleration_engine = {
+  divergence,
+  deltas: {
+    cpi_7d: cpi_d7,
+    cpi_30d: cpi_d30,
+    ceps_7d: ceps_d7,
+    ceps_30d: ceps_d30,
+    bmi_7d: raw.trends.bmi.delta_1w,
+    bmi_30d: raw.trends.bmi.delta_1m
+  },
+  flags,
+  alert_level
+};
+
+// -----------------------------------------------------
+// Write + Assert
 // -----------------------------------------------------
 
 assertDashboardShape(raw);
 safeWriteJSON(dashAbs, raw);
 
-console.log("✅ Institutional build complete (Schema v3.3.0).");
+console.log("✅ Institutional build complete (Schema v3.4.0).");
 console.log(`• Dashboard: ${dashAbs}`);
-console.log(`• Snapshot: ${snapAbs}`);
 console.log(`• Rows merged: ${mergedRows.length}`);
 console.log(`• CPI: ${raw.capital.pressure_index} (R:${resCPI} / I:${instCPI}) | CEPS: ${ceps} (R:${resCeps} / I:${instCeps}) | BMI: ${bmi}`);
+console.log(`• Accel Alert: ${raw.acceleration_engine.alert_level} | Divergence: ${divergence}`);
 console.log(`• Regime: ${raw.correlations.regime} | Vol: ${raw.volatility_regime} | Risk: ${raw.risk_mode}`);
 console.log(`• FRED: ${fredStatus.ok ? "OK ✅" : `NOT OK ⚠️ (${fredStatus.reason})`}`);
