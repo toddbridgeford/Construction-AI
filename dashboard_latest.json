@@ -7205,6 +7205,28 @@
   ],
   "alerts": [],
   "panels": {
+   "panels": {
+  "public_market": {
+    "mode": "manual_snapshot",
+    "as_of": "2026-02-27",
+    "rows": [
+      { "ticker": "FLR",  "subsector": "Engineering & Construction" },
+      { "ticker": "J",    "subsector": "Engineering & Construction" },
+      { "ticker": "ACM",  "subsector": "Engineering & Construction" },
+      { "ticker": "KBR",  "subsector": "Engineering & Construction" },
+
+      { "ticker": "TPC",  "subsector": "Industrial Services" },
+      { "ticker": "GVA",  "subsector": "Infrastructure" },
+      { "ticker": "STRL", "subsector": "Infrastructure" },
+      { "ticker": "EME",  "subsector": "Electrical & Mechanical" },
+      { "ticker": "PWR",  "subsector": "Electrical & Mechanical" },
+      { "ticker": "FIX",  "subsector": "Specialty Contractors" },
+      { "ticker": "MTZ",  "subsector": "Heavy Civil" },
+
+      { "ticker": "PHM",  "subsector": "Homebuilders" }
+    ]
+  }
+}
     "public_market": {
       "rows": []
     }
