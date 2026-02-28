@@ -1,5 +1,5 @@
 {
-  "schema_version": "3.0.0",
+  "schema_version": "3.1.0",
   "generated_at": "2026-02-28T02:38:44.650Z",
   "orchestrator": "national_autonomous_run_orchestrator_v1",
   "precedence_matrix": "national_execution_precedence_matrix_v1",
@@ -7216,5 +7216,50 @@
       "Compare permits across states vs MSAs to spot concentration and divergence.",
       "Add a market snapshot (optional) to fill Panel A without new dependencies."
     ]
-  }
+  },
+  "market_overview": {
+    "indices": [
+      {
+        "ticker": "DOW",
+        "name": "Dow Jones Industrial Avg",
+        "last": 39241.55,
+        "chg_pct": 0.77
+      },
+      {
+        "ticker": "SPX",
+        "name": "S&P 500",
+        "last": 5188.12,
+        "chg_pct": 0.8
+      },
+      {
+        "ticker": "IXIC",
+        "name": "Nasdaq",
+        "last": 16422.4,
+        "chg_pct": 1.15
+      },
+      {
+        "ticker": "RUT",
+        "name": "Russell 2000",
+        "last": 2063.22,
+        "chg_pct": 1.51
+      },
+      {
+        "ticker": "VIX",
+        "name": "Volatility Index",
+        "last": 18.22,
+        "chg_pct": -3.22
+      },
+      {
+        "ticker": "US10Y",
+        "name": "US 10Y Yield",
+        "last": 4.21,
+        "chg_bps": 4
+      }
+    ]
+  },
+  "construction_equity": {
+    "sector_averages": []
+  },
+  "ceps_score": 51,
+  "risk_mode": false
 }
