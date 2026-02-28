@@ -7,6 +7,68 @@ import fs from "fs";
 import path from "path";
 import https from "https";
 
+// === Capital OS: Shared Memory Helpers (GitHub-persisted) ===
+import fs from "fs";
+
+function isoDayUTC(d = new Date()) {
+  return d.toISOString().slice(0, 10); // YYYY-MM-DD
+}
+
+function safeReadJSON(path) {
+  try {
+    if (!fs.existsSync(path)) return null;
+    const raw = fs.readFileSync(path, "utf-8");
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Append (date,value) to an array of points, dedupe by date, keep last N.
+ */
+function appendPoint(history = [], point, maxLen = 12) {
+  const cleaned = Array.isArray(history) ? history.filter(Boolean) : [];
+  const withoutSameDate = cleaned.filter(p => p?.date !== point.date);
+  const next = [...withoutSameDate, point];
+  return next.slice(Math.max(0, next.length - maxLen));
+}
+
+/**
+ * Merge previous dashboard memory into the new dashboard object.
+ * - Persists capital.history as the shared CPI memory series (last 12).
+ * - Also persists regime_history if you already use it (last 60).
+ */
+function mergeSharedMemory({ prev, next, asof, cpiValue, maxCpiPoints = 12 }) {
+  const prevCapitalHist = prev?.capital?.history ?? [];
+  const nextCapital = next.capital ?? {};
+
+  const mergedCapitalHistory = appendPoint(
+    prevCapitalHist,
+    { date: asof, value: cpiValue },
+    maxCpiPoints
+  );
+
+  next.capital = {
+    ...nextCapital,
+    history: mergedCapitalHistory,
+  };
+
+  // Optional: keep regime_history rolling if present (doesn't break if absent)
+  if (Array.isArray(prev?.regime_history) || Array.isArray(next?.regime_history)) {
+    const prevReg = prev?.regime_history ?? [];
+    const nextReg = next?.regime_history ?? [];
+    // Dedupe by date
+    const map = new Map();
+    for (const r of [...prevReg, ...nextReg]) {
+      if (r?.date) map.set(r.date, r);
+    }
+    const merged = Array.from(map.values()).sort((a, b) => (a.date < b.date ? -1 : 1));
+    next.regime_history = merged.slice(Math.max(0, merged.length - 60));
+  }
+
+  return next;
+}
 // -----------------------------------------------------
 // Paths
 // -----------------------------------------------------
