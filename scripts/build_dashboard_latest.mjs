@@ -1,119 +1,246 @@
-// scripts/build_dashboard_latest.mjs
 // =====================================================
-// Construction-AI Dashboard Builder (Predictive-Model)
-// Always outputs valid JSON (no string concatenation).
-// Merges config/public_market_snapshot.json into panels.public_market.rows
+// Construction-AI Institutional Builder
+// Schema v3.1.0 — Full Bloomberg Mode (Hardened)
 // =====================================================
 
 import fs from "fs";
 import path from "path";
 
-const ROOT = process.cwd();
+// -----------------------------------------------------
+// Utilities
+// -----------------------------------------------------
 
-function readJson(filePath, { optional = false } = {}) {
-  const full = path.join(ROOT, filePath);
-  if (!fs.existsSync(full)) {
-    if (optional) return null;
-    throw new Error(`Missing required file: ${filePath}`);
+function avg(arr) {
+  if (!arr || arr.length === 0) return 0;
+  return arr.reduce((a, b) => a + b, 0) / arr.length;
+}
+
+function clamp(num, min, max) {
+  return Math.max(min, Math.min(max, num));
+}
+
+function correlation(a, b) {
+  if (!a || !b || a.length !== b.length || a.length < 2) return 0;
+  const meanA = avg(a);
+  const meanB = avg(b);
+
+  let numerator = 0;
+  let denomA = 0;
+  let denomB = 0;
+
+  for (let i = 0; i < a.length; i++) {
+    numerator += (a[i] - meanA) * (b[i] - meanB);
+    denomA += Math.pow(a[i] - meanA, 2);
+    denomB += Math.pow(b[i] - meanB, 2);
   }
-  const txt = fs.readFileSync(full, "utf8").trim();
-  if (!txt) return optional ? null : (() => { throw new Error(`Empty JSON file: ${filePath}`); })();
 
+  return denomA && denomB ? numerator / Math.sqrt(denomA * denomB) : 0;
+}
+
+function safeReadJSON(filePath) {
   try {
+    const txt = fs.readFileSync(filePath, "utf8");
     return JSON.parse(txt);
   } catch (e) {
-    // Provide a useful snippet around the failure
-    const preview = txt.slice(0, 4000);
-    throw new Error(
-      `Invalid JSON in ${filePath}: ${e.message}\n--- file preview (first 4k) ---\n${preview}\n--- end preview ---`
-    );
+    return null;
   }
 }
 
-function writeJson(filePath, obj) {
-  const full = path.join(ROOT, filePath);
-  fs.writeFileSync(full, JSON.stringify(obj, null, 2) + "\n");
+function safeWriteJSON(filePath, obj) {
+  fs.writeFileSync(filePath, JSON.stringify(obj, null, 2));
 }
 
-function ensure(obj, key, defaultValue) {
-  if (obj[key] === undefined || obj[key] === null) obj[key] = defaultValue;
-  return obj[key];
+function normalizeTicker(t) {
+  return String(t || "").trim().toUpperCase();
 }
 
-function normalizeSnapshot(snapshot) {
-  if (!snapshot || !Array.isArray(snapshot.rows)) return { asof: null, rows: [] };
-  return {
-    asof: snapshot.asof ?? null,
-    rows: snapshot.rows
-      .filter(r => r && typeof r.ticker === "string" && r.ticker.trim().length > 0)
-      .map(r => ({
-        ticker: String(r.ticker).trim().toUpperCase(),
-        company_name: r.company_name ?? r.companyName ?? null,
-        subsector: r.subsector ?? null,
-        price_change_1w: r.price_change_1w ?? null,
-        price_change_1m: r.price_change_1m ?? null,
-        price_change_ytd: r.price_change_ytd ?? null,
-        signal_flag: r.signal_flag ?? null
-      }))
+function mergePublicMarketRows(primaryRows, snapshotRows) {
+  const out = [];
+  const seen = new Set();
+
+  const pushRow = (r) => {
+    const t = normalizeTicker(r?.ticker);
+    if (!t) return;
+    if (seen.has(t)) return;
+    seen.add(t);
+
+    // Normalize row shape (keep your canonical keys)
+    out.push({
+      ticker: t,
+      company_name: r.company_name ?? r.companyName ?? null,
+      subsector: r.subsector ?? null,
+      price_change_1w: r.price_change_1w ?? r.priceChange1w ?? null,
+      price_change_1m: r.price_change_1m ?? r.priceChange1m ?? null,
+      price_change_ytd: r.price_change_ytd ?? r.priceChangeYtd ?? null,
+      signal_flag: r.signal_flag ?? r.signalFlag ?? null
+    });
   };
+
+  // 1) Keep enriched dashboard rows first
+  (primaryRows || []).forEach(pushRow);
+
+  // 2) Fill in missing from snapshot
+  (snapshotRows || []).forEach(pushRow);
+
+  return out;
 }
 
 // -----------------------------------------------------
-// Load base dashboard (already built by your pipeline)
+// Paths
 // -----------------------------------------------------
 
-const DASH_PATH = "dashboard_latest.json";
-const dash = readJson(DASH_PATH);
+const DASH_PATH = process.argv[2] || "dashboard_latest.json";
+const SNAP_PATH = process.argv[3] || "config/public_market_snapshot.json";
 
-// Guarantee schema keys exist
-dash.schema_version = dash.schema_version ?? dash.schemaVersion ?? "3.0.0";
-dash.generated_at = dash.generated_at ?? dash.generatedAt ?? new Date().toISOString();
-
-// Ensure nested structure exists
-ensure(dash, "panels", {});
-ensure(dash.panels, "public_market", { mode: "snapshot", as_of: null, rows: [] });
+const dashAbs = path.resolve(process.cwd(), DASH_PATH);
+const snapAbs = path.resolve(process.cwd(), SNAP_PATH);
 
 // -----------------------------------------------------
-// Merge public market snapshot (config/public_market_snapshot.json)
+// Load dashboard (required)
 // -----------------------------------------------------
 
-const snap = normalizeSnapshot(readJson("config/public_market_snapshot.json", { optional: true }));
-
-// Only overwrite as_of if snapshot has it
-if (snap.asof) dash.panels.public_market.as_of = snap.asof;
-
-// Merge rows: snapshot rows override/augment existing by ticker
-const existing = Array.isArray(dash.panels.public_market.rows) ? dash.panels.public_market.rows : [];
-const map = new Map();
-
-// Seed existing
-for (const r of existing) {
-  if (!r || !r.ticker) continue;
-  map.set(String(r.ticker).toUpperCase(), r);
+const raw = safeReadJSON(dashAbs);
+if (!raw) {
+  console.error(`❌ Cannot read dashboard JSON at: ${dashAbs}`);
+  process.exit(1);
 }
 
-// Merge snapshot (authoritative for market fields)
-for (const r of snap.rows) {
-  const t = r.ticker;
-  const prev = map.get(t) ?? { ticker: t };
-  map.set(t, {
-    ...prev,
-    // keep any existing company/subsector if snapshot omitted
-    company_name: r.company_name ?? prev.company_name ?? null,
-    subsector: r.subsector ?? prev.subsector ?? null,
-    price_change_1w: r.price_change_1w ?? prev.price_change_1w ?? null,
-    price_change_1m: r.price_change_1m ?? prev.price_change_1m ?? null,
-    price_change_ytd: r.price_change_ytd ?? prev.price_change_ytd ?? null,
-    signal_flag: r.signal_flag ?? prev.signal_flag ?? null
-  });
+raw.schema_version = "3.1.0";
+
+// Ensure panels shape exists
+raw.panels = raw.panels || {};
+raw.panels.public_market = raw.panels.public_market || {};
+raw.panels.public_market.rows = raw.panels.public_market.rows || [];
+
+// -----------------------------------------------------
+// Load snapshot (optional)
+// Supports either:
+//  A) { version, asof, rows: [...] }
+//  B) direct { rows: [...] }
+// -----------------------------------------------------
+
+const snap = safeReadJSON(snapAbs);
+const snapRows = snap?.rows || [];
+
+// Merge rows
+const mergedRows = mergePublicMarketRows(raw.panels.public_market.rows, snapRows);
+
+// Write merged rows back
+raw.panels.public_market.rows = mergedRows;
+
+// If snapshot has asof, surface it
+if (snap?.asof) raw.panels.public_market.as_of = snap.asof;
+
+// -----------------------------------------------------
+// MARKET OVERVIEW (stubbed values – wire to feed later)
+// -----------------------------------------------------
+
+raw.market_overview = {
+  indices: [
+    { ticker: "DOW",   name: "Dow Jones",        last: 39241.55, chg_pct: 0.77 },
+    { ticker: "SPX",   name: "S&P 500",          last:  5188.12, chg_pct: 0.80 },
+    { ticker: "IXIC",  name: "Nasdaq",           last: 16422.40, chg_pct: 1.15 },
+    { ticker: "RUT",   name: "Russell 2000",     last:  2063.22, chg_pct: 1.51 },
+    { ticker: "VIX",   name: "Volatility Index", last:    18.22, chg_pct: -3.22 },
+    { ticker: "US10Y", name: "US 10Y Yield",     last:     4.21, chg_bps: 4 }
+  ]
+};
+
+// -----------------------------------------------------
+// Sector Averages
+// -----------------------------------------------------
+
+const rows = raw?.panels?.public_market?.rows || [];
+const grouped = {};
+
+for (const r of rows) {
+  const sector = String(r.subsector || "GENERAL").trim() || "GENERAL";
+  if (!grouped[sector]) grouped[sector] = [];
+  grouped[sector].push(r);
 }
 
-// Write back merged rows
-dash.panels.public_market.rows = Array.from(map.values());
+const sectorAverages = Object.keys(grouped).sort().map((sector) => {
+  const list = grouped[sector];
+  return {
+    sector,
+    avg_1w: avg(list.map((r) => Number(r.price_change_1w ?? 0) || 0)),
+    avg_1m: avg(list.map((r) => Number(r.price_change_1m ?? 0) || 0)),
+    avg_ytd: avg(list.map((r) => Number(r.price_change_ytd ?? 0) || 0))
+  };
+});
+
+raw.construction_equity = {
+  sector_averages: sectorAverages
+};
 
 // -----------------------------------------------------
-// Write output (always valid JSON)
+// CEPS — Construction Equity Pressure Score
 // -----------------------------------------------------
 
-writeJson(DASH_PATH, dash);
-console.log("✅ build_dashboard_latest.mjs: dashboard_latest.json merged + written (valid JSON).");
+const findSector = (keyword) =>
+  sectorAverages.find((s) => s.sector.toLowerCase().includes(keyword)) || { avg_1w: 0 };
+
+const builders = findSector("home");
+const materials = findSector("material");
+const distributors = findSector("distributor");
+
+const avgBuilders1W = builders.avg_1w;
+const avgMaterials1W = materials.avg_1w;
+const avgDistributors1W = distributors.avg_1w;
+
+const cpiHistory = (raw.capital?.history || []).map((h) => Number(h.value ?? 0) || 0);
+const cpiDelta = cpiHistory.length >= 2 ? (cpiHistory.at(-1) - cpiHistory.at(-2)) : 0;
+
+const tenYearMove = raw.market_overview.indices.find((i) => i.ticker === "US10Y")?.chg_bps || 0;
+
+let ceps =
+  (avgBuilders1W * 0.30) +
+  (avgDistributors1W * 0.20) +
+  (avgMaterials1W * 0.20) +
+  (cpiDelta * 0.15) +
+  (tenYearMove * 0.15);
+
+ceps = clamp(Math.round(50 + ceps), 0, 100);
+raw.ceps_score = ceps;
+
+// -----------------------------------------------------
+// Correlation Engine (stub-safe)
+// -----------------------------------------------------
+
+const builderHistory = rows
+  .filter((r) => String(r.subsector || "").toLowerCase().includes("home"))
+  .map((r) => Number(r.price_change_1m ?? 0) || 0);
+
+const corrWindow = Math.min(cpiHistory.length, builderHistory.length);
+raw.correlations = {
+  cpi_vs_builders: correlation(cpiHistory.slice(-corrWindow), builderHistory.slice(-corrWindow)),
+  regime: ceps >= 70 ? "TIGHTENING" : ceps <= 30 ? "EASING" : "NEUTRAL"
+};
+
+// -----------------------------------------------------
+// Risk Mode v2
+// -----------------------------------------------------
+
+const vix = raw.market_overview.indices.find((i) => i.ticker === "VIX")?.last || 0;
+const cpiValue = Number(raw.capital?.pressure_index ?? 0) || 0;
+
+raw.risk_mode = (cpiValue >= 70) || (avgBuilders1W <= -5) || (vix >= 25);
+
+// -----------------------------------------------------
+// Volatility Regime
+// -----------------------------------------------------
+
+raw.volatility_regime =
+  vix >= 30 ? "HIGH" :
+  vix >= 20 ? "ELEVATED" :
+  "NORMAL";
+
+// -----------------------------------------------------
+// Write
+// -----------------------------------------------------
+
+safeWriteJSON(dashAbs, raw);
+console.log("✅ Institutional Bloomberg build complete.");
+console.log(`• Dashboard: ${dashAbs}`);
+console.log(`• Snapshot (optional): ${snap ? snapAbs : "(missing)"} `);
+console.log(`• Rows merged: ${mergedRows.length}`);
