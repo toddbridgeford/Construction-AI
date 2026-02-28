@@ -3,8 +3,37 @@
 // Schema v3.1.0 — Full Bloomberg Mode (Hardened)
 // =====================================================
 
-import fs from "fs";
-import path from "path";
+// -----------------------------------------------------
+// Load dashboard safely (GitHub Actions compatible)
+// -----------------------------------------------------
+
+import pathModule from "path";
+
+const ROOT = process.cwd();
+const DASHBOARD_PATH = pathModule.join(ROOT, "dashboard_latest.json");
+
+let raw = {};
+
+try {
+  if (fs.existsSync(DASHBOARD_PATH)) {
+    const file = fs.readFileSync(DASHBOARD_PATH, "utf8").trim();
+    raw = file ? JSON.parse(file) : {};
+  } else {
+    console.warn("dashboard_latest.json not found — creating new file.");
+    raw = {};
+  }
+} catch (err) {
+  console.warn("dashboard_latest.json invalid — rebuilding clean.");
+  raw = {};
+}
+
+// Guarantee required structure
+raw.panels ??= {};
+raw.capital ??= {};
+raw.executive ??= {};
+raw.market_overview ??= {};
+raw.version ??= 1;
+raw.asof ??= new Date().toISOString().split("T")[0];
 
 // -----------------------------------------------------
 // Utilities
@@ -47,7 +76,7 @@ function safeReadJSON(filePath) {
 }
 
 function safeWriteJSON(filePath, obj) {
-  fs.writeFileSync(filePath, JSON.stringify(obj, null, 2));
+  fs.writeFileSync(DASHBOARD_PATH, JSON.stringify(raw, null, 2));
 }
 
 function normalizeTicker(t) {
