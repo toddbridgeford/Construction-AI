@@ -1,12 +1,12 @@
 // =====================================================
-// Construction-AI Bloomberg Mode Builder
-// Schema v3.1.0
+// Construction-AI Institutional Builder
+// Schema v3.1.0 — Full Bloomberg Mode
 // =====================================================
 
 import fs from "fs";
 
 // -----------------------------------------------------
-// Helpers
+// Utilities
 // -----------------------------------------------------
 
 function avg(arr) {
@@ -18,67 +18,53 @@ function clamp(num, min, max) {
   return Math.max(min, Math.min(max, num));
 }
 
+function correlation(a, b) {
+  if (!a || !b || a.length !== b.length || a.length < 2) return 0;
+  const meanA = avg(a);
+  const meanB = avg(b);
+
+  let numerator = 0;
+  let denomA = 0;
+  let denomB = 0;
+
+  for (let i = 0; i < a.length; i++) {
+    numerator += (a[i] - meanA) * (b[i] - meanB);
+    denomA += Math.pow(a[i] - meanA, 2);
+    denomB += Math.pow(b[i] - meanB, 2);
+  }
+
+  return denomA && denomB ? numerator / Math.sqrt(denomA * denomB) : 0;
+}
+
 // -----------------------------------------------------
-// Load existing dashboard
+// Load dashboard
 // -----------------------------------------------------
 
-const filePath = "dashboard_latest.json";
-const raw = JSON.parse(fs.readFileSync(filePath, "utf8"));
+const path = "dashboard_latest.json";
+const raw = JSON.parse(fs.readFileSync(path, "utf8"));
 
-// Upgrade schema version
 raw.schema_version = "3.1.0";
 
 // -----------------------------------------------------
-// MARKET OVERVIEW (Placeholder logic – wire real feeds later)
+// MARKET OVERVIEW (stubbed values – wire to feed later)
 // -----------------------------------------------------
 
 raw.market_overview = {
   indices: [
-    {
-      ticker: "DOW",
-      name: "Dow Jones Industrial Avg",
-      last: 39241.55,
-      chg_pct: 0.77
-    },
-    {
-      ticker: "SPX",
-      name: "S&P 500",
-      last: 5188.12,
-      chg_pct: 0.80
-    },
-    {
-      ticker: "IXIC",
-      name: "Nasdaq",
-      last: 16422.40,
-      chg_pct: 1.15
-    },
-    {
-      ticker: "RUT",
-      name: "Russell 2000",
-      last: 2063.22,
-      chg_pct: 1.51
-    },
-    {
-      ticker: "VIX",
-      name: "Volatility Index",
-      last: 18.22,
-      chg_pct: -3.22
-    },
-    {
-      ticker: "US10Y",
-      name: "US 10Y Yield",
-      last: 4.21,
-      chg_bps: 4
-    }
+    { ticker: "DOW",  name: "Dow Jones", last: 39241.55, chg_pct: 0.77 },
+    { ticker: "SPX",  name: "S&P 500", last: 5188.12, chg_pct: 0.80 },
+    { ticker: "IXIC", name: "Nasdaq", last: 16422.40, chg_pct: 1.15 },
+    { ticker: "RUT",  name: "Russell 2000", last: 2063.22, chg_pct: 1.51 },
+    { ticker: "VIX",  name: "Volatility Index", last: 18.22, chg_pct: -3.22 },
+    { ticker: "US10Y", name: "US 10Y Yield", last: 4.21, chg_bps: 4 }
   ]
 };
 
 // -----------------------------------------------------
-// Construction Equity Sector Averages
+// Sector Averages
 // -----------------------------------------------------
 
 const rows = raw?.panels?.public_market?.rows || [];
-
 const grouped = {};
 
 for (const r of rows) {
@@ -103,35 +89,28 @@ raw.construction_equity = {
 };
 
 // -----------------------------------------------------
-// CEPS – Construction Equity Pressure Score
+// CEPS — Construction Equity Pressure Score
 // -----------------------------------------------------
 
-const builders = sectorAverages.find(s =>
-  s.sector.toLowerCase().includes("home")
-);
+const findSector = keyword =>
+  sectorAverages.find(s => s.sector.toLowerCase().includes(keyword)) || { avg_1w: 0 };
 
-const materials = sectorAverages.find(s =>
-  s.sector.toLowerCase().includes("material")
-);
+const builders = findSector("home");
+const materials = findSector("material");
+const distributors = findSector("distributor");
 
-const distributors = sectorAverages.find(s =>
-  s.sector.toLowerCase().includes("distributor")
-);
+const avgBuilders1W = builders.avg_1w;
+const avgMaterials1W = materials.avg_1w;
+const avgDistributors1W = distributors.avg_1w;
 
-const avgBuilders1W = builders?.avg_1w || 0;
-const avgMaterials1W = materials?.avg_1w || 0;
-const avgDistributors1W = distributors?.avg_1w || 0;
-
-const cpiDelta =
-  (raw.capital?.history?.length >= 2)
-    ? raw.capital.history.slice(-1)[0].value -
-      raw.capital.history.slice(-2)[0].value
-    : 0;
+const cpiHistory = raw.capital?.history?.map(h => h.value) || [];
+const cpiDelta = cpiHistory.length >= 2
+  ? cpiHistory.slice(-1)[0] - cpiHistory.slice(-2)[0]
+  : 0;
 
 const tenYearMove =
   raw.market_overview.indices.find(i => i.ticker === "US10Y")?.chg_bps || 0;
 
-// Weighted composite
 let ceps =
   (avgBuilders1W * 0.30) +
   (avgDistributors1W * 0.20) +
@@ -139,13 +118,24 @@ let ceps =
   (cpiDelta * 0.15) +
   (tenYearMove * 0.15);
 
-// Normalize 0–100
 ceps = clamp(Math.round(50 + ceps), 0, 100);
-
 raw.ceps_score = ceps;
 
 // -----------------------------------------------------
-// Risk Mode Logic
+// Correlation Engine
+// -----------------------------------------------------
+
+const builderHistory = rows
+  .filter(r => r.subsector?.toLowerCase().includes("home"))
+  .map(r => r.price_change_1m || 0);
+
+raw.correlations = {
+  cpi_vs_builders: correlation(cpiHistory.slice(-builderHistory.length), builderHistory),
+  regime: ceps >= 70 ? "TIGHTENING" : ceps <= 30 ? "EASING" : "NEUTRAL"
+};
+
+// -----------------------------------------------------
+// Risk Mode v2
 // -----------------------------------------------------
 
 const vix =
@@ -159,9 +149,17 @@ raw.risk_mode =
   (vix >= 25);
 
 // -----------------------------------------------------
-// Write File
+// Volatility Regime
 // -----------------------------------------------------
 
-fs.writeFileSync(filePath, JSON.stringify(raw, null, 2));
+raw.volatility_regime =
+  vix >= 30 ? "HIGH" :
+  vix >= 20 ? "ELEVATED" :
+  "NORMAL";
 
-console.log("Bloomberg mode dashboard built successfully.");
+// -----------------------------------------------------
+// Write file
+// -----------------------------------------------------
+
+fs.writeFileSync(path, JSON.stringify(raw, null, 2));
+console.log("Institutional Bloomberg build complete.");
