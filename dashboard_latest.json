@@ -1,5 +1,5 @@
 {
-  "schema_version": "3.3.0",
+  "schema_version": "3.4.0",
   "panels": {
     "public_market": {
       "rows": [
@@ -368,5 +368,26 @@
       "delta_1m": null
     }
   },
-  "risk_thermometer_mode": false
+  "risk_thermometer_mode": false,
+  "acceleration_engine": {
+    "divergence": 2,
+    "deltas": {
+      "cpi_7d": null,
+      "cpi_30d": null,
+      "ceps_7d": null,
+      "ceps_30d": null,
+      "bmi_7d": null,
+      "bmi_30d": null
+    },
+    "flags": {
+      "cpi_accelerating_7d": false,
+      "cpi_accelerating_30d": false,
+      "ceps_accelerating_7d": false,
+      "ceps_accelerating_30d": false,
+      "equity_tightening_divergence": false,
+      "equity_easing_divergence": false,
+      "builder_early_warning": false
+    },
+    "alert_level": "MONITOR"
+  }
 }
