@@ -1,74 +1,13 @@
 // =====================================================
 // Construction-AI Institutional Builder
 // Schema v3.4.0 — Acceleration + Divergence Engine (No deps)
+// Shared Memory: capital.history persisted in dashboard_latest.json (last 12)
 // =====================================================
 
 import fs from "fs";
 import path from "path";
 import https from "https";
 
-// === Capital OS: Shared Memory Helpers (GitHub-persisted) ===
-import fs from "fs";
-
-function isoDayUTC(d = new Date()) {
-  return d.toISOString().slice(0, 10); // YYYY-MM-DD
-}
-
-function safeReadJSON(path) {
-  try {
-    if (!fs.existsSync(path)) return null;
-    const raw = fs.readFileSync(path, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-/**
- * Append (date,value) to an array of points, dedupe by date, keep last N.
- */
-function appendPoint(history = [], point, maxLen = 12) {
-  const cleaned = Array.isArray(history) ? history.filter(Boolean) : [];
-  const withoutSameDate = cleaned.filter(p => p?.date !== point.date);
-  const next = [...withoutSameDate, point];
-  return next.slice(Math.max(0, next.length - maxLen));
-}
-
-/**
- * Merge previous dashboard memory into the new dashboard object.
- * - Persists capital.history as the shared CPI memory series (last 12).
- * - Also persists regime_history if you already use it (last 60).
- */
-function mergeSharedMemory({ prev, next, asof, cpiValue, maxCpiPoints = 12 }) {
-  const prevCapitalHist = prev?.capital?.history ?? [];
-  const nextCapital = next.capital ?? {};
-
-  const mergedCapitalHistory = appendPoint(
-    prevCapitalHist,
-    { date: asof, value: cpiValue },
-    maxCpiPoints
-  );
-
-  next.capital = {
-    ...nextCapital,
-    history: mergedCapitalHistory,
-  };
-
-  // Optional: keep regime_history rolling if present (doesn't break if absent)
-  if (Array.isArray(prev?.regime_history) || Array.isArray(next?.regime_history)) {
-    const prevReg = prev?.regime_history ?? [];
-    const nextReg = next?.regime_history ?? [];
-    // Dedupe by date
-    const map = new Map();
-    for (const r of [...prevReg, ...nextReg]) {
-      if (r?.date) map.set(r.date, r);
-    }
-    const merged = Array.from(map.values()).sort((a, b) => (a.date < b.date ? -1 : 1));
-    next.regime_history = merged.slice(Math.max(0, merged.length - 60));
-  }
-
-  return next;
-}
 // -----------------------------------------------------
 // Paths
 // -----------------------------------------------------
@@ -107,7 +46,7 @@ function correlation(a, b) {
   for (let i = 0; i < a.length; i++) {
     numerator += (a[i] - meanA) * (b[i] - meanB);
     denomA += Math.pow(a[i] - meanA, 2);
-    denomB += Math.pow(a[i] - meanB, 2);
+    denomB += Math.pow(b[i] - meanB, 2);
   }
 
   return denomA && denomB ? numerator / Math.sqrt(denomA * denomB) : 0;
@@ -199,6 +138,14 @@ function assertDashboardShape(obj) {
   if (typeof obj.capital.pressure_index !== "number") throw new Error("Missing capital.pressure_index");
   if (!Array.isArray(obj.capital.history)) throw new Error("Missing capital.history");
   if (!obj.acceleration_engine) throw new Error("Missing acceleration_engine");
+}
+
+function appendDailyHistory(history, point, maxLen = 12) {
+  const clean = Array.isArray(history) ? history.filter(Boolean) : [];
+  // remove same date if exists
+  const without = clean.filter(p => p?.date !== point.date);
+  const next = [...without, point];
+  return next.slice(Math.max(0, next.length - maxLen));
 }
 
 // -----------------------------------------------------
@@ -453,13 +400,16 @@ raw.capital.subindices.institutional = instCPI;
 raw.capital.pressure_index = compositeCPI;
 raw.capital.source_status = fredStatus;
 
-// Append CPI history once/day (no duplicates)
+// -----------------------------------------------------
+// SHARED MEMORY: Append CPI history once/day + trim to last 12
+// -----------------------------------------------------
 {
   const today = todayISO();
-  const last = raw.capital.history.at(-1);
-  if (!last || last.date !== today) {
-    raw.capital.history.push({ date: today, value: compositeCPI });
-  }
+  raw.capital.history = appendDailyHistory(
+    raw.capital.history,
+    { date: today, value: compositeCPI },
+    12
+  );
 }
 
 // CPI delta from history (for CEPS momentum)
@@ -548,6 +498,7 @@ raw.risk_thermometer_mode = raw.capital.pressure_index >= 70;
 
 // -----------------------------------------------------
 // Regime History (store CEPS/CPI/BMI splits daily)
+// Keep last 60 entries (shared memory)
 // -----------------------------------------------------
 
 {
@@ -567,6 +518,10 @@ raw.risk_thermometer_mode = raw.capital.pressure_index >= 70;
       volatility: raw.volatility_regime,
       regime: raw.correlations.regime
     });
+  }
+
+  if (raw.regime_history.length > 60) {
+    raw.regime_history = raw.regime_history.slice(-60);
   }
 }
 
@@ -592,7 +547,7 @@ raw.trends.bmi = {
 };
 
 // -----------------------------------------------------
-// ACCELERATION + DIVERGENCE ENGINE (THE UPGRADE)
+// ACCELERATION + DIVERGENCE ENGINE
 // -----------------------------------------------------
 
 const cpi_d7 = raw.trends.cpi.delta_1w;
@@ -609,13 +564,13 @@ const flags = {
   ceps_accelerating_7d: (ceps_d7 != null) && (ceps_d7 >= 3),
   ceps_accelerating_30d: (ceps_d30 != null) && (ceps_d30 >= 6),
 
-  equity_tightening_divergence: divergence <= -6, // markets pricing worse than macro
-  equity_easing_divergence: divergence >= 6,      // markets pricing better than macro
+  equity_tightening_divergence: divergence <= -6,
+  equity_easing_divergence: divergence >= 6,
 
   builder_early_warning: (bmi < 45) && ((cpi_d7 != null && cpi_d7 >= 2) || (cpi_d30 != null && cpi_d30 >= 4))
 };
 
-// Executive alert level (clean and deterministic)
+// Executive alert level
 let alert_level = "MONITOR";
 if (flags.cpi_accelerating_7d || flags.cpi_accelerating_30d) alert_level = "WATCH";
 if ((flags.cpi_accelerating_7d || flags.cpi_accelerating_30d) && (flags.builder_early_warning || flags.equity_tightening_divergence)) {
