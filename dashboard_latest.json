@@ -1,5 +1,5 @@
 {
-  "schema_version": "3.1.0",
+  "schema_version": "3.2.0",
   "panels": {
     "public_market": {
       "rows": [
@@ -310,11 +310,25 @@
       }
     ]
   },
-  "ceps_score": 50,
+  "ceps_score": 55,
   "correlations": {
     "cpi_vs_builders": 0,
     "regime": "NEUTRAL"
   },
   "risk_mode": false,
-  "volatility_regime": "NORMAL"
+  "volatility_regime": "NORMAL",
+  "shock_flags": {
+    "rate_shock": false,
+    "equity_drawdown": false,
+    "volatility_spike": false
+  },
+  "regime_history": [
+    {
+      "date": "2026-02-28",
+      "ceps": 55,
+      "cpi": 0,
+      "volatility": "NORMAL",
+      "regime": "NEUTRAL"
+    }
+  ]
 }
