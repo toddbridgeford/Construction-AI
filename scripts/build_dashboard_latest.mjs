@@ -3,37 +3,21 @@
 // Schema v3.1.0 — Full Bloomberg Mode (Hardened)
 // =====================================================
 
-// -----------------------------------------------------
-// Load dashboard safely (GitHub Actions compatible)
-// -----------------------------------------------------
+import fs from "fs";
+import path from "path";
 
-import pathModule from "path";
+// -----------------------------------------------------
+// Paths
+// -----------------------------------------------------
 
 const ROOT = process.cwd();
-const DASHBOARD_PATH = pathModule.join(ROOT, "dashboard_latest.json");
 
-let raw = {};
+// Prefer workflow env OUT_PATH, else default dashboard_latest.json
+const DASH_PATH = process.env.OUT_PATH || "dashboard_latest.json";
+const SNAP_PATH = "config/public_market_snapshot.json";
 
-try {
-  if (fs.existsSync(DASHBOARD_PATH)) {
-    const file = fs.readFileSync(DASHBOARD_PATH, "utf8").trim();
-    raw = file ? JSON.parse(file) : {};
-  } else {
-    console.warn("dashboard_latest.json not found — creating new file.");
-    raw = {};
-  }
-} catch (err) {
-  console.warn("dashboard_latest.json invalid — rebuilding clean.");
-  raw = {};
-}
-
-// Guarantee required structure
-raw.panels ??= {};
-raw.capital ??= {};
-raw.executive ??= {};
-raw.market_overview ??= {};
-raw.version ??= 1;
-raw.asof ??= new Date().toISOString().split("T")[0];
+const dashAbs = path.resolve(ROOT, DASH_PATH);
+const snapAbs = path.resolve(ROOT, SNAP_PATH);
 
 // -----------------------------------------------------
 // Utilities
@@ -68,7 +52,9 @@ function correlation(a, b) {
 
 function safeReadJSON(filePath) {
   try {
-    const txt = fs.readFileSync(filePath, "utf8");
+    if (!fs.existsSync(filePath)) return null;
+    const txt = fs.readFileSync(filePath, "utf8").trim();
+    if (!txt) return {};
     return JSON.parse(txt);
   } catch (e) {
     return null;
@@ -76,7 +62,7 @@ function safeReadJSON(filePath) {
 }
 
 function safeWriteJSON(filePath, obj) {
-  fs.writeFileSync(DASHBOARD_PATH, JSON.stringify(raw, null, 2));
+  fs.writeFileSync(filePath, JSON.stringify(obj, null, 2));
 }
 
 function normalizeTicker(t) {
@@ -93,7 +79,6 @@ function mergePublicMarketRows(primaryRows, snapshotRows) {
     if (seen.has(t)) return;
     seen.add(t);
 
-    // Normalize row shape (keep your canonical keys)
     out.push({
       ticker: t,
       company_name: r.company_name ?? r.companyName ?? null,
@@ -105,41 +90,36 @@ function mergePublicMarketRows(primaryRows, snapshotRows) {
     });
   };
 
-  // 1) Keep enriched dashboard rows first
   (primaryRows || []).forEach(pushRow);
-
-  // 2) Fill in missing from snapshot
   (snapshotRows || []).forEach(pushRow);
 
   return out;
 }
 
 // -----------------------------------------------------
-// Paths
+// Load dashboard (required for merge; create new if missing)
 // -----------------------------------------------------
 
-const DASH_PATH = process.argv[2] || "dashboard_latest.json";
-const SNAP_PATH = process.argv[3] || "config/public_market_snapshot.json";
-
-const dashAbs = path.resolve(process.cwd(), DASH_PATH);
-const snapAbs = path.resolve(process.cwd(), SNAP_PATH);
-
-// -----------------------------------------------------
-// Load dashboard (required)
-// -----------------------------------------------------
-
-const raw = safeReadJSON(dashAbs);
-if (!raw) {
-  console.error(`❌ Cannot read dashboard JSON at: ${dashAbs}`);
-  process.exit(1);
+let raw = safeReadJSON(dashAbs);
+if (raw === null) {
+  // if invalid JSON, rebuild clean
+  console.warn("dashboard_latest.json invalid or unreadable — rebuilding clean.");
+  raw = {};
 }
 
 raw.schema_version = "3.1.0";
 
+// Guarantee required structure
+raw.panels ??= {};
+raw.capital ??= {};
+raw.executive ??= {};
+raw.market_overview ??= {};
+raw.version ??= 1;
+raw.asof ??= new Date().toISOString().split("T")[0];
+
 // Ensure panels shape exists
-raw.panels = raw.panels || {};
-raw.panels.public_market = raw.panels.public_market || {};
-raw.panels.public_market.rows = raw.panels.public_market.rows || [];
+raw.panels.public_market ??= {};
+raw.panels.public_market.rows ??= [];
 
 // -----------------------------------------------------
 // Load snapshot (optional)
@@ -153,8 +133,6 @@ const snapRows = snap?.rows || [];
 
 // Merge rows
 const mergedRows = mergePublicMarketRows(raw.panels.public_market.rows, snapRows);
-
-// Write merged rows back
 raw.panels.public_market.rows = mergedRows;
 
 // If snapshot has asof, surface it
@@ -166,12 +144,12 @@ if (snap?.asof) raw.panels.public_market.as_of = snap.asof;
 
 raw.market_overview = {
   indices: [
-    { ticker: "DOW",   name: "Dow Jones",        last: 39241.55, chg_pct: 0.77 },
-    { ticker: "SPX",   name: "S&P 500",          last:  5188.12, chg_pct: 0.80 },
-    { ticker: "IXIC",  name: "Nasdaq",           last: 16422.40, chg_pct: 1.15 },
-    { ticker: "RUT",   name: "Russell 2000",     last:  2063.22, chg_pct: 1.51 },
-    { ticker: "VIX",   name: "Volatility Index", last:    18.22, chg_pct: -3.22 },
-    { ticker: "US10Y", name: "US 10Y Yield",     last:     4.21, chg_bps: 4 }
+    { ticker: "DOW", name: "Dow Jones", last: 39241.55, chg_pct: 0.77 },
+    { ticker: "SPX", name: "S&P 500", last: 5188.12, chg_pct: 0.80 },
+    { ticker: "IXIC", name: "Nasdaq", last: 16422.40, chg_pct: 1.15 },
+    { ticker: "RUT", name: "Russell 2000", last: 2063.22, chg_pct: 1.51 },
+    { ticker: "VIX", name: "Volatility Index", last: 18.22, chg_pct: -3.22 },
+    { ticker: "US10Y", name: "US 10Y Yield", last: 4.21, chg_bps: 4 }
   ]
 };
 
@@ -241,6 +219,7 @@ const builderHistory = rows
   .map((r) => Number(r.price_change_1m ?? 0) || 0);
 
 const corrWindow = Math.min(cpiHistory.length, builderHistory.length);
+
 raw.correlations = {
   cpi_vs_builders: correlation(cpiHistory.slice(-corrWindow), builderHistory.slice(-corrWindow)),
   regime: ceps >= 70 ? "TIGHTENING" : ceps <= 30 ? "EASING" : "NEUTRAL"
