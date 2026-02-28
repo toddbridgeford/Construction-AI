@@ -7204,7 +7204,6 @@
     }
   ],
   "alerts": [],
-  "panels": {
    "panels": {
   "public_market": {
     "mode": "manual_snapshot",
