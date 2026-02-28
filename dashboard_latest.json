@@ -1,5 +1,5 @@
 {
-  "schema_version": "3.2.0",
+  "schema_version": "3.3.0",
   "panels": {
     "public_market": {
       "rows": [
@@ -232,7 +232,23 @@
       "as_of": "2026-02-28"
     }
   },
-  "capital": {},
+  "capital": {
+    "subindices": {
+      "residential": 54,
+      "institutional": 51
+    },
+    "history": [
+      {
+        "date": "2026-02-28",
+        "value": 53
+      }
+    ],
+    "pressure_index": 53,
+    "source_status": {
+      "ok": true,
+      "reason": null
+    }
+  },
   "executive": {},
   "market_overview": {
     "indices": [
@@ -330,5 +346,27 @@
       "volatility": "NORMAL",
       "regime": "NEUTRAL"
     }
-  ]
+  ],
+  "builder_momentum": {
+    "value": 50
+  },
+  "ceps_split": {
+    "residential": 52,
+    "institutional": 51
+  },
+  "trends": {
+    "ceps": {
+      "delta_1w": null,
+      "delta_1m": null
+    },
+    "cpi": {
+      "delta_1w": null,
+      "delta_1m": null
+    },
+    "bmi": {
+      "delta_1w": null,
+      "delta_1m": null
+    }
+  },
+  "risk_thermometer_mode": false
 }
