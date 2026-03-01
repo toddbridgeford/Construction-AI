@@ -1,4 +1,4 @@
-name: Update dashboard_latest.json (CPI + News + Stocks + SAM + USAspending)
+name: Update dashboard_latest.json (CPI + News + Stocks + SAM + USAspending + EIA)
 
 on:
   workflow_dispatch:
@@ -47,6 +47,9 @@ jobs:
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
           SAM_API_KEY: ${{ secrets.SAM_API_KEY }}
 
+          # NEW
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+
           FRED_OBSERVATION_START: "2020-01-01"
           OUT_PATH: "dashboard_latest.json"
 
@@ -58,10 +61,15 @@ jobs:
 
           # USAspending (no key needed)
           USASPENDING_LOOKBACK_DAYS: "30"
-          USASPENDING_LIMIT: "50"
-          # NAICS 23 = Construction. Add 5413 for A/E if you want.
-          USASPENDING_NAICS: "23,5413"
+          USASPENDING_LIMIT: "80"
+          USASPENDING_NAICS: "23,5413,2373,2371,2362,2382"
           USASPENDING_KEYWORDS: "construction,design-build,general contractor,roofing,HVAC,electrical,plumbing,concrete,civil,road,bridge,data center"
+
+          # EIA series IDs (YOU CAN EDIT THIS LIST ANYTIME)
+          # Tip: Start with 1–3 series you know are valid, then expand.
+          # Example commonly used legacy series: PET.RWTC.D (WTI spot)
+          EIA_SERIES_IDS: "PET.RWTC.D"
+          EIA_MAX_POINTS: "120"
         run: |
           node scripts/build_dashboard_latest.mjs
 
@@ -93,7 +101,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update dashboard_latest.json (CPI + News + Stocks + SAM + USAspending)"
+          git commit -m "Update dashboard_latest.json (CPI + News + Stocks + SAM + USAspending + EIA)"
           git push origin Predictive-Model
 
       - name: Complete job
