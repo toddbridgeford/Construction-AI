@@ -1,0 +1,39 @@
+diff --git a/scripts/build_dashboard_latest.mjs b/scripts/build_dashboard_latest.mjs
+index 2b6a2c1..c8f0d2a 100644
+--- a/scripts/build_dashboard_latest.mjs
++++ b/scripts/build_dashboard_latest.mjs
+@@ -205,13 +205,14 @@ function buildSignalsPayload(fredSignals, seriesMap, blsSeries = [], censusSerie
+   const fredPayload = fredSignals.map((s) => {
+     const hist = seriesMap[s.key]?.history ?? [];
+     return {
+       name: s.name,
+       region: s.region ?? "US",
+       units: s.units ?? "",
+       yoy: computeYoY(hist),
+-      history: hist.map((p) => ({ date: p.date, value: p.value }))
++      history: hist.map((p) => ({ date: p.date, value: p.value })),
++      source: "FRED"
+     };
+   });
+ 
+   // BLS/Census already normalized by providers
+   const blsPayload = blsSeries.map(s => ({
+     name: s.name,
+     region: s.region,
+     units: s.units,
+     yoy: s.yoy ?? null,
+     history: s.history ?? [],
+     source: "BLS"
+   }));
+ 
+   const censusPayload = censusSeries.map(s => ({
+     name: s.name,
+     region: s.region,
+     units: s.units,
+     yoy: s.yoy ?? null,
+     history: s.history ?? [],
+     source: "Census"
+   }));
+ 
+   return [...fredPayload, ...blsPayload, ...censusPayload];
+ }
