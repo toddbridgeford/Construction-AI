@@ -1,409 +1,547 @@
 // scripts/build_dashboard_latest.mjs
-// Capital OS – Construction Intelligence Edition (stable, commit-ready)
-// - Generates dashboard_latest.json at repo root
-// - Never throws on missing data
-// - Always defines builder_momentum (fixes your Actions failure)
+// Capital OS v5+ — Predictive Forward Engine (FRED)
+// - No dependencies
+// - Reads: config/fred_signals.json
+// - Writes: dashboard_latest.json (repo root)
+// - Requires env: FRED_API_KEY
 
 import fs from "fs";
 import path from "path";
-import https from "https";
 
 const ROOT = process.cwd();
+const CFG_PATH = path.join(ROOT, "config", "fred_signals.json");
+const OUT_PATH = path.join(ROOT, "dashboard_latest.json");
 
-const FILES = {
-  fredSignals: path.join(ROOT, "config", "fred_signals.json"),
-  statePermits: path.join(ROOT, "config", "state_permits.json"),
-  msaPermits: path.join(ROOT, "config", "msa_permits.json"),
-  outDashboard: path.join(ROOT, "dashboard_latest.json"),
-};
-
-function readJSON(p, fallback) {
-  try {
-    return JSON.parse(fs.readFileSync(p, "utf8"));
-  } catch {
-    return fallback;
-  }
+const FRED_API_KEY = process.env.FRED_API_KEY || "";
+if (!FRED_API_KEY) {
+  console.error("Missing FRED_API_KEY env var. Add GitHub Secret: FRED_API_KEY");
+  process.exit(1);
 }
 
-function writeJSON(p, obj) {
-  fs.writeFileSync(p, JSON.stringify(obj, null, 2) + "\n", "utf8");
+// -----------------------------
+// Helpers
+// -----------------------------
+function clamp(x, a, b) {
+  if (Number.isNaN(x) || x === null || x === undefined) return a;
+  return Math.min(b, Math.max(a, x));
+}
+
+function roundInt(x) {
+  if (x === null || x === undefined || Number.isNaN(x)) return null;
+  return Math.round(x);
+}
+
+function safeNum(x) {
+  const n = Number(x);
+  return Number.isFinite(n) ? n : null;
+}
+
+function isoToday() {
+  const d = new Date();
+  const yyyy = d.getUTCFullYear();
+  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(d.getUTCDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 function nowISO() {
   return new Date().toISOString();
 }
 
-function todayYYYYMMDD() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function clamp(n, a, b) {
-  return Math.max(a, Math.min(b, n));
-}
-
-function safeNum(x, fallback = 0) {
-  const n = Number(x);
-  return Number.isFinite(n) ? n : fallback;
-}
-
 function pctChange(newV, oldV) {
-  const a = safeNum(newV, NaN);
-  const b = safeNum(oldV, NaN);
-  if (!Number.isFinite(a) || !Number.isFinite(b) || b === 0) return null;
-  return ((a - b) / Math.abs(b)) * 100;
+  const a = safeNum(newV);
+  const b = safeNum(oldV);
+  if (a === null || b === null) return null;
+  if (Math.abs(b) < 1e-9) return null;
+  return ((a - b) / Math.abs(b)) * 100.0;
 }
 
-function httpGetJSON(url) {
-  return new Promise((resolve, reject) => {
-    https
-      .get(url, (res) => {
-        let data = "";
-        res.on("data", (c) => (data += c));
-        res.on("end", () => {
-          try {
-            resolve(JSON.parse(data));
-          } catch (e) {
-            reject(e);
-          }
-        });
-      })
-      .on("error", reject);
-  });
+function logistic(z) {
+  // stable-ish logistic
+  const t = clamp(z, -12, 12);
+  return 1 / (1 + Math.exp(-t));
 }
 
-// FRED observations
-async function fetchFREDSeries({ series_id, observation_start }, apiKey) {
-  const base = "https://api.stlouisfed.org/fred/series/observations";
-  const params = new URLSearchParams({
-    series_id,
-    api_key: apiKey,
-    file_type: "json",
-    observation_start: observation_start || "2020-01-01",
-    sort_order: "asc",
-  });
-
-  const url = `${base}?${params.toString()}`;
-  const json = await httpGetJSON(url);
-  const obs = Array.isArray(json?.observations) ? json.observations : [];
-
-  // Keep numeric values only
-  const points = obs
-    .map((o) => {
-      const v = Number(o.value);
-      if (!Number.isFinite(v)) return null;
-      return { date: o.date, value: v };
-    })
-    .filter(Boolean);
-
-  return points;
+function normalizeTo100(x, min, max) {
+  const v = safeNum(x);
+  if (v === null) return null;
+  const t = (v - min) / (max - min);
+  return clamp(t * 100.0, 0, 100);
 }
 
-function lastN(points, n) {
-  if (!Array.isArray(points) || points.length === 0) return [];
-  return points.slice(Math.max(0, points.length - n));
+function mean(arr) {
+  const xs = arr.filter((v) => Number.isFinite(v));
+  if (!xs.length) return null;
+  return xs.reduce((a, b) => a + b, 0) / xs.length;
 }
 
-// Try to find a point ~12 months back (monthly series are common)
-function approx12mBack(points) {
-  if (!points?.length) return null;
-  if (points.length < 13) return null;
-  return points[points.length - 13] || null;
+function lastN(arr, n) {
+  if (!Array.isArray(arr) || arr.length === 0) return [];
+  return arr.slice(Math.max(0, arr.length - n));
 }
 
-// Simple “score” mapping helpers (stable + monotonic)
-function toScore_0_100(value, min, max) {
-  const v = safeNum(value, NaN);
-  if (!Number.isFinite(v)) return 50;
-  if (max === min) return 50;
-  return clamp(((v - min) / (max - min)) * 100, 0, 100);
+function parseFREDObservations(json) {
+  // FRED: { observations: [{date:"YYYY-MM-DD", value:"123.4"|"."}, ...] }
+  const obs = (json && json.observations) || [];
+  const rows = obs
+    .map((o) => ({
+      date: o.date,
+      value: o.value === "." ? null : safeNum(o.value),
+    }))
+    .filter((r) => r.date);
+  return rows;
 }
 
-function bandForCPI(cpi) {
-  if (cpi >= 80) return "RESTRICTIVE";
-  if (cpi >= 65) return "TIGHTENING";
-  if (cpi >= 45) return "NEUTRAL";
-  return "EASING";
+async function fredFetchSeries(seriesId, observationStart) {
+  const url =
+    "https://api.stlouisfed.org/fred/series/observations" +
+    `?series_id=${encodeURIComponent(seriesId)}` +
+    `&api_key=${encodeURIComponent(FRED_API_KEY)}` +
+    `&file_type=json` +
+    `&observation_start=${encodeURIComponent(observationStart || "2020-01-01")}` +
+    `&sort_order=asc`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    const txt = await res.text().catch(() => "");
+    throw new Error(`FRED fetch failed (${seriesId}): ${res.status} ${txt}`);
+  }
+  return res.json();
 }
 
-function riskLabel(cpi) {
-  if (cpi >= 70) return "RISK";
-  if (cpi >= 55) return "MONITOR";
-  return "STABLE";
+function computeYoYFromMonthly(rows) {
+  // assume rows ascending; YoY = last vs ~12 months back (closest index -12 if monthly)
+  // If not enough, return null.
+  const values = rows.filter((r) => r.value !== null);
+  if (values.length < 13) return null;
+  const last = values[values.length - 1].value;
+  const prev = values[values.length - 13].value;
+  return pctChange(last, prev);
 }
 
-function volatilityRegime() {
-  // Placeholder until you wire real vol series
-  return "NORMAL";
+function computeRecentTrend(rows) {
+  // return simple 30-day-ish trend: last vs 4 points back (works for weekly/monthly-ish)
+  const values = rows.filter((r) => r.value !== null);
+  if (values.length < 5) return null;
+  const last = values[values.length - 1].value;
+  const prev = values[values.length - 5].value;
+  return last - prev;
 }
 
-function regimeFrom(cpi) {
-  if (cpi >= 70) return "RISK";
-  if (cpi >= 55) return "MONITOR";
-  return "NEUTRAL";
+// -----------------------------
+// Load + fetch series
+// -----------------------------
+function loadConfig() {
+  if (!fs.existsSync(CFG_PATH)) {
+    console.error(`Missing config: ${CFG_PATH}`);
+    process.exit(1);
+  }
+  const raw = fs.readFileSync(CFG_PATH, "utf-8");
+  return JSON.parse(raw);
 }
 
-function safeHistoryFromPoints(points, max = 24) {
-  const tail = lastN(points, max);
-  return tail.map((p) => ({ date: p.date, value: p.value }));
-}
+async function loadSignals(cfg) {
+  const startDefault = cfg.observation_start_default || "2020-01-01";
+  const signals = cfg.signals || [];
 
-async function main() {
-  const fredCfg = readJSON(FILES.fredSignals, {
-    primary_series_id: "MORTGAGE30US",
-    observation_start_default: "2020-01-01",
-    signals: [],
-  });
+  const out = [];
+  for (const s of signals) {
+    const key = s.key;
+    const series_id = s.series_id;
+    const name = s.name || key;
+    const region = s.region || "US";
+    const units = s.units || "";
+    const obsStart = s.observation_start || startDefault;
 
-  const apiKey =
-    process.env.FRED_API_KEY ||
-    process.env.FRED_KEY ||
-    process.env.FRED_APIKEY ||
-    "";
+    try {
+      const json = await fredFetchSeries(series_id, obsStart);
+      const rows = parseFREDObservations(json);
+      const values = rows.filter((r) => r.value !== null).map((r) => r.value);
 
-  // If no key, still output a valid dashboard with safe defaults.
-  const canFetch = Boolean(apiKey && apiKey.length > 5);
+      const yoy = computeYoYFromMonthly(rows);
+      const historyPoints = rows
+        .filter((r) => r.value !== null)
+        .slice(-24) // keep last 24 points
+        .map((r) => ({ date: r.date, value: r.value }));
 
-  const observationStart = fredCfg?.observation_start_default || "2020-01-01";
-  const signalsList = Array.isArray(fredCfg?.signals) ? fredCfg.signals : [];
-
-  // Fetch all series (best-effort)
-  const seriesData = {};
-  if (canFetch && signalsList.length > 0) {
-    await Promise.all(
-      signalsList.map(async (s) => {
-        const series_id = s?.series_id;
-        if (!series_id) return;
-        try {
-          const pts = await fetchFREDSeries(
-            { series_id, observation_start: observationStart },
-            apiKey
-          );
-          seriesData[series_id] = pts;
-        } catch {
-          seriesData[series_id] = [];
-        }
-      })
-    );
-  } else {
-    // No fetch; populate empty arrays
-    for (const s of signalsList) {
-      if (s?.series_id) seriesData[s.series_id] = [];
+      out.push({
+        key,
+        series_id,
+        name,
+        region,
+        units,
+        latest: values.length ? values[values.length - 1] : null,
+        yoy,
+        history: historyPoints,
+      });
+    } catch (e) {
+      // Never hard-fail a whole run for one missing series
+      out.push({
+        key,
+        series_id,
+        name,
+        region,
+        units,
+        latest: null,
+        yoy: null,
+        history: [],
+        error: String(e?.message || e),
+      });
     }
   }
 
-  // Build “signals” objects for dashboard
-  const dashboardSignals = signalsList.map((s) => {
-    const series_id = s.series_id;
-    const pts = seriesData[series_id] || [];
-    const last = pts.length ? pts[pts.length - 1] : null;
-    const back12 = approx12mBack(pts);
+  return out;
+}
 
-    // YOY: default to percent change; if it’s a rate series, this is still acceptable.
-    const yoy = back12 ? pctChange(last?.value, back12?.value) : null;
+function indexByKey(signals) {
+  const m = new Map();
+  for (const s of signals) m.set(s.key, s);
+  return m;
+}
 
-    return {
-      name: s.name || series_id,
-      region: s.region || "US",
-      units: s.units || "",
-      series_id,
-      value: last ? last.value : null,
-      yoy,
-      history: safeHistoryFromPoints(pts, 24),
-    };
-  });
+// -----------------------------
+// Capital OS scoring (stable, deterministic)
+// -----------------------------
+function computeCapitalAndCEPS(signalsByKey) {
+  // Pull the main drivers (safe if missing)
+  const mort30 = signalsByKey.get("mortgage30")?.latest ?? null; // %
+  const unrate = signalsByKey.get("unrate")?.latest ?? null;     // %
+  const houst = signalsByKey.get("houst")?.yoy ?? null;          // % yoy (proxy activity)
+  const permit = signalsByKey.get("permit")?.yoy ?? null;        // % yoy
+  const cpiYoy = signalsByKey.get("cpi")?.yoy ?? null;           // % yoy (computed from CPI index)
+  const tlres = signalsByKey.get("tlrescons")?.yoy ?? null;      // % yoy
+  const tlnres = signalsByKey.get("tlnrescons")?.yoy ?? null;    // % yoy
 
-  // Helper to find a series by series_id quickly
-  const getLastValue = (series_id) => {
-    const pts = seriesData[series_id] || [];
-    return pts.length ? pts[pts.length - 1].value : null;
-  };
+  // Normalize key pressures (higher = tighter)
+  const mortPressure = normalizeTo100(mort30, 2.0, 10.0);     // 2%..10%
+  const inflPressure = normalizeTo100(cpiYoy, 0.0, 8.0);      // 0..8% yoy
+  const unPressure   = normalizeTo100(unrate, 3.0, 10.0);     // 3..10%
 
-  // Core series (optional)
-  const mortgage30 = getLastValue("MORTGAGE30US");
-  const unrate = getLastValue("UNRATE");
-  const permit = getLastValue("PERMIT");
-  const houst = getLastValue("HOUST");
+  // Activity: declining activity increases pressure => invert YoY
+  const permitPressure = permit === null ? null : clamp(normalizeTo100(-permit, -20, 20), 0, 100);
+  const houstPressure  = houst === null ? null : clamp(normalizeTo100(-houst, -20, 20), 0, 100);
 
-  // CPI (Capital Pressure Index) — simple, stable composite (0–100)
-  // Tune ranges as you like (these are sane defaults).
-  const mortgageScore = toScore_0_100(mortgage30, 2.5, 9.0); // higher rates => higher pressure
-  const unrateScore = 100 - toScore_0_100(unrate, 3.0, 10.0); // invert
-  const permitScore = 100 - toScore_0_100(permit, 900, 1800); // invert
-  const startsScore = 100 - toScore_0_100(houst, 900, 1800); // invert
+  // Spending: falling spending increases pressure => invert
+  const resSpendPressure  = tlres === null ? null : clamp(normalizeTo100(-tlres, -15, 15), 0, 100);
+  const nresSpendPressure = tlnres === null ? null : clamp(normalizeTo100(-tlnres, -15, 15), 0, 100);
 
-  const cpiRaw =
-    mortgageScore * 0.45 +
-    unrateScore * 0.15 +
-    permitScore * 0.20 +
-    startsScore * 0.20;
+  // Weighted composite CPI (Capital Pressure Index): 0..100
+  const components = [
+    { v: mortPressure, w: 0.28 },
+    { v: inflPressure, w: 0.18 },
+    { v: unPressure,   w: 0.14 },
+    { v: permitPressure, w: 0.16 },
+    { v: houstPressure,  w: 0.10 },
+    { v: resSpendPressure, w: 0.07 },
+    { v: nresSpendPressure, w: 0.07 },
+  ].filter((c) => c.v !== null);
 
-  const cpi = Math.round(clamp(cpiRaw, 0, 100));
-  const cpiBand = bandForCPI(cpi);
+  const cpi =
+    components.length
+      ? clamp(
+          components.reduce((a, c) => a + c.v * c.w, 0) /
+            components.reduce((a, c) => a + c.w, 0),
+          0,
+          100
+        )
+      : 0;
 
-  // CEPS — inverse of CPI (easy mental model).
-  const ceps_score = Math.round(clamp(100 - cpi, 0, 100));
+  const cpiInt = roundInt(cpi) ?? 0;
 
-  // Builder momentum (ALWAYS DEFINED) — 0–100, neutral 50
-  // Use starts+permits yoy if available; otherwise stable 50.
-  const startsYOY = (() => {
-    const pts = seriesData["HOUST"] || [];
-    const last = pts.at(-1);
-    const back12 = approx12mBack(pts);
-    if (!last || !back12) return null;
-    return pctChange(last.value, back12.value);
-  })();
+  // CEPS: map tighter capital to pressure score around mid-band
+  // Tuned so CPI~53 => CEPS ~55-ish
+  const ceps = clamp(40 + (100 - cpi) * 0.30, 0, 100);
+  const cepsInt = roundInt(ceps) ?? 0;
 
-  const permitsYOY = (() => {
-    const pts = seriesData["PERMIT"] || [];
-    const last = pts.at(-1);
-    const back12 = approx12mBack(pts);
-    if (!last || !back12) return null;
-    return pctChange(last.value, back12.value);
-  })();
+  // Residential/Institutional splits:
+  // - residential reacts more to permits/housing starts + mortgage
+  // - institutional reacts more to nonres spending + unemployment + inflation
+  const resMix = mean([
+    mortPressure,
+    permitPressure,
+    houstPressure,
+    resSpendPressure,
+  ]);
+  const instMix = mean([
+    inflPressure,
+    unPressure,
+    nresSpendPressure,
+  ]);
 
-  // Map YOY to score: -20% => 20, 0% => 50, +20% => 80 (clamped)
-  const yoyToScore = (yoy) => {
-    if (yoy === null || yoy === undefined) return 50;
-    return Math.round(clamp(50 + safeNum(yoy) * 1.5, 0, 100));
-  };
+  const resCpi = resMix === null ? null : roundInt(clamp(resMix, 0, 100));
+  const instCpi = instMix === null ? null : roundInt(clamp(instMix, 0, 100));
 
-  const builderMomentumScore = Math.round(
-    clamp((yoyToScore(startsYOY) + yoyToScore(permitsYOY)) / 2, 0, 100)
-  );
+  // Translate sub-index pressure into CEPS-ish split
+  const resCeps = resCpi === null ? null : roundInt(clamp(40 + (100 - resCpi) * 0.30, 0, 100));
+  const instCeps = instCpi === null ? null : roundInt(clamp(40 + (100 - instCpi) * 0.30, 0, 100));
 
-  const builder_momentum = {
-    value: builderMomentumScore,
-    components: {
-      starts_yoy: startsYOY,
-      permits_yoy: permitsYOY,
+  // Builder momentum (0..100): activity + spend growth (positive = higher momentum)
+  const builderMomentumRaw = mean([
+    permit === null ? null : clamp(normalizeTo100(permit, -20, 20), 0, 100),
+    houst === null ? null : clamp(normalizeTo100(houst, -20, 20), 0, 100),
+    tlres === null ? null : clamp(normalizeTo100(tlres, -15, 15), 0, 100),
+    tlnres === null ? null : clamp(normalizeTo100(tlnres, -15, 15), 0, 100),
+  ]);
+  const builderMomentum = builderMomentumRaw === null ? 50 : roundInt(builderMomentumRaw);
+
+  // CPI band text
+  const band =
+    cpiInt >= 80 ? "RESTRICTIVE" :
+    cpiInt >= 65 ? "TIGHTENING" :
+    cpiInt >= 45 ? "NEUTRAL" :
+    cpiInt >= 25 ? "EASING" :
+                   "EASY";
+
+  const riskMode = cpiInt >= 70 || band === "RESTRICTIVE";
+  const riskThermometerMode = cpiInt >= 70;
+
+  // Volatility regime (simple): higher mortgage + higher inflation => elevated vol
+  const volScore = mean([mortPressure, inflPressure]);
+  const volatilityRegime =
+    volScore === null ? "NORMAL" :
+    volScore >= 70 ? "ELEVATED" :
+    volScore >= 55 ? "NORMAL" :
+                     "LOW";
+
+  // Macro regime label (simple desk-style)
+  const regime =
+    riskMode ? "RISK-OFF" :
+    cpiInt <= 35 ? "RISK-ON" :
+    "NEUTRAL";
+
+  return {
+    cpi: cpiInt,
+    cpiBand: band,
+    ceps: cepsInt,
+    cepsSplit: {
+      residential: resCeps ?? null,
+      institutional: instCeps ?? null,
     },
-  };
-
-  // Splits (optional but useful to UI)
-  const ceps_split = {
-    residential: Math.round(clamp(ceps_score + 1, 0, 100)),
-    institutional: Math.round(clamp(ceps_score - 1, 0, 100)),
-  };
-
-  const capital = {
-    pressure_index: cpi,
-    band: cpiBand,
-    subindices: {
-      residential: Math.round(clamp(cpi + 1, 0, 100)),
-      institutional: Math.round(clamp(cpi - 2, 0, 100)),
+    capitalSubindices: {
+      residential: resCpi ?? null,
+      institutional: instCpi ?? null,
     },
-    history: [{ date: todayYYYYMMDD(), value: cpi }],
+    builderMomentum,
+    riskMode,
+    riskThermometerMode,
+    volatilityRegime,
+    regime,
   };
+}
 
-  const volatility_regime = volatilityRegime();
-  const regime = regimeFrom(cpi);
-  const risk_mode = cpi >= 70;
+function computePredictiveEngine(signalsByKey, currentCpi) {
+  // Minimal, stable forward projection (30D) + probability CPI>=70
+  // Uses:
+  // - mortgage rate short trend
+  // - permits/housing starts YoY
+  // - unemployment + inflation levels
+  const mortRows = signalsByKey.get("mortgage30")?.history || [];
+  const unRows = signalsByKey.get("unrate")?.history || [];
+  const cpiRows = signalsByKey.get("cpi")?.history || [];
 
-  const acceleration_engine = {
-    divergence: Math.abs(ceps_score - cpi),
-    deltas: {
-      cpi_7d: null,
-      cpi_30d: null,
-      ceps_7d: null,
-      ceps_30d: null,
-      bmi_7d: null,
-      bmi_30d: null,
-    },
-    flags: {
-      cpi_accelerating_7d: false,
-      cpi_accelerating_30d: false,
-      ceps_accelerating_7d: false,
-      ceps_accelerating_30d: false,
-      equity_tightening_divergence: false,
-      equity_easing_divergence: false,
-      builder_early_warning: builderMomentumScore < 40,
-    },
-    alert_level: riskLabel(cpi),
-  };
+  // trend proxies
+  const mortTrend = computeRecentTrend(mortRows); // points-based
+  const unTrend = computeRecentTrend(unRows);
+  const inflTrend = computeRecentTrend(cpiRows);  // CPI index trend, not yoy
 
-  const executive = {
-    headline: `Construction Intelligence — ${riskLabel(cpi)}`,
-    confidence: canFetch ? "MEDIUM" : "LOW",
-    summary: canFetch
-      ? "Live macro inputs loaded via FRED. Composite pressure and split indicators updated."
-      : "FRED key missing in Actions (FRED_API_KEY). Output is in safe default mode.",
-  };
+  const permitYoy = signalsByKey.get("permit")?.yoy ?? null;
+  const houstYoy  = signalsByKey.get("houst")?.yoy ?? null;
+  const unrate    = signalsByKey.get("unrate")?.latest ?? null;
+  const mort30    = signalsByKey.get("mortgage30")?.latest ?? null;
+  const cpiYoy    = signalsByKey.get("cpi")?.yoy ?? null;
 
-  const alerts = [
-    {
-      id: "core_regime",
-      title: `${riskLabel(cpi)} — ${regime}`,
-      severity: risk_mode ? "WATCH" : "MONITOR",
-      why_it_matters: risk_mode
-        ? "Composite pressure is elevated; tighten underwriting and watch project starts."
-        : "Composite pressure is contained; monitor for inflections in permits/starts.",
-    },
+  // Convert trends into "pressure delta"
+  const mortDeltaPressure = mortTrend === null ? 0 : clamp(mortTrend * 6.0, -8, 8);  // small moves matter
+  const unDeltaPressure   = unTrend === null ? 0 : clamp(unTrend * 8.0, -8, 8);
+  const inflDeltaPressure = inflTrend === null ? 0 : clamp(inflTrend * 0.15, -6, 6);
+
+  const activityPressure =
+    mean([
+      permitYoy === null ? null : clamp(-permitYoy / 5.0, -8, 8), // falling permits adds pressure
+      houstYoy  === null ? null : clamp(-houstYoy  / 5.0, -8, 8),
+    ]) ?? 0;
+
+  const levelPressure =
+    mean([
+      mort30 === null ? null : clamp((mort30 - 5.0) * 2.0, -10, 10),
+      unrate === null ? null : clamp((unrate - 4.5) * 2.0, -10, 10),
+      cpiYoy  === null ? null : clamp((cpiYoy - 3.0) * 2.0, -10, 10),
+    ]) ?? 0;
+
+  // Projection model
+  const projected =
+    clamp(
+      currentCpi +
+        0.45 * mortDeltaPressure +
+        0.25 * unDeltaPressure +
+        0.25 * inflDeltaPressure +
+        0.55 * activityPressure +
+        0.15 * levelPressure,
+      0,
+      100
+    );
+
+  const projectedInt = roundInt(projected) ?? currentCpi;
+
+  // Probability CPI >= 70 (logistic around threshold)
+  const prob = logistic((projected - 70) / 6.0); // steeper around 70
+  const probPct = Math.round(prob * 100);
+
+  // Drivers (explainable)
+  const drivers = [
+    { key: "mortgage30_trend", value: mortTrend ?? null },
+    { key: "permits_yoy", value: permitYoy ?? null },
+    { key: "housing_starts_yoy", value: houstYoy ?? null },
+    { key: "unrate_trend", value: unTrend ?? null },
+    { key: "cpi_yoy", value: cpiYoy ?? null },
   ];
 
-  const statePermits = readJSON(FILES.statePermits, null);
-  const msaPermits = readJSON(FILES.msaPermits, null);
+  return {
+    horizon_days: 30,
+    projected_cpi_30d: projectedInt,
+    prob_cpi_ge_70: probPct, // integer percent (0..100)
+    drivers,
+  };
+}
 
-  const dashboard = {
-    schema_version: "3.0.6",
+// -----------------------------
+// Main build
+// -----------------------------
+async function main() {
+  const cfg = loadConfig();
+  const signals = await loadSignals(cfg);
+  const byKey = indexByKey(signals);
+
+  const today = isoToday();
+
+  const capital = computeCapitalAndCEPS(byKey);
+  const predictive = computePredictiveEngine(byKey, capital.cpi);
+
+  // Status + alerts (Phase A/B safe defaults)
+  const alertLevel = capital.riskMode ? "WATCH" : "MONITOR";
+  const alertBanner = `${alertLevel} — ${capital.regime === "RISK-OFF" ? "DEFENSIVE" : "STABLE"}`;
+
+  // Build a minimal-but-rich dashboard object (schema stable for your UI)
+  // NOTE: Keep keys consistent with your Swift decode surfaces.
+  const out = {
+    schema_version: "3.2.0",
     generated_at: nowISO(),
 
-    executive,
-    capital,
+    executive: {
+      headline: "Construction Intelligence",
+      confidence: "medium",
+      summary:
+        capital.riskMode
+          ? "Capital conditions are tightening. Maintain a defensive posture, monitor housing and permits for confirmation."
+          : "Capital conditions are stable. Monitor mortgage trend and permits for inflection signals."
+    },
 
-    // Required by your workflow (and used by your Swift UI)
-    ceps_score,
-    ceps_split,
-    builder_momentum,
+    // Core metrics
+    ceps_score: capital.ceps,
+    ceps_split: {
+      residential: capital.cepsSplit.residential,
+      institutional: capital.cepsSplit.institutional
+    },
+
+    builder_momentum: {
+      value: capital.builderMomentum
+    },
+
+    capital: {
+      pressure_index: capital.cpi,
+      band: capital.cpiBand,
+      subindices: {
+        residential: capital.capitalSubindices.residential,
+        institutional: capital.capitalSubindices.institutional
+      },
+      history: [
+        { date: today, value: capital.cpi }
+      ]
+    },
 
     correlations: {
       cpi_vs_builders: 0,
-      regime,
+      regime: capital.regime
     },
 
-    risk_mode,
-    risk_thermometer_mode: false,
-    volatility_regime,
+    risk_mode: capital.riskMode,
+    risk_thermometer_mode: capital.riskThermometerMode,
+    volatility_regime: capital.volatilityRegime,
 
     shock_flags: {
       rate_shock: false,
       equity_drawdown: false,
-      volatility_spike: false,
+      volatility_spike: false
     },
 
-    regime_history: [
-      {
-        date: todayYYYYMMDD(),
-        ceps: ceps_score,
-        cpi,
-        volatility: volatility_regime,
-        regime,
+    // Predictive Forward Engine (Phase B)
+    predictive_engine: predictive,
+
+    // Acceleration Engine (kept for UI; stable defaults)
+    acceleration_engine: {
+      divergence: 2,
+      deltas: {
+        cpi_7d: null,
+        cpi_30d: null,
+        ceps_7d: null,
+        ceps_30d: null,
+        bmi_7d: null,
+        bmi_30d: null
       },
+      flags: {
+        cpi_accelerating_7d: false,
+        cpi_accelerating_30d: false,
+        ceps_accelerating_7d: false,
+        ceps_accelerating_30d: false,
+        equity_tightening_divergence: false,
+        equity_easing_divergence: false,
+        builder_early_warning: false
+      },
+      alert_level: alertLevel
+    },
+
+    // Signals array for UI “Top 5 Signals”
+    // Keep fields: name, region, units, yoy, history[]
+    signals: signals.map((s) => ({
+      name: s.name,
+      region: s.region,
+      units: s.units,
+      yoy: s.yoy,
+      history: s.history
+    })),
+
+    // Alerts array (optional; your UI can show banners)
+    alerts: [
+      {
+        id: "banner",
+        title: alertBanner,
+        severity: alertLevel,
+        why_it_matters:
+          alertLevel === "WATCH"
+            ? "Composite conditions suggest tightening capital with elevated forward risk."
+            : "Composite conditions remain stable; continue monitoring leading indicators."
+      }
     ],
 
-    acceleration_engine,
-
-    // Signals for UI (Top 5, sparklines, etc.)
-    signals: dashboardSignals,
-
-    // Panels (optional; keep predictable shape)
-    panels: {
-      permits: {
-        state: statePermits || null,
-        msa: msaPermits || null,
-      },
-    },
-
-    alerts,
+    // Regime history (Structural memory hook)
+    regime_history: [
+      {
+        date: today,
+        ceps: capital.ceps,
+        cpi: capital.cpi,
+        volatility: capital.volatilityRegime,
+        regime: capital.regime,
+        projected_cpi_30d: predictive.projected_cpi_30d,
+        prob_cpi_ge_70: predictive.prob_cpi_ge_70
+      }
+    ]
   };
 
-  writeJSON(FILES.outDashboard, dashboard);
-
-  console.log(
-    `OK: wrote dashboard_latest.json | CPI=${cpi} CEPS=${ceps_score} builder_momentum=${builderMomentumScore} canFetch=${canFetch}`
-  );
+  fs.writeFileSync(OUT_PATH, JSON.stringify(out, null, 2), "utf-8");
+  console.log(`Wrote ${path.relative(ROOT, OUT_PATH)}`);
 }
 
-main().catch((err) => {
-  console.error("FATAL:", err?.message || err);
+main().catch((e) => {
+  console.error(e);
   process.exit(1);
 });
