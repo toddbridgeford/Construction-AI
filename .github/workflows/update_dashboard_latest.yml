@@ -45,14 +45,9 @@ jobs:
 
       - name: Run Build Script
         env:
-          # REQUIRED (already in your repo)
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-
-          # OPTIONAL (you said you have these keys; we pass them through now)
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
-
-          # Existing settings
           FRED_OBSERVATION_START: "2020-01-01"
           OUT_PATH: "dashboard_latest.json"
         run: |
