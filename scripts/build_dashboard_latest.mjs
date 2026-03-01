@@ -33,7 +33,6 @@ function isoUtcNow() {
 }
 
 function parseMonthYear(label) {
-  // label like "December 2025" or "Jan 2026"
   const cleaned = label.replace(/\s+/g, " ").trim();
   const m = cleaned.match(/^([A-Za-z]+)\s+(\d{4})$/);
   if (!m) return null;
@@ -59,11 +58,7 @@ function parseMonthYear(label) {
 }
 
 function pickLatestMonthlyExcelLink(html, baseUrl) {
-  // We look for anchor tags pointing to .xls/.xlsx and whose visible text or nearby text contains Month YYYY.
-  // Census pages are consistent enough that selecting the highest Month-Year found usually works.
   const links = [];
-
-  // crude anchor scan
   const anchorRe = /<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
   let m;
   while ((m = anchorRe.exec(html))) {
@@ -71,7 +66,6 @@ function pickLatestMonthlyExcelLink(html, baseUrl) {
     const inner = m[2].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
     if (!/\.xls(x)?(\?|$)/i.test(href)) continue;
 
-    // Find a Month YYYY either in anchor text, or in the surrounding HTML chunk
     const windowStart = Math.max(0, m.index - 400);
     const windowEnd = Math.min(html.length, m.index + 400);
     const windowText = html
@@ -92,7 +86,6 @@ function pickLatestMonthlyExcelLink(html, baseUrl) {
     links.push({ url: abs, label: my || inner, ts: ts ?? -1 });
   }
 
-  // Prefer true month-year timestamps, otherwise fallback to first xls link.
   links.sort((a, b) => (b.ts - a.ts));
   return links[0] || null;
 }
@@ -101,7 +94,6 @@ function xlsxToRows(buf) {
   const wb = XLSX.read(buf, { type: "buffer" });
   const sheetName = wb.SheetNames[0];
   const ws = wb.Sheets[sheetName];
-  // defval keeps empty cells present
   return XLSX.utils.sheet_to_json(ws, { defval: null, raw: true });
 }
 
@@ -114,14 +106,22 @@ function safeNumber(x) {
   return Number.isFinite(n) ? n : null;
 }
 
-function normalizeStateFips(two) {
-  const s = String(two).trim();
-  return s.padStart(2, "0");
-}
-
 function normalizeCbsa(code) {
   const s = String(code).trim();
   return s.padStart(5, "0");
+}
+
+function normalizeAreaNameForJoin(name) {
+  if (!name) return null;
+  let s = String(name).trim();
+
+  // Strip LAUS suffixes deterministically
+  s = s.replace(/\s+Metropolitan Statistical Area$/i, "");
+  s = s.replace(/\s+Micropolitan Statistical Area$/i, "");
+
+  // Some area_text strings can include extra commas/spaces; normalize whitespace
+  s = s.replace(/\s+/g, " ").trim();
+  return s.toLowerCase();
 }
 
 // ---------------------------
@@ -146,22 +146,14 @@ async function fredObservations({ apiKey, seriesId, limit = 6 }) {
 // ---------------------------
 // BLS LAUS (flat files)
 // ---------------------------
-// We use download.bls.gov LAUS time series files, filtered by measure_code=03 (unemployment rate)
-// measure_code definitions are published in la.measure.  [oai_citation:5‡download.bls.gov](https://download.bls.gov/pub/time.series/la/la.measure)
 async function loadBlsLausUnempRatesLatest() {
   const base = "https://download.bls.gov/pub/time.series/la/";
 
-  // Series metadata: to know which series IDs correspond to unemployment rate (measure_code 03)
+  // Series metadata: identify unemployment rate series (measure_code=03)
   const seriesTxt = await fetchText(base + "la.series");
-
-  // Seasonal codes: S seasonally adjusted, U not seasonally adjusted.  [oai_citation:6‡download.bls.gov](https://download.bls.gov/pub/time.series/la/la.seasonal?utm_source=chatgpt.com)
-  // We'll choose:
-  // - States: seasonal=S
-  // - Metro & Micro: seasonal=U (BLS commonly publishes metro area rates not seasonally adjusted)
   const unempSeries = new Map(); // series_id -> { area_type_code, area_code, seasonal }
 
   const lines = seriesTxt.split("\n").filter(Boolean);
-  // header: series_id area_type_code area_code measure_code seasonal srd_code ...
   const header = lines[0].trim().split(/\s+/);
   const idx = (name) => header.indexOf(name);
 
@@ -185,7 +177,7 @@ async function loadBlsLausUnempRatesLatest() {
     unempSeries.set(series_id, { area_type_code, area_code, seasonal });
   }
 
-  // Area names
+  // Area names (area_text join)
   const areaTxt = await fetchText(base + "la.area");
   const areaLines = areaTxt.split("\n").filter(Boolean);
   const areaHeader = areaLines[0].trim().split(/\s+/);
@@ -195,30 +187,28 @@ async function loadBlsLausUnempRatesLatest() {
   const iaCode = aIdx("area_code");
   const iaText = aIdx("area_text");
 
-  const areaName = new Map(); // `${type}:${code}` -> name
+  const areaTextByTypeCode = new Map(); // `${type}:${code}` -> area_text
   for (let i = 1; i < areaLines.length; i++) {
     const raw = areaLines[i];
-    // area_text may contain spaces; it's last column onwards
     const parts = raw.trim().split(/\s+/);
     if (parts.length < iaText + 1) continue;
     const t = parts[iaType];
     const c = parts[iaCode];
     const text = parts.slice(iaText).join(" ").trim();
-    areaName.set(`${t}:${c}`, text);
+    areaTextByTypeCode.set(`${t}:${c}`, text);
   }
 
-  // Data files for latest values:
-  // - AllStatesS (seasonally adjusted states)  [oai_citation:7‡download.bls.gov](https://download.bls.gov/pub/time.series/la/)
-  // - Metro (not seasonally adjusted metros)  [oai_citation:8‡download.bls.gov](https://download.bls.gov/pub/time.series/la/)
-  // - Micro (not seasonally adjusted micros)  [oai_citation:9‡download.bls.gov](https://download.bls.gov/pub/time.series/la/)
+  // Data files:
+  // - AllStatesS (S, seasonally adjusted)
+  // - Metro (U, not seasonally adjusted)
+  // - Micro (U, not seasonally adjusted)
   const dataSources = [
     { url: base + "la.data.3.AllStatesS", wantSeasonal: "S" },
     { url: base + "la.data.60.Metro", wantSeasonal: "U" },
     { url: base + "la.data.62.Micro", wantSeasonal: "U" },
   ];
 
-  // Parse each file and take the latest (max year+period) for each series
-  const latest = new Map(); // series_id -> { year, period, value }
+  const latest = new Map(); // series_id -> { key, year, month, value }
 
   for (const src of dataSources) {
     const txt = await fetchText(src.url);
@@ -240,7 +230,7 @@ async function loadBlsLausUnempRatesLatest() {
       if (meta.seasonal !== src.wantSeasonal) continue;
 
       const year = Number(parts[isYear]);
-      const period = parts[isPeriod]; // e.g., "M12"
+      const period = parts[isPeriod]; // M01..M12
       if (!/^M\d{2}$/.test(period)) continue;
       const month = Number(period.slice(1));
       const key = year * 100 + month;
@@ -248,55 +238,51 @@ async function loadBlsLausUnempRatesLatest() {
 
       const prev = latest.get(series_id);
       if (!prev || key > prev.key) {
-        latest.set(series_id, { key, year, month, period, value });
+        latest.set(series_id, { key, year, month, value });
       }
     }
   }
 
-  // Build outputs:
-  // States map: state_fips -> unemployment_rate
-  // CBSA map: cbsa_code -> unemployment_rate (for metros/micros where present)
+  // State unemployment map (by fips from series_id pattern)
   const stateUnemp = new Map();
-  const cbsaUnemp = new Map();
+
+  // Metro/micro unemployment by normalized area name (deterministic join target)
+  const cbsaUnempByNormName = new Map(); // norm_name -> { value, year, month, series_id, area_text }
 
   for (const [series_id, obs] of latest.entries()) {
     const meta = unempSeries.get(series_id);
     if (!meta) continue;
 
-    const name = areaName.get(`${meta.area_type_code}:${meta.area_code}`) || null;
-
-    // Heuristic mapping:
-    // - State series IDs include "LASST" prefix (example seen in la.series snippets)  [oai_citation:10‡download.bls.gov](https://download.bls.gov/pub/time.series/la/la.series?utm_source=chatgpt.com)
-    // - Metro/micro often include other area codes.
-    // We'll map by area_type_code:
-    //  "A" is used in la.series for state-like entries (from snippets), and metro/micro differ.
-    // Instead of relying on codes we don't want to guess, we store by name and keep ID.
-    // For v1 we:
-    //  - if name matches a state name exactly, map to state via a lookup later (done below)
-    //  - if name ends with "Metropolitan Statistical Area" or "Micropolitan Statistical Area", store as CBSA by extracting leading numeric from area_code when possible.
+    const area_text = areaTextByTypeCode.get(`${meta.area_type_code}:${meta.area_code}`) || null;
     const value = obs.value;
 
-    // State mapping: state area_code usually begins with state FIPS (e.g., "08...").
-    // For AllStatesS file, series_id typically LAUST{statefips}0000000000003 (common pattern; see BLS ID format docs).  [oai_citation:11‡Bureau of Labor Statistics](https://www.bls.gov/help/hlpforma.htm?utm_source=chatgpt.com)
+    // States: LAUST{statefips}00000000000003 is common
     const mState = series_id.match(/^LAU[S|U]T(\d{2})00000000000003$/);
     if (mState) {
-      stateUnemp.set(mState[1], { value, year: obs.year, month: obs.month, series_id, name });
+      stateUnemp.set(mState[1], { value, year: obs.year, month: obs.month, series_id, area_text });
       continue;
     }
 
-    // Metro/Micro mapping: BLS metro IDs often look like LAU[U|S]T? / LAU? with embedded area codes.
-    // We will not guess CBSA from series_id; instead we keep a name-keyed map and later join to CBSA names from BPS file.
-    cbsaUnemp.set(series_id, { value, year: obs.year, month: obs.month, series_id, name });
+    // Metro + micro: key by normalized name, because BPS gives CBSA names
+    const norm = normalizeAreaNameForJoin(area_text);
+    if (!norm) continue;
+
+    // Collision guard: if two series normalize to same name, keep both and flag later
+    const existing = cbsaUnempByNormName.get(norm);
+    if (!existing) {
+      cbsaUnempByNormName.set(norm, [{ value, year: obs.year, month: obs.month, series_id, area_text }]);
+    } else {
+      existing.push({ value, year: obs.year, month: obs.month, series_id, area_text });
+    }
   }
 
-  // Determine the latest reference month from any state observation
   let latestRef = null;
   for (const v of stateUnemp.values()) {
     const key = v.year * 100 + v.month;
     if (!latestRef || key > latestRef.key) latestRef = { key, year: v.year, month: v.month };
   }
 
-  return { stateUnemp, cbsaUnempBySeriesId: cbsaUnemp, latestRef };
+  return { stateUnemp, cbsaUnempByNormName, latestRef };
 }
 
 // ---------------------------
@@ -321,8 +307,6 @@ async function loadCensusBpsLatest() {
   const cbsaRows = xlsxToRows(cbsaXls);
   const stateRows = xlsxToRows(stateXls);
 
-  // The Census BPS Excel layouts can vary slightly.
-  // We’ll detect key columns by name-insensitive matching.
   function findCol(row, patterns) {
     const keys = Object.keys(row);
     for (const p of patterns) {
@@ -333,9 +317,7 @@ async function loadCensusBpsLatest() {
     return null;
   }
 
-  // CBSA: expect columns like "CBSA", "CBSA Code", "Metropolitan Area", "Name", and permit unit totals (1-unit, 2+ units, total).
-  const cbsaPermit = new Map(); // cbsa -> { name, total, sf, mf2p, monthLabel }
-
+  const cbsaPermit = new Map(); // cbsa -> { name, total, sf, mf2p }
   for (const r of cbsaRows) {
     const cbsaCol = findCol(r, [/cbsa/i, /msa/i, /code/i]);
     const nameCol = findCol(r, [/title/i, /name/i, /area/i]);
@@ -346,7 +328,6 @@ async function loadCensusBpsLatest() {
     const cbsa = normalizeCbsa(code);
     const name = nameCol ? String(r[nameCol] ?? "").trim() : null;
 
-    // permit columns: try common patterns
     const totalCol = findCol(r, [/total\s+units/i, /^total$/i, /total.*perm/i]);
     const sfCol = findCol(r, [/1\s*unit/i, /single\s*family/i, /1-unit/i]);
     const mfCol = findCol(r, [/2\+?\s*units/i, /multi/i, /2\+ units/i]);
@@ -355,14 +336,11 @@ async function loadCensusBpsLatest() {
     const sf = sfCol ? safeNumber(r[sfCol]) : null;
     const mf2p = mfCol ? safeNumber(r[mfCol]) : null;
 
-    // only store if it looks like a data row
     if (total === null && sf === null && mf2p === null) continue;
-
     cbsaPermit.set(cbsa, { name, total, sf, mf2p });
   }
 
-  // State: columns usually include state name and units totals
-  const statePermit = new Map(); // fips2 -> { name, total, sf, mf2p }
+  const statePermit = new Map();
   const stateNameToFips = buildStateNameToFips();
 
   for (const r of stateRows) {
@@ -381,7 +359,6 @@ async function loadCensusBpsLatest() {
     const mf2p = mfCol ? safeNumber(r[mfCol]) : null;
 
     if (total === null && sf === null && mf2p === null) continue;
-
     statePermit.set(fips, { name, total, sf, mf2p });
   }
 
@@ -392,8 +369,6 @@ async function loadCensusBpsLatest() {
 }
 
 function buildStateNameToFips() {
-  // 50 states only (no territories) as you requested.
-  // Deterministic mapping; avoids dependencies.
   const entries = [
     ["Alabama","01"],["Alaska","02"],["Arizona","04"],["Arkansas","05"],["California","06"],
     ["Colorado","08"],["Connecticut","09"],["Delaware","10"],["Florida","12"],["Georgia","13"],
@@ -417,12 +392,10 @@ function buildStateNameToFips() {
 async function main() {
   const FRED_API_KEY = mustGetEnv("FRED_API_KEY");
 
-  // 1) National anchors (FRED)
-  // (You can adjust series IDs anytime; these are stable and commonly used.)
   const FRED_SERIES = {
     mortgage_30y: "MORTGAGE30US",
     cpi_headline: "CPIAUCSL",
-    construction_employment: "USCONS",  // All Employees: Construction (FRED)
+    construction_employment: "USCONS",
     total_construction_spending: "TTLCONS",
     housing_starts_total: "HOUST",
     building_permits_total: "PERMIT",
@@ -434,41 +407,28 @@ async function main() {
     fred[k] = {
       series_id: seriesId,
       latest: obs[0] ?? null,
-      history: obs.slice().reverse(), // oldest->newest
+      history: obs.slice().reverse(),
     };
   }
 
-  // 2) Census BPS permits (State + CBSA)
   const bps = await loadCensusBpsLatest();
-
-  // 3) BLS LAUS unemployment rates (State + Metro + Micro) from flat files
   const laus = await loadBlsLausUnempRatesLatest();
 
-  // 4) Build geo_data
   const geo_data = {};
   const observed_gaps = [];
 
   // US node
   geo_data["us:US"] = {
     geo: { level: "us", id: "US", name: "United States" },
-    capital: {
-      mortgage_30y: fred.mortgage_30y.latest,
-    },
-    prices: {
-      cpi_headline: fred.cpi_headline.latest,
-    },
-    labor: {
-      construction_employment: fred.construction_employment.latest,
-      unemployment_rate: null, // optional; can add later
-    },
+    capital: { mortgage_30y: fred.mortgage_30y.latest },
+    prices: { cpi_headline: fred.cpi_headline.latest },
+    labor: { construction_employment: fred.construction_employment.latest, unemployment_rate: null },
     residential: {
       permits_total: fred.building_permits_total.latest,
       starts_total: fred.housing_starts_total.latest,
-      permits_bps_state_cbsa: null, // US aggregate from BPS file could be added later if desired
+      permits_bps_state_cbsa: null,
     },
-    commercial: {
-      construction_spending_total: fred.total_construction_spending.latest,
-    }
+    commercial: { construction_spending_total: fred.total_construction_spending.latest }
   };
 
   // State nodes (all 50)
@@ -489,45 +449,63 @@ async function main() {
         permits_sf: p ? { date: null, value: p.sf, units: "units", source: "Census BPS" } : null,
         permits_mf2p: p ? { date: null, value: p.mf2p, units: "units", source: "Census BPS" } : null
       },
-      commercial: {
-        // v1 proxy: state commercial pipeline is not directly measured here; keep null and let OS stay Structural for that component
-        proxy: null
-      }
+      commercial: { proxy: null }
     };
 
     if (!p) observed_gaps.push({ geo: nodeKey, metric: "bps_state_permits", reason: "missing in parsed BPS state file" });
     if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "missing in LAUS AllStatesS latest parse" });
   }
 
-  // CBSA nodes: use BPS CBSA permits as the CBSA universe
+  // Build a deterministic CBSA-name → cbsa_code map from BPS
+  const cbsaNameToCode = new Map(); // normalized_name -> [cbsa_codes]
+  for (const [cbsa, rec] of bps.cbsa.permit.entries()) {
+    const norm = normalizeAreaNameForJoin(rec?.name);
+    if (!norm) continue;
+    const arr = cbsaNameToCode.get(norm) || [];
+    arr.push(cbsa);
+    cbsaNameToCode.set(norm, arr);
+  }
+
+  // CBSA nodes
   const cbsas = Array.from(bps.cbsa.permit.keys()).sort();
   for (const cbsa of cbsas) {
     const p = bps.cbsa.permit.get(cbsa);
     const nodeKey = `cbsa:${cbsa}`;
 
+    // Deterministic unemployment join:
+    // 1) Normalize BPS name
+    // 2) Use it to look up LAUS unemployment by normalized area name
+    let unemp = null;
+    const norm = normalizeAreaNameForJoin(p?.name);
+    if (norm) {
+      const lausCandidates = laus.cbsaUnempByNormName.get(norm) || null;
+
+      // Guard against LAUS name collisions:
+      if (lausCandidates && lausCandidates.length === 1) {
+        const v = lausCandidates[0];
+        unemp = { date: `${v.year}-${String(v.month).padStart(2,"0")}-01`, value: v.value, series_id: v.series_id };
+      } else if (lausCandidates && lausCandidates.length > 1) {
+        observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: `LAUS name collision (${lausCandidates.length} series normalize to same area_text)` });
+      }
+    }
+
     geo_data[nodeKey] = {
       geo: { level: "cbsa", id: cbsa, name: p?.name ?? null },
       capital: { mortgage_30y: fred.mortgage_30y.latest },
-      labor: {
-        // Joining LAUS metro/micro unemployment to CBSA deterministically requires a shared key.
-        // In v1 expanded we keep this as "gap" and add a v1.1 join step once we lock a stable mapping.
-        unemployment_rate: null
-      },
+      labor: { unemployment_rate: unemp },
       residential: {
         permits_total: p ? { date: null, value: p.total, units: "units", source: "Census BPS" } : null,
         permits_sf: p ? { date: null, value: p.sf, units: "units", source: "Census BPS" } : null,
         permits_mf2p: p ? { date: null, value: p.mf2p, units: "units", source: "Census BPS" } : null
       },
-      commercial: {
-        proxy: null
-      }
+      commercial: { proxy: null }
     };
 
-    // We intentionally mark CBSA unemployment as gap in v1, because mapping series_id→CBSA needs a stable join.
-    observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "join step deferred to v1.1 (deterministic mapping required)" });
+    if (!unemp) {
+      observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "no deterministic LAUS match for this CBSA name" });
+    }
   }
 
-  // 5) Coverage & provenance
   const payload = {
     date: new Date().toISOString().slice(0, 10),
     observed_timestamp_utc: isoUtcNow(),
@@ -554,9 +532,7 @@ async function main() {
         seasonal_codes: { S: "Seasonally Adjusted", U: "Not Seasonally Adjusted" }
       }
     },
-    series_pack: {
-      fred_series: FRED_SERIES
-    },
+    series_pack: { fred_series: FRED_SERIES },
     geo_data,
     observed_gaps
   };
