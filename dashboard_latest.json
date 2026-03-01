@@ -1,6 +1,6 @@
 {
   "schema_version": "3.4.0",
-  "generated_at": "2026-03-01T06:54:12.457Z",
+  "generated_at": "2026-03-01T07:15:38.948Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -59,7 +59,7 @@
     ]
   },
   "macro_bls": {
-    "asof": "2026-03-01T06:54:10.563Z",
+    "asof": "2026-03-01T07:15:37.365Z",
     "error": null
   },
   "macro_census": {
