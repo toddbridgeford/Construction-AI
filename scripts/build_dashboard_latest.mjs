@@ -1,8 +1,15 @@
 // scripts/build_dashboard_latest.mjs
-// Capital OS — Construction Intelligence Edition
-// Node 20+ (ESM). Uses FRED_API_KEY from env.
-// Input:  config/fred_signals.json
-// Output: dashboard_latest.json (repo root)
+// Capital OS — Construction Intelligence Edition (Clean, Stable)
+// Node 20+ (ESM). Uses built-in fetch.
+//
+// Inputs:
+//   - config/fred_signals.json
+//   - (optional) existing dashboard_latest.json (to append regime_history)
+//
+// Env:
+//   - FRED_API_KEY (required in GitHub Actions)
+//   - FRED_OBSERVATION_START (optional, default from config or 2020-01-01)
+//   - OUT_PATH (optional, default dashboard_latest.json at repo root)
 
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -11,35 +18,19 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// -------------------------
-// Config
-// -------------------------
-
-const FRED_API_KEY = process.env.FRED_API_KEY || "";
+// ---------- Paths ----------
 const CONFIG_PATH = path.resolve(__dirname, "../config/fred_signals.json");
-const OUTPUT_PATH = path.resolve(__dirname, "../dashboard_latest.json");
+const DEFAULT_OUT = path.resolve(__dirname, "../dashboard_latest.json");
+const OUT_PATH = process.env.OUT_PATH
+  ? path.resolve(process.cwd(), process.env.OUT_PATH)
+  : DEFAULT_OUT;
 
-// FRED base
+// ---------- Env ----------
+const FRED_API_KEY = (process.env.FRED_API_KEY || "").trim();
 const FRED_BASE = "https://api.stlouisfed.org/fred/series/observations";
 
-// -------------------------
-// Utils
-// -------------------------
-
+// ---------- Helpers ----------
 const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
-const round = (x, n = 2) => {
-  if (x === null || x === undefined || Number.isNaN(x)) return null;
-  const p = 10 ** n;
-  return Math.round(x * p) / p;
-};
-
-function toNumberMaybe(v) {
-  if (v === null || v === undefined) return null;
-  const s = String(v).trim();
-  if (s === "." || s === "" || s.toLowerCase() === "nan") return null;
-  const d = Number(s);
-  return Number.isFinite(d) ? d : null;
-}
 
 function isoNow() {
   return new Date().toISOString();
@@ -57,6 +48,33 @@ function safeUpper(s) {
   return (s ?? "").toString().trim().toUpperCase();
 }
 
+function toNumberMaybe(v) {
+  if (v === null || v === undefined) return null;
+  const s = String(v).trim();
+  if (s === "" || s === "." || s.toLowerCase() === "nan") return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+
+async function readJSON(p) {
+  const raw = await fs.readFile(p, "utf8");
+  return JSON.parse(raw);
+}
+
+async function writeJSON(p, obj) {
+  await fs.writeFile(p, JSON.stringify(obj, null, 2) + "\n", "utf8");
+}
+
+async function loadExistingDashboard(p) {
+  try {
+    const raw = await fs.readFile(p, "utf8");
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
 function bandFromCPI(cpi) {
   if (cpi >= 70) return "RESTRICTIVE";
   if (cpi >= 60) return "TIGHTENING";
@@ -65,295 +83,9 @@ function bandFromCPI(cpi) {
 }
 
 function severityFromCPI(cpi) {
+  // Keep simple & stable (you can widen later)
   if (cpi >= 70) return "WATCH";
-  if (cpi >= 60) return "MONITOR";
   return "MONITOR";
-}
-
-function volatilityFromShock(probGe70, mortgageTrend, permitsYoy) {
-  // simple qualitative proxy
-  const s =
-    (probGe70 ?? 0) +
-    Math.abs(mortgageTrend ?? 0) * 15 +
-    Math.abs(permitsYoy ?? 0) * 0.3;
-  if (s >= 12) return "HIGH";
-  if (s >= 6) return "NORMAL";
-  return "LOW";
-}
-
-function pickWindowByFrequency(seriesId) {
-  // FRED series differ in frequency; we just default to “enough”
-  // - Mortgage weekly -> ~260 points for 5 years
-  // - Monthly -> ~72 points for 6 years
-  // Safe universal:
-  return { limit: 3000 };
-}
-
-function getClosestToDate(history, targetYYYYMMDD) {
-  // history: [{date, value}] sorted asc
-  if (!history?.length) return null;
-  const target = new Date(`${targetYYYYMMDD}T00:00:00Z`).getTime();
-  let best = null;
-  let bestDist = Infinity;
-  for (const p of history) {
-    const t = new Date(`${p.date}T00:00:00Z`).getTime();
-    const dist = Math.abs(t - target);
-    if (dist < bestDist) {
-      bestDist = dist;
-      best = p;
-    }
-  }
-  return best;
-}
-
-function computeYoY(history) {
-  // returns yoy % change using nearest point ~1y ago
-  if (!history || history.length < 2) return null;
-  const last = history[history.length - 1];
-  if (last.value == null) return null;
-
-  const lastDate = new Date(`${last.date}T00:00:00Z`);
-  const yearAgo = new Date(Date.UTC(lastDate.getUTCFullYear() - 1, lastDate.getUTCMonth(), lastDate.getUTCDate()));
-  const yearAgoStr = `${yearAgo.getUTCFullYear()}-${String(yearAgo.getUTCMonth() + 1).padStart(2, "0")}-${String(
-    yearAgo.getUTCDate()
-  ).padStart(2, "0")}`;
-
-  const prev = getClosestToDate(history, yearAgoStr);
-  if (!prev || prev.value == null) return null;
-
-  // percent change
-  if (prev.value === 0) return null;
-  return ((last.value / prev.value) - 1) * 100;
-}
-
-function computeTrend(history, pointsBack = 4) {
-  // last - value N points back (weekly/multi points)
-  if (!history || history.length < pointsBack + 1) return null;
-  const last = history[history.length - 1]?.value;
-  const prev = history[history.length - 1 - pointsBack]?.value;
-  if (last == null || prev == null) return null;
-  return last - prev;
-}
-
-function computeMoMTrend(history) {
-  // monthly series: last - prev
-  return computeTrend(history, 1);
-}
-
-function normalizePct(x, cap = 10) {
-  if (x == null) return 0;
-  return clamp(x / cap, -1, 1);
-}
-
-function normalizeAbs(x, cap = 1) {
-  if (x == null) return 0;
-  return clamp(x / cap, -1, 1);
-}
-
-// -------------------------
-// FRED fetch
-// -------------------------
-
-async function fetchFREDSeries(seriesId, observationStartDefault) {
-  if (!FRED_API_KEY) {
-    throw new Error("Missing FRED_API_KEY env var. Add GitHub Secret FRED_API_KEY.");
-  }
-
-  const { limit } = pickWindowByFrequency(seriesId);
-
-  const url = new URL(FRED_BASE);
-  url.searchParams.set("series_id", seriesId);
-  url.searchParams.set("api_key", FRED_API_KEY);
-  url.searchParams.set("file_type", "json");
-  url.searchParams.set("sort_order", "asc");
-  url.searchParams.set("observation_start", observationStartDefault || "2020-01-01");
-  url.searchParams.set("limit", String(limit));
-
-  const res = await fetch(url.toString());
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    throw new Error(`FRED fetch failed (${seriesId}) HTTP ${res.status}: ${body.slice(0, 180)}`);
-  }
-  const json = await res.json();
-
-  const obs = Array.isArray(json?.observations) ? json.observations : [];
-  const out = obs
-    .map((o) => ({
-      date: o.date,
-      value: toNumberMaybe(o.value),
-    }))
-    .filter((p) => p.date && p.value != null);
-
-  return out;
-}
-
-// -------------------------
-// Core Scoring (simple + stable)
-// -------------------------
-
-function computeCoreEngines(seriesMap) {
-  // seriesMap keys based on your config keys:
-  // mortgage30, permit, houst, unrate, cpi
-  const mortgageHist = seriesMap.mortgage30?.history ?? [];
-  const permitsHist = seriesMap.permit?.history ?? [];
-  const startsHist = seriesMap.houst?.history ?? [];
-  const unrateHist = seriesMap.unrate?.history ?? [];
-  const cpiHist = seriesMap.cpi?.history ?? [];
-
-  const mortgageTrend = computeTrend(mortgageHist, 4); // ~1 month for weekly
-  const permitsYoy = computeYoY(permitsHist);
-  const startsYoy = computeYoY(startsHist);
-  const unrateTrend = computeMoMTrend(unrateHist);
-  const cpiYoy = computeYoY(cpiHist);
-
-  // CPI score (0-100): higher = tighter/restrictive
-  // Interpretations:
-  // - Mortgage rising -> tighter
-  // - CPI YoY rising -> tighter
-  // - Unemployment rising -> easing (offset)
-  // - Permits falling -> easing/slowdown (offset)
-  // - Starts falling -> easing/slowdown (offset)
-  const tight =
-    50 +
-    22 * normalizeAbs(mortgageTrend, 0.25) +
-    18 * normalizePct(cpiYoy, 6) -
-    10 * normalizeAbs(unrateTrend, 0.25) -
-    10 * normalizePct(permitsYoy, 10) -
-    8 * normalizePct(startsYoy, 12);
-
-  const cpiScore = clamp(Math.round(tight), 0, 100);
-
-  // CEPS score: “construction environment pressure score” (0-100)
-  // Slightly more influenced by construction activity (permits/starts) than inflation.
-  const ceps =
-    50 +
-    14 * normalizeAbs(mortgageTrend, 0.25) +
-    10 * normalizePct(cpiYoy, 6) -
-    16 * normalizePct(permitsYoy, 10) -
-    14 * normalizePct(startsYoy, 12) -
-    6 * normalizeAbs(unrateTrend, 0.25);
-
-  const cepsScore = clamp(Math.round(ceps), 0, 100);
-
-  // Split (rough, stable)
-  const cepsResidential = clamp(Math.round(cepsScore - 3), 0, 100);
-  const cepsInstitutional = clamp(Math.round(cepsScore + 4), 0, 100);
-
-  // Subindices for capital (rough)
-  const capRes = clamp(Math.round(cpiScore + 6), 0, 100);
-  const capInst = clamp(Math.round(cpiScore - 12), 0, 100);
-
-  // Builder momentum (0-100): more sensitive to permits/starts
-  const bMom =
-    50 -
-    20 * normalizePct(permitsYoy, 10) -
-    18 * normalizePct(startsYoy, 12) +
-    6 * normalizeAbs(mortgageTrend, 0.25);
-  const builderMomentum = clamp(Math.round(bMom), 0, 100);
-
-  // Predictive forward (30d): very simple projection based on drivers
-  const projectedCpi30d = clamp(Math.round(cpiScore + 0.4 * (normalizeAbs(mortgageTrend, 0.25) * 10)), 0, 100);
-
-  // Probability CPI >= 70
-  const probGe70 =
-    clamp(
-      Math.round(
-        2 +
-          18 * Math.max(0, normalizeAbs(mortgageTrend, 0.25)) +
-          10 * Math.max(0, normalizePct(cpiYoy, 6))
-      ),
-      0,
-      95
-    );
-
-  const drivers = [
-    { key: "mortgage30_trend", value: mortgageTrend },
-    { key: "permits_yoy", value: permitsYoy },
-    { key: "housing_starts_yoy", value: startsYoy },
-    { key: "unrate_trend", value: unrateTrend },
-    { key: "cpi_yoy", value: cpiYoy },
-  ];
-
-  const volRegime = volatilityFromShock(probGe70, mortgageTrend, permitsYoy);
-
-  return {
-    mortgageTrend,
-    permitsYoy,
-    startsYoy,
-    unrateTrend,
-    cpiYoy,
-    cpiScore,
-    cepsScore,
-    cepsResidential,
-    cepsInstitutional,
-    capRes,
-    capInst,
-    builderMomentum,
-    projectedCpi30d,
-    probGe70,
-    drivers,
-    volRegime,
-  };
-}
-
-// -------------------------
-// Load config + build
-// -------------------------
-
-async function readJSON(p) {
-  const raw = await fs.readFile(p, "utf8");
-  return JSON.parse(raw);
-}
-
-async function writeJSON(p, obj) {
-  const txt = JSON.stringify(obj, null, 2) + "\n";
-  await fs.writeFile(p, txt, "utf8");
-}
-
-async function loadExistingDashboardIfAny() {
-  try {
-    const raw = await fs.readFile(OUTPUT_PATH, "utf8");
-    const parsed = JSON.parse(raw);
-    if (parsed && typeof parsed === "object") return parsed;
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-function buildRegimeHistory(existing, entry) {
-  const prev = Array.isArray(existing?.regime_history) ? existing.regime_history : [];
-  // keep last 180 entries
-  const merged = [...prev, entry];
-
-  // de-dupe by date
-  const seen = new Set();
-  const out = [];
-  for (let i = merged.length - 1; i >= 0; i--) {
-    const d = merged[i]?.date;
-    if (!d) continue;
-    if (seen.has(d)) continue;
-    seen.add(d);
-    out.push(merged[i]);
-  }
-  out.reverse();
-  return out.slice(-180);
-}
-
-function buildSignalsPayload(configSignals, seriesMap) {
-  // Keep each signal’s history as provided
-  return configSignals.map((s) => {
-    const key = s.key;
-    const hist = seriesMap[key]?.history ?? [];
-    const yoy = computeYoY(hist);
-    return {
-      name: s.name,
-      region: s.region ?? "US",
-      units: s.units ?? "",
-      yoy: yoy == null ? null : yoy,
-      history: hist.map((p) => ({ date: p.date, value: p.value })),
-    };
-  });
 }
 
 function executiveSummary(cpiScore, band) {
@@ -369,14 +101,244 @@ function executiveSummary(cpiScore, band) {
   return "Capital conditions are stable. Monitor mortgage trend and permits for inflection signals.";
 }
 
-// -------------------------
-// Main
-// -------------------------
+function getClosestToDate(history, targetYYYYMMDD) {
+  if (!Array.isArray(history) || history.length === 0) return null;
+  const target = new Date(`${targetYYYYMMDD}T00:00:00Z`).getTime();
+  let best = null;
+  let bestDist = Infinity;
+  for (const p of history) {
+    const t = new Date(`${p.date}T00:00:00Z`).getTime();
+    const dist = Math.abs(t - target);
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = p;
+    }
+  }
+  return best;
+}
 
+function computeYoY(history) {
+  if (!Array.isArray(history) || history.length < 2) return null;
+  const last = history[history.length - 1];
+  if (!last || last.value == null) return null;
+
+  const lastDate = new Date(`${last.date}T00:00:00Z`);
+  const yearAgo = new Date(
+    Date.UTC(
+      lastDate.getUTCFullYear() - 1,
+      lastDate.getUTCMonth(),
+      lastDate.getUTCDate()
+    )
+  );
+
+  const yearAgoStr = `${yearAgo.getUTCFullYear()}-${String(
+    yearAgo.getUTCMonth() + 1
+  ).padStart(2, "0")}-${String(yearAgo.getUTCDate()).padStart(2, "0")}`;
+
+  const prev = getClosestToDate(history, yearAgoStr);
+  if (!prev || prev.value == null || prev.value === 0) return null;
+
+  return (last.value / prev.value - 1) * 100;
+}
+
+function computeTrend(history, pointsBack = 1) {
+  if (!Array.isArray(history) || history.length < pointsBack + 1) return null;
+  const last = history[history.length - 1]?.value;
+  const prev = history[history.length - 1 - pointsBack]?.value;
+  if (last == null || prev == null) return null;
+  return last - prev;
+}
+
+// Normalizers (bounded)
+function normPct(x, cap = 10) {
+  if (x == null) return 0;
+  return clamp(x / cap, -1, 1);
+}
+function normAbs(x, cap = 1) {
+  if (x == null) return 0;
+  return clamp(x / cap, -1, 1);
+}
+
+// ---------- FRED ----------
+async function fetchFREDSeries(seriesId, observationStart) {
+  if (!FRED_API_KEY) {
+    throw new Error(
+      "Missing FRED_API_KEY env var. Add GitHub Actions secret: FRED_API_KEY."
+    );
+  }
+
+  const url = new URL(FRED_BASE);
+  url.searchParams.set("series_id", seriesId);
+  url.searchParams.set("api_key", FRED_API_KEY);
+  url.searchParams.set("file_type", "json");
+  url.searchParams.set("sort_order", "asc");
+  url.searchParams.set("observation_start", observationStart || "2020-01-01");
+  url.searchParams.set("limit", "3000");
+
+  const res = await fetch(url.toString());
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(
+      `FRED fetch failed (${seriesId}) HTTP ${res.status}: ${body.slice(0, 220)}`
+    );
+  }
+
+  const json = await res.json();
+  const obs = Array.isArray(json?.observations) ? json.observations : [];
+
+  return obs
+    .map((o) => ({ date: o.date, value: toNumberMaybe(o.value) }))
+    .filter((p) => p.date && p.value != null);
+}
+
+// ---------- Engines ----------
+function computeEngines(seriesMap) {
+  // Based on config keys: mortgage30, permit, houst, unrate, cpi
+  const mortgageHist = seriesMap.mortgage30?.history ?? [];
+  const permitsHist = seriesMap.permit?.history ?? [];
+  const startsHist = seriesMap.houst?.history ?? [];
+  const unrateHist = seriesMap.unrate?.history ?? [];
+  const cpiHist = seriesMap.cpi?.history ?? [];
+
+  // Mortgage is weekly → ~4 pts ≈ 1 month
+  const mortgageTrend = computeTrend(mortgageHist, 4);
+  const permitsYoy = computeYoY(permitsHist);
+  const startsYoy = computeYoY(startsHist);
+  const unrateTrend = computeTrend(unrateHist, 1); // monthly MoM
+  const cpiYoy = computeYoY(cpiHist);
+
+  // CPI score (0–100): higher = tighter/restrictive
+  const cpiScore = clamp(
+    Math.round(
+      50 +
+        22 * normAbs(mortgageTrend, 0.25) +
+        18 * normPct(cpiYoy, 6) -
+        10 * normAbs(unrateTrend, 0.25) -
+        10 * normPct(permitsYoy, 10) -
+        8 * normPct(startsYoy, 12)
+    ),
+    0,
+    100
+  );
+
+  // CEPS score (0–100): more activity-sensitive
+  const cepsScore = clamp(
+    Math.round(
+      50 +
+        14 * normAbs(mortgageTrend, 0.25) +
+        10 * normPct(cpiYoy, 6) -
+        16 * normPct(permitsYoy, 10) -
+        14 * normPct(startsYoy, 12) -
+        6 * normAbs(unrateTrend, 0.25)
+    ),
+    0,
+    100
+  );
+
+  // Builder momentum (0–100): heavily permits/starts
+  const builderMomentum = clamp(
+    Math.round(
+      50 -
+        20 * normPct(permitsYoy, 10) -
+        18 * normPct(startsYoy, 12) +
+        6 * normAbs(mortgageTrend, 0.25)
+    ),
+    0,
+    100
+  );
+
+  // Capital subindices (stable offsets)
+  const capRes = clamp(Math.round(cpiScore + 6), 0, 100);
+  const capInst = clamp(Math.round(cpiScore - 12), 0, 100);
+
+  // Predictive (simple forward projection)
+  const projectedCpi30d = clamp(
+    Math.round(cpiScore + 4 * Math.max(0, normAbs(mortgageTrend, 0.25))),
+    0,
+    100
+  );
+
+  const probGe70 = clamp(
+    Math.round(
+      2 +
+        18 * Math.max(0, normAbs(mortgageTrend, 0.25)) +
+        10 * Math.max(0, normPct(cpiYoy, 6))
+    ),
+    0,
+    95
+  );
+
+  const volScore =
+    (probGe70 ?? 0) +
+    Math.abs(mortgageTrend ?? 0) * 15 +
+    Math.abs(permitsYoy ?? 0) * 0.3;
+
+  const volatilityRegime = volScore >= 12 ? "HIGH" : volScore >= 6 ? "NORMAL" : "LOW";
+
+  return {
+    mortgageTrend,
+    permitsYoy,
+    startsYoy,
+    unrateTrend,
+    cpiYoy,
+    cpiScore,
+    cepsScore,
+    cepsResidential: clamp(Math.round(cepsScore - 3), 0, 100),
+    cepsInstitutional: clamp(Math.round(cepsScore + 4), 0, 100),
+    builderMomentum,
+    capRes,
+    capInst,
+    projectedCpi30d,
+    probGe70,
+    volatilityRegime,
+    drivers: [
+      { key: "mortgage30_trend", value: mortgageTrend },
+      { key: "permits_yoy", value: permitsYoy },
+      { key: "housing_starts_yoy", value: startsYoy },
+      { key: "unrate_trend", value: unrateTrend },
+      { key: "cpi_yoy", value: cpiYoy },
+    ],
+  };
+}
+
+function buildSignalsPayload(configSignals, seriesMap) {
+  return configSignals.map((s) => {
+    const hist = seriesMap[s.key]?.history ?? [];
+    return {
+      name: s.name,
+      region: s.region ?? "US",
+      units: s.units ?? "",
+      yoy: computeYoY(hist),
+      history: hist.map((p) => ({ date: p.date, value: p.value })),
+    };
+  });
+}
+
+function buildRegimeHistory(existing, entry) {
+  const prev = Array.isArray(existing?.regime_history) ? existing.regime_history : [];
+  const merged = [...prev, entry];
+
+  // De-dupe by date (keep newest)
+  const seen = new Set();
+  const out = [];
+  for (let i = merged.length - 1; i >= 0; i--) {
+    const d = merged[i]?.date;
+    if (!d || seen.has(d)) continue;
+    seen.add(d);
+    out.push(merged[i]);
+  }
+  out.reverse();
+  return out.slice(-180);
+}
+
+// ---------- Main ----------
 async function main() {
   const cfg = await readJSON(CONFIG_PATH);
 
-  const observationStartDefault = cfg.observation_start_default || "2020-01-01";
+  const observationStart =
+    (process.env.FRED_OBSERVATION_START || "").trim() ||
+    (cfg.observation_start_default || "2020-01-01");
+
   const configSignals = Array.isArray(cfg.signals) ? cfg.signals : [];
   if (configSignals.length === 0) {
     throw new Error("config/fred_signals.json has no signals[]");
@@ -385,27 +347,19 @@ async function main() {
   // Fetch all series
   const seriesMap = {};
   for (const s of configSignals) {
-    const key = s.key;
-    const seriesId = s.series_id;
-    if (!key || !seriesId) continue;
-    const history = await fetchFREDSeries(seriesId, observationStartDefault);
-    seriesMap[key] = { ...s, history };
+    if (!s?.key || !s?.series_id) continue;
+    const history = await fetchFREDSeries(s.series_id, observationStart);
+    seriesMap[s.key] = { ...s, history };
   }
 
-  // Engines
-  const eng = computeCoreEngines(seriesMap);
-
-  // Core top-line
-  const schemaVersion = "3.2.0";
-  const generatedAt = isoNow();
+  const eng = computeEngines(seriesMap);
 
   const cpiScore = eng.cpiScore;
   const band = bandFromCPI(cpiScore);
-
-  const riskMode = cpiScore >= 70 || band === "RESTRICTIVE";
-  const riskThermometerMode = riskMode; // you can decouple later
-
   const severity = severityFromCPI(cpiScore);
+
+  const riskMode = cpiScore >= 70;
+  const riskThermometerMode = riskMode;
 
   const executive = {
     headline: "Construction Intelligence",
@@ -413,12 +367,11 @@ async function main() {
     summary: executiveSummary(cpiScore, band),
   };
 
-  const existing = await loadExistingDashboardIfAny();
+  const existing = await loadExistingDashboard(OUT_PATH);
 
-  // Build output JSON
   const out = {
-    schema_version: schemaVersion,
-    generated_at: generatedAt,
+    schema_version: "3.2.0",
+    generated_at: isoNow(),
 
     executive,
 
@@ -428,7 +381,7 @@ async function main() {
       institutional: eng.cepsInstitutional,
     },
 
-    // FIX: Always define builder_momentum
+    // IMPORTANT: defined (prevents builder_momentum undefined failures)
     builder_momentum: { value: eng.builderMomentum },
 
     capital: {
@@ -438,12 +391,7 @@ async function main() {
         residential: eng.capRes,
         institutional: eng.capInst,
       },
-      history: [
-        {
-          date: todayYYYYMMDD(),
-          value: cpiScore,
-        },
-      ],
+      history: [{ date: todayYYYYMMDD(), value: cpiScore }],
     },
 
     correlations: {
@@ -453,19 +401,19 @@ async function main() {
 
     risk_mode: Boolean(riskMode),
     risk_thermometer_mode: Boolean(riskThermometerMode),
-    volatility_regime: safeUpper(eng.volRegime),
+    volatility_regime: safeUpper(eng.volatilityRegime),
 
     shock_flags: {
       rate_shock: false,
       equity_drawdown: false,
-      volatility_spike: eng.volRegime === "HIGH",
+      volatility_spike: eng.volatilityRegime === "HIGH",
     },
 
     predictive_engine: {
       horizon_days: 30,
       projected_cpi_30d: eng.projectedCpi30d,
       prob_cpi_ge_70: eng.probGe70,
-      drivers: eng.drivers.map((d) => ({ key: d.key, value: d.value })),
+      drivers: eng.drivers,
     },
 
     acceleration_engine: {
@@ -497,43 +445,33 @@ async function main() {
         id: "banner",
         title: `${safeUpper(severity)} — ${band === "NEUTRAL" ? "STABLE" : safeUpper(band)}`,
         severity: safeUpper(severity),
-        why_it_matters: "Composite conditions remain stable; continue monitoring leading indicators.",
+        why_it_matters:
+          "Composite conditions remain stable; continue monitoring leading indicators.",
       },
     ],
   };
 
-  // Regime history append (Structural Cycle Memory)
+  // Structural Cycle Memory (regime_history append)
   const histEntry = {
     date: todayYYYYMMDD(),
     ceps: eng.cepsScore,
     cpi: cpiScore,
-    volatility: safeUpper(eng.volRegime),
+    volatility: safeUpper(eng.volatilityRegime),
     regime: safeUpper(bandFromCPI(cpiScore)),
     projected_cpi_30d: eng.projectedCpi30d,
     prob_cpi_ge_70: eng.probGe70,
   };
   out.regime_history = buildRegimeHistory(existing, histEntry);
 
-  // Basic rounding pass for nicer JSON
-  // (keep integers where meaningful, but normalize floats)
-  out.predictive_engine.prob_cpi_ge_70 = Math.round(out.predictive_engine.prob_cpi_ge_70);
-  out.predictive_engine.projected_cpi_30d = Math.round(out.predictive_engine.projected_cpi_30d);
+  await writeJSON(OUT_PATH, out);
 
-  out.predictive_engine.drivers = out.predictive_engine.drivers.map((d) => ({
-    key: d.key,
-    value: d.value == null ? null : round(d.value, 6),
-  }));
-
-  // Write
-  await writeJSON(OUTPUT_PATH, out);
-
-  // Console summary (Actions logs)
-  console.log("Wrote dashboard_latest.json");
+  // Logs (GitHub Actions)
+  console.log(`Wrote: ${OUT_PATH}`);
   console.log(`CPI=${cpiScore} (${band})  CEPS=${eng.cepsScore}  BMI=${eng.builderMomentum}`);
   console.log(`Projected CPI (30d)=${eng.projectedCpi30d}  Prob CPI>=70=${eng.probGe70}%`);
 }
 
 main().catch((err) => {
-  console.error("Build failed:", err?.message || err);
+  console.error("Build failed:", err?.stack || err?.message || err);
   process.exit(1);
 });
