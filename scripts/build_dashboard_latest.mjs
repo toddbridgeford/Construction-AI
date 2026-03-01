@@ -279,7 +279,8 @@ function buildSignalsPayload(fredSignals, seriesMap, blsSeries = [], censusSerie
       region: s.region ?? "US",
       units: s.units ?? "",
       yoy: computeYoY(hist),
-      history: hist.map((p) => ({ date: p.date, value: p.value }))
+      history: hist.map((p) => ({ date: p.date, value: p.value })),
+source: "FRED"
     };
   });
 
