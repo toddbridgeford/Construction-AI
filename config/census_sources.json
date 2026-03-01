@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "max_points": 120,
+  "sources": [
+    {
+      "key": "permits_total",
+      "name": "Building Permits (Total)",
+      "units": "count",
+      "base_url": "https://api.census.gov/data/YOUR_DATASET_HERE",
+      "time_field": "time",
+      "value_field": "VALUE",
+      "geo_fields": ["us", "state", "metropolitan statistical area/micropolitan statistical area", "place"],
+      "geographies": [
+        { "label": "US", "key": "national", "params": { "for": "us:1" } },
+        { "label": "STATE", "key": "state", "params": { "for": "state:*" } },
+        { "label": "MSA", "key": "msa", "params": { "for": "metropolitan statistical area/micropolitan statistical area:*" } },
+        { "label": "CITY", "key": "city", "params": { "for": "place:*" } }
+      ]
+    }
+  ]
+}
