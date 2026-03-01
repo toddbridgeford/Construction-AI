@@ -1,6 +1,6 @@
 {
   "schema_version": "3.2.0",
-  "generated_at": "2026-03-01T00:51:11.371Z",
+  "generated_at": "2026-03-01T01:12:58.390Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -42,28 +42,28 @@
   },
   "predictive_engine": {
     "horizon_days": 30,
-    "projected_cpi_30d": 56,
+    "projected_cpi_30d": 58,
     "prob_cpi_ge_70": 6,
     "drivers": [
       {
         "key": "mortgage30_trend",
-        "value": -0.12
+        "value": -0.11999999999999922
       },
       {
         "key": "permits_yoy",
-        "value": -2.162162
+        "value": -2.1621621621621623
       },
       {
         "key": "housing_starts_yoy",
-        "value": -7.265522
+        "value": -7.265521796565388
       },
       {
         "key": "unrate_trend",
-        "value": -0.1
+        "value": -0.10000000000000053
       },
       {
         "key": "cpi_yoy",
-        "value": 2.391201
+        "value": 2.391201432150014
       }
     ]
   },
@@ -3473,7 +3473,7 @@
       "cpi": 58,
       "volatility": "NORMAL",
       "regime": "NEUTRAL",
-      "projected_cpi_30d": 56,
+      "projected_cpi_30d": 58,
       "prob_cpi_ge_70": 6
     }
   ]
