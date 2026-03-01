@@ -109,27 +109,81 @@ function pickLatestMonthlyExcelLink(html, baseUrl) {
       .replace(/\s+/g, " ")
       .trim();
 
-    const monthYearRe = /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}/i;
-    const match = (inner.match(monthYearRe) || windowText.match(monthYearRe));
+    const monthYearRe =
+      /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}/i;
+    const match = inner.match(monthYearRe) || windowText.match(monthYearRe);
     const my = match ? match[0] : null;
     const ts = my ? parseMonthYear(my) : null;
 
-    const abs = href.startsWith("http")
-      ? href
-      : new URL(href, baseUrl).toString();
-
+    const abs = href.startsWith("http") ? href : new URL(href, baseUrl).toString();
     links.push({ url: abs, label: my || inner, ts: ts ?? -1 });
   }
 
-  links.sort((a, b) => (b.ts - a.ts));
+  links.sort((a, b) => b.ts - a.ts);
   return links[0] || null;
 }
 
-function xlsxToRows(buf) {
+// ---------------------------
+// XLSX: choose the correct sheet + header row (BPS files often have cover sheets)
+// ---------------------------
+function sheetToRowsWithDetectedHeader(ws, headerMatchers) {
+  // Look at first ~40 rows as arrays to find a header row containing key columns.
+  const preview = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
+  const maxScan = Math.min(preview.length, 40);
+
+  let headerRowIndex = -1;
+
+  for (let r = 0; r < maxScan; r++) {
+    const row = preview[r];
+    if (!Array.isArray(row)) continue;
+
+    const cells = row
+      .map(v => (v == null ? "" : String(v)).trim().toLowerCase())
+      .filter(Boolean);
+
+    if (cells.length < 2) continue;
+
+    const hits = headerMatchers.every(re => cells.some(c => re.test(c)));
+    if (hits) {
+      headerRowIndex = r;
+      break;
+    }
+  }
+
+  if (headerRowIndex === -1) return null;
+
+  // Use that header row as the column names
+  const rows = XLSX.utils.sheet_to_json(ws, {
+    defval: null,
+    raw: true,
+    range: headerRowIndex,
+  });
+
+  return rows;
+}
+
+function xlsxToRowsSmart(buf, headerMatchers) {
   const wb = XLSX.read(buf, { type: "buffer" });
-  const sheetName = wb.SheetNames[0];
-  const ws = wb.Sheets[sheetName];
-  return XLSX.utils.sheet_to_json(ws, { defval: null, raw: true });
+
+  for (const sheetName of wb.SheetNames) {
+    const ws = wb.Sheets[sheetName];
+    const rows = sheetToRowsWithDetectedHeader(ws, headerMatchers);
+    if (rows && rows.length > 0) return rows;
+  }
+
+  // fallback: old behavior (may be a cover page, but better than crashing)
+  const ws0 = wb.Sheets[wb.SheetNames[0]];
+  return XLSX.utils.sheet_to_json(ws0, { defval: null, raw: true });
+}
+
+function findCol(row, patterns) {
+  const keys = Object.keys(row);
+  for (const p of patterns) {
+    const re = p instanceof RegExp ? p : new RegExp(p, "i");
+    const k = keys.find(x => re.test(x));
+    if (k) return k;
+  }
+  return null;
 }
 
 // ---------------------------
@@ -147,11 +201,10 @@ async function fredObservations({ apiKey, seriesId, limit = 24 }) {
   }
   const txt = await fetchText(url.toString());
   const json = JSON.parse(txt);
-  const obs = (json.observations || []).map(o => ({
+  return (json.observations || []).map(o => ({
     date: o.date,
     value: safeNumber(o.value),
   }));
-  return obs;
 }
 
 // ---------------------------
@@ -173,32 +226,24 @@ async function loadCensusBpsLatest() {
   const cbsaXls = await fetchBuffer(cbsaLink.url);
   const stateXls = await fetchBuffer(stateLink.url);
 
-  const cbsaRows = xlsxToRows(cbsaXls);
-  const stateRows = xlsxToRows(stateXls);
+  // Header matchers (lowercased)
+  const cbsaRows = xlsxToRowsSmart(cbsaXls, [/cbsa|msa/i, /total/i]);
+  const stateRows = xlsxToRowsSmart(stateXls, [/state/i, /total/i]);
 
-  function findCol(row, patterns) {
-    const keys = Object.keys(row);
-    for (const p of patterns) {
-      const re = (p instanceof RegExp) ? p : new RegExp(p, "i");
-      const k = keys.find(x => re.test(x));
-      if (k) return k;
-    }
-    return null;
-  }
-
-  const cbsaPermit = new Map();
+  const cbsaPermit = new Map(); // cbsa -> { name, total, sf, mf2p }
   for (const r of cbsaRows) {
     const cbsaCol = findCol(r, [/cbsa/i, /msa/i, /code/i]);
-    const nameCol = findCol(r, [/title/i, /name/i, /area/i]);
+    const nameCol = findCol(r, [/name/i, /title/i, /area/i]);
     if (!cbsaCol) continue;
 
     const code = safeNumber(r[cbsaCol]);
     if (!code) continue;
+
     const cbsa = normalizeCbsa(code);
     const name = nameCol ? String(r[nameCol] ?? "").trim() : null;
 
-    const totalCol = findCol(r, [/total\s+units/i, /^total$/i, /total.*perm/i]);
-    const sfCol = findCol(r, [/1\s*unit/i, /single\s*family/i, /1-unit/i]);
+    const totalCol = findCol(r, [/total/i]);
+    const sfCol = findCol(r, [/1\s*unit/i, /single/i, /1-unit/i]);
     const mfCol = findCol(r, [/2\+?\s*units/i, /multi/i, /2\+ units/i]);
 
     const total = totalCol ? safeNumber(r[totalCol]) : null;
@@ -209,18 +254,19 @@ async function loadCensusBpsLatest() {
     cbsaPermit.set(cbsa, { name, total, sf, mf2p });
   }
 
-  const statePermit = new Map();
+  const statePermit = new Map(); // fips -> { name, total, sf, mf2p }
   const stateNameToFips = buildStateNameToFips();
 
   for (const r of stateRows) {
     const nameCol = findCol(r, [/state/i]);
     if (!nameCol) continue;
+
     const name = String(r[nameCol] ?? "").trim();
     const fips = stateNameToFips.get(name.toLowerCase());
     if (!fips) continue;
 
-    const totalCol = findCol(r, [/total\s+units/i, /^total$/i, /total.*perm/i]);
-    const sfCol = findCol(r, [/1\s*unit/i, /single\s*family/i, /1-unit/i]);
+    const totalCol = findCol(r, [/total/i]);
+    const sfCol = findCol(r, [/1\s*unit/i, /single/i, /1-unit/i]);
     const mfCol = findCol(r, [/2\+?\s*units/i, /multi/i, /2\+ units/i]);
 
     const total = totalCol ? safeNumber(r[totalCol]) : null;
@@ -256,7 +302,7 @@ function buildStateNameToFips() {
 }
 
 // ---------------------------
-// BLS LAUS
+// BLS LAUS (flat files)
 // ---------------------------
 async function loadBlsLausUnempRatesLatest() {
   const base = "https://download.bls.gov/pub/time.series/la/";
@@ -343,9 +389,7 @@ async function loadBlsLausUnempRatesLatest() {
       const value = safeNumber(parts[isValue]);
 
       const prev = latest.get(series_id);
-      if (!prev || key > prev.key) {
-        latest.set(series_id, { key, year, month, value });
-      }
+      if (!prev || key > prev.key) latest.set(series_id, { key, year, month, value });
     }
   }
 
@@ -358,9 +402,16 @@ async function loadBlsLausUnempRatesLatest() {
 
     const area_text = areaTextByTypeCode.get(`${meta.area_type_code}:${meta.area_code}`) || null;
 
-    const mState = series_id.match(/^LAU[S|U]T(\d{2})00000000000003$/);
+    // FIXED regex: [SU] (not [S|U])
+    const mState = series_id.match(/^LAU[SU]T(\d{2})00000000000003$/);
     if (mState) {
-      stateUnemp.set(mState[1], { value: obs.value, year: obs.year, month: obs.month, series_id, area_text });
+      stateUnemp.set(mState[1], {
+        value: obs.value,
+        year: obs.year,
+        month: obs.month,
+        series_id,
+        area_text
+      });
       continue;
     }
 
@@ -377,28 +428,23 @@ async function loadBlsLausUnempRatesLatest() {
 }
 
 // ---------------------------
-// CEPS (deterministic, observed-only)
+// CEPS (simple deterministic, observed-only)
 // ---------------------------
 function computeCeps({ mortgage30, permits, permitsHistory, unempStateMedian }) {
-  // Capital: mortgage rate pressure (centered ~5.5%; higher = more pressure)
   const capital = mortgage30 == null ? 50 : clamp(50 + (mortgage30 - 5.5) * 12);
 
-  // Pipeline: permits momentum (latest vs average of previous 6 points if available)
   let pipeline = 50;
   if (permits != null && Array.isArray(permitsHistory) && permitsHistory.length >= 8) {
     const hist = permitsHistory.slice(-7, -1).map(x => x.value).filter(v => v != null);
     if (hist.length >= 3) {
       const avg = hist.reduce((a,b)=>a+b,0) / hist.length;
-      // if permits below avg => higher pressure
       const ratio = avg > 0 ? permits / avg : 1;
-      pipeline = clamp(50 + (1 - ratio) * 60); // strong sensitivity
+      pipeline = clamp(50 + (1 - ratio) * 60);
     }
   }
 
-  // Trade: unemployment median (higher unemp = higher slowdown pressure)
   const trade = unempStateMedian == null ? 50 : clamp(40 + (unempStateMedian - 4.0) * 10);
 
-  // CEPS: weighted
   const ceps = clamp(0.45 * capital + 0.35 * pipeline + 0.20 * trade);
   return {
     ceps_score: Math.round(ceps),
@@ -437,18 +483,16 @@ async function main() {
     fred[k] = {
       series_id: seriesId,
       latest: obs[0] ?? null,
-      history: obs.slice().reverse(), // oldest->newest
+      history: obs.slice().reverse(),
     };
   }
 
   const bps = await loadCensusBpsLatest();
   const laus = await loadBlsLausUnempRatesLatest();
 
-  // Build expanded geo_data for drilldown
   const geo_data = {};
   const observed_gaps = [];
 
-  // US node (observed anchors)
   geo_data["us:US"] = {
     geo: { level: "us", id: "US", name: "United States" },
     capital: { mortgage_30y: fred.mortgage_30y.latest },
@@ -461,9 +505,9 @@ async function main() {
     commercial: { construction_spending_total: fred.total_construction_spending.latest }
   };
 
-  // State nodes (permits + unemployment)
   const stateNameToFips = buildStateNameToFips();
   const states = Array.from(stateNameToFips.values()).sort();
+
   for (const fips of states) {
     const p = bps.state.permit.get(fips) || null;
     const u = laus.stateUnemp.get(fips) || null;
@@ -481,12 +525,12 @@ async function main() {
       }
     };
 
-    if (!p) observed_gaps.push({ geo: nodeKey, metric: "bps_state_permits", reason: "missing in parsed BPS state file" });
-    if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "missing in LAUS AllStatesS latest parse" });
+    if (!p) observed_gaps.push({ geo: nodeKey, metric: "bps_state_permits", reason: "no parsed row for this state (sheet/header mismatch)" });
+    if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "no state unemployment match (series_id parse)" });
   }
 
-  // CBSA nodes (permits + deterministic unemployment join by normalized name)
   const cbsas = Array.from(bps.cbsa.permit.keys()).sort();
+
   for (const cbsa of cbsas) {
     const p = bps.cbsa.permit.get(cbsa);
     const nodeKey = `cbsa:${cbsa}`;
@@ -495,9 +539,7 @@ async function main() {
     const norm = normalizeAreaNameForJoin(p?.name);
     if (norm) {
       const candidates = laus.cbsaUnempByNormName.get(norm) || null;
-      if (candidates && candidates.length === 1) {
-        unemp = candidates[0].value;
-      }
+      if (candidates && candidates.length === 1) unemp = candidates[0].value;
     }
 
     geo_data[nodeKey] = {
@@ -507,31 +549,24 @@ async function main() {
         permits_sf: p ? p.sf : null,
         permits_mf2p: p ? p.mf2p : null
       },
-      labor: {
-        unemployment_rate: unemp
-      }
+      labor: { unemployment_rate: unemp }
     };
 
-    if (unemp == null) {
-      observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "no deterministic LAUS match for this CBSA name" });
-    }
+    if (unemp == null) observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "no deterministic LAUS match for this CBSA name" });
   }
 
-  // CEPS computation inputs (observed-only)
+  // CEPS inputs
   const mortgageLatest = fred.mortgage_30y.latest?.value ?? null;
   const permitsLatest = fred.building_permits_total.latest?.value ?? null;
   const permitsHist = fred.building_permits_total.history ?? [];
 
-  // Median state unemployment (ignores nulls)
   const stateUnemps = [];
   for (const fips of states) {
     const u = laus.stateUnemp.get(fips)?.value ?? null;
     if (u != null) stateUnemps.push(u);
   }
-  stateUnemps.sort((a,b)=>a-b);
-  const unempMedian = stateUnemps.length
-    ? stateUnemps[Math.floor(stateUnemps.length / 2)]
-    : null;
+  stateUnemps.sort((a, b) => a - b);
+  const unempMedian = stateUnemps.length ? stateUnemps[Math.floor(stateUnemps.length / 2)] : null;
 
   const cepsParts = computeCeps({
     mortgage30: mortgageLatest,
@@ -546,7 +581,6 @@ async function main() {
   const risk_mode = ceps_score >= 70;
   const risk_thermometer_mode = risk_mode;
 
-  // Minimal executive summary (calm, deterministic)
   const executiveSummary =
     ceps_score >= 70
       ? "Pressure is elevated. Capital and pipeline signals warrant defensive posture and tighter risk controls."
@@ -584,7 +618,6 @@ async function main() {
     risk_thermometer_mode,
     volatility_regime: "NORMAL",
 
-    // Expanded observed drilldown layer (National → State → CBSA)
     observed: {
       sources: {
         fred: { api: "https://api.stlouisfed.org/fred/series/observations" },
