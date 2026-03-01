@@ -124,15 +124,13 @@ function pickLatestMonthlyExcelLink(html, baseUrl) {
 }
 
 // ---------------------------
-// XLSX: choose the correct sheet + header row (BPS files often have cover sheets)
+// XLSX: choose correct sheet + header row
 // ---------------------------
 function sheetToRowsWithDetectedHeader(ws, headerMatchers) {
-  // Look at first ~40 rows as arrays to find a header row containing key columns.
   const preview = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
   const maxScan = Math.min(preview.length, 40);
 
   let headerRowIndex = -1;
-
   for (let r = 0; r < maxScan; r++) {
     const row = preview[r];
     if (!Array.isArray(row)) continue;
@@ -152,7 +150,6 @@ function sheetToRowsWithDetectedHeader(ws, headerMatchers) {
 
   if (headerRowIndex === -1) return null;
 
-  // Use that header row as the column names
   const rows = XLSX.utils.sheet_to_json(ws, {
     defval: null,
     raw: true,
@@ -171,7 +168,6 @@ function xlsxToRowsSmart(buf, headerMatchers) {
     if (rows && rows.length > 0) return rows;
   }
 
-  // fallback: old behavior (may be a cover page, but better than crashing)
   const ws0 = wb.Sheets[wb.SheetNames[0]];
   return XLSX.utils.sheet_to_json(ws0, { defval: null, raw: true });
 }
@@ -226,11 +222,10 @@ async function loadCensusBpsLatest() {
   const cbsaXls = await fetchBuffer(cbsaLink.url);
   const stateXls = await fetchBuffer(stateLink.url);
 
-  // Header matchers (lowercased)
   const cbsaRows = xlsxToRowsSmart(cbsaXls, [/cbsa|msa/i, /total/i]);
   const stateRows = xlsxToRowsSmart(stateXls, [/state/i, /total/i]);
 
-  const cbsaPermit = new Map(); // cbsa -> { name, total, sf, mf2p }
+  const cbsaPermit = new Map();
   for (const r of cbsaRows) {
     const cbsaCol = findCol(r, [/cbsa/i, /msa/i, /code/i]);
     const nameCol = findCol(r, [/name/i, /title/i, /area/i]);
@@ -254,7 +249,7 @@ async function loadCensusBpsLatest() {
     cbsaPermit.set(cbsa, { name, total, sf, mf2p });
   }
 
-  const statePermit = new Map(); // fips -> { name, total, sf, mf2p }
+  const statePermit = new Map();
   const stateNameToFips = buildStateNameToFips();
 
   for (const r of stateRows) {
@@ -330,7 +325,7 @@ async function loadBlsLausUnempRatesLatest() {
     const measure_code = parts[iMeasure];
     const seasonal = parts[iSeasonal];
 
-    if (measure_code !== "03") continue; // unemployment rate
+    if (measure_code !== "03") continue;
     unempSeries.set(series_id, { area_type_code, area_code, seasonal });
   }
 
@@ -402,7 +397,7 @@ async function loadBlsLausUnempRatesLatest() {
 
     const area_text = areaTextByTypeCode.get(`${meta.area_type_code}:${meta.area_code}`) || null;
 
-    // FIXED regex: [SU] (not [S|U])
+    // State unemployment series id pattern
     const mState = series_id.match(/^LAU[SU]T(\d{2})00000000000003$/);
     if (mState) {
       stateUnemp.set(mState[1], {
@@ -428,7 +423,7 @@ async function loadBlsLausUnempRatesLatest() {
 }
 
 // ---------------------------
-// CEPS (simple deterministic, observed-only)
+// CEPS (deterministic, observed-only)
 // ---------------------------
 function computeCeps({ mortgage30, permits, permitsHistory, unempStateMedian }) {
   const capital = mortgage30 == null ? 50 : clamp(50 + (mortgage30 - 5.5) * 12);
@@ -468,8 +463,11 @@ function bandForScore(x) {
 async function main() {
   const FRED_API_KEY = mustGetEnv("FRED_API_KEY");
 
-   const FRED_SERIES = {
-    // Construction anchors (existing)
+  // ---------------------------
+  // FRED SERIES PACK (Construction + Full Macro Sweep)
+  // ---------------------------
+  const FRED_SERIES = {
+    // Construction anchors
     mortgage_30y: "MORTGAGE30US",
     cpi_headline: "CPIAUCSL",
     construction_employment: "USCONS",
@@ -477,26 +475,35 @@ async function main() {
     housing_starts_total: "HOUST",
     building_permits_total: "PERMIT",
 
-    // --- Macro Pack v1 (new) ---
-
-    // Rates / capital
-    dgs10_10y_treasury: "DGS10",
+    // Rates / curve / policy
     dgs2_2y_treasury: "DGS2",
+    dgs10_10y_treasury: "DGS10",
     dgs30_30y_treasury: "DGS30",
     effr_fed_funds: "EFFR",
     sofr: "SOFR",
     t10yie_breakeven_10y: "T10YIE",
 
-    // Financial conditions / credit
-    nfci: "NFCI",
-    sloos_ci_large_tightening: "DRTSCILM",
+    // Credit / spreads
     baa_corp_yield: "BAA",
+    aaa_corp_yield: "AAA",
     hy_oas: "BAMLH0A0HYM2",
     ig_oas: "BAMLC0A0CM",
 
-    // Macro demand / labor
-    ism_pmi: "NAPM",
+    // Financial conditions
+    nfci: "NFCI",
+    anfcI_adjusted: "ANFCI",         // Adjusted National Financial Conditions Index
+    stlfsI: "STLFSI4",               // St. Louis Fed Financial Stress Index
+
+    // Lending standards (SLOOS proxy series on FRED)
+    sloos_ci_large_tightening: "DRTSCILM", // Net % tightening C&I loans to large firms
+
+    // Labor / macro demand
     unrate: "UNRATE",
+    ism_pmi: "NAPM",
+
+    // Housing / credit health (common FRED indicators)
+    nahb_hmi: "HMI",
+    cre_delinquency: "DRCRELEX",     // Delinquency rate on CRE loans (if available on your FRED region)
   };
 
   const fred = {};
@@ -509,12 +516,14 @@ async function main() {
     };
   }
 
+  // Other ingestions (already stable)
   const bps = await loadCensusBpsLatest();
   const laus = await loadBlsLausUnempRatesLatest();
 
   const geo_data = {};
   const observed_gaps = [];
 
+  // US node
   geo_data["us:US"] = {
     geo: { level: "us", id: "US", name: "United States" },
     capital: { mortgage_30y: fred.mortgage_30y.latest },
@@ -527,6 +536,7 @@ async function main() {
     commercial: { construction_spending_total: fred.total_construction_spending.latest }
   };
 
+  // States
   const stateNameToFips = buildStateNameToFips();
   const states = Array.from(stateNameToFips.values()).sort();
 
@@ -551,8 +561,8 @@ async function main() {
     if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "no state unemployment match (series_id parse)" });
   }
 
+  // CBSAs
   const cbsas = Array.from(bps.cbsa.permit.keys()).sort();
-
   for (const cbsa of cbsas) {
     const p = bps.cbsa.permit.get(cbsa);
     const nodeKey = `cbsa:${cbsa}`;
@@ -656,6 +666,10 @@ async function main() {
         states_fips: states,
         cbsas
       },
+
+      // ✅ Macro pack exposed here for iPad UI + GPT analysis
+      macro_fred: fred,
+
       geo_data,
       observed_gaps
     }
