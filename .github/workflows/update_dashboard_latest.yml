@@ -1,9 +1,9 @@
-name: Update dashboard_latest.json (FRED + Ready for BLS/Census)
+name: Update dashboard_latest.json (FRED + Macro + News/Stocks + Ready for BLS/Census)
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 13 * * *" # daily (UTC). adjust if you want.
+    - cron: "15 13 * * *" # daily (UTC)
 
 permissions:
   contents: write
@@ -33,23 +33,26 @@ jobs:
       - name: Validate Required Files
         run: |
           test -f scripts/build_dashboard_latest.mjs
-          test -f config/fred_signals.json
           test -f scripts/package.json
 
       - name: Install script dependencies
         run: npm --prefix scripts install --silent
-
-      - name: Validate JSON Structure
-        run: |
-          node -e "JSON.parse(require('fs').readFileSync('config/fred_signals.json','utf8'))"
 
       - name: Run Build Script
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+
+          # Optional if you later want it (not required)
+          ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+
           FRED_OBSERVATION_START: "2020-01-01"
           OUT_PATH: "dashboard_latest.json"
+
+          # Optional customization
+          NEWS_LOOKBACK_DAYS: "3"
+          STOCK_TICKERS: "DHI,PHM,LEN,NVR,TOL,HD,LOW,VMC,MLM,BLDR,FBIN,OC,USCR,EXP"
         run: |
           node scripts/build_dashboard_latest.mjs
 
@@ -81,7 +84,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update dashboard_latest.json (FRED)"
+          git commit -m "Update dashboard_latest.json (Macro + News + Stocks)"
           git push origin Predictive-Model
 
       - name: Complete job
