@@ -15,6 +15,11 @@ function mustGetEnv(name) {
   return v;
 }
 
+function getEnv(name, fallback = null) {
+  const v = process.env[name];
+  return v == null || String(v).trim() === "" ? fallback : v;
+}
+
 const DEFAULT_HEADERS = {
   "User-Agent":
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
@@ -43,6 +48,10 @@ async function fetchBuffer(url) {
 
 function isoUtcNow() {
   return new Date().toISOString();
+}
+
+function todayISODate() {
+  return new Date().toISOString().slice(0, 10);
 }
 
 function clamp(x, lo = 0, hi = 100) {
@@ -141,7 +150,7 @@ function pickLatestMonthlyExcelLink(html, baseUrl) {
 }
 
 // ---------------------------
-// XLSX: choose correct sheet + header row
+// XLSX: robust header detect
 // ---------------------------
 function sheetToRowsWithDetectedHeader(ws, headerMatchers) {
   const preview = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
@@ -200,7 +209,7 @@ function findCol(row, patterns) {
 // ---------------------------
 // FRED
 // ---------------------------
-async function fredObservations({ apiKey, seriesId, limit = 36 }) {
+async function fredObservations({ apiKey, seriesId, limit = 48 }) {
   const url = new URL("https://api.stlouisfed.org/fred/series/observations");
   url.searchParams.set("api_key", apiKey);
   url.searchParams.set("file_type", "json");
@@ -221,6 +230,7 @@ async function fredObservations({ apiKey, seriesId, limit = 36 }) {
 function latestValue(series) {
   return series?.latest?.value ?? null;
 }
+
 function prevValue(series, kBack = 1) {
   const hist = series?.history;
   if (!Array.isArray(hist) || hist.length < 2) return null;
@@ -228,6 +238,7 @@ function prevValue(series, kBack = 1) {
   if (idx < 0) return null;
   return hist[idx]?.value ?? null;
 }
+
 function avgLastN(history, n, excludeLast = 0) {
   if (!Array.isArray(history) || history.length === 0) return null;
   const end = history.length - excludeLast;
@@ -331,7 +342,7 @@ function buildStateNameToFips() {
 }
 
 // ---------------------------
-// BLS LAUS (flat files)
+// BLS LAUS (flat files) — state + metro/micro
 // ---------------------------
 async function loadBlsLausUnempRatesLatest() {
   const base = "https://download.bls.gov/pub/time.series/la/";
@@ -359,7 +370,7 @@ async function loadBlsLausUnempRatesLatest() {
     const measure_code = parts[iMeasure];
     const seasonal = parts[iSeasonal];
 
-    if (measure_code !== "03") continue;
+    if (measure_code !== "03") continue; // unemployment rate
     unempSeries.set(series_id, { area_type_code, area_code, seasonal });
   }
 
@@ -450,219 +461,143 @@ async function loadBlsLausUnempRatesLatest() {
 }
 
 // ---------------------------
-// CEPS v2 scoring (deterministic)
+// FREE NEWS (GDELT) + clustering + land tracker
 // ---------------------------
-function scoreMortgage30(x) {
-  if (x == null) return 50;
-  return clamp(20 + (x - 3.0) * 12);
-}
-function scoreCurveInversion(dgs2, dgs10) {
-  if (dgs2 == null || dgs10 == null) return 50;
-  const spread = dgs10 - dgs2;
-  return clamp(50 + (-spread) * 18);
-}
-function scoreNFCI(nfci) {
-  if (nfci == null) return 50;
-  return clamp(50 + nfci * 25);
-}
-function scoreSTLFSI(stress) {
-  if (stress == null) return 50;
-  return clamp(35 + stress * 15);
-}
-function scoreOAS(oas) {
-  if (oas == null) return 50;
-  return clamp(20 + (oas - 1.0) * 12);
-}
-function scoreSLOOS(netPct) {
-  if (netPct == null) return 50;
-  return clamp(35 + netPct * 1.0);
-}
-function scorePermitsMomentum(latest, avgPrev) {
-  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
-  const ratio = latest / avgPrev;
-  return clamp(50 + (1 - ratio) * 60);
-}
-function scoreStartsMomentum(latest, avgPrev) {
-  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
-  const ratio = latest / avgPrev;
-  return clamp(50 + (1 - ratio) * 55);
-}
-function scoreUnemploymentMedian(med) {
-  if (med == null) return 50;
-  return clamp(30 + (med - 3.5) * 12);
-}
-function scoreConsEmploymentMomentum(latest, avgPrev) {
-  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
-  const ratio = latest / avgPrev;
-  return clamp(50 + (1 - ratio) * 50);
-}
-
-function weightedScore(components) {
-  const usable = components.filter(c => c.score != null && Number.isFinite(c.score));
-  if (usable.length === 0) return 50;
-  const wSum = usable.reduce((a, c) => a + c.weight, 0);
-  if (wSum <= 0) return 50;
-  return clamp(usable.reduce((a, c) => a + c.score * c.weight, 0) / wSum);
-}
-
-function normalizeComponents(arr) {
-  return arr.map(x => ({
-    key: x.key,
-    label: x.label,
-    value: x.value,
-    score: Math.round(x.score),
-    weight: x.weight
-  }));
-}
-
-function computeCepsV2({ fred, unempStateMedian }) {
-  const mortgage30 = latestValue(fred.mortgage_30y);
-  const dgs2 = latestValue(fred.dgs2_2y_treasury);
-  const dgs10 = latestValue(fred.dgs10_10y_treasury);
-  const nfci = latestValue(fred.nfci);
-  const anfcI = latestValue(fred.anfcI_adjusted);
-  const stlfsi = latestValue(fred.stlfsI);
-  const hy = latestValue(fred.hy_oas);
-  const ig = latestValue(fred.ig_oas);
-  const sloos = latestValue(fred.sloos_ci_large_tightening);
-  const baa = latestValue(fred.baa_corp_yield);
-  const aaa = latestValue(fred.aaa_corp_yield);
-  const baaAaaSpread = (baa != null && aaa != null) ? (baa - aaa) : null;
-
-  const capital_components = [
-    { key: "mortgage_30y", label: "Mortgage 30Y", value: mortgage30, score: scoreMortgage30(mortgage30), weight: 0.22 },
-    { key: "curve_2y10y", label: "Yield Curve (10y-2y)", value: (dgs10 != null && dgs2 != null) ? (dgs10 - dgs2) : null, score: scoreCurveInversion(dgs2, dgs10), weight: 0.18 },
-    { key: "nfci", label: "NFCI", value: nfci, score: scoreNFCI(nfci), weight: 0.12 },
-    { key: "anfcI", label: "ANFCI", value: anfcI, score: scoreNFCI(anfcI), weight: 0.08 },
-    { key: "stlfsI", label: "Financial Stress (STLFSI)", value: stlfsi, score: scoreSTLFSI(stlfsi), weight: 0.10 },
-    { key: "hy_oas", label: "High Yield OAS", value: hy, score: scoreOAS(hy), weight: 0.12 },
-    { key: "ig_oas", label: "IG OAS", value: ig, score: scoreOAS(ig), weight: 0.06 },
-    { key: "sloos", label: "SLOOS Tightening", value: sloos, score: scoreSLOOS(sloos), weight: 0.08 },
-    { key: "baa_aaa_spread", label: "BAA–AAA Spread", value: baaAaaSpread, score: scoreOAS(baaAaaSpread), weight: 0.04 },
-  ];
-  const capitalScore = weightedScore(capital_components);
-
-  const permitsLatest = latestValue(fred.building_permits_total);
-  const permitsAvgPrev = avgLastN(fred.building_permits_total?.history, 6, 1);
-  const startsLatest = latestValue(fred.housing_starts_total);
-  const startsAvgPrev = avgLastN(fred.housing_starts_total?.history, 6, 1);
-
-  const pipeline_components = [
-    { key: "permits_momentum", label: "Permits Momentum", value: permitsLatest, score: scorePermitsMomentum(permitsLatest, permitsAvgPrev), weight: 0.65 },
-    { key: "starts_momentum", label: "Starts Momentum", value: startsLatest, score: scoreStartsMomentum(startsLatest, startsAvgPrev), weight: 0.35 },
-  ];
-  const pipelineScore = weightedScore(pipeline_components);
-
-  const consEmpLatest = latestValue(fred.construction_employment);
-  const consEmpAvgPrev = avgLastN(fred.construction_employment?.history, 6, 1);
-
-  const trade_components = [
-    { key: "unemp_state_median", label: "State Unemployment Median", value: unempStateMedian, score: scoreUnemploymentMedian(unempStateMedian), weight: 0.65 },
-    { key: "cons_emp_momentum", label: "Construction Employment Momentum", value: consEmpLatest, score: scoreConsEmploymentMomentum(consEmpLatest, consEmpAvgPrev), weight: 0.35 },
-  ];
-  const tradeScore = weightedScore(trade_components);
-
-  const ceps = clamp(0.50 * capitalScore + 0.32 * pipelineScore + 0.18 * tradeScore);
-
-  return {
-    ceps_score: Math.round(ceps),
-    capital: Math.round(capitalScore),
-    pipeline: Math.round(pipelineScore),
-    trade: Math.round(tradeScore),
-    components: {
-      capital: normalizeComponents(capital_components),
-      pipeline: normalizeComponents(pipeline_components),
-      trade: normalizeComponents(trade_components),
-    }
-  };
-}
-
-function bandForScore(x) {
-  if (x >= 76) return "FREEZE_RISK";
-  if (x >= 61) return "TIGHTENING";
-  if (x >= 46) return "SLOWDOWN";
-  if (x >= 31) return "LATE_EXPANSION";
-  return "EXPANSION";
-}
-
-function severityForScore(x) {
-  if (x >= 76) return "CRITICAL";
-  if (x >= 70) return "ELEVATED";
-  if (x >= 60) return "WATCH";
-  return "NORMAL";
-}
-
-// ---------------------------
-// FREE NEWS: GDELT + RSS fallback
-// ---------------------------
-function daysAgoISO(days) {
+function daysAgoUTC(days) {
   const d = new Date();
   d.setUTCDate(d.getUTCDate() - days);
-  return d.toISOString();
+  return d;
+}
+function toGdeltDatetime(d) {
+  // yyyyMMddHHmmss
+  const yyyy = String(d.getUTCFullYear());
+  const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(d.getUTCDate()).padStart(2, "0");
+  const HH = String(d.getUTCHours()).padStart(2, "0");
+  const MM = String(d.getUTCMinutes()).padStart(2, "0");
+  const SS = String(d.getUTCSeconds()).padStart(2, "0");
+  return `${yyyy}${mm}${dd}${HH}${MM}${SS}`;
 }
 
-// GDELT 2.1 DOC API (free). We keep it simple: keyword query + max results.
-async function fetchGdeltNews({ query, lookbackDays = 3, max = 25 }) {
-  const start = daysAgoISO(lookbackDays);
+async function fetchGdeltNews({ query, lookbackDays = 5, max = 60 }) {
+  const start = toGdeltDatetime(daysAgoUTC(lookbackDays));
   const url = new URL("https://api.gdeltproject.org/api/v2/doc/doc");
   url.searchParams.set("query", query);
   url.searchParams.set("mode", "ArtList");
   url.searchParams.set("format", "json");
   url.searchParams.set("maxrecords", String(max));
-  url.searchParams.set("format", "json");
-  url.searchParams.set("startdatetime", start.replace(/[-:]/g, "").slice(0, 14)); // yyyyMMddHHmmss
+  url.searchParams.set("startdatetime", start);
+
   const json = await fetchJson(url.toString());
   const arts = Array.isArray(json?.articles) ? json.articles : [];
-  return arts.map(a => ({
-    title: a.title ?? null,
-    url: a.url ?? null,
-    source: a.sourceCountry ?? a.sourceCollection ?? a.sourceCommonName ?? null,
-    published_at: a.seendate ?? a.datetime ?? null
-  })).filter(x => x.title && x.url);
+
+  return arts
+    .map(a => ({
+      title: a.title ?? null,
+      url: a.url ?? null,
+      source: a.sourceCountry ?? a.sourceCommonName ?? a.sourceCollection ?? null,
+      published_at: a.seendate ?? a.datetime ?? null,
+      language: a.language ?? null,
+      // Keep any useful metadata if present
+      domain: a.domain ?? null,
+    }))
+    .filter(x => x.title && x.url);
 }
 
-// Very small RSS parser (no dependency). Good enough for basic feeds.
-function parseRssItems(xml, max = 20) {
-  const items = [];
-  const itemRe = /<item\b[\s\S]*?<\/item>/gi;
-  const titleRe = /<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>|<title>([\s\S]*?)<\/title>/i;
-  const linkRe = /<link>([\s\S]*?)<\/link>/i;
-  const pubRe = /<pubDate>([\s\S]*?)<\/pubDate>/i;
-  let m;
-  while ((m = itemRe.exec(xml)) && items.length < max) {
-    const block = m[0];
-    const t = block.match(titleRe);
-    const l = block.match(linkRe);
-    const p = block.match(pubRe);
-    const title = (t?.[1] ?? t?.[2] ?? "").trim();
-    const url = (l?.[1] ?? "").trim();
-    const published_at = (p?.[1] ?? "").trim();
-    if (title && url) items.push({ title, url, source: "rss", published_at: published_at || null });
+function classifyNewsItem(title) {
+  const t = String(title || "").toLowerCase();
+
+  const themes = [];
+
+  if (/(mortgage|rate|fed|yield|treasury|sofr|inflation)/i.test(t)) themes.push("capital");
+  if (/(permit|permits|starts|housing start|pipeline|backlog|pre[- ]?construction|entitlement)/i.test(t)) themes.push("pipeline");
+  if (/(labor|wage|union|strike|subcontract|crew|trade shortage)/i.test(t)) themes.push("trade");
+  if (/(lumber|steel|cement|concrete|gypsum|drywall|asphalt|tariff|input cost)/i.test(t)) themes.push("materials");
+  if (/(code|zoning|regulation|permit reform|environmental review|ceiqa|nea?pa)/i.test(t)) themes.push("regulatory");
+  if (/(construction spending|capex|pmi|consumer|sentiment|recession)/i.test(t)) themes.push("macro");
+
+  // Land tracker tags
+  if (/(acquire|acquired|purchase|purchased|buying|bought)\s+land|land\s+(deal|purchase|acquisition)|site\s+purchase|master[- ]planned|entitled\s+land/i.test(t)) {
+    themes.push("land");
   }
-  return items;
+  if (/(multifamily|apartment|rental|single[- ]family|homebuilder|subdivision)/i.test(t)) themes.push("residential");
+  if (/(industrial|warehouse|data center|office|retail|hotel|logistics|manufacturing plant)/i.test(t)) themes.push("commercial");
+
+  if (themes.length === 0) themes.push("other");
+  return Array.from(new Set(themes));
 }
 
-async function fetchRss(url, max = 20) {
-  const xml = await fetchText(url);
-  return parseRssItems(xml, max);
+function buildNewsClusters(news) {
+  const clusters = {
+    capital: [],
+    pipeline: [],
+    trade: [],
+    materials: [],
+    regulatory: [],
+    macro: [],
+    land: [],
+    other: []
+  };
+
+  for (const n of news) {
+    const themes = classifyNewsItem(n.title);
+    for (const th of themes) {
+      if (!clusters[th]) clusters[th] = [];
+      clusters[th].push({ ...n, themes });
+    }
+  }
+
+  // Keep each cluster small and executive-friendly
+  for (const k of Object.keys(clusters)) {
+    clusters[k] = clusters[k].slice(0, 12);
+  }
+
+  return clusters;
+}
+
+function buildLandTracker(news) {
+  const landItems = news
+    .map(n => ({ ...n, themes: classifyNewsItem(n.title) }))
+    .filter(n => n.themes.includes("land"))
+    .slice(0, 50);
+
+  const residential_tagged = landItems.filter(x => x.themes.includes("residential")).length;
+  const commercial_tagged = landItems.filter(x => x.themes.includes("commercial")).length;
+
+  // Purpose heuristic
+  const purpose = { residential: 0, commercial: 0, mixed: 0, unknown: 0 };
+  for (const it of landItems) {
+    const r = it.themes.includes("residential");
+    const c = it.themes.includes("commercial");
+    if (r && c) purpose.mixed++;
+    else if (r) purpose.residential++;
+    else if (c) purpose.commercial++;
+    else purpose.unknown++;
+  }
+
+  return {
+    total_mentions: landItems.length,
+    residential_tagged,
+    commercial_tagged,
+    purpose_breakdown: purpose,
+    items: landItems.slice(0, 15)
+  };
 }
 
 // ---------------------------
-// FREE STOCKS: Stooq CSV (free, no key) + optional AlphaVantage
+// STOCKS: Stooq primary + Alpha Vantage fallback (key already in secrets)
 // ---------------------------
 function parseCsvLine(line) {
-  // simple CSV (no embedded commas expected for Stooq quotes)
   return line.split(",").map(x => x.trim());
 }
 
-// Stooq: https://stooq.com/q/l/?s=aapl.us&f=sd2t2ohlcv&h&e=csv
 async function fetchStooqQuote(ticker) {
   const t = ticker.toLowerCase();
   const stooqSymbol = t.includes(".") ? t : `${t}.us`;
 
   const url = new URL("https://stooq.com/q/l/");
   url.searchParams.set("s", stooqSymbol);
-  url.searchParams.set("f", "sd2t2ohlcv"); // date, time, open, high, low, close, volume
+  url.searchParams.set("f", "sd2t2ohlcv");
   url.searchParams.set("h", "");
   url.searchParams.set("e", "csv");
 
@@ -693,7 +628,6 @@ async function fetchStooqQuote(ticker) {
   };
 }
 
-// Optional Alpha Vantage (free tier but requires key)
 async function fetchAlphaVantageQuote(ticker, apiKey) {
   const url = new URL("https://www.alphavantage.co/query");
   url.searchParams.set("function", "GLOBAL_QUOTE");
@@ -701,13 +635,19 @@ async function fetchAlphaVantageQuote(ticker, apiKey) {
   url.searchParams.set("apikey", apiKey);
 
   const json = await fetchJson(url.toString());
+
+  // Rate limit / throttling often returns a "Note"
+  if (json?.Note) return { rate_limited: true, note: json.Note };
+
   const q = json?.["Global Quote"];
   if (!q) return null;
 
   const close = safeNumber(q["05. price"]);
   const prevClose = safeNumber(q["08. previous close"]);
   const change = safeNumber(q["09. change"]);
-  const changePct = q["10. change percent"] ? safeNumber(String(q["10. change percent"]).replace("%","")) : null;
+  const changePct = q["10. change percent"]
+    ? safeNumber(String(q["10. change percent"]).replace("%", ""))
+    : null;
 
   return {
     ticker: ticker.toUpperCase(),
@@ -720,15 +660,422 @@ async function fetchAlphaVantageQuote(ticker, apiKey) {
   };
 }
 
+function normalizeTickerList(s) {
+  return String(s || "")
+    .split(",")
+    .map(x => x.trim())
+    .filter(Boolean)
+    .map(x => x.toUpperCase());
+}
+
+async function fetchStockUniverse({ tickers, alphaKey, alphaPriority }) {
+  const out = [];
+
+  const prioritySet = new Set(alphaPriority);
+  let alphaBudget = Math.min(alphaPriority.length, 12); // keep it safe for free tier
+
+  for (const t of tickers) {
+    // Always attempt Stooq first
+    try {
+      const s = await fetchStooqQuote(t);
+      if (s) out.push(s);
+    } catch {}
+
+    // Alpha Vantage only for priority tickers and while budget remains
+    if (alphaKey && prioritySet.has(t) && alphaBudget > 0) {
+      try {
+        const av = await fetchAlphaVantageQuote(t, alphaKey);
+        if (av?.rate_limited) {
+          alphaBudget = 0; // stop further AV calls deterministically
+        } else if (av) {
+          // Replace stooq entry if it exists
+          const idx = out.findIndex(x => x.ticker === t);
+          if (idx >= 0) out[idx] = av;
+          else out.push(av);
+          alphaBudget--;
+        }
+      } catch {}
+    }
+  }
+
+  return out;
+}
+
+function buildSectorRollups(stocks) {
+  const groups = {
+    builders: ["DHI","LEN","PHM","NVR","TOL"],
+    materials: ["VMC","MLM","EXP","OC","FBIN","USCR","CRH"],
+    distribution: ["BLDR"],
+    equipment: ["CAT","DE","URI"],
+    retail: ["HD","LOW"]
+  };
+
+  const rollups = {};
+  for (const [sector, list] of Object.entries(groups)) {
+    const subset = stocks.filter(s => list.includes(s.ticker));
+    const avgChange = subset.length
+      ? subset.reduce((a, b) => a + (b.change_pct ?? 0), 0) / subset.length
+      : null;
+
+    rollups[sector] = {
+      count: subset.length,
+      avg_change_pct: avgChange
+    };
+  }
+  return rollups;
+}
+
+// ---------------------------
+// SAM.gov (optional key) — federal project signal (aggressive mode)
+// ---------------------------
+async function fetchSamGovOpportunities({ apiKey, lookbackDays = 7, max = 50 }) {
+  if (!apiKey) return { enabled: false, reason: "Missing SAM_API_KEY", items: [] };
+
+  // This endpoint and parameters can evolve; we keep it defensive.
+  // We use a broad construction-related keyword set.
+  const keywords = [
+    "construction",
+    "renovation",
+    "design-build",
+    "general contractor",
+    "roofing",
+    "HVAC",
+    "electrical",
+    "plumbing",
+    "concrete",
+    "civil"
+  ];
+
+  const q = keywords.map(k => `"${k}"`).join(" OR ");
+
+  // SAM.gov opportunities search endpoint (v2 style). If it fails, we safely return empty.
+  const url = new URL("https://api.sam.gov/opportunities/v2/search");
+  url.searchParams.set("api_key", apiKey);
+  url.searchParams.set("limit", String(max));
+  url.searchParams.set("q", q);
+
+  // Attempt to restrict recency (best-effort)
+  const from = daysAgoUTC(lookbackDays).toISOString().slice(0, 10);
+  url.searchParams.set("postedFrom", from);
+
+  try {
+    const json = await fetchJson(url.toString());
+    const opps = Array.isArray(json?.opportunitiesData) ? json.opportunitiesData : [];
+    const items = opps.map(o => ({
+      title: o.title ?? o.noticeTitle ?? null,
+      url: o.uiLink ?? o.link ?? null,
+      posted: o.postedDate ?? null,
+      dept: o.department ?? o.departmentName ?? null,
+      type: o.noticeType ?? null,
+      place: o.placeOfPerformance?.city?.name ?? o.placeOfPerformance?.state?.code ?? null
+    })).filter(x => x.title);
+
+    return { enabled: true, items: items.slice(0, max) };
+  } catch (e) {
+    return { enabled: true, error: String(e?.message || e), items: [] };
+  }
+}
+
+// ---------------------------
+// CPI ENGINE v1 (maps to your OS zones + Δ3m momentum)
+// ---------------------------
+function momentumBand(delta3m) {
+  if (delta3m == null) return "Stable";
+  if (delta3m >= 8) return "Accelerating Stress";
+  if (delta3m >= 4) return "Rising";
+  if (delta3m <= -8) return "Rapid Relief";
+  if (delta3m <= -4) return "Easing";
+  return "Stable";
+}
+
+function zoneForCpi(x) {
+  if (x >= 76) return "Freeze Risk";
+  if (x >= 61) return "Tightening";
+  if (x >= 46) return "Slowdown";
+  if (x >= 31) return "Late Expansion";
+  return "Expansion";
+}
+
+function severityForCpi(x) {
+  if (x >= 76) return "CRITICAL";
+  if (x >= 70) return "ELEVATED";
+  if (x >= 60) return "WATCH";
+  return "NORMAL";
+}
+
+function computeDelta3mFromHistory(historyArr) {
+  // historyArr is [{date,value}] daily/weekly ok; we take nearest ~3 months back by index if monthly-like
+  if (!Array.isArray(historyArr) || historyArr.length < 4) return null;
+  const curr = historyArr[historyArr.length - 1]?.value ?? null;
+  const prev = historyArr[Math.max(0, historyArr.length - 4)]?.value ?? null;
+  if (curr == null || prev == null) return null;
+  return curr - prev;
+}
+
+function weightedAvg(items) {
+  const usable = items.filter(x => x.value != null && Number.isFinite(x.value) && x.weight > 0);
+  if (usable.length === 0) return 50;
+  const wSum = usable.reduce((a, b) => a + b.weight, 0);
+  if (wSum <= 0) return 50;
+  return clamp(usable.reduce((a, b) => a + b.value * b.weight, 0) / wSum);
+}
+
+function computeCpiEngine({ capitalScore, pipelineScore, tradeScore, materialsScore, regulatoryScore, macroScore }) {
+  // Sub-index weights per your spec (when inputs allow). We map missing to neutral 50.
+  const C = capitalScore ?? 50;
+  const P = pipelineScore ?? 50;
+  const T = tradeScore ?? 50;
+  const M = materialsScore ?? 50;
+  const R = regulatoryScore ?? 50;
+  const S = macroScore ?? 50;
+
+  const cpi_sf = weightedAvg([
+    { value: C, weight: 0.40 },
+    { value: P, weight: 0.35 },
+    { value: T, weight: 0.15 },
+    { value: M, weight: 0.05 },
+    { value: S, weight: 0.05 }
+  ]);
+
+  const cpi_mf = weightedAvg([
+    { value: C, weight: 0.30 },
+    { value: P, weight: 0.30 },
+    { value: T, weight: 0.15 },
+    { value: S, weight: 0.15 },
+    { value: M, weight: 0.05 },
+    { value: R, weight: 0.05 }
+  ]);
+
+  const cpi_inst = weightedAvg([
+    { value: P, weight: 0.30 },
+    { value: R, weight: 0.25 },
+    { value: C, weight: 0.15 },
+    { value: T, weight: 0.10 },
+    { value: M, weight: 0.10 },
+    { value: S, weight: 0.10 }
+  ]);
+
+  const cpi_infra = weightedAvg([
+    { value: P, weight: 0.30 },
+    { value: T, weight: 0.25 },
+    { value: M, weight: 0.20 },
+    { value: C, weight: 0.10 },
+    { value: S, weight: 0.10 },
+    { value: R, weight: 0.05 }
+  ]);
+
+  const cpi_r = clamp(0.60 * cpi_sf + 0.40 * cpi_mf);
+  const cpi_i = clamp(0.55 * cpi_inst + 0.45 * cpi_infra);
+  const headline = clamp(0.55 * cpi_r + 0.45 * cpi_i);
+
+  return {
+    cpi_sf: Math.round(cpi_sf),
+    cpi_mf: Math.round(cpi_mf),
+    cpi_inst: Math.round(cpi_inst),
+    cpi_infra: Math.round(cpi_infra),
+    cpi_r: Math.round(cpi_r),
+    cpi_i: Math.round(cpi_i),
+    headline: Math.round(headline),
+    divergences: {
+      r_minus_i: Math.round(cpi_r - cpi_i),
+      sf_minus_mf: Math.round(cpi_sf - cpi_mf),
+      inst_minus_infra: Math.round(cpi_inst - cpi_infra)
+    }
+  };
+}
+
+// ---------------------------
+// Simple scoring primitives for inputs (deterministic)
+// ---------------------------
+function scoreMortgage30(x) {
+  if (x == null) return 50;
+  return clamp(20 + (x - 3.0) * 12);
+}
+function scoreCurveInversion(dgs2, dgs10) {
+  if (dgs2 == null || dgs10 == null) return 50;
+  const spread = dgs10 - dgs2; // negative = inverted
+  return clamp(50 + (-spread) * 18);
+}
+function scoreNFCI(nfci) {
+  if (nfci == null) return 50;
+  return clamp(50 + nfci * 25);
+}
+function scoreSTLFSI(stress) {
+  if (stress == null) return 50;
+  return clamp(35 + stress * 15);
+}
+function scoreOAS(oas) {
+  if (oas == null) return 50;
+  return clamp(20 + (oas - 1.0) * 12);
+}
+function scoreSLOOS(netPct) {
+  if (netPct == null) return 50;
+  return clamp(35 + netPct * 1.0);
+}
+function scoreMomentum(latest, avgPrev, sensitivity = 60) {
+  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
+  const ratio = latest / avgPrev;
+  return clamp(50 + (1 - ratio) * sensitivity);
+}
+function scoreUnemploymentMedian(med) {
+  if (med == null) return 50;
+  return clamp(30 + (med - 3.5) * 12);
+}
+
+function weightedScore(components) {
+  const usable = components.filter(c => c.score != null && Number.isFinite(c.score));
+  if (usable.length === 0) return 50;
+  const wSum = usable.reduce((a, c) => a + c.weight, 0);
+  if (wSum <= 0) return 50;
+  return clamp(usable.reduce((a, c) => a + c.score * c.weight, 0) / wSum);
+}
+
+function normalizeComponents(arr) {
+  return arr.map(x => ({
+    key: x.key,
+    label: x.label,
+    value: x.value,
+    score: Math.round(x.score),
+    weight: x.weight
+  }));
+}
+
+// ---------------------------
+// Regime + Ecosystem Pulse (deterministic, transmission aligned)
+// ---------------------------
+function regimeFromCpi(headline, capitalScore, delta3m) {
+  const zone = zoneForCpi(headline);
+
+  let primary = zone;
+  let modifier = "Neutral";
+
+  if (capitalScore != null && capitalScore >= 80) modifier = "Capital Override";
+  else if (delta3m != null && delta3m >= 8) modifier = "Acceleration";
+  else if (delta3m != null && delta3m <= -8) modifier = "Relief";
+
+  const confidence =
+    (delta3m == null) ? "medium" :
+    (Math.abs(delta3m) >= 8) ? "high" : "medium";
+
+  return { primary, modifier, confidence };
+}
+
+function pulseColor(score) {
+  if (score >= 70) return "🔴";
+  if (score >= 60) return "🟡";
+  return "🟢";
+}
+
+function computeEcosystemPulse({ capital, pipeline }) {
+  // Transmission logic: Capital → Builders → Architects → GCs → Distributors → Manufacturers
+  // Deterministic mapping (higher = more stress)
+  const builders = clamp(0.70 * capital + 0.30 * pipeline);
+  const architects = clamp(0.55 * builders + 0.45 * pipeline);
+  const gcs = clamp(0.55 * architects + 0.45 * pipeline);
+  const distributors = clamp(0.55 * gcs + 0.45 * pipeline);
+  const manufacturers = clamp(0.55 * distributors + 0.45 * pipeline);
+
+  return {
+    builders: { score: Math.round(builders), state: pulseColor(builders) },
+    architects: { score: Math.round(architects), state: pulseColor(architects) },
+    general_contractors: { score: Math.round(gcs), state: pulseColor(gcs) },
+    distributors: { score: Math.round(distributors), state: pulseColor(distributors) },
+    manufacturers: { score: Math.round(manufacturers), state: pulseColor(manufacturers) }
+  };
+}
+
+function computeStockOverlay(sector_rollups) {
+  // Deterministic and bounded: only +0 or +5 or +10
+  const b = sector_rollups?.builders?.avg_change_pct;
+  const m = sector_rollups?.materials?.avg_change_pct;
+
+  let overlay = 0;
+  if (b != null && b < -2) overlay += 5;
+  if (m != null && m < -2) overlay += 5;
+
+  return clamp(overlay, 0, 15);
+}
+
+// ---------------------------
+// Read prior output for Regime History + CPI Δ3m
+// ---------------------------
+function readPriorDashboardSafe() {
+  try {
+    if (!fs.existsSync(OUTFILE)) return null;
+    const txt = fs.readFileSync(OUTFILE, "utf8");
+    const j = JSON.parse(txt);
+    return j;
+  } catch {
+    return null;
+  }
+}
+
+function updateRegimeHistory(prior, nextRegime, nextCpi) {
+  const today = todayISODate();
+  const priorHistory = Array.isArray(prior?.regime_history) ? prior.regime_history : [];
+  const last = priorHistory.length ? priorHistory[priorHistory.length - 1] : null;
+
+  const entry = {
+    date: today,
+    primary_regime: nextRegime.primary,
+    secondary_modifier: nextRegime.modifier,
+    confidence: nextRegime.confidence,
+    cpi_level: nextCpi.headline,
+    capital_score: nextCpi.components?.capital ?? null,
+    pipeline_score: nextCpi.components?.pipeline ?? null,
+    flip_trigger: null,
+    duration_days: null,
+    status: "Active"
+  };
+
+  // Close prior if regime changed
+  const history = priorHistory.map(x => ({ ...x }));
+  if (last && last.status === "Active") {
+    const changed =
+      last.primary_regime !== entry.primary_regime ||
+      last.secondary_modifier !== entry.secondary_modifier;
+
+    if (changed) {
+      last.status = "Closed";
+      // leave last entry in place (already in history)
+      history[history.length - 1] = last;
+
+      entry.flip_trigger = "Regime change";
+    }
+  }
+
+  // Add new active entry only if changed OR no history
+  if (!last || last.status !== "Active" ||
+      last.primary_regime !== entry.primary_regime ||
+      last.secondary_modifier !== entry.secondary_modifier) {
+    history.push(entry);
+  } else {
+    // If unchanged, just keep history as-is
+  }
+
+  // Compute durations for the active entry
+  const activeIdx = history.findIndex(x => x.status === "Active");
+  if (activeIdx >= 0) {
+    const active = history[activeIdx];
+    const start = new Date(active.date + "T00:00:00Z").getTime();
+    const now = new Date(today + "T00:00:00Z").getTime();
+    active.duration_days = Math.max(0, Math.round((now - start) / (1000 * 60 * 60 * 24)));
+    history[activeIdx] = active;
+  }
+
+  return history;
+}
+
 // ---------------------------
 // MAIN
 // ---------------------------
 async function main() {
   const FRED_API_KEY = mustGetEnv("FRED_API_KEY");
 
-  // Macro + construction series pack
+  const prior = readPriorDashboardSafe();
+
+  // Macro + construction pack
   const FRED_SERIES = {
-    // Construction anchors
     mortgage_30y: "MORTGAGE30US",
     cpi_headline: "CPIAUCSL",
     construction_employment: "USCONS",
@@ -736,7 +1083,6 @@ async function main() {
     housing_starts_total: "HOUST",
     building_permits_total: "PERMIT",
 
-    // Rates / curve / policy
     dgs2_2y_treasury: "DGS2",
     dgs10_10y_treasury: "DGS10",
     dgs30_30y_treasury: "DGS30",
@@ -744,34 +1090,30 @@ async function main() {
     sofr: "SOFR",
     t10yie_breakeven_10y: "T10YIE",
 
-    // Credit / spreads
     baa_corp_yield: "BAA",
     aaa_corp_yield: "AAA",
     hy_oas: "BAMLH0A0HYM2",
     ig_oas: "BAMLC0A0CM",
 
-    // Financial conditions / stress
     nfci: "NFCI",
     anfcI_adjusted: "ANFCI",
     stlfsI: "STLFSI4",
 
-    // Lending standards
     sloos_ci_large_tightening: "DRTSCILM",
 
-    // Macro demand / labor
     unrate: "UNRATE",
     ism_pmi: "NAPM",
 
-    // Housing sentiment
-    nahb_hmi: "HMI",
+    nahb_hmi: "HMI"
   };
 
   const fred = {};
   for (const [k, seriesId] of Object.entries(FRED_SERIES)) {
-    const obs = await fredObservations({ apiKey: FRED_API_KEY, seriesId, limit: 36 });
+    const obs = await fredObservations({ apiKey: FRED_API_KEY, seriesId, limit: 48 });
     fred[k] = { series_id: seriesId, latest: obs[0] ?? null, history: obs.slice().reverse() };
   }
 
+  // Census + BLS
   const bps = await loadCensusBpsLatest();
   const laus = await loadBlsLausUnempRatesLatest();
 
@@ -786,67 +1128,199 @@ async function main() {
   stateUnemps.sort((a, b) => a - b);
   const unempMedian = stateUnemps.length ? stateUnemps[Math.floor(stateUnemps.length / 2)] : null;
 
-  // CEPS v2
-  const cepsV2 = computeCepsV2({ fred, unempStateMedian: unempMedian });
-  const ceps_score = cepsV2.ceps_score;
-  const capIdx = cepsV2.capital;
+  // Capital score (multi-signal)
+  const mortgage30 = latestValue(fred.mortgage_30y);
+  const dgs2 = latestValue(fred.dgs2_2y_treasury);
+  const dgs10 = latestValue(fred.dgs10_10y_treasury);
+  const nfci = latestValue(fred.nfci);
+  const anfcI = latestValue(fred.anfcI_adjusted);
+  const stlfsi = latestValue(fred.stlfsI);
+  const hy = latestValue(fred.hy_oas);
+  const ig = latestValue(fred.ig_oas);
+  const sloos = latestValue(fred.sloos_ci_large_tightening);
+  const baa = latestValue(fred.baa_corp_yield);
+  const aaa = latestValue(fred.aaa_corp_yield);
+  const baaAaaSpread = (baa != null && aaa != null) ? (baa - aaa) : null;
 
-  const risk_mode = ceps_score >= 70;
-  const risk_thermometer_mode = risk_mode;
+  const capital_components = [
+    { key: "mortgage_30y", label: "Mortgage 30Y", value: mortgage30, score: scoreMortgage30(mortgage30), weight: 0.22 },
+    { key: "curve_10y_2y", label: "Yield Curve (10y-2y)", value: (dgs10 != null && dgs2 != null) ? (dgs10 - dgs2) : null, score: scoreCurveInversion(dgs2, dgs10), weight: 0.18 },
+    { key: "nfci", label: "NFCI", value: nfci, score: scoreNFCI(nfci), weight: 0.12 },
+    { key: "anfcI", label: "ANFCI", value: anfcI, score: scoreNFCI(anfcI), weight: 0.08 },
+    { key: "stlfsI", label: "Financial Stress (STLFSI)", value: stlfsi, score: scoreSTLFSI(stlfsi), weight: 0.10 },
+    { key: "hy_oas", label: "High Yield OAS", value: hy, score: scoreOAS(hy), weight: 0.12 },
+    { key: "ig_oas", label: "IG OAS", value: ig, score: scoreOAS(ig), weight: 0.06 },
+    { key: "sloos", label: "SLOOS Tightening", value: sloos, score: scoreSLOOS(sloos), weight: 0.08 },
+    { key: "baa_aaa_spread", label: "BAA–AAA Spread", value: baaAaaSpread, score: scoreOAS(baaAaaSpread), weight: 0.04 }
+  ];
+  const capitalScore = Math.round(weightedScore(capital_components));
 
-  // Trends (for SwiftUI arrows)
+  // Pipeline score (permits + starts momentum)
+  const permitsLatest = latestValue(fred.building_permits_total);
+  const permitsAvgPrev = avgLastN(fred.building_permits_total?.history, 6, 1);
+  const startsLatest = latestValue(fred.housing_starts_total);
+  const startsAvgPrev = avgLastN(fred.housing_starts_total?.history, 6, 1);
+
+  const pipeline_components = [
+    { key: "permits_momentum", label: "Permits Momentum", value: permitsLatest, score: scoreMomentum(permitsLatest, permitsAvgPrev, 60), weight: 0.65 },
+    { key: "starts_momentum", label: "Starts Momentum", value: startsLatest, score: scoreMomentum(startsLatest, startsAvgPrev, 55), weight: 0.35 }
+  ];
+  const pipelineScore = Math.round(weightedScore(pipeline_components));
+
+  // Trade score (unemp median + construction employment momentum)
+  const consEmpLatest = latestValue(fred.construction_employment);
+  const consEmpAvgPrev = avgLastN(fred.construction_employment?.history, 6, 1);
+
+  const trade_components = [
+    { key: "unemp_state_median", label: "State Unemployment Median", value: unempMedian, score: scoreUnemploymentMedian(unempMedian), weight: 0.65 },
+    { key: "cons_emp_momentum", label: "Construction Employment Momentum", value: consEmpLatest, score: scoreMomentum(consEmpLatest, consEmpAvgPrev, 50), weight: 0.35 }
+  ];
+  const tradeScore = Math.round(weightedScore(trade_components));
+
+  // Materials / Regulatory / Macro placeholders (neutral until we ingest more dedicated sources)
+  const materialsScore = 50;
+  const regulatoryScore = 50;
+
+  // Macro score: blend NFCI + unemployment + PMI
+  const unrate = latestValue(fred.unrate);
+  const pmi = latestValue(fred.ism_pmi);
+
+  const macro_components = [
+    { key: "nfci", label: "NFCI", value: nfci, score: scoreNFCI(nfci), weight: 0.45 },
+    { key: "unrate", label: "Unemployment Rate", value: unrate, score: clamp(30 + (unrate == null ? 0 : (unrate - 3.5) * 10)), weight: 0.30 },
+    { key: "pmi", label: "ISM PMI", value: pmi, score: clamp(60 - (pmi == null ? 0 : (pmi - 50) * 2)), weight: 0.25 }
+  ];
+  const macroScore = Math.round(weightedScore(macro_components));
+
+  // CPI Engine
+  const cpiCore = computeCpiEngine({
+    capitalScore,
+    pipelineScore,
+    tradeScore,
+    materialsScore,
+    regulatoryScore,
+    macroScore
+  });
+
+  // Stock layer
+  const tickers = normalizeTickerList(getEnv("STOCK_TICKERS", ""));
+  const alphaKey = getEnv("ALPHAVANTAGE_API_KEY", null);
+  const alphaPriority = normalizeTickerList(getEnv("ALPHAVANTAGE_PRIORITY_TICKERS", ""));
+  const stocks = await fetchStockUniverse({ tickers, alphaKey, alphaPriority });
+  const sector_rollups = buildSectorRollups(stocks);
+  const stock_overlay = computeStockOverlay(sector_rollups);
+
+  // Apply stock overlay to CAPITAL only (temporary, bounded)
+  const capitalScoreAdj = clamp(capitalScore + stock_overlay, 0, 100);
+  const cpiWithOverlay = computeCpiEngine({
+    capitalScore: capitalScoreAdj,
+    pipelineScore,
+    tradeScore,
+    materialsScore,
+    regulatoryScore,
+    macroScore
+  });
+
+  // Momentum Δ3m via history (we persist CPI headline history inside dashboard)
+  const priorCpiHist = Array.isArray(prior?.cpi?.history) ? prior.cpi.history : [];
+  const cpiHistory = [...priorCpiHist, { date: todayISODate(), value: cpiWithOverlay.headline }].slice(-12);
+  const delta3m = computeDelta3mFromHistory(cpiHistory);
+  const momentum = momentumBand(delta3m);
+
+  // Risk Thermometer triggers (deterministic)
+  const freezeRisk =
+    cpiWithOverlay.headline >= 76 ||
+    (capitalScoreAdj >= 80 && pipelineScore >= 70) ||
+    (cpiWithOverlay.headline >= 70 && (delta3m ?? 0) >= 10);
+
+  const rtm =
+    cpiWithOverlay.headline >= 70 ||
+    (delta3m ?? 0) >= 8 ||
+    freezeRisk ||
+    capitalScoreAdj >= 80;
+
+  // Regime + Ecosystem
+  const regime = regimeFromCpi(cpiWithOverlay.headline, capitalScoreAdj, delta3m);
+  const ecosystem_pulse = computeEcosystemPulse({ capital: capitalScoreAdj, pipeline: pipelineScore });
+
+  // News (aggressive)
+  const lookbackDays = safeNumber(getEnv("NEWS_LOOKBACK_DAYS", "5")) ?? 5;
+  const newsMax = safeNumber(getEnv("NEWS_MAX", "60")) ?? 60;
+
+  const gdeltQuery =
+    '(construction OR "building permits" OR "housing starts" OR "commercial real estate" OR "general contractor" OR "homebuilder" OR "building code" OR "land acquisition" OR "pre-construction" OR "master planned community" OR "data center") sourceCountry:US';
+
+  let news = [];
+  try {
+    news = await fetchGdeltNews({ query: gdeltQuery, lookbackDays, max: newsMax });
+  } catch {
+    news = [];
+  }
+
+  const news_clusters = buildNewsClusters(news);
+  const land_tracker = buildLandTracker(news);
+
+  // SAM.gov (aggressive, optional)
+  const samKey = getEnv("SAM_API_KEY", null);
+  const sam = await fetchSamGovOpportunities({ apiKey: samKey, lookbackDays: 10, max: 50 });
+
+  // Trends for UI
   const trends = {
-    mortgage_30y: trendArrow(latestValue(fred.mortgage_30y), prevValue(fred.mortgage_30y, 1)),
-    permits: trendArrow(latestValue(fred.building_permits_total), prevValue(fred.building_permits_total, 1)),
-    starts: trendArrow(latestValue(fred.housing_starts_total), prevValue(fred.housing_starts_total, 1)),
-    nfci: trendArrow(latestValue(fred.nfci), prevValue(fred.nfci, 1)),
-    hy_oas: trendArrow(latestValue(fred.hy_oas), prevValue(fred.hy_oas, 1)),
+    cpi: trendArrow(cpiHistory[cpiHistory.length - 1]?.value, cpiHistory[Math.max(0, cpiHistory.length - 2)]?.value),
+    mortgage_30y: trendArrow(mortgage30, prevValue(fred.mortgage_30y, 1)),
+    permits: trendArrow(permitsLatest, prevValue(fred.building_permits_total, 1)),
+    starts: trendArrow(startsLatest, prevValue(fred.housing_starts_total, 1)),
+    nfci: trendArrow(nfci, prevValue(fred.nfci, 1)),
+    hy_oas: trendArrow(hy, prevValue(fred.hy_oas, 1)),
+    builders_sector: trendArrow(sector_rollups.builders?.avg_change_pct, 0)
   };
 
-  // Apple-native alerts
+  // Alerts (Apple-native)
   const alerts = [];
-  const sev = severityForScore(ceps_score);
-  if (sev === "CRITICAL") {
+  const sev = severityForCpi(cpiWithOverlay.headline);
+
+  if (freezeRisk) {
     alerts.push({
       severity: "CRITICAL",
       symbol: "exclamationmark.triangle.fill",
       title: "Freeze Risk",
-      message: "Capital and credit conditions indicate elevated freeze probability. Tighten commitments and protect liquidity."
+      message: "Freeze criteria met. Tighten commitments, protect liquidity, and harden credit posture."
     });
   } else if (sev === "ELEVATED") {
     alerts.push({
       severity: "ELEVATED",
       symbol: "exclamationmark.circle.fill",
       title: "Elevated Pressure",
-      message: "Capital conditions are tightening. Focus on backlog quality, credit discipline, and working capital."
+      message: "Capital tightening is constraining the pipeline. Protect margin and working capital."
     });
   } else if (sev === "WATCH") {
     alerts.push({
       severity: "WATCH",
       symbol: "eye.fill",
       title: "Watchlist",
-      message: "Pressure is rising. Monitor mortgage direction, spreads, and permits momentum for confirmation."
+      message: "Pressure rising. Monitor mortgage direction, spreads, and permits momentum for confirmation."
     });
   }
 
-  const executiveSummary =
-    ceps_score >= 70
-      ? "Pressure is elevated. Capital and credit stress are constraining the pipeline. Defensive posture recommended."
-      : "Pressure is stable. Capital is the primary transmission lever. Monitor permits momentum and credit spreads for inflection.";
+  if (stock_overlay >= 10) {
+    alerts.push({
+      severity: "WATCH",
+      symbol: "chart.line.downtrend.xyaxis",
+      title: "Equity Weakness Overlay",
+      message: "Sector weakness implies forward stress. Treat as temporary capital tightening overlay."
+    });
+  }
 
-  // Drilldown geo layer (unchanged)
+  // Geo layer (US + states + CBSAs)
   const geo_data = {};
   const observed_gaps = [];
 
   geo_data["us:US"] = {
     geo: { level: "us", id: "US", name: "United States" },
-    capital: { mortgage_30y: fred.mortgage_30y.latest },
+    capital: { mortgage_30y: fred.mortgage_30y.latest, nfci: fred.nfci.latest, hy_oas: fred.hy_oas.latest },
     prices: { cpi_headline: fred.cpi_headline.latest },
-    labor: { construction_employment: fred.construction_employment.latest },
-    residential: {
-      permits_total: fred.building_permits_total.latest,
-      starts_total: fred.housing_starts_total.latest,
-    },
+    labor: { construction_employment: fred.construction_employment.latest, unrate: fred.unrate.latest },
+    residential: { permits_total: fred.building_permits_total.latest, starts_total: fred.housing_starts_total.latest },
     commercial: { construction_spending_total: fred.total_construction_spending.latest }
   };
 
@@ -865,8 +1339,8 @@ async function main() {
       labor: { unemployment_rate: u ? u.value : null }
     };
 
-    if (!p) observed_gaps.push({ geo: nodeKey, metric: "bps_state_permits", reason: "no parsed row for this state (sheet/header mismatch)" });
-    if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "no state unemployment match (series_id parse)" });
+    if (!p) observed_gaps.push({ geo: nodeKey, metric: "bps_state_permits", reason: "No parsed permits row" });
+    if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "No unemployment match" });
   }
 
   const cbsas = Array.from(bps.cbsa.permit.keys()).sort();
@@ -891,189 +1365,219 @@ async function main() {
       labor: { unemployment_rate: unemp }
     };
 
-    if (unemp == null) observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "no deterministic LAUS match for this CBSA name" });
+    if (unemp == null) observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "No deterministic name match" });
   }
 
-  // ---------------------------
-  // NEWS (free)
-  // ---------------------------
-  const lookbackDays = safeNumber(process.env.NEWS_LOOKBACK_DAYS) ?? 3;
+  // Regime History
+  const regime_history = updateRegimeHistory(
+    prior,
+    regime,
+    { headline: cpiWithOverlay.headline, components: { capital: capitalScoreAdj, pipeline: pipelineScore } }
+  );
 
-  // Construction-focused query
-  const gdeltQuery =
-    '(construction OR "building permits" OR "housing starts" OR "commercial real estate" OR "general contractor" OR "homebuilder" OR "building code" OR "land acquisition") sourceCountry:US';
+  const activeRegime = regime_history.find(x => x.status === "Active") || null;
+  const prevRegime = [...regime_history].reverse().find(x => x.status === "Closed") || null;
 
-  let news = [];
-  try {
-    news = await fetchGdeltNews({ query: gdeltQuery, lookbackDays, max: 25 });
-  } catch (e) {
-    // RSS fallback (ENR is often paywalled; we keep generic feeds that usually work)
-    try {
-      const rss = await fetchRss("https://news.google.com/rss/search?q=construction+industry+US&hl=en-US&gl=US&ceid=US:en", 25);
-      news = rss;
-    } catch {
-      news = [];
-    }
-  }
+  const regime_history_display = {
+    current_regime_duration_days: activeRegime?.duration_days ?? null,
+    previous_regime: prevRegime?.primary_regime ?? null,
+    last_flip_date: activeRegime?.flip_trigger ? activeRegime?.date : (prevRegime?.date ?? null),
+    regime_stability:
+      (delta3m == null) ? "🟡 Watch" :
+      (Math.abs(delta3m) <= 3) ? "🟢 Stable" :
+      (Math.abs(delta3m) <= 7) ? "🟡 Watch" : "🔴 Fragile"
+  };
 
-  // ---------------------------
-  // STOCKS (free)
-  // ---------------------------
-  const tickers = (process.env.STOCK_TICKERS || "")
-    .split(",")
-    .map(s => s.trim())
-    .filter(Boolean);
-
-  const alphaKey = process.env.ALPHAVANTAGE_API_KEY || null;
-
-  const stocks = [];
-  for (const t of tickers) {
-    try {
-      // Prefer free/no-key Stooq
-      const q = await fetchStooqQuote(t);
-      if (q) {
-        stocks.push(q);
-        continue;
+  // Apple-native UI contract
+  const ui = {
+    accent: "system",
+    alerts,
+    trends: Object.fromEntries(Object.entries(trends).map(([k, v]) => ([k, { arrow: v, symbol: symbolForTrend(v) }]))),
+    cards: [
+      {
+        id: "headline_cpi",
+        title: "Construction Pressure",
+        subtitle: `Headline CPI • ${zoneForCpi(cpiWithOverlay.headline)}`,
+        value: cpiWithOverlay.headline,
+        trend: trends.cpi,
+        symbol: "gauge.with.dots",
+        severity: severityForCpi(cpiWithOverlay.headline)
+      },
+      {
+        id: "capital",
+        title: "Capital",
+        subtitle: "Rates • Credit • Conditions",
+        value: capitalScoreAdj,
+        trend: trends.nfci,
+        symbol: "banknote",
+        severity: severityForCpi(capitalScoreAdj)
+      },
+      {
+        id: "pipeline",
+        title: "Pipeline",
+        subtitle: "Permits • Starts",
+        value: pipelineScore,
+        trend: trends.permits,
+        symbol: "building.2",
+        severity: severityForCpi(pipelineScore)
+      },
+      {
+        id: "trade",
+        title: "Trade Execution",
+        subtitle: "Labor Conditions",
+        value: tradeScore,
+        trend: "→",
+        symbol: "person.2",
+        severity: severityForCpi(tradeScore)
       }
-      // Optional fallback
-      if (alphaKey) {
-        const av = await fetchAlphaVantageQuote(t, alphaKey);
-        if (av) stocks.push(av);
-      }
-    } catch {
-      // skip
-    }
-  }
+    ],
+    heat_strip: {
+      cpi: cpiWithOverlay.headline,
+      zone: zoneForCpi(cpiWithOverlay.headline),
+      delta_3m: delta3m,
+      momentum,
+      risk_thermometer_mode: rtm,
+      freeze_risk: freezeRisk
+    },
+    ecosystem_pulse
+  };
 
-  // Apple-native cards
-  const ui_cards = [
-    {
-      id: "ceps",
-      title: "Construction Pressure",
-      subtitle: `CEPS v2 • ${bandForScore(ceps_score)}`,
-      value: ceps_score,
-      trend: "→",
-      symbol: "gauge.with.dots",
-      severity: severityForScore(ceps_score)
-    },
-    {
-      id: "capital",
-      title: "Capital",
-      subtitle: "Rates • Credit • Conditions",
-      value: cepsV2.capital,
-      trend: trends.nfci,
-      symbol: "banknote",
-      severity: severityForScore(cepsV2.capital)
-    },
-    {
-      id: "pipeline",
-      title: "Pipeline",
-      subtitle: "Permits • Starts Momentum",
-      value: cepsV2.pipeline,
-      trend: trends.permits,
-      symbol: "building.2",
-      severity: severityForScore(cepsV2.pipeline)
-    },
-    {
-      id: "trade",
-      title: "Trade",
-      subtitle: "Labor Conditions",
-      value: cepsV2.trade,
-      trend: "→",
-      symbol: "person.2",
-      severity: severityForScore(cepsV2.trade)
-    }
-  ];
-
-  // ---------------------------
-  // GPT Payload (Construction AI)
-  // ---------------------------
+  // GPT payload (your Construction AI brain feed)
   const gpt_payload = {
     product: "Construction AI",
     generated_at_utc: isoUtcNow(),
-    executive: {
-      headline: "Construction Intelligence",
-      summary: executiveSummary,
-      severity: severityForScore(ceps_score),
-      band: bandForScore(ceps_score),
+
+    regime_history: regime_history_display,
+    regime: {
+      primary: regime.primary,
+      modifier: regime.modifier,
+      confidence: regime.confidence
     },
-    ceps_v2: {
-      score: ceps_score,
-      capital: cepsV2.capital,
-      pipeline: cepsV2.pipeline,
-      trade: cepsV2.trade,
-      components: cepsV2.components
+
+    cpi: {
+      headline: cpiWithOverlay.headline,
+      zone: zoneForCpi(cpiWithOverlay.headline),
+      delta_3m: delta3m,
+      momentum,
+      freeze_risk: freezeRisk,
+      risk_thermometer_mode: rtm,
+      r: cpiWithOverlay.cpi_r,
+      i: cpiWithOverlay.cpi_i,
+      sf: cpiWithOverlay.cpi_sf,
+      mf: cpiWithOverlay.cpi_mf,
+      inst: cpiWithOverlay.cpi_inst,
+      infra: cpiWithOverlay.cpi_infra,
+      divergences: cpiWithOverlay.divergences
     },
+
+    six_pillar: {
+      capital: capitalScoreAdj,
+      pipeline: pipelineScore,
+      trade: tradeScore,
+      materials: materialsScore,
+      regulatory: regulatoryScore,
+      macro_sentiment: macroScore
+    },
+
+    capital_micro_triggers: {
+      stock_overlay: stock_overlay,
+      nfci: nfci,
+      hy_oas: hy,
+      sloos_tightening: sloos
+    },
+
+    ecosystem_pulse,
+
     signal_strip: [
-      { key: "mortgage_30y", value: latestValue(fred.mortgage_30y), arrow: trends.mortgage_30y },
-      { key: "permits", value: latestValue(fred.building_permits_total), arrow: trends.permits },
-      { key: "starts", value: latestValue(fred.housing_starts_total), arrow: trends.starts },
-      { key: "nfci", value: latestValue(fred.nfci), arrow: trends.nfci },
-      { key: "hy_oas", value: latestValue(fred.hy_oas), arrow: trends.hy_oas }
+      { key: "mortgage_30y", value: mortgage30, arrow: trends.mortgage_30y },
+      { key: "permits", value: permitsLatest, arrow: trends.permits },
+      { key: "starts", value: startsLatest, arrow: trends.starts },
+      { key: "nfci", value: nfci, arrow: trends.nfci },
+      { key: "hy_oas", value: hy, arrow: trends.hy_oas }
     ],
-    news_brief: news.slice(0, 12),
-    stock_snapshot: stocks.slice(0, 25)
+
+    market_intel: {
+      stocks: stocks.slice(0, 40),
+      sector_rollups,
+      stock_pressure_overlay: stock_overlay
+    },
+
+    news: {
+      clusters: news_clusters,
+      land_tracker,
+      brief: (news_clusters.land?.length ? news_clusters.land : news).slice(0, 12)
+    },
+
+    project_pipeline: {
+      sam_gov: sam
+    }
   };
 
+  // Final output (stable top-level structure)
   const out = {
-    schema_version: "3.7.0",
+    schema_version: "4.0.0",
     generated_at: isoUtcNow(),
 
     executive: {
       headline: "Construction Intelligence",
-      confidence: "medium",
-      summary: executiveSummary
+      confidence: regime.confidence,
+      summary:
+        freezeRisk
+          ? "Freeze risk active. Capital tightening is dominant. Shift to defensive posture and protect liquidity."
+          : (severityForCpi(cpiWithOverlay.headline) === "ELEVATED"
+              ? "Pressure elevated. Capital and credit stress are constraining the pipeline."
+              : "Pressure stable. Monitor capital direction, spreads, and permits for inflection.")
     },
 
-    // Keep workflow gate
-    ceps_score,
+    // Headline CPI block (primary index going forward)
+    cpi: {
+      headline: cpiWithOverlay.headline,
+      zone: zoneForCpi(cpiWithOverlay.headline),
+      delta_3m: delta3m,
+      momentum,
+      history: cpiHistory,
 
-    ceps_v2: {
-      version: "2.0",
-      band: bandForScore(ceps_score),
-      severity: severityForScore(ceps_score),
-      capital: cepsV2.capital,
-      pipeline: cepsV2.pipeline,
-      trade: cepsV2.trade,
-      components: cepsV2.components
+      cpi_r: cpiWithOverlay.cpi_r,
+      cpi_i: cpiWithOverlay.cpi_i,
+      cpi_sf: cpiWithOverlay.cpi_sf,
+      cpi_mf: cpiWithOverlay.cpi_mf,
+      cpi_inst: cpiWithOverlay.cpi_inst,
+      cpi_infra: cpiWithOverlay.cpi_infra,
+
+      divergences: cpiWithOverlay.divergences,
+
+      components: {
+        capital: capitalScoreAdj,
+        pipeline: pipelineScore,
+        trade: tradeScore,
+        materials: materialsScore,
+        regulatory: regulatoryScore,
+        macro_sentiment: macroScore
+      }
     },
 
-    ceps_split: {
-      residential: clamp(ceps_score - 3, 0, 100),
-      institutional: clamp(ceps_score + 3, 0, 100)
-    },
+    // Backward-compat for earlier builds (optional consumers)
+    ceps_score: cpiWithOverlay.headline,
 
-    builder_momentum: { value: clamp(Math.round((cepsV2.pipeline + 40) / 2), 0, 100) },
-
-    capital: {
-      pressure_index: capIdx,
-      band: bandForScore(capIdx),
-      subindices: {
-        residential: clamp(capIdx + 6, 0, 100),
-        institutional: clamp(capIdx - 6, 0, 100)
-      },
-      history: [{ date: new Date().toISOString().slice(0, 10), value: capIdx }]
-    },
-
-    risk_mode,
-    risk_thermometer_mode,
+    risk_mode: rtm,
+    risk_thermometer_mode: rtm,
     volatility_regime: "NORMAL",
 
-    // Apple-friendly primitives
-    ui: {
-      accent: "system",
-      alerts,
-      trends: Object.fromEntries(Object.entries(trends).map(([k, v]) => ([k, { arrow: v, symbol: symbolForTrend(v) }]))),
-      cards: ui_cards
-    },
+    regime_history,
+    regime_history_display,
 
-    // News + Stocks
+    ui,
+
     market_intel: {
-      news: news.slice(0, 25),
-      stocks: stocks.slice(0, 50)
+      news: news.slice(0, 60),
+      news_clusters,
+      land_tracker,
+      stocks,
+      sector_rollups,
+      stock_pressure_overlay: stock_overlay,
+      sam_gov: sam
     },
 
-    // GPT-optimized block
     gpt_payload,
 
     observed: {
@@ -1087,10 +1591,11 @@ async function main() {
         },
         bls_laus: { base: "https://download.bls.gov/pub/time.series/la/" },
         gdelt: { api: "https://api.gdeltproject.org/api/v2/doc/doc" },
-        stooq: { api: "https://stooq.com/q/l/" }
+        stooq: { api: "https://stooq.com/q/l/" },
+        alphavantage: { api: "https://www.alphavantage.co/query" },
+        sam_gov: { api: "https://api.sam.gov/opportunities/v2/search" }
       },
       coverage: { us: true, states_fips: states, cbsas },
-
       macro_fred: fred,
       geo_data,
       observed_gaps
@@ -1098,7 +1603,7 @@ async function main() {
   };
 
   fs.writeFileSync(OUTFILE, JSON.stringify(out, null, 2), "utf8");
-  console.log(`Wrote ${OUTFILE} (ceps_score=${ceps_score})`);
+  console.log(`Wrote ${OUTFILE} (Headline CPI=${out.cpi.headline})`);
 }
 
 main().catch(err => {
