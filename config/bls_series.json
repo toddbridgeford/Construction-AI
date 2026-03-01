@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "lookback_years": 8,
+  "max_points": 96,
+  "series": [
+    {
+      "key": "construction_employment",
+      "series_id": "CES2000000001",
+      "name": "Construction Employment (Total)",
+      "units": "thousands",
+      "region": "US"
+    },
+    {
+      "key": "construction_avg_hourly_earnings",
+      "series_id": "CES2000000008",
+      "name": "Construction Avg Hourly Earnings",
+      "units": "USD",
+      "region": "US"
+    },
+    {
+      "key": "construction_avg_weekly_hours",
+      "series_id": "CES2000000002",
+      "name": "Construction Avg Weekly Hours",
+      "units": "hours",
+      "region": "US"
+    }
+  ]
+}
