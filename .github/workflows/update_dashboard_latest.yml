@@ -1,4 +1,4 @@
-name: Update dashboard_latest.json (FRED + Macro + News/Stocks + Ready for BLS/Census)
+name: Update dashboard_latest.json (CPI + News + Stocks + SAM.gov)
 
 on:
   workflow_dispatch:
@@ -44,15 +44,23 @@ jobs:
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
 
-          # Optional if you later want it (not required)
+          # You said this is already loaded ✅
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
+
+          # Optional (recommended) — if you add it later, SAM.gov pipeline becomes live
+          SAM_API_KEY: ${{ secrets.SAM_API_KEY }}
 
           FRED_OBSERVATION_START: "2020-01-01"
           OUT_PATH: "dashboard_latest.json"
 
-          # Optional customization
-          NEWS_LOOKBACK_DAYS: "3"
-          STOCK_TICKERS: "DHI,PHM,LEN,NVR,TOL,HD,LOW,VMC,MLM,BLDR,FBIN,OC,USCR,EXP"
+          NEWS_LOOKBACK_DAYS: "5"
+          NEWS_MAX: "60"
+
+          # Construction ecosystem universe (edit anytime)
+          STOCK_TICKERS: "DHI,PHM,LEN,NVR,TOL,HD,LOW,VMC,MLM,BLDR,FBIN,OC,USCR,EXP,CAT,DE,URI,TPC,CRH"
+
+          # Alpha Vantage has tight free limits; we only use it for this subset by default
+          ALPHAVANTAGE_PRIORITY_TICKERS: "DHI,PHM,LEN,NVR,TOL,BLDR,VMC,MLM,OC,HD,LOW"
         run: |
           node scripts/build_dashboard_latest.mjs
 
@@ -60,16 +68,16 @@ jobs:
         run: |
           node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8'))"
 
-      - name: Fail if dashboard missing CEPS
+      - name: Fail if dashboard missing CPI
         run: |
           node - <<'NODE'
           const fs = require('fs');
           const j = JSON.parse(fs.readFileSync('dashboard_latest.json','utf8'));
-          if (typeof j.ceps_score !== 'number') {
-            console.error("Missing ceps_score in dashboard_latest.json");
+          if (typeof j.cpi?.headline !== 'number') {
+            console.error("Missing cpi.headline in dashboard_latest.json");
             process.exit(1);
           }
-          console.log("ceps_score:", j.ceps_score);
+          console.log("Headline CPI:", j.cpi.headline);
           NODE
 
       - name: Commit changes (if any)
@@ -84,7 +92,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update dashboard_latest.json (Macro + News + Stocks)"
+          git commit -m "Update dashboard_latest.json (CPI + News + Stocks + SAM)"
           git push origin Predictive-Model
 
       - name: Complete job
