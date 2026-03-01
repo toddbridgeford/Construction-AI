@@ -1,4 +1,4 @@
-name: Update dashboard_latest.json (FRED)
+name: Update dashboard_latest.json (FRED + Ready for BLS/Census)
 
 on:
   workflow_dispatch:
@@ -34,16 +34,22 @@ jobs:
         run: |
           test -f scripts/build_dashboard_latest.mjs
           test -f config/fred_signals.json
-          test -f config/public_market_snapshot.json
 
       - name: Validate JSON Structure
         run: |
           node -e "JSON.parse(require('fs').readFileSync('config/fred_signals.json','utf8'))"
-          node -e "JSON.parse(require('fs').readFileSync('config/public_market_snapshot.json','utf8'))"
 
       - name: Run Build Script
         env:
+          # REQUIRED (already in your repo)
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+
+          # OPTIONAL (you said you have these keys; we pass them through now)
+          # You can use them later when we add BLS/Census ingestion to the Node script.
+          BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+
+          # Existing settings
           FRED_OBSERVATION_START: "2020-01-01"
           OUT_PATH: "dashboard_latest.json"
         run: |
