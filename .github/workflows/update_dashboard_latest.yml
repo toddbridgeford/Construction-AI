@@ -1,4 +1,4 @@
-name: Update dashboard_latest.json (CPI + News + Stocks + SAM.gov)
+name: Update dashboard_latest.json (CPI + News + Stocks + SAM + USAspending)
 
 on:
   workflow_dispatch:
@@ -44,10 +44,7 @@ jobs:
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
 
-          # You said this is already loaded ✅
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
-
-          # Optional (recommended) — if you add it later, SAM.gov pipeline becomes live
           SAM_API_KEY: ${{ secrets.SAM_API_KEY }}
 
           FRED_OBSERVATION_START: "2020-01-01"
@@ -56,11 +53,15 @@ jobs:
           NEWS_LOOKBACK_DAYS: "5"
           NEWS_MAX: "60"
 
-          # Construction ecosystem universe (edit anytime)
           STOCK_TICKERS: "DHI,PHM,LEN,NVR,TOL,HD,LOW,VMC,MLM,BLDR,FBIN,OC,USCR,EXP,CAT,DE,URI,TPC,CRH"
-
-          # Alpha Vantage has tight free limits; we only use it for this subset by default
           ALPHAVANTAGE_PRIORITY_TICKERS: "DHI,PHM,LEN,NVR,TOL,BLDR,VMC,MLM,OC,HD,LOW"
+
+          # USAspending (no key needed)
+          USASPENDING_LOOKBACK_DAYS: "30"
+          USASPENDING_LIMIT: "50"
+          # NAICS 23 = Construction. Add 5413 for A/E if you want.
+          USASPENDING_NAICS: "23,5413"
+          USASPENDING_KEYWORDS: "construction,design-build,general contractor,roofing,HVAC,electrical,plumbing,concrete,civil,road,bridge,data center"
         run: |
           node scripts/build_dashboard_latest.mjs
 
@@ -92,7 +93,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Update dashboard_latest.json (CPI + News + Stocks + SAM)"
+          git commit -m "Update dashboard_latest.json (CPI + News + Stocks + SAM + USAspending)"
           git push origin Predictive-Model
 
       - name: Complete job
