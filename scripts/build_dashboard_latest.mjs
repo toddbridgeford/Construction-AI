@@ -1,459 +1,571 @@
 // scripts/build_dashboard_latest.mjs
-// Construction Intelligence OS — FRED + BLS + Census (Config-driven, Stable)
-// Node 20+ ESM. Zero external dependencies.
-
-import fs from "node:fs/promises";
+import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import XLSX from "xlsx";
 
-import { clamp, isoNow, utcYYYYMMDD } from "./lib/http.mjs";
-import { fetchBLS } from "./providers/bls.mjs";
-import { fetchCensus } from "./providers/census.mjs";
+const ROOT = path.resolve(process.cwd());
+const OUTFILE = path.join(ROOT, "dashboard_latest.json");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// ---------- Paths ----------
-const CONFIG_FRED = path.resolve(__dirname, "../config/fred_signals.json");
-const CONFIG_BLS = path.resolve(__dirname, "../config/bls_series.json");
-const CONFIG_CENSUS = path.resolve(__dirname, "../config/census_sources.json");
-
-const DEFAULT_OUT = path.resolve(__dirname, "../dashboard_latest.json");
-const OUT_PATH = process.env.OUT_PATH
-  ? path.resolve(process.cwd(), process.env.OUT_PATH)
-  : DEFAULT_OUT;
-
-// ---------- Env ----------
-const FRED_API_KEY = (process.env.FRED_API_KEY || "").trim();
-const BLS_API_KEY = (process.env.BLS_API_KEY || "").trim();
-const CENSUS_API_KEY = (process.env.CENSUS_API_KEY || "").trim();
-
-const FRED_BASE = "https://api.stlouisfed.org/fred/series/observations";
-
-// ---------- Helpers ----------
-function safeUpper(s) {
-  return (s ?? "").toString().trim().toUpperCase();
+// ---------------------------
+// Helpers
+// ---------------------------
+function mustGetEnv(name) {
+  const v = process.env[name];
+  if (!v) throw new Error(`Missing required env var: ${name}`);
+  return v;
 }
-function toNumberMaybe(v) {
-  if (v === null || v === undefined) return null;
-  const s = String(v).trim();
-  if (s === "" || s === "." || s.toLowerCase() === "nan") return null;
+
+async function fetchText(url) {
+  const res = await fetch(url, { redirect: "follow" });
+  if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
+  return await res.text();
+}
+
+async function fetchBuffer(url) {
+  const res = await fetch(url, { redirect: "follow" });
+  if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
+  const ab = await res.arrayBuffer();
+  return Buffer.from(ab);
+}
+
+function isoUtcNow() {
+  return new Date().toISOString();
+}
+
+function parseMonthYear(label) {
+  // label like "December 2025" or "Jan 2026"
+  const cleaned = label.replace(/\s+/g, " ").trim();
+  const m = cleaned.match(/^([A-Za-z]+)\s+(\d{4})$/);
+  if (!m) return null;
+  const monthName = m[1].toLowerCase();
+  const year = Number(m[2]);
+  const monthMap = {
+    january: 0, jan: 0,
+    february: 1, feb: 1,
+    march: 2, mar: 2,
+    april: 3, apr: 3,
+    may: 4,
+    june: 5, jun: 5,
+    july: 6, jul: 6,
+    august: 7, aug: 7,
+    september: 8, sep: 8, sept: 8,
+    october: 9, oct: 9,
+    november: 10, nov: 10,
+    december: 11, dec: 11,
+  };
+  const mm = monthMap[monthName];
+  if (mm === undefined) return null;
+  return new Date(Date.UTC(year, mm, 1)).getTime();
+}
+
+function pickLatestMonthlyExcelLink(html, baseUrl) {
+  // We look for anchor tags pointing to .xls/.xlsx and whose visible text or nearby text contains Month YYYY.
+  // Census pages are consistent enough that selecting the highest Month-Year found usually works.
+  const links = [];
+
+  // crude anchor scan
+  const anchorRe = /<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
+  let m;
+  while ((m = anchorRe.exec(html))) {
+    const href = m[1];
+    const inner = m[2].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    if (!/\.xls(x)?(\?|$)/i.test(href)) continue;
+
+    // Find a Month YYYY either in anchor text, or in the surrounding HTML chunk
+    const windowStart = Math.max(0, m.index - 400);
+    const windowEnd = Math.min(html.length, m.index + 400);
+    const windowText = html
+      .slice(windowStart, windowEnd)
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const monthYearRe = /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}/i;
+    const match = (inner.match(monthYearRe) || windowText.match(monthYearRe));
+    const my = match ? match[0] : null;
+    const ts = my ? parseMonthYear(my) : null;
+
+    const abs = href.startsWith("http")
+      ? href
+      : new URL(href, baseUrl).toString();
+
+    links.push({ url: abs, label: my || inner, ts: ts ?? -1 });
+  }
+
+  // Prefer true month-year timestamps, otherwise fallback to first xls link.
+  links.sort((a, b) => (b.ts - a.ts));
+  return links[0] || null;
+}
+
+function xlsxToRows(buf) {
+  const wb = XLSX.read(buf, { type: "buffer" });
+  const sheetName = wb.SheetNames[0];
+  const ws = wb.Sheets[sheetName];
+  // defval keeps empty cells present
+  return XLSX.utils.sheet_to_json(ws, { defval: null, raw: true });
+}
+
+function safeNumber(x) {
+  if (x === null || x === undefined) return null;
+  if (typeof x === "number") return Number.isFinite(x) ? x : null;
+  const s = String(x).replace(/,/g, "").trim();
+  if (!s) return null;
   const n = Number(s);
   return Number.isFinite(n) ? n : null;
 }
-async function readJSON(p) {
-  const raw = await fs.readFile(p, "utf8");
-  return JSON.parse(raw);
-}
-async function readJSONOptional(p, fallback = null) {
-  try {
-    const raw = await fs.readFile(p, "utf8");
-    return JSON.parse(raw);
-  } catch {
-    return fallback;
-  }
-}
-async function writeJSON(p, obj) {
-  await fs.writeFile(p, JSON.stringify(obj, null, 2) + "\n", "utf8");
-}
-async function loadExistingDashboard(p) {
-  try {
-    const raw = await fs.readFile(p, "utf8");
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" ? parsed : null;
-  } catch {
-    return null;
-  }
+
+function normalizeStateFips(two) {
+  const s = String(two).trim();
+  return s.padStart(2, "0");
 }
 
-function bandFromCPI(cpi) {
-  if (cpi >= 70) return "RESTRICTIVE";
-  if (cpi >= 60) return "TIGHTENING";
-  if (cpi >= 45) return "NEUTRAL";
-  return "EASING";
-}
-function severityFromCPI(cpi) {
-  if (cpi >= 70) return "WATCH";
-  return "MONITOR";
-}
-function executiveSummary(cpiScore, band) {
-  if (cpiScore >= 70) {
-    return "Capital conditions are restrictive. Prioritize risk controls and monitor permits and labor for demand compression.";
-  }
-  if (cpiScore >= 60) {
-    return "Capital conditions are tightening. Watch mortgage direction and permits closely for forward inflection.";
-  }
-  if (band === "EASING") {
-    return "Capital conditions are easing. Monitor demand stabilization signals and any re-acceleration in inflation.";
-  }
-  return "Capital conditions are stable. Monitor mortgage trend and permits for inflection signals.";
+function normalizeCbsa(code) {
+  const s = String(code).trim();
+  return s.padStart(5, "0");
 }
 
-function getClosestToDate(history, targetYYYYMMDD) {
-  if (!Array.isArray(history) || history.length === 0) return null;
-  const target = new Date(`${targetYYYYMMDD}T00:00:00Z`).getTime();
-  let best = null;
-  let bestDist = Infinity;
-  for (const p of history) {
-    const t = new Date(`${p.date}T00:00:00Z`).getTime();
-    const dist = Math.abs(t - target);
-    if (dist < bestDist) {
-      bestDist = dist;
-      best = p;
+// ---------------------------
+// FRED
+// ---------------------------
+async function fredObservations({ apiKey, seriesId, limit = 6 }) {
+  const url = new URL("https://api.stlouisfed.org/fred/series/observations");
+  url.searchParams.set("api_key", apiKey);
+  url.searchParams.set("file_type", "json");
+  url.searchParams.set("series_id", seriesId);
+  url.searchParams.set("sort_order", "desc");
+  url.searchParams.set("limit", String(limit));
+  const txt = await fetchText(url.toString());
+  const json = JSON.parse(txt);
+  const obs = (json.observations || []).map(o => ({
+    date: o.date,
+    value: safeNumber(o.value),
+  }));
+  return obs;
+}
+
+// ---------------------------
+// BLS LAUS (flat files)
+// ---------------------------
+// We use download.bls.gov LAUS time series files, filtered by measure_code=03 (unemployment rate)
+// measure_code definitions are published in la.measure.  [oai_citation:5‡download.bls.gov](https://download.bls.gov/pub/time.series/la/la.measure)
+async function loadBlsLausUnempRatesLatest() {
+  const base = "https://download.bls.gov/pub/time.series/la/";
+
+  // Series metadata: to know which series IDs correspond to unemployment rate (measure_code 03)
+  const seriesTxt = await fetchText(base + "la.series");
+
+  // Seasonal codes: S seasonally adjusted, U not seasonally adjusted.  [oai_citation:6‡download.bls.gov](https://download.bls.gov/pub/time.series/la/la.seasonal?utm_source=chatgpt.com)
+  // We'll choose:
+  // - States: seasonal=S
+  // - Metro & Micro: seasonal=U (BLS commonly publishes metro area rates not seasonally adjusted)
+  const unempSeries = new Map(); // series_id -> { area_type_code, area_code, seasonal }
+
+  const lines = seriesTxt.split("\n").filter(Boolean);
+  // header: series_id area_type_code area_code measure_code seasonal srd_code ...
+  const header = lines[0].trim().split(/\s+/);
+  const idx = (name) => header.indexOf(name);
+
+  const iSeries = idx("series_id");
+  const iAreaType = idx("area_type_code");
+  const iAreaCode = idx("area_code");
+  const iMeasure = idx("measure_code");
+  const iSeasonal = idx("seasonal");
+
+  for (let i = 1; i < lines.length; i++) {
+    const parts = lines[i].trim().split(/\s+/);
+    if (parts.length < header.length) continue;
+
+    const series_id = parts[iSeries];
+    const area_type_code = parts[iAreaType];
+    const area_code = parts[iAreaCode];
+    const measure_code = parts[iMeasure];
+    const seasonal = parts[iSeasonal];
+
+    if (measure_code !== "03") continue; // unemployment rate
+    unempSeries.set(series_id, { area_type_code, area_code, seasonal });
+  }
+
+  // Area names
+  const areaTxt = await fetchText(base + "la.area");
+  const areaLines = areaTxt.split("\n").filter(Boolean);
+  const areaHeader = areaLines[0].trim().split(/\s+/);
+  const aIdx = (name) => areaHeader.indexOf(name);
+
+  const iaType = aIdx("area_type_code");
+  const iaCode = aIdx("area_code");
+  const iaText = aIdx("area_text");
+
+  const areaName = new Map(); // `${type}:${code}` -> name
+  for (let i = 1; i < areaLines.length; i++) {
+    const raw = areaLines[i];
+    // area_text may contain spaces; it's last column onwards
+    const parts = raw.trim().split(/\s+/);
+    if (parts.length < iaText + 1) continue;
+    const t = parts[iaType];
+    const c = parts[iaCode];
+    const text = parts.slice(iaText).join(" ").trim();
+    areaName.set(`${t}:${c}`, text);
+  }
+
+  // Data files for latest values:
+  // - AllStatesS (seasonally adjusted states)  [oai_citation:7‡download.bls.gov](https://download.bls.gov/pub/time.series/la/)
+  // - Metro (not seasonally adjusted metros)  [oai_citation:8‡download.bls.gov](https://download.bls.gov/pub/time.series/la/)
+  // - Micro (not seasonally adjusted micros)  [oai_citation:9‡download.bls.gov](https://download.bls.gov/pub/time.series/la/)
+  const dataSources = [
+    { url: base + "la.data.3.AllStatesS", wantSeasonal: "S" },
+    { url: base + "la.data.60.Metro", wantSeasonal: "U" },
+    { url: base + "la.data.62.Micro", wantSeasonal: "U" },
+  ];
+
+  // Parse each file and take the latest (max year+period) for each series
+  const latest = new Map(); // series_id -> { year, period, value }
+
+  for (const src of dataSources) {
+    const txt = await fetchText(src.url);
+    const lns = txt.split("\n").filter(Boolean);
+    const h = lns[0].trim().split(/\s+/);
+    const sIdx = (name) => h.indexOf(name);
+    const isSeries = sIdx("series_id");
+    const isYear = sIdx("year");
+    const isPeriod = sIdx("period");
+    const isValue = sIdx("value");
+
+    for (let i = 1; i < lns.length; i++) {
+      const parts = lns[i].trim().split(/\s+/);
+      if (parts.length < h.length) continue;
+      const series_id = parts[isSeries];
+
+      const meta = unempSeries.get(series_id);
+      if (!meta) continue;
+      if (meta.seasonal !== src.wantSeasonal) continue;
+
+      const year = Number(parts[isYear]);
+      const period = parts[isPeriod]; // e.g., "M12"
+      if (!/^M\d{2}$/.test(period)) continue;
+      const month = Number(period.slice(1));
+      const key = year * 100 + month;
+      const value = safeNumber(parts[isValue]);
+
+      const prev = latest.get(series_id);
+      if (!prev || key > prev.key) {
+        latest.set(series_id, { key, year, month, period, value });
+      }
     }
   }
-  return best;
-}
-function computeYoY(history) {
-  if (!Array.isArray(history) || history.length < 2) return null;
-  const last = history[history.length - 1];
-  if (!last || last.value == null) return null;
 
-  // monthly/weekly data: use closest 1Y ago based on date string
-  const lastDate = new Date(`${last.date}T00:00:00Z`);
-  const yearAgo = new Date(Date.UTC(
-    lastDate.getUTCFullYear() - 1,
-    lastDate.getUTCMonth(),
-    lastDate.getUTCDate()
-  ));
-  const yearAgoStr = `${yearAgo.getUTCFullYear()}-${String(yearAgo.getUTCMonth() + 1).padStart(2, "0")}-${String(yearAgo.getUTCDate()).padStart(2, "0")}`;
-  const prev = getClosestToDate(history, yearAgoStr);
-  if (!prev || prev.value == null || prev.value === 0) return null;
+  // Build outputs:
+  // States map: state_fips -> unemployment_rate
+  // CBSA map: cbsa_code -> unemployment_rate (for metros/micros where present)
+  const stateUnemp = new Map();
+  const cbsaUnemp = new Map();
 
-  return (last.value / prev.value - 1) * 100;
-}
-function computeTrend(history, pointsBack = 1) {
-  if (!Array.isArray(history) || history.length < pointsBack + 1) return null;
-  const last = history[history.length - 1]?.value;
-  const prev = history[history.length - 1 - pointsBack]?.value;
-  if (last == null || prev == null) return null;
-  return last - prev;
-}
+  for (const [series_id, obs] of latest.entries()) {
+    const meta = unempSeries.get(series_id);
+    if (!meta) continue;
 
-// Normalizers (bounded)
-function normPct(x, cap = 10) {
-  if (x == null) return 0;
-  return clamp(x / cap, -1, 1);
-}
-function normAbs(x, cap = 1) {
-  if (x == null) return 0;
-  return clamp(x / cap, -1, 1);
-}
+    const name = areaName.get(`${meta.area_type_code}:${meta.area_code}`) || null;
 
-// ---------- FRED ----------
-async function fetchFREDSeries(seriesId, observationStart) {
-  if (!FRED_API_KEY) {
-    throw new Error("Missing FRED_API_KEY env var. Add GitHub Actions secret: FRED_API_KEY.");
+    // Heuristic mapping:
+    // - State series IDs include "LASST" prefix (example seen in la.series snippets)  [oai_citation:10‡download.bls.gov](https://download.bls.gov/pub/time.series/la/la.series?utm_source=chatgpt.com)
+    // - Metro/micro often include other area codes.
+    // We'll map by area_type_code:
+    //  "A" is used in la.series for state-like entries (from snippets), and metro/micro differ.
+    // Instead of relying on codes we don't want to guess, we store by name and keep ID.
+    // For v1 we:
+    //  - if name matches a state name exactly, map to state via a lookup later (done below)
+    //  - if name ends with "Metropolitan Statistical Area" or "Micropolitan Statistical Area", store as CBSA by extracting leading numeric from area_code when possible.
+    const value = obs.value;
+
+    // State mapping: state area_code usually begins with state FIPS (e.g., "08...").
+    // For AllStatesS file, series_id typically LAUST{statefips}0000000000003 (common pattern; see BLS ID format docs).  [oai_citation:11‡Bureau of Labor Statistics](https://www.bls.gov/help/hlpforma.htm?utm_source=chatgpt.com)
+    const mState = series_id.match(/^LAU[S|U]T(\d{2})00000000000003$/);
+    if (mState) {
+      stateUnemp.set(mState[1], { value, year: obs.year, month: obs.month, series_id, name });
+      continue;
+    }
+
+    // Metro/Micro mapping: BLS metro IDs often look like LAU[U|S]T? / LAU? with embedded area codes.
+    // We will not guess CBSA from series_id; instead we keep a name-keyed map and later join to CBSA names from BPS file.
+    cbsaUnemp.set(series_id, { value, year: obs.year, month: obs.month, series_id, name });
   }
 
-  const url = new URL(FRED_BASE);
-  url.searchParams.set("series_id", seriesId);
-  url.searchParams.set("api_key", FRED_API_KEY);
-  url.searchParams.set("file_type", "json");
-  url.searchParams.set("sort_order", "asc");
-  url.searchParams.set("observation_start", observationStart || "2020-01-01");
-  url.searchParams.set("limit", "3000");
-
-  const res = await fetch(url.toString());
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    throw new Error(`FRED fetch failed (${seriesId}) HTTP ${res.status}: ${body.slice(0, 220)}`);
+  // Determine the latest reference month from any state observation
+  let latestRef = null;
+  for (const v of stateUnemp.values()) {
+    const key = v.year * 100 + v.month;
+    if (!latestRef || key > latestRef.key) latestRef = { key, year: v.year, month: v.month };
   }
 
-  const json = await res.json();
-  const obs = Array.isArray(json?.observations) ? json.observations : [];
-
-  return obs
-    .map((o) => ({ date: o.date, value: toNumberMaybe(o.value) }))
-    .filter((p) => p.date && p.value != null);
+  return { stateUnemp, cbsaUnempBySeriesId: cbsaUnemp, latestRef };
 }
 
-// ---------- Engines ----------
-function computeEngines(seriesMap) {
-  const mortgageHist = seriesMap.mortgage30?.history ?? [];
-  const permitsHist  = seriesMap.permit?.history ?? [];
-  const startsHist   = seriesMap.houst?.history ?? [];
-  const unrateHist   = seriesMap.unrate?.history ?? [];
-  const cpiHist      = seriesMap.cpi?.history ?? [];
+// ---------------------------
+// Census BPS Excel parsing
+// ---------------------------
+async function loadCensusBpsLatest() {
+  const cbsaPage = "https://www.census.gov/construction/bps/msamonthly.html";
+  const statePage = "https://www.census.gov/construction/bps/statemonthly.html";
 
-  const mortgageTrend = computeTrend(mortgageHist, 4);
-  const permitsYoy    = computeYoY(permitsHist);
-  const startsYoy     = computeYoY(startsHist);
-  const unrateTrend   = computeTrend(unrateHist, 1);
-  const cpiYoy        = computeYoY(cpiHist);
+  const cbsaHtml = await fetchText(cbsaPage);
+  const stateHtml = await fetchText(statePage);
 
-  const cpiScore = clamp(
-    Math.round(
-      50 +
-        22 * normAbs(mortgageTrend, 0.25) +
-        18 * normPct(cpiYoy, 6) -
-        10 * normAbs(unrateTrend, 0.25) -
-        10 * normPct(permitsYoy, 10) -
-        8  * normPct(startsYoy, 12)
-    ),
-    0,
-    100
-  );
+  const cbsaLink = pickLatestMonthlyExcelLink(cbsaHtml, cbsaPage);
+  const stateLink = pickLatestMonthlyExcelLink(stateHtml, statePage);
 
-  const cepsScore = clamp(
-    Math.round(
-      50 +
-        14 * normAbs(mortgageTrend, 0.25) +
-        10 * normPct(cpiYoy, 6) -
-        16 * normPct(permitsYoy, 10) -
-        14 * normPct(startsYoy, 12) -
-        6  * normAbs(unrateTrend, 0.25)
-    ),
-    0,
-    100
-  );
+  if (!cbsaLink) throw new Error("Could not find CBSA monthly excel link on msamonthly.html");
+  if (!stateLink) throw new Error("Could not find State monthly excel link on statemonthly.html");
 
-  const builderMomentum = clamp(
-    Math.round(
-      50 -
-        20 * normPct(permitsYoy, 10) -
-        18 * normPct(startsYoy, 12) +
-        6  * normAbs(mortgageTrend, 0.25)
-    ),
-    0,
-    100
-  );
+  const cbsaXls = await fetchBuffer(cbsaLink.url);
+  const stateXls = await fetchBuffer(stateLink.url);
 
-  const capRes = clamp(Math.round(cpiScore + 6), 0, 100);
-  const capInst = clamp(Math.round(cpiScore - 12), 0, 100);
+  const cbsaRows = xlsxToRows(cbsaXls);
+  const stateRows = xlsxToRows(stateXls);
 
-  const projectedCpi30d = clamp(
-    Math.round(cpiScore + 4 * Math.max(0, normAbs(mortgageTrend, 0.25))),
-    0,
-    100
-  );
+  // The Census BPS Excel layouts can vary slightly.
+  // We’ll detect key columns by name-insensitive matching.
+  function findCol(row, patterns) {
+    const keys = Object.keys(row);
+    for (const p of patterns) {
+      const re = (p instanceof RegExp) ? p : new RegExp(p, "i");
+      const k = keys.find(x => re.test(x));
+      if (k) return k;
+    }
+    return null;
+  }
 
-  const probGe70 = clamp(
-    Math.round(
-      2 +
-        18 * Math.max(0, normAbs(mortgageTrend, 0.25)) +
-        10 * Math.max(0, normPct(cpiYoy, 6))
-    ),
-    0,
-    95
-  );
+  // CBSA: expect columns like "CBSA", "CBSA Code", "Metropolitan Area", "Name", and permit unit totals (1-unit, 2+ units, total).
+  const cbsaPermit = new Map(); // cbsa -> { name, total, sf, mf2p, monthLabel }
 
-  const volScore =
-    (probGe70 ?? 0) +
-    Math.abs(mortgageTrend ?? 0) * 15 +
-    Math.abs(permitsYoy ?? 0) * 0.3;
+  for (const r of cbsaRows) {
+    const cbsaCol = findCol(r, [/cbsa/i, /msa/i, /code/i]);
+    const nameCol = findCol(r, [/title/i, /name/i, /area/i]);
+    if (!cbsaCol) continue;
 
-  const volatilityRegime = volScore >= 12 ? "HIGH" : volScore >= 6 ? "NORMAL" : "LOW";
+    const code = safeNumber(r[cbsaCol]);
+    if (!code) continue;
+    const cbsa = normalizeCbsa(code);
+    const name = nameCol ? String(r[nameCol] ?? "").trim() : null;
+
+    // permit columns: try common patterns
+    const totalCol = findCol(r, [/total\s+units/i, /^total$/i, /total.*perm/i]);
+    const sfCol = findCol(r, [/1\s*unit/i, /single\s*family/i, /1-unit/i]);
+    const mfCol = findCol(r, [/2\+?\s*units/i, /multi/i, /2\+ units/i]);
+
+    const total = totalCol ? safeNumber(r[totalCol]) : null;
+    const sf = sfCol ? safeNumber(r[sfCol]) : null;
+    const mf2p = mfCol ? safeNumber(r[mfCol]) : null;
+
+    // only store if it looks like a data row
+    if (total === null && sf === null && mf2p === null) continue;
+
+    cbsaPermit.set(cbsa, { name, total, sf, mf2p });
+  }
+
+  // State: columns usually include state name and units totals
+  const statePermit = new Map(); // fips2 -> { name, total, sf, mf2p }
+  const stateNameToFips = buildStateNameToFips();
+
+  for (const r of stateRows) {
+    const nameCol = findCol(r, [/state/i]);
+    if (!nameCol) continue;
+    const name = String(r[nameCol] ?? "").trim();
+    const fips = stateNameToFips.get(name.toLowerCase());
+    if (!fips) continue;
+
+    const totalCol = findCol(r, [/total\s+units/i, /^total$/i, /total.*perm/i]);
+    const sfCol = findCol(r, [/1\s*unit/i, /single\s*family/i, /1-unit/i]);
+    const mfCol = findCol(r, [/2\+?\s*units/i, /multi/i, /2\+ units/i]);
+
+    const total = totalCol ? safeNumber(r[totalCol]) : null;
+    const sf = sfCol ? safeNumber(r[sfCol]) : null;
+    const mf2p = mfCol ? safeNumber(r[mfCol]) : null;
+
+    if (total === null && sf === null && mf2p === null) continue;
+
+    statePermit.set(fips, { name, total, sf, mf2p });
+  }
 
   return {
-    mortgageTrend,
-    permitsYoy,
-    startsYoy,
-    unrateTrend,
-    cpiYoy,
-    cpiScore,
-    cepsScore,
-    cepsResidential: clamp(Math.round(cepsScore - 3), 0, 100),
-    cepsInstitutional: clamp(Math.round(cepsScore + 4), 0, 100),
-    builderMomentum,
-    capRes,
-    capInst,
-    projectedCpi30d,
-    probGe70,
-    volatilityRegime,
-    drivers: [
-      { key: "mortgage30_trend", value: mortgageTrend },
-      { key: "permits_yoy", value: permitsYoy },
-      { key: "housing_starts_yoy", value: startsYoy },
-      { key: "unrate_trend", value: unrateTrend },
-      { key: "cpi_yoy", value: cpiYoy }
-    ]
+    cbsa: { link: cbsaLink, permit: cbsaPermit },
+    state: { link: stateLink, permit: statePermit },
   };
 }
 
-function buildSignalsPayload(fredSignals, seriesMap, blsSeries = [], censusSeries = []) {
-  const fredPayload = fredSignals.map((s) => {
-    const hist = seriesMap[s.key]?.history ?? [];
-    return {
-      name: s.name,
-      region: s.region ?? "US",
-      units: s.units ?? "",
-      yoy: computeYoY(hist),
-      history: hist.map((p) => ({ date: p.date, value: p.value })),
-source: "FRED"
-    };
-  });
-
-  // BLS/Census already normalized by providers
-  const blsPayload = blsSeries.map(s => ({
-    name: s.name,
-    region: s.region,
-    units: s.units,
-    yoy: s.yoy ?? null,
-    history: s.history ?? [],
-    source: "BLS"
-  }));
-
-  const censusPayload = censusSeries.map(s => ({
-    name: s.name,
-    region: s.region,
-    units: s.units,
-    yoy: s.yoy ?? null,
-    history: s.history ?? [],
-    source: "Census"
-  }));
-
-  return [...fredPayload, ...blsPayload, ...censusPayload];
+function buildStateNameToFips() {
+  // 50 states only (no territories) as you requested.
+  // Deterministic mapping; avoids dependencies.
+  const entries = [
+    ["Alabama","01"],["Alaska","02"],["Arizona","04"],["Arkansas","05"],["California","06"],
+    ["Colorado","08"],["Connecticut","09"],["Delaware","10"],["Florida","12"],["Georgia","13"],
+    ["Hawaii","15"],["Idaho","16"],["Illinois","17"],["Indiana","18"],["Iowa","19"],
+    ["Kansas","20"],["Kentucky","21"],["Louisiana","22"],["Maine","23"],["Maryland","24"],
+    ["Massachusetts","25"],["Michigan","26"],["Minnesota","27"],["Mississippi","28"],["Missouri","29"],
+    ["Montana","30"],["Nebraska","31"],["Nevada","32"],["New Hampshire","33"],["New Jersey","34"],
+    ["New Mexico","35"],["New York","36"],["North Carolina","37"],["North Dakota","38"],["Ohio","39"],
+    ["Oklahoma","40"],["Oregon","41"],["Pennsylvania","42"],["Rhode Island","44"],["South Carolina","45"],
+    ["South Dakota","46"],["Tennessee","47"],["Texas","48"],["Utah","49"],["Vermont","50"],
+    ["Virginia","51"],["Washington","53"],["West Virginia","54"],["Wisconsin","55"],["Wyoming","56"],
+  ];
+  const m = new Map();
+  for (const [n,f] of entries) m.set(n.toLowerCase(), f);
+  return m;
 }
 
-function buildRegimeHistory(existing, entry) {
-  const prev = Array.isArray(existing?.regime_history) ? existing.regime_history : [];
-  const merged = [...prev, entry];
-
-  const seen = new Set();
-  const out = [];
-  for (let i = merged.length - 1; i >= 0; i--) {
-    const d = merged[i]?.date;
-    if (!d || seen.has(d)) continue;
-    seen.add(d);
-    out.push(merged[i]);
-  }
-  out.reverse();
-  return out.slice(-180);
-}
-
-// ---------- Main ----------
+// ---------------------------
+// Assemble dashboard_latest.json
+// ---------------------------
 async function main() {
-  const cfgFred = await readJSON(CONFIG_FRED);
+  const FRED_API_KEY = mustGetEnv("FRED_API_KEY");
 
-  const observationStart =
-    (process.env.FRED_OBSERVATION_START || "").trim() ||
-    (cfgFred.observation_start_default || "2020-01-01");
-
-  const fredSignals = Array.isArray(cfgFred.signals) ? cfgFred.signals : [];
-  if (fredSignals.length === 0) throw new Error("config/fred_signals.json has no signals[]");
-
-  // Fetch FRED
-  const seriesMap = {};
-  for (const s of fredSignals) {
-    if (!s?.key || !s?.series_id) continue;
-    const history = await fetchFREDSeries(s.series_id, observationStart);
-    seriesMap[s.key] = { ...s, history };
-  }
-
-  // Fetch BLS + Census (config-driven)
-  const cfgBls = await readJSONOptional(CONFIG_BLS, null);
-  const cfgCensus = await readJSONOptional(CONFIG_CENSUS, null);
-
-  let bls = { series: [] };
-  let census = { series: [] };
-
-  try {
-    if (cfgBls) bls = await fetchBLS({ apiKey: BLS_API_KEY, config: cfgBls });
-  } catch (e) {
-    bls = { series: [], error: String(e?.message || e) };
-  }
-
-  try {
-    if (cfgCensus) census = await fetchCensus({ apiKey: CENSUS_API_KEY, config: cfgCensus });
-  } catch (e) {
-    census = { series: [], error: String(e?.message || e) };
-  }
-
-  const eng = computeEngines(seriesMap);
-
-  const cpiScore = eng.cpiScore;
-  const band = bandFromCPI(cpiScore);
-  const severity = severityFromCPI(cpiScore);
-  const riskMode = cpiScore >= 70;
-
-  const executive = {
-    headline: "Construction Intelligence",
-    confidence: "medium",
-    summary: executiveSummary(cpiScore, band)
+  // 1) National anchors (FRED)
+  // (You can adjust series IDs anytime; these are stable and commonly used.)
+  const FRED_SERIES = {
+    mortgage_30y: "MORTGAGE30US",
+    cpi_headline: "CPIAUCSL",
+    construction_employment: "USCONS",  // All Employees: Construction (FRED)
+    total_construction_spending: "TTLCONS",
+    housing_starts_total: "HOUST",
+    building_permits_total: "PERMIT",
   };
 
-  const existing = await loadExistingDashboard(OUT_PATH);
+  const fred = {};
+  for (const [k, seriesId] of Object.entries(FRED_SERIES)) {
+    const obs = await fredObservations({ apiKey: FRED_API_KEY, seriesId, limit: 6 });
+    fred[k] = {
+      series_id: seriesId,
+      latest: obs[0] ?? null,
+      history: obs.slice().reverse(), // oldest->newest
+    };
+  }
 
-  const out = {
-    schema_version: "3.4.0",
-    generated_at: isoNow(),
+  // 2) Census BPS permits (State + CBSA)
+  const bps = await loadCensusBpsLatest();
 
-    executive,
+  // 3) BLS LAUS unemployment rates (State + Metro + Micro) from flat files
+  const laus = await loadBlsLausUnempRatesLatest();
 
-    ceps_score: eng.cepsScore,
-    ceps_split: {
-      residential: eng.cepsResidential,
-      institutional: eng.cepsInstitutional
-    },
+  // 4) Build geo_data
+  const geo_data = {};
+  const observed_gaps = [];
 
-    builder_momentum: { value: eng.builderMomentum },
-
+  // US node
+  geo_data["us:US"] = {
+    geo: { level: "us", id: "US", name: "United States" },
     capital: {
-      pressure_index: cpiScore,
-      band: safeUpper(band),
-      subindices: {
-        residential: eng.capRes,
-        institutional: eng.capInst
+      mortgage_30y: fred.mortgage_30y.latest,
+    },
+    prices: {
+      cpi_headline: fred.cpi_headline.latest,
+    },
+    labor: {
+      construction_employment: fred.construction_employment.latest,
+      unemployment_rate: null, // optional; can add later
+    },
+    residential: {
+      permits_total: fred.building_permits_total.latest,
+      starts_total: fred.housing_starts_total.latest,
+      permits_bps_state_cbsa: null, // US aggregate from BPS file could be added later if desired
+    },
+    commercial: {
+      construction_spending_total: fred.total_construction_spending.latest,
+    }
+  };
+
+  // State nodes (all 50)
+  const states = Array.from(buildStateNameToFips().values()).sort();
+  for (const fips of states) {
+    const p = bps.state.permit.get(fips) || null;
+    const u = laus.stateUnemp.get(fips) || null;
+
+    const nodeKey = `state:${fips}`;
+    geo_data[nodeKey] = {
+      geo: { level: "state", id: fips, name: p?.name ?? null },
+      capital: { mortgage_30y: fred.mortgage_30y.latest },
+      labor: {
+        unemployment_rate: u ? { date: `${u.year}-${String(u.month).padStart(2,"0")}-01`, value: u.value, series_id: u.series_id } : null
       },
-      history: [{ date: utcYYYYMMDD(), value: cpiScore }]
-    },
-
-    risk_mode: Boolean(riskMode),
-    risk_thermometer_mode: Boolean(riskMode),
-    volatility_regime: safeUpper(eng.volatilityRegime),
-
-    predictive_engine: {
-      horizon_days: 30,
-      projected_cpi_30d: eng.projectedCpi30d,
-      prob_cpi_ge_70: eng.probGe70,
-      drivers: eng.drivers
-    },
-
-    // NEW: raw provider payloads (kept simple)
-    macro_bls: {
-      asof: bls.asof ?? null,
-      error: bls.error ?? null
-    },
-    macro_census: {
-      asof: census.asof ?? null,
-      error: census.error ?? null
-    },
-
-    // Signals now include FRED + BLS + Census (all in one list for UI simplicity)
-    signals: buildSignalsPayload(fredSignals, seriesMap, bls.series, census.series),
-
-    alerts: [
-      {
-        id: "banner",
-        title: `${safeUpper(severity)} — ${band === "NEUTRAL" ? "STABLE" : safeUpper(band)}`,
-        severity: safeUpper(severity),
-        why_it_matters: "Composite conditions remain stable; continue monitoring leading indicators."
+      residential: {
+        permits_total: p ? { date: null, value: p.total, units: "units", source: "Census BPS" } : null,
+        permits_sf: p ? { date: null, value: p.sf, units: "units", source: "Census BPS" } : null,
+        permits_mf2p: p ? { date: null, value: p.mf2p, units: "units", source: "Census BPS" } : null
+      },
+      commercial: {
+        // v1 proxy: state commercial pipeline is not directly measured here; keep null and let OS stay Structural for that component
+        proxy: null
       }
-    ]
+    };
+
+    if (!p) observed_gaps.push({ geo: nodeKey, metric: "bps_state_permits", reason: "missing in parsed BPS state file" });
+    if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "missing in LAUS AllStatesS latest parse" });
+  }
+
+  // CBSA nodes: use BPS CBSA permits as the CBSA universe
+  const cbsas = Array.from(bps.cbsa.permit.keys()).sort();
+  for (const cbsa of cbsas) {
+    const p = bps.cbsa.permit.get(cbsa);
+    const nodeKey = `cbsa:${cbsa}`;
+
+    geo_data[nodeKey] = {
+      geo: { level: "cbsa", id: cbsa, name: p?.name ?? null },
+      capital: { mortgage_30y: fred.mortgage_30y.latest },
+      labor: {
+        // Joining LAUS metro/micro unemployment to CBSA deterministically requires a shared key.
+        // In v1 expanded we keep this as "gap" and add a v1.1 join step once we lock a stable mapping.
+        unemployment_rate: null
+      },
+      residential: {
+        permits_total: p ? { date: null, value: p.total, units: "units", source: "Census BPS" } : null,
+        permits_sf: p ? { date: null, value: p.sf, units: "units", source: "Census BPS" } : null,
+        permits_mf2p: p ? { date: null, value: p.mf2p, units: "units", source: "Census BPS" } : null
+      },
+      commercial: {
+        proxy: null
+      }
+    };
+
+    // We intentionally mark CBSA unemployment as gap in v1, because mapping series_id→CBSA needs a stable join.
+    observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "join step deferred to v1.1 (deterministic mapping required)" });
+  }
+
+  // 5) Coverage & provenance
+  const payload = {
+    date: new Date().toISOString().slice(0, 10),
+    observed_timestamp_utc: isoUtcNow(),
+    coverage: {
+      us: true,
+      states_fips: states,
+      cbsas: cbsas,
+      msas_default_view: "metro-only filter (derived downstream)"
+    },
+    sources: {
+      fred: {
+        api: "https://api.stlouisfed.org/fred/series/observations",
+        notes: "National anchors via FRED series observations API."
+      },
+      census_bps: {
+        state_page: "https://www.census.gov/construction/bps/statemonthly.html",
+        cbsa_page: "https://www.census.gov/construction/bps/msamonthly.html",
+        selected_state_file: bps.state.link,
+        selected_cbsa_file: bps.cbsa.link
+      },
+      bls_laus: {
+        base: "https://download.bls.gov/pub/time.series/la/",
+        measure_code_unemployment_rate: "03",
+        seasonal_codes: { S: "Seasonally Adjusted", U: "Not Seasonally Adjusted" }
+      }
+    },
+    series_pack: {
+      fred_series: FRED_SERIES
+    },
+    geo_data,
+    observed_gaps
   };
 
-  // Regime history
-  const histEntry = {
-    date: utcYYYYMMDD(),
-    ceps: eng.cepsScore,
-    cpi: cpiScore,
-    volatility: safeUpper(eng.volatilityRegime),
-    regime: safeUpper(bandFromCPI(cpiScore)),
-    projected_cpi_30d: eng.projectedCpi30d,
-    prob_cpi_ge_70: eng.probGe70
-  };
-  out.regime_history = buildRegimeHistory(existing, histEntry);
-
-  await writeJSON(OUT_PATH, out);
-
-  console.log(`Wrote: ${OUT_PATH}`);
-  console.log(`CPI=${cpiScore} (${band})  CEPS=${eng.cepsScore}  BMI=${eng.builderMomentum}`);
-  if (bls.error) console.log(`BLS error: ${bls.error}`);
-  if (census.error) console.log(`Census error: ${census.error}`);
+  fs.writeFileSync(OUTFILE, JSON.stringify(payload, null, 2), "utf8");
+  console.log(`Wrote ${OUTFILE}`);
 }
 
-main().catch((err) => {
-  console.error("Build failed:", err?.stack || err?.message || err);
+main().catch(err => {
+  console.error(err);
   process.exit(1);
 });
