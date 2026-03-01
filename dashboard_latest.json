@@ -1,6 +1,6 @@
 {
-  "schema_version": "3.2.0",
-  "generated_at": "2026-03-01T01:12:58.390Z",
+  "schema_version": "3.4.0",
+  "generated_at": "2026-03-01T06:44:26.212Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -28,18 +28,9 @@
       }
     ]
   },
-  "correlations": {
-    "cpi_vs_builders": 0,
-    "regime": "NEUTRAL"
-  },
   "risk_mode": false,
   "risk_thermometer_mode": false,
   "volatility_regime": "NORMAL",
-  "shock_flags": {
-    "rate_shock": false,
-    "equity_drawdown": false,
-    "volatility_spike": false
-  },
   "predictive_engine": {
     "horizon_days": 30,
     "projected_cpi_30d": 58,
@@ -67,26 +58,13 @@
       }
     ]
   },
-  "acceleration_engine": {
-    "divergence": 2,
-    "deltas": {
-      "cpi_7d": null,
-      "cpi_30d": null,
-      "ceps_7d": null,
-      "ceps_30d": null,
-      "bmi_7d": null,
-      "bmi_30d": null
-    },
-    "flags": {
-      "cpi_accelerating_7d": false,
-      "cpi_accelerating_30d": false,
-      "ceps_accelerating_7d": false,
-      "ceps_accelerating_30d": false,
-      "equity_tightening_divergence": false,
-      "equity_easing_divergence": false,
-      "builder_early_warning": false
-    },
-    "alert_level": "MONITOR"
+  "macro_bls": {
+    "asof": "2026-03-01T06:44:24.623Z",
+    "error": null
+  },
+  "macro_census": {
+    "asof": null,
+    "error": "fetchJson failed: HTTP 404  :: <!doctype html><html lang=\"en\"><head><title>HTTP Status 404 ? Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;"
   },
   "signals": [
     {
@@ -3456,6 +3434,30 @@
           "value": 1240324
         }
       ]
+    },
+    {
+      "name": "Construction Employment (Total)",
+      "region": "US",
+      "units": "thousands",
+      "yoy": null,
+      "history": [],
+      "source": "BLS"
+    },
+    {
+      "name": "Construction Avg Hourly Earnings",
+      "region": "US",
+      "units": "USD",
+      "yoy": null,
+      "history": [],
+      "source": "BLS"
+    },
+    {
+      "name": "Construction Avg Weekly Hours",
+      "region": "US",
+      "units": "hours",
+      "yoy": null,
+      "history": [],
+      "source": "BLS"
     }
   ],
   "alerts": [
