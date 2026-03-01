@@ -1,6 +1,6 @@
 {
   "schema_version": "3.4.0",
-  "generated_at": "2026-03-01T06:44:26.212Z",
+  "generated_at": "2026-03-01T06:54:12.457Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -59,7 +59,7 @@
     ]
   },
   "macro_bls": {
-    "asof": "2026-03-01T06:44:24.623Z",
+    "asof": "2026-03-01T06:54:10.563Z",
     "error": null
   },
   "macro_census": {
@@ -1361,7 +1361,8 @@
           "date": "2026-02-26",
           "value": 5.98
         }
-      ]
+      ],
+      "source": "FRED"
     },
     {
       "name": "CPI (All Urban Consumers)",
@@ -1657,7 +1658,8 @@
           "date": "2026-01-01",
           "value": 326.588
         }
-      ]
+      ],
+      "source": "FRED"
     },
     {
       "name": "Unemployment Rate",
@@ -1953,7 +1955,8 @@
           "date": "2026-01-01",
           "value": 4.3
         }
-      ]
+      ],
+      "source": "FRED"
     },
     {
       "name": "Housing Starts",
@@ -2249,7 +2252,8 @@
           "date": "2025-12-01",
           "value": 1404
         }
-      ]
+      ],
+      "source": "FRED"
     },
     {
       "name": "Building Permits",
@@ -2545,7 +2549,8 @@
           "date": "2025-12-01",
           "value": 1448
         }
-      ]
+      ],
+      "source": "FRED"
     },
     {
       "name": "Construction Spending (Total)",
@@ -2841,7 +2846,8 @@
           "date": "2025-12-01",
           "value": 2168775
         }
-      ]
+      ],
+      "source": "FRED"
     },
     {
       "name": "Construction Spending (Residential)",
@@ -3137,7 +3143,8 @@
           "date": "2025-12-01",
           "value": 928451
         }
-      ]
+      ],
+      "source": "FRED"
     },
     {
       "name": "Construction Spending (Nonresidential)",
@@ -3433,7 +3440,8 @@
           "date": "2025-12-01",
           "value": 1240324
         }
-      ]
+      ],
+      "source": "FRED"
     },
     {
       "name": "Construction Employment (Total)",
