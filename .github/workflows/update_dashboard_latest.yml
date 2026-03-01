@@ -64,6 +64,10 @@ jobs:
           NEWSAPI_QUERY: "(construction OR \"building permits\" OR \"housing starts\" OR \"commercial real estate\" OR \"general contractor\" OR homebuilder OR \"building code\" OR \"land acquisition\" OR \"pre-construction\" OR \"data center\") AND (US OR United States)"
           NEWSAPI_LANGUAGE: "en"
           NEWSAPI_SORTBY: "publishedAt"
+          NEWSAPI_TOP_HEADLINES: "true"
+          NEWSAPI_COUNTRY: "us"
+          NEWSAPI_CATEGORY: "business"
+          NEWSAPI_PAGE_SIZE: "30"
 
           STOCK_TICKERS: "DHI,PHM,LEN,NVR,TOL,HD,LOW,VMC,MLM,BLDR,FBIN,OC,USCR,EXP,CAT,DE,URI,TPC,CRH"
           ALPHAVANTAGE_PRIORITY_TICKERS: "DHI,PHM,LEN,NVR,TOL,BLDR,VMC,MLM,OC,HD,LOW"
