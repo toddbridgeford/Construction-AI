@@ -468,13 +468,35 @@ function bandForScore(x) {
 async function main() {
   const FRED_API_KEY = mustGetEnv("FRED_API_KEY");
 
-  const FRED_SERIES = {
+   const FRED_SERIES = {
+    // Construction anchors (existing)
     mortgage_30y: "MORTGAGE30US",
     cpi_headline: "CPIAUCSL",
     construction_employment: "USCONS",
     total_construction_spending: "TTLCONS",
     housing_starts_total: "HOUST",
     building_permits_total: "PERMIT",
+
+    // --- Macro Pack v1 (new) ---
+
+    // Rates / capital
+    dgs10_10y_treasury: "DGS10",
+    dgs2_2y_treasury: "DGS2",
+    dgs30_30y_treasury: "DGS30",
+    effr_fed_funds: "EFFR",
+    sofr: "SOFR",
+    t10yie_breakeven_10y: "T10YIE",
+
+    // Financial conditions / credit
+    nfci: "NFCI",
+    sloos_ci_large_tightening: "DRTSCILM",
+    baa_corp_yield: "BAA",
+    hy_oas: "BAMLH0A0HYM2",
+    ig_oas: "BAMLC0A0CM",
+
+    // Macro demand / labor
+    ism_pmi: "NAPM",
+    unrate: "UNRATE",
   };
 
   const fred = {};
