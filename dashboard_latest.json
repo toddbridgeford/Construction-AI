@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-01T20:55:52.639Z",
+  "generated_at": "2026-03-01T21:04:32.028Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -12,6 +12,10 @@
     "delta_3m": null,
     "momentum": "Stable",
     "history": [
+      {
+        "date": "2026-03-01",
+        "value": 46
+      },
       {
         "date": "2026-03-01",
         "value": 46
@@ -176,19 +180,28 @@
     },
     "news_badge": {
       "sources": {
-        "newsapi:top_headlines": 19,
+        "newsapi:top_headlines": 16,
         "newsapi:everything": 77
       },
-      "total": 96,
+      "total": 93,
       "overlay": 0
     }
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 19,
+      "newsapi:top_headlines": 16,
       "newsapi:everything": 77
     },
     "news_unified": [
+      {
+        "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
+        "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
+        "source": "The Washington Post",
+        "published_at": "2026-02-28T19:00:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Millions of workers don’t have employer-sponsored retirement accounts. But the president’s proposal in the State of the Union speech may not answer their needs."
+      },
       {
         "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
         "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
@@ -196,16 +209,7 @@
         "published_at": "2026-02-28T14:43:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null
-      },
-      {
-        "title": "Berkshire CEO Greg Abel vows to keep Buffett's culture of disciplined investing in first annual letter - CNBC",
-        "url": "https://www.cnbc.com/2026/02/28/berkshire-ceo-abel-vows-to-keep-buffetts-culture-of-disciplined-investing-in-first-annual-letter.html",
-        "source": "CNBC",
-        "published_at": "2026-02-28T14:27:52Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Berkshire Hathaway's Greg Abel released his first annual shareholder letter as chief executive."
+        "description": ""
       },
       {
         "title": "David Ellison Delivered. Now It’s Up to Makan Delrahim to Close the Warner Bros. Deal - The Hollywood Reporter",
@@ -226,22 +230,13 @@
         "description": "President Donald Trump’s decision to strike Iran creates new risks for a significant chunk of the world’s oil supply."
       },
       {
-        "title": "Zillow forecasts critical mortgage rate change, homebuyer reaction - thestreet.com",
-        "url": "https://www.thestreet.com/real-estate/zillow-predicts-major-mortgage-rate-change-homebuying-shift",
-        "source": "TheStreet",
-        "published_at": "2026-02-28T11:06:19Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The real estate technology company reports new research that indicates a massive turn of events in the housing market."
-      },
-      {
         "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
-        "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxONkFjSzhBdlpDMk5ucWtsanBOaGV3SUdQcm1NaGNFWV83bjVLdlVxMkZvTlZkcFhEbTFCQkdQN0VCTTlWVm1peGVVYVNNZVRobjJLMktQaW5nOXhjMGZlZXNxR1V2bmVBbVA4TzdHa19LS25yM1BJcGtuSlZncTJSZEJTSHF2OXpoRm01Zmo0N0xvaEFy?oc=5",
-        "source": "Google News",
+        "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
+        "source": "Business Insider",
         "published_at": "2026-02-28T10:59:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null
+        "description": "Block earned some praise for its \"relatively generous\" severance package. Here is a look at what other Big Tech companies have offered in the past."
       },
       {
         "title": "The week the AI scare turned real and America realized maybe it isn't ready for what's coming - Fortune",
@@ -341,24 +336,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Refund amounts for State Farm customers will vary based on their place of residence and insurance premiums."
-      },
-      {
-        "title": "Here’s Why CoreWeave (CRWV) Dragged Down Nebius and Iren After Its Mixed Q4 - TipRanks",
-        "url": "https://www.tipranks.com/news/heres-why-coreweave-crwv-is-dragging-down-nebius-and-iren-after-its-mixed-q4",
-        "source": "Tipranks.com",
-        "published_at": "2026-02-27T15:32:01Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "AI cloud company CoreWeave’s ($CRWV) shares plunged 18.51% on Friday, pulling down peers Nebius ($NBIS) and Iren ($IREN) following the release of its mixed fourth-quarter earnings. The results further underscored"
-      },
-      {
-        "title": "Behind Generate's 'feverish' race to raise $400M IPO while window remains open - Fierce Biotech",
-        "url": "https://www.fiercebiotech.com/biotech/generate-scores-largest-biotech-ipo-2024-400m-nasdaq-listing",
-        "source": "FierceBiotech",
-        "published_at": "2026-02-27T08:36:54Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug developers. | Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug develop…"
       },
       {
         "title": "Bragar Eagel & Squire, P.C. Reminds Stockholders that a Class Action Lawsuit Has Been Filed Against CoreWeave, Inc. and Encourages Investors to Contact the Firm Before March 13th",
@@ -1056,26 +1033,26 @@
     ],
     "news_with_impact": [
       {
-        "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
-        "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
-        "source": "Barron's",
-        "published_at": "2026-02-28T14:43:00Z",
+        "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
+        "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
+        "source": "The Washington Post",
+        "published_at": "2026-02-28T19:00:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
+        "description": "Millions of workers don’t have employer-sponsored retirement accounts. But the president’s proposal in the State of the Union speech may not answer their needs.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Berkshire CEO Greg Abel vows to keep Buffett's culture of disciplined investing in first annual letter - CNBC",
-        "url": "https://www.cnbc.com/2026/02/28/berkshire-ceo-abel-vows-to-keep-buffetts-culture-of-disciplined-investing-in-first-annual-letter.html",
-        "source": "CNBC",
-        "published_at": "2026-02-28T14:27:52Z",
+        "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
+        "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
+        "source": "Barron's",
+        "published_at": "2026-02-28T14:43:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Berkshire Hathaway's Greg Abel released his first annual shareholder letter as chief executive.",
+        "description": "",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1108,26 +1085,13 @@
         ]
       },
       {
-        "title": "Zillow forecasts critical mortgage rate change, homebuyer reaction - thestreet.com",
-        "url": "https://www.thestreet.com/real-estate/zillow-predicts-major-mortgage-rate-change-homebuying-shift",
-        "source": "TheStreet",
-        "published_at": "2026-02-28T11:06:19Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The real estate technology company reports new research that indicates a massive turn of events in the housing market.",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
         "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
-        "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxONkFjSzhBdlpDMk5ucWtsanBOaGV3SUdQcm1NaGNFWV83bjVLdlVxMkZvTlZkcFhEbTFCQkdQN0VCTTlWVm1peGVVYVNNZVRobjJLMktQaW5nOXhjMGZlZXNxR1V2bmVBbVA4TzdHa19LS25yM1BJcGtuSlZncTJSZEJTSHF2OXpoRm01Zmo0N0xvaEFy?oc=5",
-        "source": "Google News",
+        "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
+        "source": "Business Insider",
         "published_at": "2026-02-28T10:59:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
+        "description": "Block earned some praise for its \"relatively generous\" severance package. Here is a look at what other Big Tech companies have offered in the past.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1275,32 +1239,6 @@
         "impact_score": 40,
         "themes": [
           "other"
-        ]
-      },
-      {
-        "title": "Here’s Why CoreWeave (CRWV) Dragged Down Nebius and Iren After Its Mixed Q4 - TipRanks",
-        "url": "https://www.tipranks.com/news/heres-why-coreweave-crwv-is-dragging-down-nebius-and-iren-after-its-mixed-q4",
-        "source": "Tipranks.com",
-        "published_at": "2026-02-27T15:32:01Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "AI cloud company CoreWeave’s ($CRWV) shares plunged 18.51% on Friday, pulling down peers Nebius ($NBIS) and Iren ($IREN) following the release of its mixed fourth-quarter earnings. The results further underscored",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Behind Generate's 'feverish' race to raise $400M IPO while window remains open - Fierce Biotech",
-        "url": "https://www.fiercebiotech.com/biotech/generate-scores-largest-biotech-ipo-2024-400m-nasdaq-listing",
-        "source": "FierceBiotech",
-        "published_at": "2026-02-27T08:36:54Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug developers. | Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug develop…",
-        "impact_score": 40,
-        "themes": [
-          "capital"
         ]
       },
       {
@@ -2307,19 +2245,6 @@
     ],
     "top_high_impact": [
       {
-        "title": "Zillow forecasts critical mortgage rate change, homebuyer reaction - thestreet.com",
-        "url": "https://www.thestreet.com/real-estate/zillow-predicts-major-mortgage-rate-change-homebuying-shift",
-        "source": "TheStreet",
-        "published_at": "2026-02-28T11:06:19Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The real estate technology company reports new research that indicates a massive turn of events in the housing market.",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
         "title": "MFS Creditors Warn of £930 Million Shortfall From Double Pledges - Bloomberg.com",
         "url": "https://www.bloomberg.com/news/articles/2026-02-27/mfs-creditors-warn-of-930-million-shortfall-from-double-pledges",
         "source": "Bloomberg",
@@ -2359,26 +2284,26 @@
         ]
       },
       {
-        "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
-        "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
-        "source": "Barron's",
-        "published_at": "2026-02-28T14:43:00Z",
+        "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
+        "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
+        "source": "The Washington Post",
+        "published_at": "2026-02-28T19:00:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
+        "description": "Millions of workers don’t have employer-sponsored retirement accounts. But the president’s proposal in the State of the Union speech may not answer their needs.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Berkshire CEO Greg Abel vows to keep Buffett's culture of disciplined investing in first annual letter - CNBC",
-        "url": "https://www.cnbc.com/2026/02/28/berkshire-ceo-abel-vows-to-keep-buffetts-culture-of-disciplined-investing-in-first-annual-letter.html",
-        "source": "CNBC",
-        "published_at": "2026-02-28T14:27:52Z",
+        "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
+        "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
+        "source": "Barron's",
+        "published_at": "2026-02-28T14:43:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Berkshire Hathaway's Greg Abel released his first annual shareholder letter as chief executive.",
+        "description": "",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2399,12 +2324,12 @@
       },
       {
         "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
-        "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxONkFjSzhBdlpDMk5ucWtsanBOaGV3SUdQcm1NaGNFWV83bjVLdlVxMkZvTlZkcFhEbTFCQkdQN0VCTTlWVm1peGVVYVNNZVRobjJLMktQaW5nOXhjMGZlZXNxR1V2bmVBbVA4TzdHa19LS25yM1BJcGtuSlZncTJSZEJTSHF2OXpoRm01Zmo0N0xvaEFy?oc=5",
-        "source": "Google News",
+        "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
+        "source": "Business Insider",
         "published_at": "2026-02-28T10:59:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
+        "description": "Block earned some praise for its \"relatively generous\" severance package. Here is a look at what other Big Tech companies have offered in the past.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2435,24 +2360,24 @@
         "themes": [
           "other"
         ]
+      },
+      {
+        "title": "Dow Jones Futures: Trump's Anthropic Move Hits Market ETFs; Don't Forget S&P 500's Hottest Stocks - Investor's Business Daily",
+        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-major-indexes-market-strength-sandisk-sp-500-stock/",
+        "source": "Investor's Business Daily",
+        "published_at": "2026-02-28T04:09:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The major indexes are below 50-day lines while equal-weight ETFs are at highs.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
       }
     ],
     "news_pressure_overlay": 0,
     "news_clusters": {
       "capital": [
-        {
-          "title": "Zillow forecasts critical mortgage rate change, homebuyer reaction - thestreet.com",
-          "url": "https://www.thestreet.com/real-estate/zillow-predicts-major-mortgage-rate-change-homebuying-shift",
-          "source": "TheStreet",
-          "published_at": "2026-02-28T11:06:19Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The real estate technology company reports new research that indicates a massive turn of events in the housing market.",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
         {
           "title": "DTE Energy to seek another electric rate increase after $242M hike - The Detroit News",
           "url": "https://www.detroitnews.com/story/business/2026/02/27/dte-energy-to-seek-another-electric-rate-increase-after-242-million-hike/88898312007/",
@@ -2476,19 +2401,6 @@
           "feed": "top_headlines",
           "description": "Some creditors of Market Financial Solutions Ltd., the failed UK mortgage firm backed by Wall Street lenders, warned there may be a £930 million ($1.3 billion) shortfall in collateral backing their loans.",
           "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "Behind Generate's 'feverish' race to raise $400M IPO while window remains open - Fierce Biotech",
-          "url": "https://www.fiercebiotech.com/biotech/generate-scores-largest-biotech-ipo-2024-400m-nasdaq-listing",
-          "source": "FierceBiotech",
-          "published_at": "2026-02-27T08:36:54Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug developers. | Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug develop…",
-          "impact_score": 40,
           "themes": [
             "capital"
           ]
@@ -2636,26 +2548,26 @@
       "land": [],
       "other": [
         {
-          "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
-          "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
-          "source": "Barron's",
-          "published_at": "2026-02-28T14:43:00Z",
+          "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
+          "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
+          "source": "The Washington Post",
+          "published_at": "2026-02-28T19:00:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
+          "description": "Millions of workers don’t have employer-sponsored retirement accounts. But the president’s proposal in the State of the Union speech may not answer their needs.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Berkshire CEO Greg Abel vows to keep Buffett's culture of disciplined investing in first annual letter - CNBC",
-          "url": "https://www.cnbc.com/2026/02/28/berkshire-ceo-abel-vows-to-keep-buffetts-culture-of-disciplined-investing-in-first-annual-letter.html",
-          "source": "CNBC",
-          "published_at": "2026-02-28T14:27:52Z",
+          "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
+          "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
+          "source": "Barron's",
+          "published_at": "2026-02-28T14:43:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Berkshire Hathaway's Greg Abel released his first annual shareholder letter as chief executive.",
+          "description": "",
           "impact_score": 40,
           "themes": [
             "other"
@@ -2676,12 +2588,12 @@
         },
         {
           "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
-          "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxONkFjSzhBdlpDMk5ucWtsanBOaGV3SUdQcm1NaGNFWV83bjVLdlVxMkZvTlZkcFhEbTFCQkdQN0VCTTlWVm1peGVVYVNNZVRobjJLMktQaW5nOXhjMGZlZXNxR1V2bmVBbVA4TzdHa19LS25yM1BJcGtuSlZncTJSZEJTSHF2OXpoRm01Zmo0N0xvaEFy?oc=5",
-          "source": "Google News",
+          "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
+          "source": "Business Insider",
           "published_at": "2026-02-28T10:59:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
+          "description": "Block earned some praise for its \"relatively generous\" severance package. Here is a look at what other Big Tech companies have offered in the past.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -2921,21 +2833,21 @@
       },
       {
         "ticker": "MLM",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 672.52,
         "close": 676.57,
-        "change": 4.050000000000068,
-        "change_pct": 0.6022125736037691
+        "prev_close": 678.46,
+        "change": -1.89,
+        "change_pct": -0.2786
       },
       {
         "ticker": "BLDR",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-02-27",
+        "open": 103.07,
         "close": 104.29,
-        "prev_close": 104.56,
-        "change": -0.27,
-        "change_pct": -0.2582
+        "change": 1.220000000000013,
+        "change_pct": 1.1836615892112285
       },
       {
         "ticker": "FBIN",
@@ -3017,11 +2929,11 @@
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.628519956971993
+        "avg_change_pct": 0.4817178613713649
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": -0.2582
+        "avg_change_pct": 1.1836615892112285
       },
       "equipment": {
         "count": 3,
@@ -3112,7 +3024,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-01T20:55:52.639Z",
+    "generated_at_utc": "2026-03-01T21:04:32.028Z",
     "regime_history": {
       "current_regime_duration_days": 0,
       "previous_regime": null,
@@ -3279,21 +3191,21 @@
         },
         {
           "ticker": "MLM",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 672.52,
           "close": 676.57,
-          "change": 4.050000000000068,
-          "change_pct": 0.6022125736037691
+          "prev_close": 678.46,
+          "change": -1.89,
+          "change_pct": -0.2786
         },
         {
           "ticker": "BLDR",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-02-27",
+          "open": 103.07,
           "close": 104.29,
-          "prev_close": 104.56,
-          "change": -0.27,
-          "change_pct": -0.2582
+          "change": 1.220000000000013,
+          "change_pct": 1.1836615892112285
         },
         {
           "ticker": "FBIN",
@@ -3375,11 +3287,11 @@
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": 0.628519956971993
+          "avg_change_pct": 0.4817178613713649
         },
         "distribution": {
           "count": 1,
-          "avg_change_pct": -0.2582
+          "avg_change_pct": 1.1836615892112285
         },
         "equipment": {
           "count": 3,
@@ -3394,24 +3306,11 @@
     },
     "news": {
       "sources": {
-        "newsapi:top_headlines": 19,
+        "newsapi:top_headlines": 16,
         "newsapi:everything": 77
       },
       "news_pressure_overlay": 0,
       "top_high_impact": [
-        {
-          "title": "Zillow forecasts critical mortgage rate change, homebuyer reaction - thestreet.com",
-          "url": "https://www.thestreet.com/real-estate/zillow-predicts-major-mortgage-rate-change-homebuying-shift",
-          "source": "TheStreet",
-          "published_at": "2026-02-28T11:06:19Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The real estate technology company reports new research that indicates a massive turn of events in the housing market.",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
         {
           "title": "MFS Creditors Warn of £930 Million Shortfall From Double Pledges - Bloomberg.com",
           "url": "https://www.bloomberg.com/news/articles/2026-02-27/mfs-creditors-warn-of-930-million-shortfall-from-double-pledges",
@@ -3452,26 +3351,26 @@
           ]
         },
         {
-          "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
-          "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
-          "source": "Barron's",
-          "published_at": "2026-02-28T14:43:00Z",
+          "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
+          "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
+          "source": "The Washington Post",
+          "published_at": "2026-02-28T19:00:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
+          "description": "Millions of workers don’t have employer-sponsored retirement accounts. But the president’s proposal in the State of the Union speech may not answer their needs.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Berkshire CEO Greg Abel vows to keep Buffett's culture of disciplined investing in first annual letter - CNBC",
-          "url": "https://www.cnbc.com/2026/02/28/berkshire-ceo-abel-vows-to-keep-buffetts-culture-of-disciplined-investing-in-first-annual-letter.html",
-          "source": "CNBC",
-          "published_at": "2026-02-28T14:27:52Z",
+          "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
+          "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
+          "source": "Barron's",
+          "published_at": "2026-02-28T14:43:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Berkshire Hathaway's Greg Abel released his first annual shareholder letter as chief executive.",
+          "description": "",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3492,12 +3391,12 @@
         },
         {
           "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
-          "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxONkFjSzhBdlpDMk5ucWtsanBOaGV3SUdQcm1NaGNFWV83bjVLdlVxMkZvTlZkcFhEbTFCQkdQN0VCTTlWVm1peGVVYVNNZVRobjJLMktQaW5nOXhjMGZlZXNxR1V2bmVBbVA4TzdHa19LS25yM1BJcGtuSlZncTJSZEJTSHF2OXpoRm01Zmo0N0xvaEFy?oc=5",
-          "source": "Google News",
+          "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
+          "source": "Business Insider",
           "published_at": "2026-02-28T10:59:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
+          "description": "Block earned some praise for its \"relatively generous\" severance package. Here is a look at what other Big Tech companies have offered in the past.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3528,9 +3427,35 @@
           "themes": [
             "other"
           ]
+        },
+        {
+          "title": "Dow Jones Futures: Trump's Anthropic Move Hits Market ETFs; Don't Forget S&P 500's Hottest Stocks - Investor's Business Daily",
+          "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-major-indexes-market-strength-sandisk-sp-500-stock/",
+          "source": "Investor's Business Daily",
+          "published_at": "2026-02-28T04:09:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The major indexes are below 50-day lines while equal-weight ETFs are at highs.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
         }
       ],
       "unified": [
+        {
+          "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
+          "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
+          "source": "The Washington Post",
+          "published_at": "2026-02-28T19:00:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Millions of workers don’t have employer-sponsored retirement accounts. But the president’s proposal in the State of the Union speech may not answer their needs.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
         {
           "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
           "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
@@ -3538,20 +3463,7 @@
           "published_at": "2026-02-28T14:43:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Berkshire CEO Greg Abel vows to keep Buffett's culture of disciplined investing in first annual letter - CNBC",
-          "url": "https://www.cnbc.com/2026/02/28/berkshire-ceo-abel-vows-to-keep-buffetts-culture-of-disciplined-investing-in-first-annual-letter.html",
-          "source": "CNBC",
-          "published_at": "2026-02-28T14:27:52Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Berkshire Hathaway's Greg Abel released his first annual shareholder letter as chief executive.",
+          "description": "",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3584,26 +3496,13 @@
           ]
         },
         {
-          "title": "Zillow forecasts critical mortgage rate change, homebuyer reaction - thestreet.com",
-          "url": "https://www.thestreet.com/real-estate/zillow-predicts-major-mortgage-rate-change-homebuying-shift",
-          "source": "TheStreet",
-          "published_at": "2026-02-28T11:06:19Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The real estate technology company reports new research that indicates a massive turn of events in the housing market.",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
           "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
-          "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxONkFjSzhBdlpDMk5ucWtsanBOaGV3SUdQcm1NaGNFWV83bjVLdlVxMkZvTlZkcFhEbTFCQkdQN0VCTTlWVm1peGVVYVNNZVRobjJLMktQaW5nOXhjMGZlZXNxR1V2bmVBbVA4TzdHa19LS25yM1BJcGtuSlZncTJSZEJTSHF2OXpoRm01Zmo0N0xvaEFy?oc=5",
-          "source": "Google News",
+          "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
+          "source": "Business Insider",
           "published_at": "2026-02-28T10:59:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
+          "description": "Block earned some praise for its \"relatively generous\" severance package. Here is a look at what other Big Tech companies have offered in the past.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3751,32 +3650,6 @@
           "impact_score": 40,
           "themes": [
             "other"
-          ]
-        },
-        {
-          "title": "Here’s Why CoreWeave (CRWV) Dragged Down Nebius and Iren After Its Mixed Q4 - TipRanks",
-          "url": "https://www.tipranks.com/news/heres-why-coreweave-crwv-is-dragging-down-nebius-and-iren-after-its-mixed-q4",
-          "source": "Tipranks.com",
-          "published_at": "2026-02-27T15:32:01Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "AI cloud company CoreWeave’s ($CRWV) shares plunged 18.51% on Friday, pulling down peers Nebius ($NBIS) and Iren ($IREN) following the release of its mixed fourth-quarter earnings. The results further underscored",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Behind Generate's 'feverish' race to raise $400M IPO while window remains open - Fierce Biotech",
-          "url": "https://www.fiercebiotech.com/biotech/generate-scores-largest-biotech-ipo-2024-400m-nasdaq-listing",
-          "source": "FierceBiotech",
-          "published_at": "2026-02-27T08:36:54Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug developers. | Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug develop…",
-          "impact_score": 40,
-          "themes": [
-            "capital"
           ]
         },
         {
@@ -4311,23 +4184,49 @@
           "themes": [
             "other"
           ]
+        },
+        {
+          "title": "Slow and Steady Wins The Race",
+          "url": "https://www.barchart.com/story/news/481800/slow-and-steady-wins-the-race",
+          "source": "Barchart.com",
+          "published_at": "2026-02-28T01:45:02Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Summary The Travelers Companies (TRV) demonstrates strong technical momentum, with a Trend Seeker 'Buy' signal and 9.54% gain over the past month. TRV trades...",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "New 2 World Trade Center Will Rise 1,226 Feet Over Manhattan, Finally Completing the Post-9/11 Rebuild",
+          "url": "https://www.yankodesign.com/2026/02/27/new-2-world-trade-center-will-rise-1226-feet-over-manhattan-finally-completing-the-post-9-11-rebuild/",
+          "source": "Yanko Design",
+          "published_at": "2026-02-28T00:30:10Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "New 2 World Trade Center Will Rise 1,226 Feet Over Manhattan, Finally Completing the Post-9/11 RebuildIt has been almost 25 years since the September 11 attacks forever changed the skyline of Lower Manhattan, and now the rebuilding of the World...",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Analysis of the evolution and spatial effects of green space pattern in China’s urbanization process: a case study of Guangzhou City",
+          "url": "https://www.nature.com/articles/s41598-026-41879-4",
+          "source": "Nature.com",
+          "published_at": "2026-02-28T00:00:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Scientific Reports - Analysis of the evolution and spatial effects of green space pattern in China’s urbanization process: a case study of Guangzhou City",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
         }
       ],
       "clusters": {
         "capital": [
-          {
-            "title": "Zillow forecasts critical mortgage rate change, homebuyer reaction - thestreet.com",
-            "url": "https://www.thestreet.com/real-estate/zillow-predicts-major-mortgage-rate-change-homebuying-shift",
-            "source": "TheStreet",
-            "published_at": "2026-02-28T11:06:19Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "The real estate technology company reports new research that indicates a massive turn of events in the housing market.",
-            "impact_score": 65,
-            "themes": [
-              "capital"
-            ]
-          },
           {
             "title": "DTE Energy to seek another electric rate increase after $242M hike - The Detroit News",
             "url": "https://www.detroitnews.com/story/business/2026/02/27/dte-energy-to-seek-another-electric-rate-increase-after-242-million-hike/88898312007/",
@@ -4351,19 +4250,6 @@
             "feed": "top_headlines",
             "description": "Some creditors of Market Financial Solutions Ltd., the failed UK mortgage firm backed by Wall Street lenders, warned there may be a £930 million ($1.3 billion) shortfall in collateral backing their loans.",
             "impact_score": 65,
-            "themes": [
-              "capital"
-            ]
-          },
-          {
-            "title": "Behind Generate's 'feverish' race to raise $400M IPO while window remains open - Fierce Biotech",
-            "url": "https://www.fiercebiotech.com/biotech/generate-scores-largest-biotech-ipo-2024-400m-nasdaq-listing",
-            "source": "FierceBiotech",
-            "published_at": "2026-02-27T08:36:54Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug developers. | Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug develop…",
-            "impact_score": 40,
             "themes": [
               "capital"
             ]
@@ -4511,26 +4397,26 @@
         "land": [],
         "other": [
           {
-            "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
-            "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
-            "source": "Barron's",
-            "published_at": "2026-02-28T14:43:00Z",
+            "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
+            "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
+            "source": "The Washington Post",
+            "published_at": "2026-02-28T19:00:00Z",
             "provider": "newsapi",
             "feed": "top_headlines",
-            "description": null,
+            "description": "Millions of workers don’t have employer-sponsored retirement accounts. But the president’s proposal in the State of the Union speech may not answer their needs.",
             "impact_score": 40,
             "themes": [
               "other"
             ]
           },
           {
-            "title": "Berkshire CEO Greg Abel vows to keep Buffett's culture of disciplined investing in first annual letter - CNBC",
-            "url": "https://www.cnbc.com/2026/02/28/berkshire-ceo-abel-vows-to-keep-buffetts-culture-of-disciplined-investing-in-first-annual-letter.html",
-            "source": "CNBC",
-            "published_at": "2026-02-28T14:27:52Z",
+            "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
+            "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
+            "source": "Barron's",
+            "published_at": "2026-02-28T14:43:00Z",
             "provider": "newsapi",
             "feed": "top_headlines",
-            "description": "Berkshire Hathaway's Greg Abel released his first annual shareholder letter as chief executive.",
+            "description": "",
             "impact_score": 40,
             "themes": [
               "other"
@@ -4551,12 +4437,12 @@
           },
           {
             "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
-            "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxONkFjSzhBdlpDMk5ucWtsanBOaGV3SUdQcm1NaGNFWV83bjVLdlVxMkZvTlZkcFhEbTFCQkdQN0VCTTlWVm1peGVVYVNNZVRobjJLMktQaW5nOXhjMGZlZXNxR1V2bmVBbVA4TzdHa19LS25yM1BJcGtuSlZncTJSZEJTSHF2OXpoRm01Zmo0N0xvaEFy?oc=5",
-            "source": "Google News",
+            "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
+            "source": "Business Insider",
             "published_at": "2026-02-28T10:59:00Z",
             "provider": "newsapi",
             "feed": "top_headlines",
-            "description": null,
+            "description": "Block earned some praise for its \"relatively generous\" severance package. Here is a look at what other Big Tech companies have offered in the past.",
             "impact_score": 40,
             "themes": [
               "other"
