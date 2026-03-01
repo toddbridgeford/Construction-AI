@@ -1988,7 +1988,10 @@ async function main() {
   fs.writeFileSync(OUTFILE, JSON.stringify(out, null, 2), "utf8");
   console.log(`Wrote ${OUTFILE} (Headline CPI=${out.cpi.headline})`);
 }
-
+// ---------------------------
+// PHASE 2 CPI ENHANCEMENT FLAG
+// ---------------------------
+const CPI_PHASE = "PHASE_2_ACTIVE";
 main().catch((err) => {
   console.error(err);
   process.exit(1);
