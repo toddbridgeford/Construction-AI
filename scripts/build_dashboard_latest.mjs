@@ -18,11 +18,42 @@ function getEnv(name, fallback = null) {
   const v = process.env[name];
   return v == null || String(v).trim() === "" ? fallback : v;
 }
+function safeNumber(x) {
+  if (x === null || x === undefined) return null;
+  if (typeof x === "number") return Number.isFinite(x) ? x : null;
+  const s = String(x).replace(/,/g, "").trim();
+  if (!s) return null;
+  const n = Number(s);
+  return Number.isFinite(n) ? n : null;
+}
+function clamp(x, lo = 0, hi = 100) {
+  return Math.max(lo, Math.min(hi, x));
+}
+function isoUtcNow() {
+  return new Date().toISOString();
+}
+function todayISODate() {
+  return new Date().toISOString().slice(0, 10);
+}
+function parseCsvEnvList(s) {
+  return String(s || "").split(",").map(x => x.trim()).filter(Boolean);
+}
+function trendArrow(curr, prev, eps = 1e-9) {
+  if (curr == null || prev == null) return "→";
+  if (Math.abs(curr - prev) <= eps) return "→";
+  return curr > prev ? "↑" : "↓";
+}
+function symbolForTrend(arrow) {
+  if (arrow === "↑") return "arrow.up.right";
+  if (arrow === "↓") return "arrow.down.right";
+  return "arrow.right";
+}
 
+// Network
 const DEFAULT_HEADERS = {
   "User-Agent":
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-  "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept": "application/json,text/plain,*/*",
   "Accept-Language": "en-US,en;q=0.9",
   "Connection": "keep-alive"
 };
@@ -47,104 +78,8 @@ async function fetchBuffer(url) {
   return Buffer.from(ab);
 }
 
-function isoUtcNow() {
-  return new Date().toISOString();
-}
-function todayISODate() {
-  return new Date().toISOString().slice(0, 10);
-}
-function clamp(x, lo = 0, hi = 100) {
-  return Math.max(lo, Math.min(hi, x));
-}
-function safeNumber(x) {
-  if (x === null || x === undefined) return null;
-  if (typeof x === "number") return Number.isFinite(x) ? x : null;
-  const s = String(x).replace(/,/g, "").trim();
-  if (!s) return null;
-  const n = Number(s);
-  return Number.isFinite(n) ? n : null;
-}
-function trendArrow(curr, prev, eps = 1e-9) {
-  if (curr == null || prev == null) return "→";
-  if (Math.abs(curr - prev) <= eps) return "→";
-  return curr > prev ? "↑" : "↓";
-}
-function symbolForTrend(arrow) {
-  if (arrow === "↑") return "arrow.up.right";
-  if (arrow === "↓") return "arrow.down.right";
-  return "arrow.right";
-}
-
-function normalizeCbsa(code) {
-  const s = String(code).trim();
-  return s.padStart(5, "0");
-}
-function normalizeAreaNameForJoin(name) {
-  if (!name) return null;
-  let s = String(name).trim();
-  s = s.replace(/\s+Metropolitan Statistical Area$/i, "");
-  s = s.replace(/\s+Micropolitan Statistical Area$/i, "");
-  s = s.replace(/\s+/g, " ").trim();
-  return s.toLowerCase();
-}
-
-function parseMonthYear(label) {
-  const cleaned = label.replace(/\s+/g, " ").trim();
-  const m = cleaned.match(/^([A-Za-z]+)\s+(\d{4})$/);
-  if (!m) return null;
-  const monthName = m[1].toLowerCase();
-  const year = Number(m[2]);
-  const monthMap = {
-    january: 0, jan: 0,
-    february: 1, feb: 1,
-    march: 2, mar: 2,
-    april: 3, apr: 3,
-    may: 4,
-    june: 5, jun: 5,
-    july: 6, jul: 6,
-    august: 7, aug: 7,
-    september: 8, sep: 8, sept: 8,
-    october: 9, oct: 9,
-    november: 10, nov: 10,
-    december: 11, dec: 11
-  };
-  const mm = monthMap[monthName];
-  if (mm === undefined) return null;
-  return new Date(Date.UTC(year, mm, 1)).getTime();
-}
-
-function pickLatestMonthlyExcelLink(html, baseUrl) {
-  const links = [];
-  const anchorRe = /<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
-  let m;
-  while ((m = anchorRe.exec(html))) {
-    const href = m[1];
-    const inner = m[2].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-    if (!/\.xls(x)?(\?|$)/i.test(href)) continue;
-
-    const windowStart = Math.max(0, m.index - 400);
-    const windowEnd = Math.min(html.length, m.index + 400);
-    const windowText = html
-      .slice(windowStart, windowEnd)
-      .replace(/<[^>]*>/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-    const monthYearRe =
-      /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}/i;
-    const match = inner.match(monthYearRe) || windowText.match(monthYearRe);
-    const my = match ? match[0] : null;
-    const ts = my ? parseMonthYear(my) : null;
-
-    const abs = href.startsWith("http") ? href : new URL(href, baseUrl).toString();
-    links.push({ url: abs, label: my || inner, ts: ts ?? -1 });
-  }
-  links.sort((a, b) => b.ts - a.ts);
-  return links[0] || null;
-}
-
 // ---------------------------
-// XLSX header detect
+// XLSX helpers
 // ---------------------------
 function sheetToRowsWithDetectedHeader(ws, headerMatchers) {
   const preview = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
@@ -169,11 +104,7 @@ function sheetToRowsWithDetectedHeader(ws, headerMatchers) {
   }
   if (headerRowIndex === -1) return null;
 
-  return XLSX.utils.sheet_to_json(ws, {
-    defval: null,
-    raw: true,
-    range: headerRowIndex
-  });
+  return XLSX.utils.sheet_to_json(ws, { defval: null, raw: true, range: headerRowIndex });
 }
 
 function xlsxToRowsSmart(buf, headerMatchers) {
@@ -210,8 +141,7 @@ async function fredObservations({ apiKey, seriesId, limit = 48 }) {
   if (process.env.FRED_OBSERVATION_START) {
     url.searchParams.set("observation_start", process.env.FRED_OBSERVATION_START);
   }
-  const txt = await fetchText(url.toString());
-  const json = JSON.parse(txt);
+  const json = await fetchJson(url.toString());
   return (json.observations || []).map(o => ({ date: o.date, value: safeNumber(o.value) }));
 }
 
@@ -237,6 +167,57 @@ function avgLastN(history, n, excludeLast = 0) {
 // ---------------------------
 // Census BPS
 // ---------------------------
+function parseMonthYear(label) {
+  const cleaned = label.replace(/\s+/g, " ").trim();
+  const m = cleaned.match(/^([A-Za-z]+)\s+(\d{4})$/);
+  if (!m) return null;
+  const monthName = m[1].toLowerCase();
+  const year = Number(m[2]);
+  const monthMap = {
+    january: 0, jan: 0, february: 1, feb: 1, march: 2, mar: 2, april: 3, apr: 3, may: 4,
+    june: 5, jun: 5, july: 6, jul: 6, august: 7, aug: 7, september: 8, sep: 8, sept: 8,
+    october: 9, oct: 9, november: 10, nov: 10, december: 11, dec: 11
+  };
+  const mm = monthMap[monthName];
+  if (mm === undefined) return null;
+  return new Date(Date.UTC(year, mm, 1)).getTime();
+}
+
+function pickLatestMonthlyExcelLink(html, baseUrl) {
+  const links = [];
+  const anchorRe = /<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi;
+  let m;
+  while ((m = anchorRe.exec(html))) {
+    const href = m[1];
+    const inner = m[2].replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+    if (!/\.xls(x)?(\?|$)/i.test(href)) continue;
+
+    const windowStart = Math.max(0, m.index - 400);
+    const windowEnd = Math.min(html.length, m.index + 400);
+    const windowText = html
+      .slice(windowStart, windowEnd)
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const monthYearRe =
+      /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}/i;
+    const match = inner.match(monthYearRe) || windowText.match(monthYearRe);
+    const my = match ? match[0] : null;
+    const ts = my ? parseMonthYear(my) : null;
+
+    const abs = href.startsWith("http") ? href : new URL(href, baseUrl).toString();
+    links.push({ url: abs, label: my || inner, ts: ts ?? -1 });
+  }
+  links.sort((a, b) => b.ts - a.ts);
+  return links[0] || null;
+}
+
+function normalizeCbsa(code) {
+  const s = String(code).trim();
+  return s.padStart(5, "0");
+}
+
 async function loadCensusBpsLatest() {
   const cbsaPage = "https://www.census.gov/construction/bps/msamonthly.html";
   const statePage = "https://www.census.gov/construction/bps/statemonthly.html";
@@ -282,7 +263,6 @@ async function loadCensusBpsLatest() {
 
   const statePermit = new Map();
   const stateNameToFips = buildStateNameToFips();
-
   for (const r of stateRows) {
     const nameCol = findCol(r, [/state/i]);
     if (!nameCol) continue;
@@ -328,8 +308,17 @@ function buildStateNameToFips() {
 }
 
 // ---------------------------
-// BLS LAUS
+// BLS LAUS (kept)
 // ---------------------------
+function normalizeAreaNameForJoin(name) {
+  if (!name) return null;
+  let s = String(name).trim();
+  s = s.replace(/\s+Metropolitan Statistical Area$/i, "");
+  s = s.replace(/\s+Micropolitan Statistical Area$/i, "");
+  s = s.replace(/\s+/g, " ").trim();
+  return s.toLowerCase();
+}
+
 async function loadBlsLausUnempRatesLatest() {
   const base = "https://download.bls.gov/pub/time.series/la/";
 
@@ -447,8 +436,7 @@ async function loadBlsLausUnempRatesLatest() {
 }
 
 // ---------------------------
-// USAspending.gov ingestion (NO KEY REQUIRED)
-// Core endpoint used: POST https://api.usaspending.gov/api/v2/award/search/
+// USAspending: award search + local rollups
 // ---------------------------
 function daysAgoISO(days) {
   const d = new Date();
@@ -456,24 +444,15 @@ function daysAgoISO(days) {
   return d.toISOString().slice(0, 10);
 }
 
-function parseCsvEnvList(s) {
-  return String(s || "")
-    .split(",")
-    .map(x => x.trim())
-    .filter(Boolean);
-}
-
-async function usaspendingAwardSearch({ lookbackDays = 30, limit = 50, naicsCodes = ["23"], keywords = [] }) {
+async function usaspendingAwardSearch({ lookbackDays = 30, limit = 80, naicsCodes = ["23"], keywords = [] }) {
   const url = "https://api.usaspending.gov/api/v2/award/search/";
-  const postedFrom = daysAgoISO(lookbackDays);
-  const postedTo = daysAgoISO(0);
-
+  const start = daysAgoISO(lookbackDays);
+  const end = daysAgoISO(0);
   const keywordString = keywords.length ? keywords.join(" OR ") : null;
 
-  // Filters: NAICS + date range (action dates). We keep it light and deterministic.
   const body = {
     filters: {
-      time_period: [{ start_date: postedFrom, end_date: postedTo }],
+      time_period: [{ start_date: start, end_date: end }],
       naics_codes: naicsCodes
     },
     fields: [
@@ -489,12 +468,10 @@ async function usaspendingAwardSearch({ lookbackDays = 30, limit = 50, naicsCode
       "Description"
     ],
     page: 1,
-    limit: limit,
+    limit,
     sort: "Award Amount",
     order: "desc"
   };
-
-  // Add keywords only if provided (this can reduce noise)
   if (keywordString) body.filters.keywords = keywordString;
 
   try {
@@ -520,47 +497,175 @@ async function usaspendingAwardSearch({ lookbackDays = 30, limit = 50, naicsCode
       description: r["Description"] ?? null
     }));
 
-    // Quick state rollup
-    const byState = {};
-    for (const it of items) {
-      const st = it.pop_state || "NA";
-      if (!byState[st]) byState[st] = { count: 0, amount: 0 };
-      byState[st].count += 1;
-      byState[st].amount += (it.amount || 0);
-    }
-
-    const top_states = Object.entries(byState)
-      .sort((a, b) => (b[1].amount - a[1].amount))
-      .slice(0, 10)
-      .map(([state, v]) => ({ state, count: v.count, amount: v.amount }));
-
-    return {
-      enabled: true,
-      lookback_days: lookbackDays,
-      limit,
-      naics_codes: naicsCodes,
-      keywords,
-      total_results: total,
-      top_states,
-      top_awards: items.slice(0, 25)
-    };
+    return { enabled: true, lookback_days: lookbackDays, limit, naics_codes: naicsCodes, keywords, total_results: total, items };
   } catch (e) {
-    return {
-      enabled: true,
-      error: String(e?.message || e),
-      lookback_days: lookbackDays,
-      limit,
-      naics_codes: naicsCodes,
-      keywords,
-      total_results: null,
-      top_states: [],
-      top_awards: []
-    };
+    return { enabled: true, error: String(e?.message || e), lookback_days: lookbackDays, limit, naics_codes: naicsCodes, keywords, total_results: null, items: [] };
   }
 }
 
+function rollupTop(items, keyFn, amountFn, topN = 10) {
+  const m = new Map();
+  for (const it of items) {
+    const k = keyFn(it) ?? "NA";
+    const a = amountFn(it) ?? 0;
+    const cur = m.get(k) || { count: 0, amount: 0 };
+    cur.count += 1;
+    cur.amount += a;
+    m.set(k, cur);
+  }
+  return Array.from(m.entries())
+    .map(([k, v]) => ({ key: k, count: v.count, amount: v.amount }))
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, topN);
+}
+
+function buildUsaspendingRollups(items) {
+  const by_state = rollupTop(items, x => x.pop_state, x => x.amount, 15);
+  const by_awarding_agency = rollupTop(items, x => x.awarding_agency, x => x.amount, 12);
+  const by_funding_agency = rollupTop(items, x => x.funding_agency, x => x.amount, 12);
+  const by_recipient = rollupTop(items, x => x.recipient, x => x.amount, 15);
+  const by_award_type = rollupTop(items, x => x.award_type, x => x.amount, 10);
+
+  const total_amount = items.reduce((a, b) => a + (b.amount || 0), 0);
+  const count = items.length;
+
+  return {
+    count,
+    total_amount,
+    by_state,
+    by_awarding_agency,
+    by_funding_agency,
+    by_recipient,
+    by_award_type
+  };
+}
+
+// Multi-window rollups (7/30/90)
+async function usaspendingRollupsMultiWindow({ naicsCodes, keywords, limit }) {
+  const windows = [7, 30, 90];
+  const out = {};
+  for (const w of windows) {
+    const res = await usaspendingAwardSearch({ lookbackDays: w, limit, naicsCodes, keywords });
+    const items = res.items || [];
+    out[`d${w}`] = {
+      meta: { enabled: res.enabled, error: res.error || null, total_results: res.total_results ?? null },
+      rollups: buildUsaspendingRollups(items),
+      top_awards: items.slice(0, 25)
+    };
+  }
+  return out;
+}
+
 // ---------------------------
-// FREE NEWS (GDELT) — kept from your build
+// EIA ingestion (tries v2 then legacy)
+// Notes:
+// - EIA has multiple product/series schemas across v2.
+// - To keep this stable, we accept "series IDs" and return best-effort observations.
+// ---------------------------
+async function fetchEiaSeriesBestEffort({ apiKey, seriesId, maxPoints = 120 }) {
+  // Try EIA v2 (best-effort)
+  // Common pattern: https://api.eia.gov/v2/seriesid?api_key=...  (varies by dataset)
+  // We attempt a generic v2 "series" style and fall back to legacy.
+  const tried = [];
+
+  // v2 attempt 1: /v2/seriesid/
+  try {
+    const u = new URL("https://api.eia.gov/v2/seriesid/");
+    u.searchParams.set("api_key", apiKey);
+    u.searchParams.set("series_id", seriesId);
+    tried.push(u.toString());
+    const j = await fetchJson(u.toString());
+    const data = j?.response?.data || j?.response?.series?.[0]?.data || null;
+
+    if (Array.isArray(data) && data.length) {
+      const obs = data
+        .slice(0, maxPoints)
+        .map(r => {
+          // Many EIA datasets return { period, value } or arrays
+          if (Array.isArray(r)) return { date: String(r[0]), value: safeNumber(r[1]) };
+          return { date: String(r.period ?? r.date ?? r[0] ?? ""), value: safeNumber(r.value ?? r[1]) };
+        })
+        .filter(o => o.date);
+      if (obs.length) return { ok: true, endpoint: "eia_v2_seriesid", series_id: seriesId, observations: obs };
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  // Legacy attempt: /series/
+  try {
+    const u = new URL("https://api.eia.gov/series/");
+    u.searchParams.set("api_key", apiKey);
+    u.searchParams.set("series_id", seriesId);
+    tried.push(u.toString());
+
+    const j = await fetchJson(u.toString());
+    const s = j?.series?.[0];
+    const data = s?.data;
+
+    if (Array.isArray(data) && data.length) {
+      const obs = data
+        .slice(0, maxPoints)
+        .map(r => ({ date: String(r[0]), value: safeNumber(r[1]) }))
+        .filter(o => o.date);
+      return {
+        ok: true,
+        endpoint: "eia_legacy_series",
+        series_id: seriesId,
+        name: s?.name ?? null,
+        units: s?.units ?? null,
+        observations: obs
+      };
+    }
+
+    return { ok: false, endpoint: "eia_legacy_series", series_id: seriesId, error: "No data returned", tried };
+  } catch (e) {
+    return { ok: false, endpoint: null, series_id: seriesId, error: String(e?.message || e), tried };
+  }
+}
+
+async function fetchEiaPack({ apiKey, seriesIds, maxPoints }) {
+  if (!apiKey) return { enabled: false, reason: "Missing EIA_API_KEY", series: [] };
+  if (!Array.isArray(seriesIds) || seriesIds.length === 0) {
+    return { enabled: true, warning: "No EIA_SERIES_IDS configured", series: [] };
+  }
+
+  const series = [];
+  for (const id of seriesIds) {
+    try {
+      const res = await fetchEiaSeriesBestEffort({ apiKey, seriesId: id, maxPoints });
+      series.push(res);
+    } catch (e) {
+      series.push({ ok: false, series_id: id, error: String(e?.message || e) });
+    }
+  }
+
+  // Build a simple “energy pressure overlay” based on a chosen anchor series if available
+  // Deterministic: if the latest is > 12mo avg by a large margin => adds materials/energy stress.
+  let energy_overlay = 0;
+  const firstOk = series.find(x => x.ok && Array.isArray(x.observations) && x.observations.length >= 24);
+  if (firstOk) {
+    const obs = firstOk.observations.slice().reverse(); // oldest->newest
+    const latest = obs[obs.length - 1]?.value ?? null;
+    const last12 = obs.slice(Math.max(0, obs.length - 12)).map(x => x.value).filter(v => v != null);
+    const prev12 = obs.slice(Math.max(0, obs.length - 24), Math.max(0, obs.length - 12)).map(x => x.value).filter(v => v != null);
+
+    if (latest != null && last12.length && prev12.length) {
+      const avgPrev12 = prev12.reduce((a, b) => a + b, 0) / prev12.length;
+      // Overlay thresholds are intentionally conservative.
+      if (avgPrev12 > 0) {
+        const ratio = latest / avgPrev12;
+        if (ratio >= 1.25) energy_overlay = 5;
+        if (ratio >= 1.50) energy_overlay = 10;
+      }
+    }
+  }
+
+  return { enabled: true, energy_overlay, series };
+}
+
+// ---------------------------
+// NEWS (GDELT) — compact
 // ---------------------------
 function daysAgoUTC(days) {
   const d = new Date();
@@ -592,9 +697,7 @@ async function fetchGdeltNews({ query, lookbackDays = 5, max = 60 }) {
       title: a.title ?? null,
       url: a.url ?? null,
       source: a.sourceCountry ?? a.sourceCommonName ?? a.sourceCollection ?? null,
-      published_at: a.seendate ?? a.datetime ?? null,
-      language: a.language ?? null,
-      domain: a.domain ?? null
+      published_at: a.seendate ?? a.datetime ?? null
     }))
     .filter(x => x.title && x.url);
 }
@@ -604,7 +707,7 @@ function classifyNewsItem(title) {
   if (/(mortgage|rate|fed|yield|treasury|sofr|inflation)/i.test(t)) themes.push("capital");
   if (/(permit|permits|starts|housing start|pipeline|backlog|pre[- ]?construction|entitlement)/i.test(t)) themes.push("pipeline");
   if (/(labor|wage|union|strike|subcontract|crew|trade shortage)/i.test(t)) themes.push("trade");
-  if (/(lumber|steel|cement|concrete|gypsum|drywall|asphalt|tariff|input cost)/i.test(t)) themes.push("materials");
+  if (/(lumber|steel|cement|concrete|gypsum|drywall|asphalt|tariff|input cost|diesel|fuel|gasoline|energy)/i.test(t)) themes.push("materials");
   if (/(code|zoning|regulation|permit reform|environmental review|nea?pa)/i.test(t)) themes.push("regulatory");
   if (/(construction spending|capex|pmi|consumer|sentiment|recession)/i.test(t)) themes.push("macro");
   if (/(acquire|acquired|purchase|purchased|buying|bought)\s+land|land\s+(deal|purchase|acquisition)|site\s+purchase|master[- ]planned|entitled\s+land/i.test(t)) themes.push("land");
@@ -614,9 +717,7 @@ function classifyNewsItem(title) {
   return Array.from(new Set(themes));
 }
 function buildNewsClusters(news) {
-  const clusters = {
-    capital: [], pipeline: [], trade: [], materials: [], regulatory: [], macro: [], land: [], other: []
-  };
+  const clusters = { capital: [], pipeline: [], trade: [], materials: [], regulatory: [], macro: [], land: [], other: [] };
   for (const n of news) {
     const themes = classifyNewsItem(n.title);
     for (const th of themes) {
@@ -646,18 +747,15 @@ function buildLandTracker(news) {
     else purpose.unknown++;
   }
 
-  return {
-    total_mentions: landItems.length,
-    residential_tagged,
-    commercial_tagged,
-    purpose_breakdown: purpose,
-    items: landItems.slice(0, 15)
-  };
+  return { total_mentions: landItems.length, residential_tagged, commercial_tagged, purpose_breakdown: purpose, items: landItems.slice(0, 15) };
 }
 
 // ---------------------------
-// STOCKS: Stooq + Alpha Vantage
+// STOCKS (stooq + alpha) — unchanged from your prior build (kept compact)
 // ---------------------------
+function normalizeTickerList(s) {
+  return String(s || "").split(",").map(x => x.trim()).filter(Boolean).map(x => x.toUpperCase());
+}
 function parseCsvLine(line) {
   return line.split(",").map(x => x.trim());
 }
@@ -710,9 +808,6 @@ async function fetchAlphaVantageQuote(ticker, apiKey) {
 
   return { ticker: ticker.toUpperCase(), source: "alphavantage", date: q["07. latest trading day"] ?? null, close, prev_close: prevClose, change, change_pct: changePct };
 }
-function normalizeTickerList(s) {
-  return String(s || "").split(",").map(x => x.trim()).filter(Boolean).map(x => x.toUpperCase());
-}
 async function fetchStockUniverse({ tickers, alphaKey, alphaPriority }) {
   const out = [];
   const prioritySet = new Set(alphaPriority);
@@ -751,9 +846,7 @@ function buildSectorRollups(stocks) {
   const rollups = {};
   for (const [sector, list] of Object.entries(groups)) {
     const subset = stocks.filter(s => list.includes(s.ticker));
-    const avgChange = subset.length
-      ? subset.reduce((a, b) => a + (b.change_pct ?? 0), 0) / subset.length
-      : null;
+    const avgChange = subset.length ? subset.reduce((a, b) => a + (b.change_pct ?? 0), 0) / subset.length : null;
     rollups[sector] = { count: subset.length, avg_change_pct: avgChange };
   }
   return rollups;
@@ -768,7 +861,7 @@ function computeStockOverlay(sector_rollups) {
 }
 
 // ---------------------------
-// SAM.gov (optional key) — unchanged
+// SAM.gov (uses SAM_API_KEY)
 // ---------------------------
 async function fetchSamGovOpportunities({ apiKey, lookbackDays = 7, max = 50 }) {
   if (!apiKey) return { enabled: false, reason: "Missing SAM_API_KEY", items: [] };
@@ -817,7 +910,7 @@ async function fetchSamGovOpportunities({ apiKey, lookbackDays = 7, max = 50 }) 
 }
 
 // ---------------------------
-// CPI Engine + regime/pulse (from your build)
+// CPI Engine + regime/pulse (same deterministic engine)
 // ---------------------------
 function momentumBand(delta3m) {
   if (delta3m == null) return "Stable";
@@ -895,41 +988,15 @@ function computeCpiEngine({ capitalScore, pipelineScore, tradeScore, materialsSc
   };
 }
 
-// scoring primitives
-function scoreMortgage30(x) {
-  if (x == null) return 50;
-  return clamp(20 + (x - 3.0) * 12);
-}
-function scoreCurveInversion(dgs2, dgs10) {
-  if (dgs2 == null || dgs10 == null) return 50;
-  const spread = dgs10 - dgs2;
-  return clamp(50 + (-spread) * 18);
-}
-function scoreNFCI(nfci) {
-  if (nfci == null) return 50;
-  return clamp(50 + nfci * 25);
-}
-function scoreSTLFSI(stress) {
-  if (stress == null) return 50;
-  return clamp(35 + stress * 15);
-}
-function scoreOAS(oas) {
-  if (oas == null) return 50;
-  return clamp(20 + (oas - 1.0) * 12);
-}
-function scoreSLOOS(netPct) {
-  if (netPct == null) return 50;
-  return clamp(35 + netPct * 1.0);
-}
-function scoreMomentum(latest, avgPrev, sensitivity = 60) {
-  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
-  const ratio = latest / avgPrev;
-  return clamp(50 + (1 - ratio) * sensitivity);
-}
-function scoreUnemploymentMedian(med) {
-  if (med == null) return 50;
-  return clamp(30 + (med - 3.5) * 12);
-}
+// scoring primitives (capital/pipeline/trade)
+function scoreMortgage30(x) { if (x == null) return 50; return clamp(20 + (x - 3.0) * 12); }
+function scoreCurveInversion(dgs2, dgs10) { if (dgs2 == null || dgs10 == null) return 50; const spread = dgs10 - dgs2; return clamp(50 + (-spread) * 18); }
+function scoreNFCI(n) { if (n == null) return 50; return clamp(50 + n * 25); }
+function scoreSTLFSI(x) { if (x == null) return 50; return clamp(35 + x * 15); }
+function scoreOAS(x) { if (x == null) return 50; return clamp(20 + (x - 1.0) * 12); }
+function scoreSLOOS(x) { if (x == null) return 50; return clamp(35 + x * 1.0); }
+function scoreMomentum(latest, avgPrev, sensitivity = 60) { if (latest == null || avgPrev == null || avgPrev <= 0) return 50; const ratio = latest / avgPrev; return clamp(50 + (1 - ratio) * sensitivity); }
+function scoreUnemploymentMedian(m) { if (m == null) return 50; return clamp(30 + (m - 3.5) * 12); }
 function weightedScore(components) {
   const usable = components.filter(c => c.score != null && Number.isFinite(c.score));
   if (usable.length === 0) return 50;
@@ -937,28 +1004,23 @@ function weightedScore(components) {
   if (wSum <= 0) return 50;
   return clamp(usable.reduce((a, c) => a + c.score * c.weight, 0) / wSum);
 }
+
 function regimeFromCpi(headline, capitalScore, delta3m) {
   const zone = zoneForCpi(headline);
-  let primary = zone;
   let modifier = "Neutral";
   if (capitalScore != null && capitalScore >= 80) modifier = "Capital Override";
   else if (delta3m != null && delta3m >= 8) modifier = "Acceleration";
   else if (delta3m != null && delta3m <= -8) modifier = "Relief";
   const confidence = (delta3m == null) ? "medium" : (Math.abs(delta3m) >= 8 ? "high" : "medium");
-  return { primary, modifier, confidence };
+  return { primary: zone, modifier, confidence };
 }
-function pulseColor(score) {
-  if (score >= 70) return "🔴";
-  if (score >= 60) return "🟡";
-  return "🟢";
-}
+function pulseColor(score) { if (score >= 70) return "🔴"; if (score >= 60) return "🟡"; return "🟢"; }
 function computeEcosystemPulse({ capital, pipeline }) {
   const builders = clamp(0.70 * capital + 0.30 * pipeline);
   const architects = clamp(0.55 * builders + 0.45 * pipeline);
   const gcs = clamp(0.55 * architects + 0.45 * pipeline);
   const distributors = clamp(0.55 * gcs + 0.45 * pipeline);
   const manufacturers = clamp(0.55 * distributors + 0.45 * pipeline);
-
   return {
     builders: { score: Math.round(builders), state: pulseColor(builders) },
     architects: { score: Math.round(architects), state: pulseColor(architects) },
@@ -972,8 +1034,7 @@ function computeEcosystemPulse({ capital, pipeline }) {
 function readPriorDashboardSafe() {
   try {
     if (!fs.existsSync(OUTFILE)) return null;
-    const txt = fs.readFileSync(OUTFILE, "utf8");
-    return JSON.parse(txt);
+    return JSON.parse(fs.readFileSync(OUTFILE, "utf8"));
   } catch {
     return null;
   }
@@ -1041,10 +1102,6 @@ async function main() {
 
     dgs2_2y_treasury: "DGS2",
     dgs10_10y_treasury: "DGS10",
-    dgs30_30y_treasury: "DGS30",
-    effr_fed_funds: "EFFR",
-    sofr: "SOFR",
-    t10yie_breakeven_10y: "T10YIE",
 
     baa_corp_yield: "BAA",
     aaa_corp_yield: "AAA",
@@ -1059,16 +1116,17 @@ async function main() {
 
     unrate: "UNRATE",
     ism_pmi: "NAPM",
-
     nahb_hmi: "HMI"
   };
 
+  // ---- FRED
   const fred = {};
   for (const [k, seriesId] of Object.entries(FRED_SERIES)) {
     const obs = await fredObservations({ apiKey: FRED_API_KEY, seriesId, limit: 48 });
     fred[k] = { series_id: seriesId, latest: obs[0] ?? null, history: obs.slice().reverse() };
   }
 
+  // ---- Census + BLS
   const bps = await loadCensusBpsLatest();
   const laus = await loadBlsLausUnempRatesLatest();
 
@@ -1083,7 +1141,7 @@ async function main() {
   stateUnemps.sort((a, b) => a - b);
   const unempMedian = stateUnemps.length ? stateUnemps[Math.floor(stateUnemps.length / 2)] : null;
 
-  // Capital scoring
+  // ---- Capital
   const mortgage30 = latestValue(fred.mortgage_30y);
   const dgs2 = latestValue(fred.dgs2_2y_treasury);
   const dgs10 = latestValue(fred.dgs10_10y_treasury);
@@ -1097,7 +1155,7 @@ async function main() {
   const aaa = latestValue(fred.aaa_corp_yield);
   const baaAaaSpread = (baa != null && aaa != null) ? (baa - aaa) : null;
 
-  const capital_components = [
+  const capitalScore = Math.round(weightedScore([
     { key: "mortgage_30y", label: "Mortgage 30Y", value: mortgage30, score: scoreMortgage30(mortgage30), weight: 0.22 },
     { key: "curve_10y_2y", label: "Yield Curve (10y-2y)", value: (dgs10 != null && dgs2 != null) ? (dgs10 - dgs2) : null, score: scoreCurveInversion(dgs2, dgs10), weight: 0.18 },
     { key: "nfci", label: "NFCI", value: nfci, score: scoreNFCI(nfci), weight: 0.12 },
@@ -1107,10 +1165,9 @@ async function main() {
     { key: "ig_oas", label: "IG OAS", value: ig, score: scoreOAS(ig), weight: 0.06 },
     { key: "sloos", label: "SLOOS Tightening", value: sloos, score: scoreSLOOS(sloos), weight: 0.08 },
     { key: "baa_aaa_spread", label: "BAA–AAA Spread", value: baaAaaSpread, score: scoreOAS(baaAaaSpread), weight: 0.04 }
-  ];
-  const capitalScore = Math.round(weightedScore(capital_components));
+  ]));
 
-  // Pipeline score
+  // ---- Pipeline (permits + starts momentum)
   const permitsLatest = latestValue(fred.building_permits_total);
   const permitsAvgPrev = avgLastN(fred.building_permits_total?.history, 6, 1);
   const startsLatest = latestValue(fred.housing_starts_total);
@@ -1121,7 +1178,7 @@ async function main() {
     { key: "starts_momentum", label: "Starts Momentum", value: startsLatest, score: scoreMomentum(startsLatest, startsAvgPrev, 55), weight: 0.35 }
   ]));
 
-  // Trade score
+  // ---- Trade (unemp median + construction employment)
   const consEmpLatest = latestValue(fred.construction_employment);
   const consEmpAvgPrev = avgLastN(fred.construction_employment?.history, 6, 1);
 
@@ -1130,11 +1187,7 @@ async function main() {
     { key: "cons_emp_momentum", label: "Construction Employment Momentum", value: consEmpLatest, score: scoreMomentum(consEmpLatest, consEmpAvgPrev, 50), weight: 0.35 }
   ]));
 
-  // Materials/Regulatory: neutral until we ingest dedicated series
-  const materialsScore = 50;
-  const regulatoryScore = 50;
-
-  // Macro score
+  // ---- Macro sentiment (NFCI + unrate + PMI)
   const unrate = latestValue(fred.unrate);
   const pmi = latestValue(fred.ism_pmi);
   const macroScore = Math.round(weightedScore([
@@ -1143,17 +1196,19 @@ async function main() {
     { key: "pmi", label: "ISM PMI", value: pmi, score: clamp(60 - (pmi == null ? 0 : (pmi - 50) * 2)), weight: 0.25 }
   ]));
 
-  // Base CPI
-  const cpiBase = computeCpiEngine({
-    capitalScore,
-    pipelineScore,
-    tradeScore,
-    materialsScore,
-    regulatoryScore,
-    macroScore
+  // ---- USAspending (multi-window rollups)
+  const usLookback = safeNumber(getEnv("USASPENDING_LOOKBACK_DAYS", "30")) ?? 30;
+  const usLimit = safeNumber(getEnv("USASPENDING_LIMIT", "80")) ?? 80;
+  const usNaics = parseCsvEnvList(getEnv("USASPENDING_NAICS", "23"));
+  const usKeywords = parseCsvEnvList(getEnv("USASPENDING_KEYWORDS", ""));
+
+  const usaspending_windows = await usaspendingRollupsMultiWindow({
+    naicsCodes: usNaics,
+    keywords: usKeywords,
+    limit: usLimit
   });
 
-  // Stocks (Stooq + Alpha Vantage)
+  // ---- Stocks
   const tickers = normalizeTickerList(getEnv("STOCK_TICKERS", ""));
   const alphaKey = getEnv("ALPHAVANTAGE_API_KEY", null);
   const alphaPriority = normalizeTickerList(getEnv("ALPHAVANTAGE_PRIORITY_TICKERS", ""));
@@ -1161,8 +1216,22 @@ async function main() {
   const sector_rollups = buildSectorRollups(stocks);
   const stock_overlay = computeStockOverlay(sector_rollups);
 
-  // Overlay to capital only
+  // ---- EIA Energy pack
+  const eiaKey = getEnv("EIA_API_KEY", null);
+  const eiaSeriesIds = parseCsvEnvList(getEnv("EIA_SERIES_IDS", ""));
+  const eiaMaxPoints = safeNumber(getEnv("EIA_MAX_POINTS", "120")) ?? 120;
+  const eia = await fetchEiaPack({ apiKey: eiaKey, seriesIds: eiaSeriesIds, maxPoints: eiaMaxPoints });
+
+  // ---- Materials score gets a controlled energy overlay (bounded, transparent)
+  const materialsBase = 50;
+  const materialsScore = clamp(materialsBase + (eia.energy_overlay || 0), 0, 100);
+
+  // Regulatory stays neutral until we add code/zoning feeds
+  const regulatoryScore = 50;
+
+  // ---- CPI (with stock overlay applied to capital only)
   const capitalScoreAdj = clamp(capitalScore + stock_overlay, 0, 100);
+
   const cpi = computeCpiEngine({
     capitalScore: capitalScoreAdj,
     pipelineScore,
@@ -1172,7 +1241,7 @@ async function main() {
     macroScore
   });
 
-  // CPI history + Δ3m
+  // ---- CPI history + Δ3m
   const priorCpiHist = Array.isArray(prior?.cpi?.history) ? prior.cpi.history : [];
   const cpiHistory = [...priorCpiHist, { date: todayISODate(), value: cpi.headline }].slice(-12);
   const delta3m = computeDelta3mFromHistory(cpiHistory);
@@ -1192,7 +1261,7 @@ async function main() {
   const regime = regimeFromCpi(cpi.headline, capitalScoreAdj, delta3m);
   const ecosystem_pulse = computeEcosystemPulse({ capital: capitalScoreAdj, pipeline: pipelineScore });
 
-  // News + land tracker
+  // ---- News
   const lookbackDays = safeNumber(getEnv("NEWS_LOOKBACK_DAYS", "5")) ?? 5;
   const newsMax = safeNumber(getEnv("NEWS_MAX", "60")) ?? 60;
 
@@ -1208,24 +1277,11 @@ async function main() {
   const news_clusters = buildNewsClusters(news);
   const land_tracker = buildLandTracker(news);
 
-  // SAM.gov
+  // ---- SAM.gov
   const samKey = getEnv("SAM_API_KEY", null);
   const sam = await fetchSamGovOpportunities({ apiKey: samKey, lookbackDays: 10, max: 50 });
 
-  // USAspending.gov (NEW)
-  const usLookback = safeNumber(getEnv("USASPENDING_LOOKBACK_DAYS", "30")) ?? 30;
-  const usLimit = safeNumber(getEnv("USASPENDING_LIMIT", "50")) ?? 50;
-  const usNaics = parseCsvEnvList(getEnv("USASPENDING_NAICS", "23"));
-  const usKeywords = parseCsvEnvList(getEnv("USASPENDING_KEYWORDS", ""));
-
-  const usaspending = await usaspendingAwardSearch({
-    lookbackDays: usLookback,
-    limit: usLimit,
-    naicsCodes: usNaics,
-    keywords: usKeywords
-  });
-
-  // Trends / Alerts
+  // ---- Trends + Alerts
   const trends = {
     cpi: trendArrow(cpiHistory[cpiHistory.length - 1]?.value, cpiHistory[Math.max(0, cpiHistory.length - 2)]?.value),
     mortgage_30y: trendArrow(mortgage30, prevValue(fred.mortgage_30y, 1)),
@@ -1246,60 +1302,11 @@ async function main() {
   if (stock_overlay >= 10) {
     alerts.push({ severity: "WATCH", symbol: "chart.line.downtrend.xyaxis", title: "Equity Weakness Overlay", message: "Sector weakness implies forward stress. Treat as temporary capital tightening overlay." });
   }
-  if (usaspending?.enabled && !usaspending?.error && (usaspending?.top_awards?.length ?? 0) > 0) {
-    alerts.push({ severity: "NORMAL", symbol: "building.columns.fill", title: "Federal Awards Detected", message: "USAspending awards pulled successfully. Federal pipeline layer is active." });
+  if (eia.enabled && (eia.energy_overlay || 0) >= 5) {
+    alerts.push({ severity: "WATCH", symbol: "flame.fill", title: "Energy Cost Overlay", message: "Energy series suggests elevated input-cost pressure. Treat as temporary materials overlay." });
   }
 
-  // Geo layer (US + states + CBSAs)
-  const geo_data = {};
-  const observed_gaps = [];
-
-  geo_data["us:US"] = {
-    geo: { level: "us", id: "US", name: "United States" },
-    capital: { mortgage_30y: fred.mortgage_30y.latest, nfci: fred.nfci.latest, hy_oas: fred.hy_oas.latest },
-    prices: { cpi_headline: fred.cpi_headline.latest },
-    labor: { construction_employment: fred.construction_employment.latest, unrate: fred.unrate.latest },
-    residential: { permits_total: fred.building_permits_total.latest, starts_total: fred.housing_starts_total.latest },
-    commercial: { construction_spending_total: fred.total_construction_spending.latest }
-  };
-
-  for (const fips of states) {
-    const p = bps.state.permit.get(fips) || null;
-    const u = laus.stateUnemp.get(fips) || null;
-    const nodeKey = `state:${fips}`;
-
-    geo_data[nodeKey] = {
-      geo: { level: "state", id: fips, name: p?.name ?? null },
-      residential: { permits_total: p ? p.total : null, permits_sf: p ? p.sf : null, permits_mf2p: p ? p.mf2p : null },
-      labor: { unemployment_rate: u ? u.value : null }
-    };
-
-    if (!p) observed_gaps.push({ geo: nodeKey, metric: "bps_state_permits", reason: "No parsed permits row" });
-    if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "No unemployment match" });
-  }
-
-  const cbsas = Array.from(bps.cbsa.permit.keys()).sort();
-  for (const cbsa of cbsas) {
-    const p = bps.cbsa.permit.get(cbsa);
-    const nodeKey = `cbsa:${cbsa}`;
-
-    let unemp = null;
-    const norm = normalizeAreaNameForJoin(p?.name);
-    if (norm) {
-      const candidates = laus.cbsaUnempByNormName.get(norm) || null;
-      if (candidates && candidates.length === 1) unemp = candidates[0].value;
-    }
-
-    geo_data[nodeKey] = {
-      geo: { level: "cbsa", id: cbsa, name: p?.name ?? null },
-      residential: { permits_total: p ? p.total : null, permits_sf: p ? p.sf : null, permits_mf2p: p ? p.mf2p : null },
-      labor: { unemployment_rate: unemp }
-    };
-
-    if (unemp == null) observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "No deterministic name match" });
-  }
-
-  // Regime history
+  // ---- Regime history
   const regime_history = updateRegimeHistory(
     prior,
     regime,
@@ -1318,7 +1325,7 @@ async function main() {
       (Math.abs(delta3m) <= 7) ? "🟡 Watch" : "🔴 Fragile"
   };
 
-  // Apple-native UI contract
+  // ---- UI contract (Apple-native)
   const ui = {
     accent: "system",
     alerts,
@@ -1327,13 +1334,13 @@ async function main() {
       { id: "headline_cpi", title: "Construction Pressure", subtitle: `Headline CPI • ${zoneForCpi(cpi.headline)}`, value: cpi.headline, trend: trends.cpi, symbol: "gauge.with.dots", severity: severityForCpi(cpi.headline) },
       { id: "capital", title: "Capital", subtitle: "Rates • Credit • Conditions", value: capitalScoreAdj, trend: trends.nfci, symbol: "banknote", severity: severityForCpi(capitalScoreAdj) },
       { id: "pipeline", title: "Pipeline", subtitle: "Permits • Starts", value: pipelineScore, trend: trends.permits, symbol: "building.2", severity: severityForCpi(pipelineScore) },
-      { id: "trade", title: "Trade Execution", subtitle: "Labor Conditions", value: tradeScore, trend: "→", symbol: "person.2", severity: severityForCpi(tradeScore) }
+      { id: "materials", title: "Materials & Energy", subtitle: "Energy Overlay", value: materialsScore, trend: "→", symbol: "shippingbox.fill", severity: severityForCpi(materialsScore) }
     ],
     heat_strip: { cpi: cpi.headline, zone: zoneForCpi(cpi.headline), delta_3m: delta3m, momentum, risk_thermometer_mode: rtm, freeze_risk: freezeRisk },
     ecosystem_pulse
   };
 
-  // GPT payload (Construction AI brain feed)
+  // ---- GPT payload (Construction AI)
   const gpt_payload = {
     product: "Construction AI",
     generated_at_utc: isoUtcNow(),
@@ -1348,12 +1355,7 @@ async function main() {
       momentum,
       freeze_risk: freezeRisk,
       risk_thermometer_mode: rtm,
-      r: cpi.cpi_r,
-      i: cpi.cpi_i,
-      sf: cpi.cpi_sf,
-      mf: cpi.cpi_mf,
-      inst: cpi.cpi_inst,
-      infra: cpi.cpi_infra,
+      r: cpi.cpi_r, i: cpi.cpi_i, sf: cpi.cpi_sf, mf: cpi.cpi_mf, inst: cpi.cpi_inst, infra: cpi.cpi_infra,
       divergences: cpi.divergences
     },
 
@@ -1362,8 +1364,9 @@ async function main() {
       pipeline: pipelineScore,
       trade: tradeScore,
       materials: materialsScore,
-      regulatory: regulatoryScore,
-      macro_sentiment: macroScore
+      regulatory: 50,
+      macro_sentiment: macroScore,
+      materials_energy_overlay: eia.energy_overlay || 0
     },
 
     capital_micro_triggers: { stock_overlay: stock_overlay, nfci: nfci, hy_oas: hy, sloos_tightening: sloos },
@@ -1388,13 +1391,17 @@ async function main() {
 
     project_pipeline: {
       sam_gov: sam,
-      usaspending: usaspending
-    }
+      usaspending: {
+        windows: usaspending_windows
+      }
+    },
+
+    energy: eia
   };
 
-  // Final output
+  // ---- Output JSON
   const out = {
-    schema_version: "4.1.0",
+    schema_version: "4.2.0",
     generated_at: isoUtcNow(),
 
     executive: {
@@ -1421,12 +1428,10 @@ async function main() {
       cpi_inst: cpi.cpi_inst,
       cpi_infra: cpi.cpi_infra,
       divergences: cpi.divergences,
-      components: { capital: capitalScoreAdj, pipeline: pipelineScore, trade: tradeScore, materials: materialsScore, regulatory: regulatoryScore, macro_sentiment: macroScore }
+      components: { capital: capitalScoreAdj, pipeline: pipelineScore, trade: tradeScore, materials: materialsScore, regulatory: 50, macro_sentiment: macroScore }
     },
 
-    // Backward compatibility
     ceps_score: cpi.headline,
-
     risk_mode: rtm,
     risk_thermometer_mode: rtm,
     volatility_regime: "NORMAL",
@@ -1444,7 +1449,8 @@ async function main() {
       sector_rollups,
       stock_pressure_overlay: stock_overlay,
       sam_gov: sam,
-      usaspending: usaspending
+      usaspending: { windows: usaspending_windows },
+      energy: eia
     },
 
     gpt_payload,
@@ -1463,12 +1469,10 @@ async function main() {
         stooq: { api: "https://stooq.com/q/l/" },
         alphavantage: { api: "https://www.alphavantage.co/query" },
         sam_gov: { api: "https://api.sam.gov/opportunities/v2/search" },
-        usaspending: { api: "https://api.usaspending.gov/api/v2/award/search/" }
+        usaspending: { api: "https://api.usaspending.gov/api/v2/award/search/" },
+        eia: { api: "https://api.eia.gov" }
       },
-      coverage: { us: true, states_fips: states, cbsas: Array.from(bps.cbsa.permit.keys()).sort() },
-      macro_fred: fred,
-      geo_data,
-      observed_gaps
+      macro_fred: fred
     }
   };
 
