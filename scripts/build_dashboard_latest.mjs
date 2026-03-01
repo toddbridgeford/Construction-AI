@@ -53,13 +53,6 @@ function pctChange(newV, oldV) {
   return ((a - b) / Math.abs(b)) * 100;
 }
 
-function diff(newV, oldV) {
-  const a = safeNum(newV, NaN);
-  const b = safeNum(oldV, NaN);
-  if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
-  return a - b;
-}
-
 function httpGetJSON(url) {
   return new Promise((resolve, reject) => {
     https
@@ -115,18 +108,6 @@ function approx12mBack(points) {
   if (!points?.length) return null;
   if (points.length < 13) return null;
   return points[points.length - 13] || null;
-}
-
-function approx7Back(points) {
-  if (!points?.length) return null;
-  if (points.length < 8) return null;
-  return points[points.length - 8] || null;
-}
-
-function approx30Back(points) {
-  if (!points?.length) return null;
-  if (points.length < 31) return null;
-  return points[points.length - 31] || null;
 }
 
 // Simple “score” mapping helpers (stable + monotonic)
@@ -231,11 +212,6 @@ async function main() {
     };
   });
 
-  // Pull the primary series (mortgage30) if present
-  const primaryId = fredCfg?.primary_series_id || "MORTGAGE30US";
-  const primaryPts = seriesData[primaryId] || [];
-  const primaryLast = primaryPts.length ? primaryPts[primaryPts.length - 1] : null;
-
   // Helper to find a series by series_id quickly
   const getLastValue = (series_id) => {
     const pts = seriesData[series_id] || [];
@@ -245,28 +221,26 @@ async function main() {
   // Core series (optional)
   const mortgage30 = getLastValue("MORTGAGE30US");
   const unrate = getLastValue("UNRATE");
-  const cpiIndex = getLastValue("CPIAUCSL");
-  const houst = getLastValue("HOUST");
   const permit = getLastValue("PERMIT");
+  const houst = getLastValue("HOUST");
 
   // CPI (Capital Pressure Index) — simple, stable composite (0–100)
   // Tune ranges as you like (these are sane defaults).
   const mortgageScore = toScore_0_100(mortgage30, 2.5, 9.0); // higher rates => higher pressure
-  const unrateScore = 100 - toScore_0_100(unrate, 3.0, 10.0); // higher unemployment => lower demand pressure (invert)
-  const permitScore = 100 - toScore_0_100(permit, 900, 1800); // fewer permits => higher pressure (invert)
-  const startsScore = 100 - toScore_0_100(houst, 900, 1800); // fewer starts => higher pressure (invert)
+  const unrateScore = 100 - toScore_0_100(unrate, 3.0, 10.0); // invert
+  const permitScore = 100 - toScore_0_100(permit, 900, 1800); // invert
+  const startsScore = 100 - toScore_0_100(houst, 900, 1800); // invert
 
   const cpiRaw =
-    (mortgageScore * 0.45 +
-      unrateScore * 0.15 +
-      permitScore * 0.20 +
-      startsScore * 0.20);
+    mortgageScore * 0.45 +
+    unrateScore * 0.15 +
+    permitScore * 0.20 +
+    startsScore * 0.20;
 
   const cpi = Math.round(clamp(cpiRaw, 0, 100));
   const cpiBand = bandForCPI(cpi);
 
-  // CEPS — Construction Expansion/Pressure Score (0–100)
-  // Here we define CEPS as inverse of CPI (easy mental model).
+  // CEPS — inverse of CPI (easy mental model).
   const ceps_score = Math.round(clamp(100 - cpi, 0, 100));
 
   // Builder momentum (ALWAYS DEFINED) — 0–100, neutral 50
@@ -290,7 +264,7 @@ async function main() {
   // Map YOY to score: -20% => 20, 0% => 50, +20% => 80 (clamped)
   const yoyToScore = (yoy) => {
     if (yoy === null || yoy === undefined) return 50;
-    return Math.round(clamp(50 + (safeNum(yoy) * 1.5), 0, 100));
+    return Math.round(clamp(50 + safeNum(yoy) * 1.5, 0, 100));
   };
 
   const builderMomentumScore = Math.round(
@@ -318,26 +292,18 @@ async function main() {
       residential: Math.round(clamp(cpi + 1, 0, 100)),
       institutional: Math.round(clamp(cpi - 2, 0, 100)),
     },
-    history: [
-      { date: todayYYYYMMDD(), value: cpi },
-    ],
+    history: [{ date: todayYYYYMMDD(), value: cpi }],
   };
 
   const volatility_regime = volatilityRegime();
   const regime = regimeFrom(cpi);
   const risk_mode = cpi >= 70;
 
-  // “Acceleration engine” (best-effort deltas)
-  const cpi7d = null;
-  const cpi30d = null;
-
-  // If you later add daily CPI history, these will fill automatically.
-  // For now they’re null, but flags remain stable booleans.
   const acceleration_engine = {
-    divergence: Math.abs(ceps_score - cpi), // simple divergence proxy
+    divergence: Math.abs(ceps_score - cpi),
     deltas: {
-      cpi_7d: cpi7d,
-      cpi_30d: cpi30d,
+      cpi_7d: null,
+      cpi_30d: null,
       ceps_7d: null,
       ceps_30d: null,
       bmi_7d: null,
@@ -355,17 +321,14 @@ async function main() {
     alert_level: riskLabel(cpi),
   };
 
-  // Minimal “executive” summary
   const executive = {
     headline: `Construction Intelligence — ${riskLabel(cpi)}`,
     confidence: canFetch ? "MEDIUM" : "LOW",
-    summary:
-      canFetch
-        ? "Live macro inputs loaded via FRED. Composite pressure and split indicators updated."
-        : "FRED key missing in Actions (FRED_API_KEY). Output is in safe default mode.",
+    summary: canFetch
+      ? "Live macro inputs loaded via FRED. Composite pressure and split indicators updated."
+      : "FRED key missing in Actions (FRED_API_KEY). Output is in safe default mode.",
   };
 
-  // Alerts (stable)
   const alerts = [
     {
       id: "core_regime",
@@ -377,7 +340,6 @@ async function main() {
     },
   ];
 
-  // Optional permits configs (read-only; keep output stable)
   const statePermits = readJSON(FILES.statePermits, null);
   const msaPermits = readJSON(FILES.msaPermits, null);
 
@@ -436,14 +398,12 @@ async function main() {
 
   writeJSON(FILES.outDashboard, dashboard);
 
-  // Helpful console line for Actions log
   console.log(
     `OK: wrote dashboard_latest.json | CPI=${cpi} CEPS=${ceps_score} builder_momentum=${builderMomentumScore} canFetch=${canFetch}`
   );
 }
 
 main().catch((err) => {
-  // Never leave Actions with an unhelpful stacktrace; still fail the job.
   console.error("FATAL:", err?.message || err);
   process.exit(1);
 });
