@@ -48,7 +48,7 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
-          FRED_OBSERVATION_START: "2020-01-01"
+          FRED_OBSERVATION_START: "2018-01-01"
           OUT_PATH: "dashboard_latest.json"
         run: |
           node scripts/build_dashboard_latest.mjs
