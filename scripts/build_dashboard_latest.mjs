@@ -15,14 +15,23 @@ function mustGetEnv(name) {
   return v;
 }
 
+// A browser-like header set to avoid 403 blocks from some .gov download hosts
+const DEFAULT_HEADERS = {
+  "User-Agent":
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+  "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "Accept-Language": "en-US,en;q=0.9",
+  "Connection": "keep-alive",
+};
+
 async function fetchText(url) {
-  const res = await fetch(url, { redirect: "follow" });
+  const res = await fetch(url, { redirect: "follow", headers: DEFAULT_HEADERS });
   if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
   return await res.text();
 }
 
 async function fetchBuffer(url) {
-  const res = await fetch(url, { redirect: "follow" });
+  const res = await fetch(url, { redirect: "follow", headers: DEFAULT_HEADERS });
   if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
   const ab = await res.arrayBuffer();
   return Buffer.from(ab);
@@ -114,12 +123,8 @@ function normalizeCbsa(code) {
 function normalizeAreaNameForJoin(name) {
   if (!name) return null;
   let s = String(name).trim();
-
-  // Strip LAUS suffixes deterministically
   s = s.replace(/\s+Metropolitan Statistical Area$/i, "");
   s = s.replace(/\s+Micropolitan Statistical Area$/i, "");
-
-  // Some area_text strings can include extra commas/spaces; normalize whitespace
   s = s.replace(/\s+/g, " ").trim();
   return s.toLowerCase();
 }
@@ -149,9 +154,8 @@ async function fredObservations({ apiKey, seriesId, limit = 6 }) {
 async function loadBlsLausUnempRatesLatest() {
   const base = "https://download.bls.gov/pub/time.series/la/";
 
-  // Series metadata: identify unemployment rate series (measure_code=03)
   const seriesTxt = await fetchText(base + "la.series");
-  const unempSeries = new Map(); // series_id -> { area_type_code, area_code, seasonal }
+  const unempSeries = new Map();
 
   const lines = seriesTxt.split("\n").filter(Boolean);
   const header = lines[0].trim().split(/\s+/);
@@ -173,11 +177,10 @@ async function loadBlsLausUnempRatesLatest() {
     const measure_code = parts[iMeasure];
     const seasonal = parts[iSeasonal];
 
-    if (measure_code !== "03") continue; // unemployment rate
+    if (measure_code !== "03") continue;
     unempSeries.set(series_id, { area_type_code, area_code, seasonal });
   }
 
-  // Area names (area_text join)
   const areaTxt = await fetchText(base + "la.area");
   const areaLines = areaTxt.split("\n").filter(Boolean);
   const areaHeader = areaLines[0].trim().split(/\s+/);
@@ -187,7 +190,7 @@ async function loadBlsLausUnempRatesLatest() {
   const iaCode = aIdx("area_code");
   const iaText = aIdx("area_text");
 
-  const areaTextByTypeCode = new Map(); // `${type}:${code}` -> area_text
+  const areaTextByTypeCode = new Map();
   for (let i = 1; i < areaLines.length; i++) {
     const raw = areaLines[i];
     const parts = raw.trim().split(/\s+/);
@@ -198,17 +201,13 @@ async function loadBlsLausUnempRatesLatest() {
     areaTextByTypeCode.set(`${t}:${c}`, text);
   }
 
-  // Data files:
-  // - AllStatesS (S, seasonally adjusted)
-  // - Metro (U, not seasonally adjusted)
-  // - Micro (U, not seasonally adjusted)
   const dataSources = [
     { url: base + "la.data.3.AllStatesS", wantSeasonal: "S" },
     { url: base + "la.data.60.Metro", wantSeasonal: "U" },
     { url: base + "la.data.62.Micro", wantSeasonal: "U" },
   ];
 
-  const latest = new Map(); // series_id -> { key, year, month, value }
+  const latest = new Map();
 
   for (const src of dataSources) {
     const txt = await fetchText(src.url);
@@ -230,7 +229,7 @@ async function loadBlsLausUnempRatesLatest() {
       if (meta.seasonal !== src.wantSeasonal) continue;
 
       const year = Number(parts[isYear]);
-      const period = parts[isPeriod]; // M01..M12
+      const period = parts[isPeriod];
       if (!/^M\d{2}$/.test(period)) continue;
       const month = Number(period.slice(1));
       const key = year * 100 + month;
@@ -243,11 +242,8 @@ async function loadBlsLausUnempRatesLatest() {
     }
   }
 
-  // State unemployment map (by fips from series_id pattern)
   const stateUnemp = new Map();
-
-  // Metro/micro unemployment by normalized area name (deterministic join target)
-  const cbsaUnempByNormName = new Map(); // norm_name -> { value, year, month, series_id, area_text }
+  const cbsaUnempByNormName = new Map();
 
   for (const [series_id, obs] of latest.entries()) {
     const meta = unempSeries.get(series_id);
@@ -256,24 +252,19 @@ async function loadBlsLausUnempRatesLatest() {
     const area_text = areaTextByTypeCode.get(`${meta.area_type_code}:${meta.area_code}`) || null;
     const value = obs.value;
 
-    // States: LAUST{statefips}00000000000003 is common
     const mState = series_id.match(/^LAU[S|U]T(\d{2})00000000000003$/);
     if (mState) {
       stateUnemp.set(mState[1], { value, year: obs.year, month: obs.month, series_id, area_text });
       continue;
     }
 
-    // Metro + micro: key by normalized name, because BPS gives CBSA names
     const norm = normalizeAreaNameForJoin(area_text);
     if (!norm) continue;
 
-    // Collision guard: if two series normalize to same name, keep both and flag later
     const existing = cbsaUnempByNormName.get(norm);
-    if (!existing) {
-      cbsaUnempByNormName.set(norm, [{ value, year: obs.year, month: obs.month, series_id, area_text }]);
-    } else {
-      existing.push({ value, year: obs.year, month: obs.month, series_id, area_text });
-    }
+    const row = { value, year: obs.year, month: obs.month, series_id, area_text };
+    if (!existing) cbsaUnempByNormName.set(norm, [row]);
+    else existing.push(row);
   }
 
   let latestRef = null;
@@ -317,7 +308,7 @@ async function loadCensusBpsLatest() {
     return null;
   }
 
-  const cbsaPermit = new Map(); // cbsa -> { name, total, sf, mf2p }
+  const cbsaPermit = new Map();
   for (const r of cbsaRows) {
     const cbsaCol = findCol(r, [/cbsa/i, /msa/i, /code/i]);
     const nameCol = findCol(r, [/title/i, /name/i, /area/i]);
@@ -431,7 +422,7 @@ async function main() {
     commercial: { construction_spending_total: fred.total_construction_spending.latest }
   };
 
-  // State nodes (all 50)
+  // State nodes
   const states = Array.from(buildStateNameToFips().values()).sort();
   for (const fips of states) {
     const p = bps.state.permit.get(fips) || null;
@@ -456,36 +447,21 @@ async function main() {
     if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "missing in LAUS AllStatesS latest parse" });
   }
 
-  // Build a deterministic CBSA-name → cbsa_code map from BPS
-  const cbsaNameToCode = new Map(); // normalized_name -> [cbsa_codes]
-  for (const [cbsa, rec] of bps.cbsa.permit.entries()) {
-    const norm = normalizeAreaNameForJoin(rec?.name);
-    if (!norm) continue;
-    const arr = cbsaNameToCode.get(norm) || [];
-    arr.push(cbsa);
-    cbsaNameToCode.set(norm, arr);
-  }
-
-  // CBSA nodes
+  // CBSA nodes + deterministic unemployment join by normalized name
   const cbsas = Array.from(bps.cbsa.permit.keys()).sort();
   for (const cbsa of cbsas) {
     const p = bps.cbsa.permit.get(cbsa);
     const nodeKey = `cbsa:${cbsa}`;
 
-    // Deterministic unemployment join:
-    // 1) Normalize BPS name
-    // 2) Use it to look up LAUS unemployment by normalized area name
     let unemp = null;
     const norm = normalizeAreaNameForJoin(p?.name);
     if (norm) {
-      const lausCandidates = laus.cbsaUnempByNormName.get(norm) || null;
-
-      // Guard against LAUS name collisions:
-      if (lausCandidates && lausCandidates.length === 1) {
-        const v = lausCandidates[0];
+      const candidates = laus.cbsaUnempByNormName.get(norm) || null;
+      if (candidates && candidates.length === 1) {
+        const v = candidates[0];
         unemp = { date: `${v.year}-${String(v.month).padStart(2,"0")}-01`, value: v.value, series_id: v.series_id };
-      } else if (lausCandidates && lausCandidates.length > 1) {
-        observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: `LAUS name collision (${lausCandidates.length} series normalize to same area_text)` });
+      } else if (candidates && candidates.length > 1) {
+        observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: `LAUS name collision (${candidates.length} series normalize to same area_text)` });
       }
     }
 
