@@ -150,13 +150,11 @@ function sheetToRowsWithDetectedHeader(ws, headerMatchers) {
 
   if (headerRowIndex === -1) return null;
 
-  const rows = XLSX.utils.sheet_to_json(ws, {
+  return XLSX.utils.sheet_to_json(ws, {
     defval: null,
     raw: true,
     range: headerRowIndex,
   });
-
-  return rows;
 }
 
 function xlsxToRowsSmart(buf, headerMatchers) {
@@ -185,7 +183,7 @@ function findCol(row, patterns) {
 // ---------------------------
 // FRED
 // ---------------------------
-async function fredObservations({ apiKey, seriesId, limit = 24 }) {
+async function fredObservations({ apiKey, seriesId, limit = 36 }) {
   const url = new URL("https://api.stlouisfed.org/fred/series/observations");
   url.searchParams.set("api_key", apiKey);
   url.searchParams.set("file_type", "json");
@@ -201,6 +199,102 @@ async function fredObservations({ apiKey, seriesId, limit = 24 }) {
     date: o.date,
     value: safeNumber(o.value),
   }));
+}
+
+function latestValue(series) {
+  return series?.latest?.value ?? null;
+}
+
+function prevValue(series, kBack = 1) {
+  const hist = series?.history;
+  if (!Array.isArray(hist) || hist.length < 2) return null;
+  const idx = hist.length - 1 - kBack;
+  if (idx < 0) return null;
+  return hist[idx]?.value ?? null;
+}
+
+function trendArrow(curr, prev, eps = 1e-9) {
+  if (curr == null || prev == null) return "→";
+  if (Math.abs(curr - prev) <= eps) return "→";
+  return curr > prev ? "↑" : "↓";
+}
+
+function zClip(x, lo, hi) {
+  if (x == null) return null;
+  return Math.max(lo, Math.min(hi, x));
+}
+
+// Deterministic normalizations to 0–100 pressure:
+// (Higher score = more pressure/tightness)
+function scoreMortgage30(x) {
+  // 3% -> ~20, 5.5% -> ~50, 8% -> ~80
+  if (x == null) return 50;
+  return clamp(20 + (x - 3.0) * 12);
+}
+
+function scoreCurveInversion(dgs2, dgs10) {
+  // inversion = 2y > 10y increases pressure
+  if (dgs2 == null || dgs10 == null) return 50;
+  const spread = dgs10 - dgs2; // negative is inverted
+  // spread +1.5 -> low pressure, -1.5 -> high pressure
+  return clamp(50 + (-spread) * 18);
+}
+
+function scoreNFCI(nfci) {
+  // NFCI often around -0.5 to +1.0
+  if (nfci == null) return 50;
+  return clamp(50 + nfci * 25);
+}
+
+function scoreSTLFSI(stress) {
+  // STLFSI4 typical ~ -1 to +3
+  if (stress == null) return 50;
+  return clamp(35 + stress * 15);
+}
+
+function scoreOAS(oas) {
+  // OAS in % points, typical IG ~1–3, HY ~3–10
+  if (oas == null) return 50;
+  return clamp(20 + (oas - 1.0) * 12);
+}
+
+function scoreSLOOS(netPct) {
+  // Net % tightening: 0–50+ typical. Higher = tighter credit.
+  if (netPct == null) return 50;
+  return clamp(35 + netPct * 1.0);
+}
+
+function scorePermitsMomentum(latest, avgPrev) {
+  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
+  const ratio = latest / avgPrev;
+  return clamp(50 + (1 - ratio) * 60);
+}
+
+function scoreStartsMomentum(latest, avgPrev) {
+  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
+  const ratio = latest / avgPrev;
+  return clamp(50 + (1 - ratio) * 55);
+}
+
+function scoreUnemploymentMedian(med) {
+  // 3.5% -> low pressure, 6.5% -> higher pressure
+  if (med == null) return 50;
+  return clamp(30 + (med - 3.5) * 12);
+}
+
+function scoreConsEmploymentMomentum(latest, avgPrev) {
+  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
+  const ratio = latest / avgPrev;
+  return clamp(50 + (1 - ratio) * 50);
+}
+
+function avgLastN(history, n, excludeLast = 0) {
+  if (!Array.isArray(history) || history.length === 0) return null;
+  const end = history.length - excludeLast;
+  const start = Math.max(0, end - n);
+  const slice = history.slice(start, end).map(x => x.value).filter(v => v != null);
+  if (slice.length === 0) return null;
+  return slice.reduce((a, b) => a + b, 0) / slice.length;
 }
 
 // ---------------------------
@@ -292,7 +386,7 @@ function buildStateNameToFips() {
     ["Virginia","51"],["Washington","53"],["West Virginia","54"],["Wisconsin","55"],["Wyoming","56"],
   ];
   const m = new Map();
-  for (const [n,f] of entries) m.set(n.toLowerCase(), f);
+  for (const [n, f] of entries) m.set(n.toLowerCase(), f);
   return m;
 }
 
@@ -397,7 +491,6 @@ async function loadBlsLausUnempRatesLatest() {
 
     const area_text = areaTextByTypeCode.get(`${meta.area_type_code}:${meta.area_code}`) || null;
 
-    // State unemployment series id pattern
     const mState = series_id.match(/^LAU[SU]T(\d{2})00000000000003$/);
     if (mState) {
       stateUnemp.set(mState[1], {
@@ -423,30 +516,97 @@ async function loadBlsLausUnempRatesLatest() {
 }
 
 // ---------------------------
-// CEPS (deterministic, observed-only)
+// CEPS v2 (Capital + Pipeline + Trade)
 // ---------------------------
-function computeCeps({ mortgage30, permits, permitsHistory, unempStateMedian }) {
-  const capital = mortgage30 == null ? 50 : clamp(50 + (mortgage30 - 5.5) * 12);
+function computeCepsV2({ fred, unempStateMedian }) {
+  // Capital inputs
+  const mortgage30 = latestValue(fred.mortgage_30y);
+  const dgs2 = latestValue(fred.dgs2_2y_treasury);
+  const dgs10 = latestValue(fred.dgs10_10y_treasury);
+  const nfci = latestValue(fred.nfci);
+  const anfcI = latestValue(fred.anfcI_adjusted);
+  const stlfsi = latestValue(fred.stlfsI);
+  const hy = latestValue(fred.hy_oas);
+  const ig = latestValue(fred.ig_oas);
+  const sloos = latestValue(fred.sloos_ci_large_tightening);
+  const baa = latestValue(fred.baa_corp_yield);
+  const aaa = latestValue(fred.aaa_corp_yield);
 
-  let pipeline = 50;
-  if (permits != null && Array.isArray(permitsHistory) && permitsHistory.length >= 8) {
-    const hist = permitsHistory.slice(-7, -1).map(x => x.value).filter(v => v != null);
-    if (hist.length >= 3) {
-      const avg = hist.reduce((a,b)=>a+b,0) / hist.length;
-      const ratio = avg > 0 ? permits / avg : 1;
-      pipeline = clamp(50 + (1 - ratio) * 60);
-    }
-  }
+  const baaAaaSpread = (baa != null && aaa != null) ? (baa - aaa) : null;
 
-  const trade = unempStateMedian == null ? 50 : clamp(40 + (unempStateMedian - 4.0) * 10);
+  const capital_components = [
+    { key: "mortgage_30y", label: "Mortgage 30Y", value: mortgage30, score: scoreMortgage30(mortgage30), weight: 0.22 },
+    { key: "curve_inversion", label: "Yield Curve (2y–10y)", value: (dgs2 != null && dgs10 != null) ? (dgs10 - dgs2) : null, score: scoreCurveInversion(dgs2, dgs10), weight: 0.18 },
+    { key: "nfci", label: "NFCI", value: nfci, score: scoreNFCI(nfci), weight: 0.12 },
+    { key: "anfcI", label: "ANFCI", value: anfcI, score: scoreNFCI(anfcI), weight: 0.08 },
+    { key: "stlfsI", label: "Financial Stress (STLFSI)", value: stlfsi, score: scoreSTLFSI(stlfsi), weight: 0.10 },
+    { key: "hy_oas", label: "High Yield Spread (OAS)", value: hy, score: scoreOAS(hy), weight: 0.12 },
+    { key: "ig_oas", label: "IG Spread (OAS)", value: ig, score: scoreOAS(ig), weight: 0.06 },
+    { key: "sloos", label: "Bank Tightening (SLOOS)", value: sloos, score: scoreSLOOS(sloos), weight: 0.08 },
+    { key: "baa_aaa_spread", label: "BAA–AAA Spread", value: baaAaaSpread, score: scoreOAS(baaAaaSpread), weight: 0.04 },
+  ];
 
-  const ceps = clamp(0.45 * capital + 0.35 * pipeline + 0.20 * trade);
+  const capitalScore = weightedScore(capital_components);
+
+  // Pipeline inputs (momentum)
+  const permitsLatest = latestValue(fred.building_permits_total);
+  const permitsAvgPrev = avgLastN(fred.building_permits_total?.history, 6, 1);
+  const startsLatest = latestValue(fred.housing_starts_total);
+  const startsAvgPrev = avgLastN(fred.housing_starts_total?.history, 6, 1);
+
+  const pipeline_components = [
+    { key: "permits_momentum", label: "Permits Momentum", value: permitsLatest, score: scorePermitsMomentum(permitsLatest, permitsAvgPrev), weight: 0.65 },
+    { key: "starts_momentum", label: "Starts Momentum", value: startsLatest, score: scoreStartsMomentum(startsLatest, startsAvgPrev), weight: 0.35 },
+  ];
+
+  const pipelineScore = weightedScore(pipeline_components);
+
+  // Trade inputs (labor execution conditions)
+  const consEmpLatest = latestValue(fred.construction_employment);
+  const consEmpAvgPrev = avgLastN(fred.construction_employment?.history, 6, 1);
+
+  const trade_components = [
+    { key: "unemp_median_states", label: "State Unemployment Median", value: unempStateMedian, score: scoreUnemploymentMedian(unempStateMedian), weight: 0.65 },
+    { key: "cons_emp_momentum", label: "Construction Employment Momentum", value: consEmpLatest, score: scoreConsEmploymentMomentum(consEmpLatest, consEmpAvgPrev), weight: 0.35 },
+  ];
+
+  const tradeScore = weightedScore(trade_components);
+
+  // Headline CEPS v2 (capital dominates)
+  const ceps = clamp(0.50 * capitalScore + 0.32 * pipelineScore + 0.18 * tradeScore);
+
   return {
     ceps_score: Math.round(ceps),
-    capital: Math.round(capital),
-    pipeline: Math.round(pipeline),
-    trade: Math.round(trade),
+    capital: Math.round(capitalScore),
+    pipeline: Math.round(pipelineScore),
+    trade: Math.round(tradeScore),
+    components: {
+      capital: normalizeComponents(capital_components),
+      pipeline: normalizeComponents(pipeline_components),
+      trade: normalizeComponents(trade_components),
+    }
   };
+}
+
+function normalizeComponents(arr) {
+  return arr.map(x => ({
+    key: x.key,
+    label: x.label,
+    value: x.value,
+    score: Math.round(x.score),
+    weight: x.weight
+  }));
+}
+
+function weightedScore(components) {
+  const usable = components.filter(c => c.score != null && Number.isFinite(c.score));
+  if (usable.length === 0) return 50;
+
+  const wSum = usable.reduce((a, c) => a + c.weight, 0);
+  if (wSum <= 0) return 50;
+
+  const s = usable.reduce((a, c) => a + c.score * c.weight, 0) / wSum;
+  return clamp(s);
 }
 
 function bandForScore(x) {
@@ -457,15 +617,26 @@ function bandForScore(x) {
   return "EXPANSION";
 }
 
+function severityForScore(x) {
+  if (x >= 76) return "CRITICAL";
+  if (x >= 70) return "ELEVATED";
+  if (x >= 60) return "WATCH";
+  return "NORMAL";
+}
+
+function symbolForTrend(arrow) {
+  if (arrow === "↑") return "arrow.up.right";
+  if (arrow === "↓") return "arrow.down.right";
+  return "arrow.right";
+}
+
 // ---------------------------
 // MAIN
 // ---------------------------
 async function main() {
   const FRED_API_KEY = mustGetEnv("FRED_API_KEY");
 
-  // ---------------------------
-  // FRED SERIES PACK (Construction + Full Macro Sweep)
-  // ---------------------------
+  // Full Macro Sweep (construction + macro)
   const FRED_SERIES = {
     // Construction anchors
     mortgage_30y: "MORTGAGE30US",
@@ -489,26 +660,25 @@ async function main() {
     hy_oas: "BAMLH0A0HYM2",
     ig_oas: "BAMLC0A0CM",
 
-    // Financial conditions
+    // Financial conditions / stress
     nfci: "NFCI",
-    anfcI_adjusted: "ANFCI",         // Adjusted National Financial Conditions Index
-    stlfsI: "STLFSI4",               // St. Louis Fed Financial Stress Index
+    anfcI_adjusted: "ANFCI",
+    stlfsI: "STLFSI4",
 
-    // Lending standards (SLOOS proxy series on FRED)
-    sloos_ci_large_tightening: "DRTSCILM", // Net % tightening C&I loans to large firms
+    // Lending standards
+    sloos_ci_large_tightening: "DRTSCILM",
 
-    // Labor / macro demand
+    // Macro demand / labor
     unrate: "UNRATE",
     ism_pmi: "NAPM",
 
-    // Housing / credit health (common FRED indicators)
+    // Housing sentiment (if available)
     nahb_hmi: "HMI",
-    cre_delinquency: "DRCRELEX",     // Delinquency rate on CRE loans (if available on your FRED region)
   };
 
   const fred = {};
   for (const [k, seriesId] of Object.entries(FRED_SERIES)) {
-    const obs = await fredObservations({ apiKey: FRED_API_KEY, seriesId, limit: 24 });
+    const obs = await fredObservations({ apiKey: FRED_API_KEY, seriesId, limit: 36 });
     fred[k] = {
       series_id: seriesId,
       latest: obs[0] ?? null,
@@ -516,14 +686,74 @@ async function main() {
     };
   }
 
-  // Other ingestions (already stable)
   const bps = await loadCensusBpsLatest();
   const laus = await loadBlsLausUnempRatesLatest();
 
+  // Median state unemployment
+  const stateNameToFips = buildStateNameToFips();
+  const states = Array.from(stateNameToFips.values()).sort();
+
+  const stateUnemps = [];
+  for (const fips of states) {
+    const u = laus.stateUnemp.get(fips)?.value ?? null;
+    if (u != null) stateUnemps.push(u);
+  }
+  stateUnemps.sort((a, b) => a - b);
+  const unempMedian = stateUnemps.length ? stateUnemps[Math.floor(stateUnemps.length / 2)] : null;
+
+  // CEPS v2
+  const cepsV2 = computeCepsV2({ fred, unempStateMedian: unempMedian });
+
+  const ceps_score = cepsV2.ceps_score;
+  const capIdx = cepsV2.capital;
+
+  const risk_mode = ceps_score >= 70;
+  const risk_thermometer_mode = risk_mode;
+
+  // Trends for Apple UI (simple arrows)
+  const trends = {
+    mortgage_30y: trendArrow(latestValue(fred.mortgage_30y), prevValue(fred.mortgage_30y, 1)),
+    permits: trendArrow(latestValue(fred.building_permits_total), prevValue(fred.building_permits_total, 1)),
+    starts: trendArrow(latestValue(fred.housing_starts_total), prevValue(fred.housing_starts_total, 1)),
+    nfci: trendArrow(latestValue(fred.nfci), prevValue(fred.nfci, 1)),
+    hy_oas: trendArrow(latestValue(fred.hy_oas), prevValue(fred.hy_oas, 1)),
+  };
+
+  const alerts = [];
+  const sev = severityForScore(ceps_score);
+
+  if (sev === "CRITICAL") {
+    alerts.push({
+      severity: "CRITICAL",
+      symbol: "exclamationmark.triangle.fill",
+      title: "Freeze Risk",
+      message: "Capital and credit conditions indicate elevated freeze probability. Tighten commitments and protect liquidity."
+    });
+  } else if (sev === "ELEVATED") {
+    alerts.push({
+      severity: "ELEVATED",
+      symbol: "exclamationmark.circle.fill",
+      title: "Elevated Pressure",
+      message: "Capital conditions are tightening. Focus on backlog quality, credit discipline, and working capital."
+    });
+  } else if (sev === "WATCH") {
+    alerts.push({
+      severity: "WATCH",
+      symbol: "eye.fill",
+      title: "Watchlist",
+      message: "Pressure is rising. Monitor mortgage direction, spreads, and permits momentum for confirmation."
+    });
+  }
+
+  const executiveSummary =
+    ceps_score >= 70
+      ? "Pressure is elevated. Capital and credit stress are materially constraining the pipeline. Defensive posture recommended."
+      : "Pressure is stable. Capital is the primary transmission lever. Monitor permits momentum and credit spreads for inflection.";
+
+  // Drilldown geo layer (unchanged)
   const geo_data = {};
   const observed_gaps = [];
 
-  // US node
   geo_data["us:US"] = {
     geo: { level: "us", id: "US", name: "United States" },
     capital: { mortgage_30y: fred.mortgage_30y.latest },
@@ -535,10 +765,6 @@ async function main() {
     },
     commercial: { construction_spending_total: fred.total_construction_spending.latest }
   };
-
-  // States
-  const stateNameToFips = buildStateNameToFips();
-  const states = Array.from(stateNameToFips.values()).sort();
 
   for (const fips of states) {
     const p = bps.state.permit.get(fips) || null;
@@ -552,17 +778,15 @@ async function main() {
         permits_sf: p ? p.sf : null,
         permits_mf2p: p ? p.mf2p : null
       },
-      labor: {
-        unemployment_rate: u ? u.value : null
-      }
+      labor: { unemployment_rate: u ? u.value : null }
     };
 
     if (!p) observed_gaps.push({ geo: nodeKey, metric: "bps_state_permits", reason: "no parsed row for this state (sheet/header mismatch)" });
     if (!u) observed_gaps.push({ geo: nodeKey, metric: "laus_state_unemployment_rate", reason: "no state unemployment match (series_id parse)" });
   }
 
-  // CBSAs
   const cbsas = Array.from(bps.cbsa.permit.keys()).sort();
+
   for (const cbsa of cbsas) {
     const p = bps.cbsa.permit.get(cbsa);
     const nodeKey = `cbsa:${cbsa}`;
@@ -587,39 +811,48 @@ async function main() {
     if (unemp == null) observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "no deterministic LAUS match for this CBSA name" });
   }
 
-  // CEPS inputs
-  const mortgageLatest = fred.mortgage_30y.latest?.value ?? null;
-  const permitsLatest = fred.building_permits_total.latest?.value ?? null;
-  const permitsHist = fred.building_permits_total.history ?? [];
-
-  const stateUnemps = [];
-  for (const fips of states) {
-    const u = laus.stateUnemp.get(fips)?.value ?? null;
-    if (u != null) stateUnemps.push(u);
-  }
-  stateUnemps.sort((a, b) => a - b);
-  const unempMedian = stateUnemps.length ? stateUnemps[Math.floor(stateUnemps.length / 2)] : null;
-
-  const cepsParts = computeCeps({
-    mortgage30: mortgageLatest,
-    permits: permitsLatest,
-    permitsHistory: permitsHist,
-    unempStateMedian: unempMedian
-  });
-
-  const ceps_score = cepsParts.ceps_score;
-  const capIdx = cepsParts.capital;
-
-  const risk_mode = ceps_score >= 70;
-  const risk_thermometer_mode = risk_mode;
-
-  const executiveSummary =
-    ceps_score >= 70
-      ? "Pressure is elevated. Capital and pipeline signals warrant defensive posture and tighter risk controls."
-      : "Pressure is stable. Monitor capital and residential permits for early inflection signals.";
+  // Apple-native UI “cards” (simple, stable contract)
+  const ui_cards = [
+    {
+      id: "ceps",
+      title: "Construction Pressure",
+      subtitle: `CEPS v2 • ${bandForScore(ceps_score)}`,
+      value: ceps_score,
+      trend: "→",
+      symbol: "gauge.with.dots",
+      severity: severityForScore(ceps_score)
+    },
+    {
+      id: "capital",
+      title: "Capital",
+      subtitle: "Rates • Credit • Conditions",
+      value: cepsV2.capital,
+      trend: trends.nfci,
+      symbol: "banknote",
+      severity: severityForScore(cepsV2.capital)
+    },
+    {
+      id: "pipeline",
+      title: "Pipeline",
+      subtitle: "Permits • Starts Momentum",
+      value: cepsV2.pipeline,
+      trend: trends.permits,
+      symbol: "building.2",
+      severity: severityForScore(cepsV2.pipeline)
+    },
+    {
+      id: "trade",
+      title: "Trade",
+      subtitle: "Labor Conditions",
+      value: cepsV2.trade,
+      trend: "→",
+      symbol: "person.2",
+      severity: severityForScore(cepsV2.trade)
+    }
+  ];
 
   const out = {
-    schema_version: "3.4.0",
+    schema_version: "3.6.0",
     generated_at: isoUtcNow(),
 
     executive: {
@@ -628,13 +861,27 @@ async function main() {
       summary: executiveSummary
     },
 
+    // Headline score (keeps your existing workflow gate)
     ceps_score,
+
+    // v2 breakdown (for your iPad UI + future CPI engine)
+    ceps_v2: {
+      version: "2.0",
+      band: bandForScore(ceps_score),
+      severity: severityForScore(ceps_score),
+      capital: cepsV2.capital,
+      pipeline: cepsV2.pipeline,
+      trade: cepsV2.trade,
+      components: cepsV2.components
+    },
+
+    // Existing fields you already use
     ceps_split: {
       residential: clamp(ceps_score - 3, 0, 100),
       institutional: clamp(ceps_score + 3, 0, 100)
     },
 
-    builder_momentum: { value: clamp(Math.round((cepsParts.pipeline + 40) / 2), 0, 100) },
+    builder_momentum: { value: clamp(Math.round((cepsV2.pipeline + 40) / 2), 0, 100) },
 
     capital: {
       pressure_index: capIdx,
@@ -650,6 +897,14 @@ async function main() {
     risk_thermometer_mode,
     volatility_regime: "NORMAL",
 
+    // Apple design language: calm primitives for SwiftUI
+    ui: {
+      accent: "system",
+      alerts,
+      trends: Object.fromEntries(Object.entries(trends).map(([k, v]) => ([k, { arrow: v, symbol: symbolForTrend(v) }]))),
+      cards: ui_cards
+    },
+
     observed: {
       sources: {
         fred: { api: "https://api.stlouisfed.org/fred/series/observations" },
@@ -661,13 +916,9 @@ async function main() {
         },
         bls_laus: { base: "https://download.bls.gov/pub/time.series/la/" }
       },
-      coverage: {
-        us: true,
-        states_fips: states,
-        cbsas
-      },
+      coverage: { us: true, states_fips: states, cbsas },
 
-      // ✅ Macro pack exposed here for iPad UI + GPT analysis
+      // Full macro pack exposed for your iPad dashboard + GPT analytics
       macro_fred: fred,
 
       geo_data,
