@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-01T19:57:52.979Z",
+  "generated_at": "2026-03-01T20:55:52.639Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -12,6 +12,10 @@
     "delta_3m": null,
     "momentum": "Stable",
     "history": [
+      {
+        "date": "2026-03-01",
+        "value": 46
+      },
       {
         "date": "2026-03-01",
         "value": 46
@@ -355,6 +359,51 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug developers. | Generate:Biomedicines is the latest biotech to benefit from a renewed appetite from investors for publicly listed drug develop…"
+      },
+      {
+        "title": "Bragar Eagel & Squire, P.C. Reminds Stockholders that a Class Action Lawsuit Has Been Filed Against CoreWeave, Inc. and Encourages Investors to Contact the Firm Before March 13th",
+        "url": "https://www.globenewswire.com/news-release/2026/02/28/3246905/0/en/Bragar-Eagel-Squire-P-C-Reminds-Stockholders-that-a-Class-Action-Lawsuit-Has-Been-Filed-Against-CoreWeave-Inc-and-Encourages-Investors-to-Contact-the-Firm-Before-March-13th.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-02-28T20:55:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Bragar Eagel & Squire, P.C. Litigation Partner Brandon Walker Encourages Investors Who Suffered Losses In CoreWeave (CRWV) To Contact Him Directly To Discuss Their Options"
+      },
+      {
+        "title": "The billion-dollar infrastructure deals powering the AI boom | TechCrunch",
+        "url": "https://techcrunch.com/2026/02/28/billion-dollar-infrastructure-deals-ai-boom-data-centers-openai-oracle-nvidia-microsoft-google-meta/",
+        "source": "TechCrunch",
+        "published_at": "2026-02-28T20:43:59Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Here's everything we know about the biggest AI infrastructure projects, including major spending from Meta, Oracle, Microsoft, Google, and OpenAI."
+      },
+      {
+        "title": "What is next in quantum advantage?",
+        "url": "https://quantumfrontiers.com/2026/02/28/what-is-next-in-quantum-advantage/",
+        "source": "Quantumfrontiers.com",
+        "published_at": "2026-02-28T20:03:24Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "We are now at an exciting point in our process of developing quantum computers and understanding their computational power: It has been demonstrated that quantum computers can outperform classical ones (if you buy my argument from Parts 1 and 2 … Continue rea…"
+      },
+      {
+        "title": "The Global Race to Unlock Nuclear Fusion",
+        "url": "https://oilprice.com/Alternative-Energy/Nuclear-Power/The-Global-Race-to-Unlock-Nuclear-Fusion.html",
+        "source": "OilPrice.com",
+        "published_at": "2026-02-28T20:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Governments worldwide have been racing to unlock the secret to nuclear fusion energy for several decades, with the aim of producing abundant, clean energy. While several generation milestones have been achieved in recent years, accomplishing commercial-scale …"
+      },
+      {
+        "title": "Huntington Ingalls Industries, Inc. (HII): A Bull Case Theory",
+        "url": "https://finance.yahoo.com/news/huntington-ingalls-industries-inc-hii-195814368.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-02-28T19:58:14Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "We came across a bullish thesis on Huntington Ingalls Industries, Inc. on Paradox Intelligence’s Substack. In this article, we will summarize the bulls..."
       },
       {
         "title": "Heidi Montag and Spencer Pratt say they’re still ‘displaced’ over a year after California wildfires—as they reveal toll of their home loss on kids",
@@ -1003,51 +1052,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": ""
-      },
-      {
-        "title": "A nearly blind refugee is found dead after Border Patrol agents drop him at Buffalo doughnut shop",
-        "url": "https://www.bostonherald.com/2026/02/27/refugee-death-buffalo/",
-        "source": "Boston Herald",
-        "published_at": "2026-02-27T16:17:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Buffalo Mayor Sean Ryan accused border agents of dereliction of duty."
-      },
-      {
-        "title": "A nearly blind refugee is found dead after Border Patrol agents drop him at Buffalo doughnut shop",
-        "url": "https://www.denverpost.com/2026/02/27/refugee-death-buffalo/",
-        "source": "The Denver Post",
-        "published_at": "2026-02-27T16:17:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Buffalo Mayor Sean Ryan accused border agents of dereliction of duty."
-      },
-      {
-        "title": "MTA flips the bird at Old Man Winter, bucking previous policy to shut service for snow",
-        "url": "https://gothamist.com/news/mta-flips-the-bird-at-old-man-winter-bucking-previous-policy-to-shut-service-for-snow",
-        "source": "Gothamist",
-        "published_at": "2026-02-27T16:01:06Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The city's subways looked like the Polar Express earlier this week.\n \n\nPrevious MTA leaders were quick to close aboveground subway service during major snowstorms. In two major winter storms this year, current MTA Chair Janno Lieber opted to keep things movin…"
-      },
-      {
-        "title": "Review: 40955 Maersk Dual-Fuel Container Vessel",
-        "url": "https://brickset.com/article/129977/review-40955-maersk-dual-fuel-container-vessel",
-        "source": "Brickset.com",
-        "published_at": "2026-02-27T16:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Exactly two years ago (on the last day of February 2024), I wrote an article highlighting the relationship that exists between the LEGO and Maersk family dynasties. My article looked at the 10241 Maersk Line Triple-E set and how it immortalised that relations…"
-      },
-      {
-        "title": "Texas' Big Bend braces for border wall in national park, worrying local Republicans and Democrats",
-        "url": "https://www.nbcnews.com/politics/immigration/texas-big-bend-braces-border-wall-national-park-worrying-local-republi-rcna260942",
-        "source": "NBC News",
-        "published_at": "2026-02-27T15:55:16Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Locals and elected leaders from both parties across far West Texas are condemning the Department of Homeland Security’s newly revealed plans to build a border wall through Big Bend National Park and its neighboring state park."
       }
     ],
     "news_with_impact": [
@@ -1297,6 +1301,71 @@
         "impact_score": 40,
         "themes": [
           "capital"
+        ]
+      },
+      {
+        "title": "Bragar Eagel & Squire, P.C. Reminds Stockholders that a Class Action Lawsuit Has Been Filed Against CoreWeave, Inc. and Encourages Investors to Contact the Firm Before March 13th",
+        "url": "https://www.globenewswire.com/news-release/2026/02/28/3246905/0/en/Bragar-Eagel-Squire-P-C-Reminds-Stockholders-that-a-Class-Action-Lawsuit-Has-Been-Filed-Against-CoreWeave-Inc-and-Encourages-Investors-to-Contact-the-Firm-Before-March-13th.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-02-28T20:55:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Bragar Eagel & Squire, P.C. Litigation Partner Brandon Walker Encourages Investors Who Suffered Losses In CoreWeave (CRWV) To Contact Him Directly To Discuss Their Options",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "The billion-dollar infrastructure deals powering the AI boom | TechCrunch",
+        "url": "https://techcrunch.com/2026/02/28/billion-dollar-infrastructure-deals-ai-boom-data-centers-openai-oracle-nvidia-microsoft-google-meta/",
+        "source": "TechCrunch",
+        "published_at": "2026-02-28T20:43:59Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Here's everything we know about the biggest AI infrastructure projects, including major spending from Meta, Oracle, Microsoft, Google, and OpenAI.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "What is next in quantum advantage?",
+        "url": "https://quantumfrontiers.com/2026/02/28/what-is-next-in-quantum-advantage/",
+        "source": "Quantumfrontiers.com",
+        "published_at": "2026-02-28T20:03:24Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "We are now at an exciting point in our process of developing quantum computers and understanding their computational power: It has been demonstrated that quantum computers can outperform classical ones (if you buy my argument from Parts 1 and 2 … Continue rea…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "The Global Race to Unlock Nuclear Fusion",
+        "url": "https://oilprice.com/Alternative-Energy/Nuclear-Power/The-Global-Race-to-Unlock-Nuclear-Fusion.html",
+        "source": "OilPrice.com",
+        "published_at": "2026-02-28T20:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Governments worldwide have been racing to unlock the secret to nuclear fusion energy for several decades, with the aim of producing abundant, clean energy. While several generation milestones have been achieved in recent years, accomplishing commercial-scale …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Huntington Ingalls Industries, Inc. (HII): A Bull Case Theory",
+        "url": "https://finance.yahoo.com/news/huntington-ingalls-industries-inc-hii-195814368.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-02-28T19:58:14Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "We came across a bullish thesis on Huntington Ingalls Industries, Inc. on Paradox Intelligence’s Substack. In this article, we will summarize the bulls...",
+        "impact_score": 40,
+        "themes": [
+          "other"
         ]
       },
       {
@@ -2234,71 +2303,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "A nearly blind refugee is found dead after Border Patrol agents drop him at Buffalo doughnut shop",
-        "url": "https://www.bostonherald.com/2026/02/27/refugee-death-buffalo/",
-        "source": "Boston Herald",
-        "published_at": "2026-02-27T16:17:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Buffalo Mayor Sean Ryan accused border agents of dereliction of duty.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "A nearly blind refugee is found dead after Border Patrol agents drop him at Buffalo doughnut shop",
-        "url": "https://www.denverpost.com/2026/02/27/refugee-death-buffalo/",
-        "source": "The Denver Post",
-        "published_at": "2026-02-27T16:17:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Buffalo Mayor Sean Ryan accused border agents of dereliction of duty.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "MTA flips the bird at Old Man Winter, bucking previous policy to shut service for snow",
-        "url": "https://gothamist.com/news/mta-flips-the-bird-at-old-man-winter-bucking-previous-policy-to-shut-service-for-snow",
-        "source": "Gothamist",
-        "published_at": "2026-02-27T16:01:06Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The city's subways looked like the Polar Express earlier this week.\n \n\nPrevious MTA leaders were quick to close aboveground subway service during major snowstorms. In two major winter storms this year, current MTA Chair Janno Lieber opted to keep things movin…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Review: 40955 Maersk Dual-Fuel Container Vessel",
-        "url": "https://brickset.com/article/129977/review-40955-maersk-dual-fuel-container-vessel",
-        "source": "Brickset.com",
-        "published_at": "2026-02-27T16:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Exactly two years ago (on the last day of February 2024), I wrote an article highlighting the relationship that exists between the LEGO and Maersk family dynasties. My article looked at the 10241 Maersk Line Triple-E set and how it immortalised that relations…",
-        "impact_score": 40,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "Texas' Big Bend braces for border wall in national park, worrying local Republicans and Democrats",
-        "url": "https://www.nbcnews.com/politics/immigration/texas-big-bend-braces-border-wall-national-park-worrying-local-republi-rcna260942",
-        "source": "NBC News",
-        "published_at": "2026-02-27T15:55:16Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Locals and elected leaders from both parties across far West Texas are condemning the Department of Homeland Security’s newly revealed plans to build a border wall through Big Bend National Park and its neighboring state park.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2625,19 +2629,6 @@
           "themes": [
             "materials"
           ]
-        },
-        {
-          "title": "Review: 40955 Maersk Dual-Fuel Container Vessel",
-          "url": "https://brickset.com/article/129977/review-40955-maersk-dual-fuel-container-vessel",
-          "source": "Brickset.com",
-          "published_at": "2026-02-27T16:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Exactly two years ago (on the last day of February 2024), I wrote an article highlighting the relationship that exists between the LEGO and Maersk family dynasties. My article looked at the 10241 Maersk Line Triple-E set and how it immortalised that relations…",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
         }
       ],
       "regulatory": [],
@@ -2921,12 +2912,12 @@
       },
       {
         "ticker": "VMC",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-02-27",
+        "open": 307.67,
         "close": 310,
-        "prev_close": 308.99,
-        "change": 1.01,
-        "change_pct": 0.3269
+        "change": 2.329999999999984,
+        "change_pct": 0.7573049046055786
       },
       {
         "ticker": "MLM",
@@ -2939,12 +2930,12 @@
       },
       {
         "ticker": "BLDR",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 103.07,
         "close": 104.29,
-        "change": 1.220000000000013,
-        "change_pct": 1.1836615892112285
+        "prev_close": 104.56,
+        "change": -0.27,
+        "change_pct": -0.2582
       },
       {
         "ticker": "FBIN",
@@ -3026,11 +3017,11 @@
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.5567858062043967
+        "avg_change_pct": 0.628519956971993
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": 1.1836615892112285
+        "avg_change_pct": -0.2582
       },
       "equipment": {
         "count": 3,
@@ -3121,7 +3112,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-01T19:57:52.979Z",
+    "generated_at_utc": "2026-03-01T20:55:52.639Z",
     "regime_history": {
       "current_regime_duration_days": 0,
       "previous_regime": null,
@@ -3279,12 +3270,12 @@
         },
         {
           "ticker": "VMC",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-02-27",
+          "open": 307.67,
           "close": 310,
-          "prev_close": 308.99,
-          "change": 1.01,
-          "change_pct": 0.3269
+          "change": 2.329999999999984,
+          "change_pct": 0.7573049046055786
         },
         {
           "ticker": "MLM",
@@ -3297,12 +3288,12 @@
         },
         {
           "ticker": "BLDR",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 103.07,
           "close": 104.29,
-          "change": 1.220000000000013,
-          "change_pct": 1.1836615892112285
+          "prev_close": 104.56,
+          "change": -0.27,
+          "change_pct": -0.2582
         },
         {
           "ticker": "FBIN",
@@ -3384,11 +3375,11 @@
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": 0.5567858062043967
+          "avg_change_pct": 0.628519956971993
         },
         "distribution": {
           "count": 1,
-          "avg_change_pct": 1.1836615892112285
+          "avg_change_pct": -0.2582
         },
         "equipment": {
           "count": 3,
@@ -3786,6 +3777,71 @@
           "impact_score": 40,
           "themes": [
             "capital"
+          ]
+        },
+        {
+          "title": "Bragar Eagel & Squire, P.C. Reminds Stockholders that a Class Action Lawsuit Has Been Filed Against CoreWeave, Inc. and Encourages Investors to Contact the Firm Before March 13th",
+          "url": "https://www.globenewswire.com/news-release/2026/02/28/3246905/0/en/Bragar-Eagel-Squire-P-C-Reminds-Stockholders-that-a-Class-Action-Lawsuit-Has-Been-Filed-Against-CoreWeave-Inc-and-Encourages-Investors-to-Contact-the-Firm-Before-March-13th.html",
+          "source": "GlobeNewswire",
+          "published_at": "2026-02-28T20:55:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Bragar Eagel & Squire, P.C. Litigation Partner Brandon Walker Encourages Investors Who Suffered Losses In CoreWeave (CRWV) To Contact Him Directly To Discuss Their Options",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "The billion-dollar infrastructure deals powering the AI boom | TechCrunch",
+          "url": "https://techcrunch.com/2026/02/28/billion-dollar-infrastructure-deals-ai-boom-data-centers-openai-oracle-nvidia-microsoft-google-meta/",
+          "source": "TechCrunch",
+          "published_at": "2026-02-28T20:43:59Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Here's everything we know about the biggest AI infrastructure projects, including major spending from Meta, Oracle, Microsoft, Google, and OpenAI.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "What is next in quantum advantage?",
+          "url": "https://quantumfrontiers.com/2026/02/28/what-is-next-in-quantum-advantage/",
+          "source": "Quantumfrontiers.com",
+          "published_at": "2026-02-28T20:03:24Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "We are now at an exciting point in our process of developing quantum computers and understanding their computational power: It has been demonstrated that quantum computers can outperform classical ones (if you buy my argument from Parts 1 and 2 … Continue rea…",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "The Global Race to Unlock Nuclear Fusion",
+          "url": "https://oilprice.com/Alternative-Energy/Nuclear-Power/The-Global-Race-to-Unlock-Nuclear-Fusion.html",
+          "source": "OilPrice.com",
+          "published_at": "2026-02-28T20:00:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Governments worldwide have been racing to unlock the secret to nuclear fusion energy for several decades, with the aim of producing abundant, clean energy. While several generation milestones have been achieved in recent years, accomplishing commercial-scale …",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Huntington Ingalls Industries, Inc. (HII): A Bull Case Theory",
+          "url": "https://finance.yahoo.com/news/huntington-ingalls-industries-inc-hii-195814368.html",
+          "source": "Yahoo Entertainment",
+          "published_at": "2026-02-28T19:58:14Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "We came across a bullish thesis on Huntington Ingalls Industries, Inc. on Paradox Intelligence’s Substack. In this article, we will summarize the bulls...",
+          "impact_score": 40,
+          "themes": [
+            "other"
           ]
         },
         {
@@ -4255,71 +4311,6 @@
           "themes": [
             "other"
           ]
-        },
-        {
-          "title": "Slow and Steady Wins The Race",
-          "url": "https://www.barchart.com/story/news/481800/slow-and-steady-wins-the-race",
-          "source": "Barchart.com",
-          "published_at": "2026-02-28T01:45:02Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Summary The Travelers Companies (TRV) demonstrates strong technical momentum, with a Trend Seeker 'Buy' signal and 9.54% gain over the past month. TRV trades...",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "New 2 World Trade Center Will Rise 1,226 Feet Over Manhattan, Finally Completing the Post-9/11 Rebuild",
-          "url": "https://www.yankodesign.com/2026/02/27/new-2-world-trade-center-will-rise-1226-feet-over-manhattan-finally-completing-the-post-9-11-rebuild/",
-          "source": "Yanko Design",
-          "published_at": "2026-02-28T00:30:10Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "New 2 World Trade Center Will Rise 1,226 Feet Over Manhattan, Finally Completing the Post-9/11 RebuildIt has been almost 25 years since the September 11 attacks forever changed the skyline of Lower Manhattan, and now the rebuilding of the World...",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Analysis of the evolution and spatial effects of green space pattern in China’s urbanization process: a case study of Guangzhou City",
-          "url": "https://www.nature.com/articles/s41598-026-41879-4",
-          "source": "Nature.com",
-          "published_at": "2026-02-28T00:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Scientific Reports - Analysis of the evolution and spatial effects of green space pattern in China’s urbanization process: a case study of Guangzhou City",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Sanford Heisler Sharp McKnight Secures Compassionate Release for Richard Brown in 1988 Kansas City Fire Case",
-          "url": "https://www.globenewswire.com/news-release/2026/02/27/3246858/0/en/Sanford-Heisler-Sharp-McKnight-Secures-Compassionate-Release-for-Richard-Brown-in-1988-Kansas-City-Fire-Case.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-02-27T23:28:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "KANSAS CITY, Mo., Feb. 27, 2026 (GLOBE NEWSWIRE) -- Sanford Heisler Sharp McKnight announced today that the United States District Court for the Western District of Missouri granted compassionate release to Richard W. Brown, vacating his life sentence and res…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "FCC approves the merger of cable giants Cox and Charter",
-          "url": "https://slashdot.org/firehose.pl?op=view&amp%3Bid=180870592",
-          "source": "Slashdot.org",
-          "published_at": "2026-02-27T23:12:08Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The Federal Communications Commission has given the go ahead for two of the US' biggest cable providers, Charter Communications and Cox Communications, to merge. Charter announced its intention to acquire Cox for $34.5 billion in May 2025, with specific plans…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
         }
       ],
       "clusters": {
@@ -4510,19 +4501,6 @@
             "feed": "everything",
             "description": "In today’s capitalistic society, money is king, or in the case of tvN’s newest suspense-thriller Mad Concrete Dreams, owning a building is the next best thing. Despite drowning in debt, Ha Jung-woo (Narco-Saints) is the proud proprietor of commercial real est…",
             "impact_score": 55,
-            "themes": [
-              "materials"
-            ]
-          },
-          {
-            "title": "Review: 40955 Maersk Dual-Fuel Container Vessel",
-            "url": "https://brickset.com/article/129977/review-40955-maersk-dual-fuel-container-vessel",
-            "source": "Brickset.com",
-            "published_at": "2026-02-27T16:00:00Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "Exactly two years ago (on the last day of February 2024), I wrote an article highlighting the relationship that exists between the LEGO and Maersk family dynasties. My article looked at the 10241 Maersk Line Triple-E set and how it immortalised that relations…",
-            "impact_score": 40,
             "themes": [
               "materials"
             ]
