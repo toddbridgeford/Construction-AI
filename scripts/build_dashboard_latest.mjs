@@ -1,35 +1,23 @@
 // scripts/build_dashboard_latest.mjs
-// Capital OS — Construction Intelligence Edition (Clean, Stable)
-// Node 20+ (ESM). Uses built-in fetch.
-//
-// Inputs:
-//   - config/fred_signals.json
-//   - config/news_router.json (optional)
-//   - config/fmp_universe.json (optional)
-//   - (optional) existing dashboard_latest.json (to append regime_history)
-//
-// Env:
-//   - FRED_API_KEY (required in GitHub Actions)
-//   - NEWSAPI_KEY (optional)
-//   - FMP_API_KEY (optional)
-//   - FRED_OBSERVATION_START (optional, default from config or 2020-01-01)
-//   - OUT_PATH (optional, default dashboard_latest.json at repo root)
+// Construction Intelligence OS — FRED + BLS + Census (Config-driven, Stable)
+// Node 20+ ESM. Zero external dependencies.
 
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { fetchNewsAPI } from "./providers/newsapi.mjs";
-import { fetchFMPMarkets } from "./providers/fmp.mjs";
 import { clamp, isoNow, utcYYYYMMDD } from "./lib/http.mjs";
+import { fetchBLS } from "./providers/bls.mjs";
+import { fetchCensus } from "./providers/census.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // ---------- Paths ----------
 const CONFIG_FRED = path.resolve(__dirname, "../config/fred_signals.json");
-const CONFIG_NEWS = path.resolve(__dirname, "../config/news_router.json");
-const CONFIG_FMP  = path.resolve(__dirname, "../config/fmp_universe.json");
+const CONFIG_BLS = path.resolve(__dirname, "../config/bls_series.json");
+const CONFIG_CENSUS = path.resolve(__dirname, "../config/census_sources.json");
+
 const DEFAULT_OUT = path.resolve(__dirname, "../dashboard_latest.json");
 const OUT_PATH = process.env.OUT_PATH
   ? path.resolve(process.cwd(), process.env.OUT_PATH)
@@ -37,8 +25,9 @@ const OUT_PATH = process.env.OUT_PATH
 
 // ---------- Env ----------
 const FRED_API_KEY = (process.env.FRED_API_KEY || "").trim();
-const NEWSAPI_KEY  = (process.env.NEWSAPI_KEY || "").trim();
-const FMP_API_KEY  = (process.env.FMP_API_KEY || "").trim();
+const BLS_API_KEY = (process.env.BLS_API_KEY || "").trim();
+const CENSUS_API_KEY = (process.env.CENSUS_API_KEY || "").trim();
+
 const FRED_BASE = "https://api.stlouisfed.org/fred/series/observations";
 
 // ---------- Helpers ----------
@@ -120,13 +109,13 @@ function computeYoY(history) {
   const last = history[history.length - 1];
   if (!last || last.value == null) return null;
 
+  // monthly/weekly data: use closest 1Y ago based on date string
   const lastDate = new Date(`${last.date}T00:00:00Z`);
   const yearAgo = new Date(Date.UTC(
     lastDate.getUTCFullYear() - 1,
     lastDate.getUTCMonth(),
     lastDate.getUTCDate()
   ));
-
   const yearAgoStr = `${yearAgo.getUTCFullYear()}-${String(yearAgo.getUTCMonth() + 1).padStart(2, "0")}-${String(yearAgo.getUTCDate()).padStart(2, "0")}`;
   const prev = getClosestToDate(history, yearAgoStr);
   if (!prev || prev.value == null || prev.value === 0) return null;
@@ -181,21 +170,18 @@ async function fetchFREDSeries(seriesId, observationStart) {
 
 // ---------- Engines ----------
 function computeEngines(seriesMap) {
-  // Based on config keys: mortgage30, permit, houst, unrate, cpi
   const mortgageHist = seriesMap.mortgage30?.history ?? [];
   const permitsHist  = seriesMap.permit?.history ?? [];
   const startsHist   = seriesMap.houst?.history ?? [];
   const unrateHist   = seriesMap.unrate?.history ?? [];
   const cpiHist      = seriesMap.cpi?.history ?? [];
 
-  // Mortgage is weekly → ~4 pts ≈ 1 month
   const mortgageTrend = computeTrend(mortgageHist, 4);
   const permitsYoy    = computeYoY(permitsHist);
   const startsYoy     = computeYoY(startsHist);
-  const unrateTrend   = computeTrend(unrateHist, 1); // monthly MoM
+  const unrateTrend   = computeTrend(unrateHist, 1);
   const cpiYoy        = computeYoY(cpiHist);
 
-  // CPI score (0–100): higher = tighter/restrictive
   const cpiScore = clamp(
     Math.round(
       50 +
@@ -209,7 +195,6 @@ function computeEngines(seriesMap) {
     100
   );
 
-  // CEPS score (0–100): activity-sensitive
   const cepsScore = clamp(
     Math.round(
       50 +
@@ -223,7 +208,6 @@ function computeEngines(seriesMap) {
     100
   );
 
-  // Builder momentum (0–100): heavily permits/starts
   const builderMomentum = clamp(
     Math.round(
       50 -
@@ -287,8 +271,8 @@ function computeEngines(seriesMap) {
   };
 }
 
-function buildSignalsPayload(configSignals, seriesMap) {
-  return configSignals.map((s) => {
+function buildSignalsPayload(fredSignals, seriesMap, blsSeries = [], censusSeries = []) {
+  const fredPayload = fredSignals.map((s) => {
     const hist = seriesMap[s.key]?.history ?? [];
     return {
       name: s.name,
@@ -298,13 +282,33 @@ function buildSignalsPayload(configSignals, seriesMap) {
       history: hist.map((p) => ({ date: p.date, value: p.value }))
     };
   });
+
+  // BLS/Census already normalized by providers
+  const blsPayload = blsSeries.map(s => ({
+    name: s.name,
+    region: s.region,
+    units: s.units,
+    yoy: s.yoy ?? null,
+    history: s.history ?? [],
+    source: "BLS"
+  }));
+
+  const censusPayload = censusSeries.map(s => ({
+    name: s.name,
+    region: s.region,
+    units: s.units,
+    yoy: s.yoy ?? null,
+    history: s.history ?? [],
+    source: "Census"
+  }));
+
+  return [...fredPayload, ...blsPayload, ...censusPayload];
 }
 
 function buildRegimeHistory(existing, entry) {
   const prev = Array.isArray(existing?.regime_history) ? existing.regime_history : [];
   const merged = [...prev, entry];
 
-  // De-dupe by date (keep newest)
   const seen = new Set();
   const out = [];
   for (let i = merged.length - 1; i >= 0; i--) {
@@ -319,27 +323,48 @@ function buildRegimeHistory(existing, entry) {
 
 // ---------- Main ----------
 async function main() {
-  const cfg = await readJSON(CONFIG_FRED);
+  const cfgFred = await readJSON(CONFIG_FRED);
 
   const observationStart =
     (process.env.FRED_OBSERVATION_START || "").trim() ||
-    (cfg.observation_start_default || "2020-01-01");
+    (cfgFred.observation_start_default || "2020-01-01");
 
-  const configSignals = Array.isArray(cfg.signals) ? cfg.signals : [];
-  if (configSignals.length === 0) throw new Error("config/fred_signals.json has no signals[]");
+  const fredSignals = Array.isArray(cfgFred.signals) ? cfgFred.signals : [];
+  if (fredSignals.length === 0) throw new Error("config/fred_signals.json has no signals[]");
 
-  // Fetch all FRED series
+  // Fetch FRED
   const seriesMap = {};
-  for (const s of configSignals) {
+  for (const s of fredSignals) {
     if (!s?.key || !s?.series_id) continue;
     const history = await fetchFREDSeries(s.series_id, observationStart);
     seriesMap[s.key] = { ...s, history };
   }
 
+  // Fetch BLS + Census (config-driven)
+  const cfgBls = await readJSONOptional(CONFIG_BLS, null);
+  const cfgCensus = await readJSONOptional(CONFIG_CENSUS, null);
+
+  let bls = { series: [] };
+  let census = { series: [] };
+
+  try {
+    if (cfgBls) bls = await fetchBLS({ apiKey: BLS_API_KEY, config: cfgBls });
+  } catch (e) {
+    bls = { series: [], error: String(e?.message || e) };
+  }
+
+  try {
+    if (cfgCensus) census = await fetchCensus({ apiKey: CENSUS_API_KEY, config: cfgCensus });
+  } catch (e) {
+    census = { series: [], error: String(e?.message || e) };
+  }
+
   const eng = computeEngines(seriesMap);
+
   const cpiScore = eng.cpiScore;
   const band = bandFromCPI(cpiScore);
   const severity = severityFromCPI(cpiScore);
+  const riskMode = cpiScore >= 70;
 
   const executive = {
     headline: "Construction Intelligence",
@@ -349,29 +374,8 @@ async function main() {
 
   const existing = await loadExistingDashboard(OUT_PATH);
 
-  // Optional providers (additive; safe failures)
-  const newsCfg = await readJSONOptional(CONFIG_NEWS, null);
-  const fmpCfg  = await readJSONOptional(CONFIG_FMP, null);
-
-  let news = null;
-  let markets = null;
-
-  try {
-    if (newsCfg) news = await fetchNewsAPI({ apiKey: NEWSAPI_KEY, config: newsCfg });
-  } catch (e) {
-    news = { asof: utcYYYYMMDD(), backbone: "newsapi", error: String(e?.message || e), headlines: [], category_scores: {} };
-  }
-
-  try {
-    if (fmpCfg) markets = await fetchFMPMarkets({ apiKey: FMP_API_KEY, universe: fmpCfg });
-  } catch (e) {
-    markets = { asof: utcYYYYMMDD(), source: "fmp", error: String(e?.message || e), universe: [], subsector_momentum: {} };
-  }
-
-  const riskMode = cpiScore >= 70;
-
   const out = {
-    schema_version: "3.3.0",
+    schema_version: "3.4.0",
     generated_at: isoNow(),
 
     executive,
@@ -394,20 +398,9 @@ async function main() {
       history: [{ date: utcYYYYMMDD(), value: cpiScore }]
     },
 
-    correlations: {
-      cpi_vs_builders: 0,
-      regime: safeUpper(bandFromCPI(cpiScore))
-    },
-
     risk_mode: Boolean(riskMode),
     risk_thermometer_mode: Boolean(riskMode),
     volatility_regime: safeUpper(eng.volatilityRegime),
-
-    shock_flags: {
-      rate_shock: false,
-      equity_drawdown: false,
-      volatility_spike: eng.volatilityRegime === "HIGH"
-    },
 
     predictive_engine: {
       horizon_days: 30,
@@ -416,34 +409,18 @@ async function main() {
       drivers: eng.drivers
     },
 
-    acceleration_engine: {
-      divergence: 2,
-      deltas: {
-        cpi_7d: null,
-        cpi_30d: null,
-        ceps_7d: null,
-        ceps_30d: null,
-        bmi_7d: null,
-        bmi_30d: null
-      },
-      flags: {
-        cpi_accelerating_7d: false,
-        cpi_accelerating_30d: false,
-        ceps_accelerating_7d: false,
-        ceps_accelerating_30d: false,
-        equity_tightening_divergence: false,
-        equity_easing_divergence: false,
-        builder_early_warning: false
-      },
-      alert_level: safeUpper(severity)
+    // NEW: raw provider payloads (kept simple)
+    macro_bls: {
+      asof: bls.asof ?? null,
+      error: bls.error ?? null
+    },
+    macro_census: {
+      asof: census.asof ?? null,
+      error: census.error ?? null
     },
 
-    // Existing FRED signal payload stays identical
-    signals: buildSignalsPayload(configSignals, seriesMap),
-
-    // NEW: News + Markets sections (additive)
-    news: news ?? undefined,
-    markets: markets ?? undefined,
+    // Signals now include FRED + BLS + Census (all in one list for UI simplicity)
+    signals: buildSignalsPayload(fredSignals, seriesMap, bls.series, census.series),
 
     alerts: [
       {
@@ -455,7 +432,7 @@ async function main() {
     ]
   };
 
-  // Structural Cycle Memory (regime_history append)
+  // Regime history
   const histEntry = {
     date: utcYYYYMMDD(),
     ceps: eng.cepsScore,
@@ -471,8 +448,8 @@ async function main() {
 
   console.log(`Wrote: ${OUT_PATH}`);
   console.log(`CPI=${cpiScore} (${band})  CEPS=${eng.cepsScore}  BMI=${eng.builderMomentum}`);
-  if (out.news?.error) console.log(`News: ${out.news.error}`);
-  if (out.markets?.error) console.log(`Markets: ${out.markets.error}`);
+  if (bls.error) console.log(`BLS error: ${bls.error}`);
+  if (census.error) console.log(`Census error: ${census.error}`);
 }
 
 main().catch((err) => {
