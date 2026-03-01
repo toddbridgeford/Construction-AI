@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "backbone": "newsapi",
+  "lookback_days": 7,
+  "page_size": 50,
+  "queries": [
+    "construction OR contractor OR homebuilder OR housing starts OR building permits OR construction spending OR AEC OR architecture OR engineering OR \"building materials\" OR lumber OR concrete OR gypsum OR insulation OR polyiso OR roofing OR drywall OR \"labor shortage\" OR union OR strike OR bankruptcy OR lien OR \"project award\" OR infrastructure OR DOT OR FAA OR \"data center\" OR \"semiconductor plant\""
+  ],
+  "whitelist_domains": [
+    "constructiondive.com",
+    "enr.com",
+    "constructionbusinessowner.com",
+    "constructionexec.com",
+    "bloomberg.com",
+    "wsj.com",
+    "reuters.com",
+    "apnews.com",
+    "ft.com",
+    "nytimes.com"
+  ]
+}
