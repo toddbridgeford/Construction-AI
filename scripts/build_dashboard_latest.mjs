@@ -29,6 +29,11 @@ async function fetchText(url) {
   return await res.text();
 }
 
+async function fetchJson(url) {
+  const txt = await fetchText(url);
+  return JSON.parse(txt);
+}
+
 async function fetchBuffer(url) {
   const res = await fetch(url, { redirect: "follow", headers: DEFAULT_HEADERS });
   if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
@@ -51,6 +56,18 @@ function safeNumber(x) {
   if (!s) return null;
   const n = Number(s);
   return Number.isFinite(n) ? n : null;
+}
+
+function trendArrow(curr, prev, eps = 1e-9) {
+  if (curr == null || prev == null) return "→";
+  if (Math.abs(curr - prev) <= eps) return "→";
+  return curr > prev ? "↑" : "↓";
+}
+
+function symbolForTrend(arrow) {
+  if (arrow === "↑") return "arrow.up.right";
+  if (arrow === "↓") return "arrow.down.right";
+  return "arrow.right";
 }
 
 function normalizeCbsa(code) {
@@ -204,7 +221,6 @@ async function fredObservations({ apiKey, seriesId, limit = 36 }) {
 function latestValue(series) {
   return series?.latest?.value ?? null;
 }
-
 function prevValue(series, kBack = 1) {
   const hist = series?.history;
   if (!Array.isArray(hist) || hist.length < 2) return null;
@@ -212,82 +228,6 @@ function prevValue(series, kBack = 1) {
   if (idx < 0) return null;
   return hist[idx]?.value ?? null;
 }
-
-function trendArrow(curr, prev, eps = 1e-9) {
-  if (curr == null || prev == null) return "→";
-  if (Math.abs(curr - prev) <= eps) return "→";
-  return curr > prev ? "↑" : "↓";
-}
-
-function zClip(x, lo, hi) {
-  if (x == null) return null;
-  return Math.max(lo, Math.min(hi, x));
-}
-
-// Deterministic normalizations to 0–100 pressure:
-// (Higher score = more pressure/tightness)
-function scoreMortgage30(x) {
-  // 3% -> ~20, 5.5% -> ~50, 8% -> ~80
-  if (x == null) return 50;
-  return clamp(20 + (x - 3.0) * 12);
-}
-
-function scoreCurveInversion(dgs2, dgs10) {
-  // inversion = 2y > 10y increases pressure
-  if (dgs2 == null || dgs10 == null) return 50;
-  const spread = dgs10 - dgs2; // negative is inverted
-  // spread +1.5 -> low pressure, -1.5 -> high pressure
-  return clamp(50 + (-spread) * 18);
-}
-
-function scoreNFCI(nfci) {
-  // NFCI often around -0.5 to +1.0
-  if (nfci == null) return 50;
-  return clamp(50 + nfci * 25);
-}
-
-function scoreSTLFSI(stress) {
-  // STLFSI4 typical ~ -1 to +3
-  if (stress == null) return 50;
-  return clamp(35 + stress * 15);
-}
-
-function scoreOAS(oas) {
-  // OAS in % points, typical IG ~1–3, HY ~3–10
-  if (oas == null) return 50;
-  return clamp(20 + (oas - 1.0) * 12);
-}
-
-function scoreSLOOS(netPct) {
-  // Net % tightening: 0–50+ typical. Higher = tighter credit.
-  if (netPct == null) return 50;
-  return clamp(35 + netPct * 1.0);
-}
-
-function scorePermitsMomentum(latest, avgPrev) {
-  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
-  const ratio = latest / avgPrev;
-  return clamp(50 + (1 - ratio) * 60);
-}
-
-function scoreStartsMomentum(latest, avgPrev) {
-  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
-  const ratio = latest / avgPrev;
-  return clamp(50 + (1 - ratio) * 55);
-}
-
-function scoreUnemploymentMedian(med) {
-  // 3.5% -> low pressure, 6.5% -> higher pressure
-  if (med == null) return 50;
-  return clamp(30 + (med - 3.5) * 12);
-}
-
-function scoreConsEmploymentMomentum(latest, avgPrev) {
-  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
-  const ratio = latest / avgPrev;
-  return clamp(50 + (1 - ratio) * 50);
-}
-
 function avgLastN(history, n, excludeLast = 0) {
   if (!Array.isArray(history) || history.length === 0) return null;
   const end = history.length - excludeLast;
@@ -493,13 +433,7 @@ async function loadBlsLausUnempRatesLatest() {
 
     const mState = series_id.match(/^LAU[SU]T(\d{2})00000000000003$/);
     if (mState) {
-      stateUnemp.set(mState[1], {
-        value: obs.value,
-        year: obs.year,
-        month: obs.month,
-        series_id,
-        area_text
-      });
+      stateUnemp.set(mState[1], { value: obs.value, year: obs.year, month: obs.month, series_id, area_text });
       continue;
     }
 
@@ -516,10 +450,72 @@ async function loadBlsLausUnempRatesLatest() {
 }
 
 // ---------------------------
-// CEPS v2 (Capital + Pipeline + Trade)
+// CEPS v2 scoring (deterministic)
 // ---------------------------
+function scoreMortgage30(x) {
+  if (x == null) return 50;
+  return clamp(20 + (x - 3.0) * 12);
+}
+function scoreCurveInversion(dgs2, dgs10) {
+  if (dgs2 == null || dgs10 == null) return 50;
+  const spread = dgs10 - dgs2;
+  return clamp(50 + (-spread) * 18);
+}
+function scoreNFCI(nfci) {
+  if (nfci == null) return 50;
+  return clamp(50 + nfci * 25);
+}
+function scoreSTLFSI(stress) {
+  if (stress == null) return 50;
+  return clamp(35 + stress * 15);
+}
+function scoreOAS(oas) {
+  if (oas == null) return 50;
+  return clamp(20 + (oas - 1.0) * 12);
+}
+function scoreSLOOS(netPct) {
+  if (netPct == null) return 50;
+  return clamp(35 + netPct * 1.0);
+}
+function scorePermitsMomentum(latest, avgPrev) {
+  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
+  const ratio = latest / avgPrev;
+  return clamp(50 + (1 - ratio) * 60);
+}
+function scoreStartsMomentum(latest, avgPrev) {
+  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
+  const ratio = latest / avgPrev;
+  return clamp(50 + (1 - ratio) * 55);
+}
+function scoreUnemploymentMedian(med) {
+  if (med == null) return 50;
+  return clamp(30 + (med - 3.5) * 12);
+}
+function scoreConsEmploymentMomentum(latest, avgPrev) {
+  if (latest == null || avgPrev == null || avgPrev <= 0) return 50;
+  const ratio = latest / avgPrev;
+  return clamp(50 + (1 - ratio) * 50);
+}
+
+function weightedScore(components) {
+  const usable = components.filter(c => c.score != null && Number.isFinite(c.score));
+  if (usable.length === 0) return 50;
+  const wSum = usable.reduce((a, c) => a + c.weight, 0);
+  if (wSum <= 0) return 50;
+  return clamp(usable.reduce((a, c) => a + c.score * c.weight, 0) / wSum);
+}
+
+function normalizeComponents(arr) {
+  return arr.map(x => ({
+    key: x.key,
+    label: x.label,
+    value: x.value,
+    score: Math.round(x.score),
+    weight: x.weight
+  }));
+}
+
 function computeCepsV2({ fred, unempStateMedian }) {
-  // Capital inputs
   const mortgage30 = latestValue(fred.mortgage_30y);
   const dgs2 = latestValue(fred.dgs2_2y_treasury);
   const dgs10 = latestValue(fred.dgs10_10y_treasury);
@@ -531,24 +527,21 @@ function computeCepsV2({ fred, unempStateMedian }) {
   const sloos = latestValue(fred.sloos_ci_large_tightening);
   const baa = latestValue(fred.baa_corp_yield);
   const aaa = latestValue(fred.aaa_corp_yield);
-
   const baaAaaSpread = (baa != null && aaa != null) ? (baa - aaa) : null;
 
   const capital_components = [
     { key: "mortgage_30y", label: "Mortgage 30Y", value: mortgage30, score: scoreMortgage30(mortgage30), weight: 0.22 },
-    { key: "curve_inversion", label: "Yield Curve (2y–10y)", value: (dgs2 != null && dgs10 != null) ? (dgs10 - dgs2) : null, score: scoreCurveInversion(dgs2, dgs10), weight: 0.18 },
+    { key: "curve_2y10y", label: "Yield Curve (10y-2y)", value: (dgs10 != null && dgs2 != null) ? (dgs10 - dgs2) : null, score: scoreCurveInversion(dgs2, dgs10), weight: 0.18 },
     { key: "nfci", label: "NFCI", value: nfci, score: scoreNFCI(nfci), weight: 0.12 },
     { key: "anfcI", label: "ANFCI", value: anfcI, score: scoreNFCI(anfcI), weight: 0.08 },
     { key: "stlfsI", label: "Financial Stress (STLFSI)", value: stlfsi, score: scoreSTLFSI(stlfsi), weight: 0.10 },
-    { key: "hy_oas", label: "High Yield Spread (OAS)", value: hy, score: scoreOAS(hy), weight: 0.12 },
-    { key: "ig_oas", label: "IG Spread (OAS)", value: ig, score: scoreOAS(ig), weight: 0.06 },
-    { key: "sloos", label: "Bank Tightening (SLOOS)", value: sloos, score: scoreSLOOS(sloos), weight: 0.08 },
+    { key: "hy_oas", label: "High Yield OAS", value: hy, score: scoreOAS(hy), weight: 0.12 },
+    { key: "ig_oas", label: "IG OAS", value: ig, score: scoreOAS(ig), weight: 0.06 },
+    { key: "sloos", label: "SLOOS Tightening", value: sloos, score: scoreSLOOS(sloos), weight: 0.08 },
     { key: "baa_aaa_spread", label: "BAA–AAA Spread", value: baaAaaSpread, score: scoreOAS(baaAaaSpread), weight: 0.04 },
   ];
-
   const capitalScore = weightedScore(capital_components);
 
-  // Pipeline inputs (momentum)
   const permitsLatest = latestValue(fred.building_permits_total);
   const permitsAvgPrev = avgLastN(fred.building_permits_total?.history, 6, 1);
   const startsLatest = latestValue(fred.housing_starts_total);
@@ -558,21 +551,17 @@ function computeCepsV2({ fred, unempStateMedian }) {
     { key: "permits_momentum", label: "Permits Momentum", value: permitsLatest, score: scorePermitsMomentum(permitsLatest, permitsAvgPrev), weight: 0.65 },
     { key: "starts_momentum", label: "Starts Momentum", value: startsLatest, score: scoreStartsMomentum(startsLatest, startsAvgPrev), weight: 0.35 },
   ];
-
   const pipelineScore = weightedScore(pipeline_components);
 
-  // Trade inputs (labor execution conditions)
   const consEmpLatest = latestValue(fred.construction_employment);
   const consEmpAvgPrev = avgLastN(fred.construction_employment?.history, 6, 1);
 
   const trade_components = [
-    { key: "unemp_median_states", label: "State Unemployment Median", value: unempStateMedian, score: scoreUnemploymentMedian(unempStateMedian), weight: 0.65 },
+    { key: "unemp_state_median", label: "State Unemployment Median", value: unempStateMedian, score: scoreUnemploymentMedian(unempStateMedian), weight: 0.65 },
     { key: "cons_emp_momentum", label: "Construction Employment Momentum", value: consEmpLatest, score: scoreConsEmploymentMomentum(consEmpLatest, consEmpAvgPrev), weight: 0.35 },
   ];
-
   const tradeScore = weightedScore(trade_components);
 
-  // Headline CEPS v2 (capital dominates)
   const ceps = clamp(0.50 * capitalScore + 0.32 * pipelineScore + 0.18 * tradeScore);
 
   return {
@@ -586,27 +575,6 @@ function computeCepsV2({ fred, unempStateMedian }) {
       trade: normalizeComponents(trade_components),
     }
   };
-}
-
-function normalizeComponents(arr) {
-  return arr.map(x => ({
-    key: x.key,
-    label: x.label,
-    value: x.value,
-    score: Math.round(x.score),
-    weight: x.weight
-  }));
-}
-
-function weightedScore(components) {
-  const usable = components.filter(c => c.score != null && Number.isFinite(c.score));
-  if (usable.length === 0) return 50;
-
-  const wSum = usable.reduce((a, c) => a + c.weight, 0);
-  if (wSum <= 0) return 50;
-
-  const s = usable.reduce((a, c) => a + c.score * c.weight, 0) / wSum;
-  return clamp(s);
 }
 
 function bandForScore(x) {
@@ -624,10 +592,132 @@ function severityForScore(x) {
   return "NORMAL";
 }
 
-function symbolForTrend(arrow) {
-  if (arrow === "↑") return "arrow.up.right";
-  if (arrow === "↓") return "arrow.down.right";
-  return "arrow.right";
+// ---------------------------
+// FREE NEWS: GDELT + RSS fallback
+// ---------------------------
+function daysAgoISO(days) {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - days);
+  return d.toISOString();
+}
+
+// GDELT 2.1 DOC API (free). We keep it simple: keyword query + max results.
+async function fetchGdeltNews({ query, lookbackDays = 3, max = 25 }) {
+  const start = daysAgoISO(lookbackDays);
+  const url = new URL("https://api.gdeltproject.org/api/v2/doc/doc");
+  url.searchParams.set("query", query);
+  url.searchParams.set("mode", "ArtList");
+  url.searchParams.set("format", "json");
+  url.searchParams.set("maxrecords", String(max));
+  url.searchParams.set("format", "json");
+  url.searchParams.set("startdatetime", start.replace(/[-:]/g, "").slice(0, 14)); // yyyyMMddHHmmss
+  const json = await fetchJson(url.toString());
+  const arts = Array.isArray(json?.articles) ? json.articles : [];
+  return arts.map(a => ({
+    title: a.title ?? null,
+    url: a.url ?? null,
+    source: a.sourceCountry ?? a.sourceCollection ?? a.sourceCommonName ?? null,
+    published_at: a.seendate ?? a.datetime ?? null
+  })).filter(x => x.title && x.url);
+}
+
+// Very small RSS parser (no dependency). Good enough for basic feeds.
+function parseRssItems(xml, max = 20) {
+  const items = [];
+  const itemRe = /<item\b[\s\S]*?<\/item>/gi;
+  const titleRe = /<title><!\[CDATA\[([\s\S]*?)\]\]><\/title>|<title>([\s\S]*?)<\/title>/i;
+  const linkRe = /<link>([\s\S]*?)<\/link>/i;
+  const pubRe = /<pubDate>([\s\S]*?)<\/pubDate>/i;
+  let m;
+  while ((m = itemRe.exec(xml)) && items.length < max) {
+    const block = m[0];
+    const t = block.match(titleRe);
+    const l = block.match(linkRe);
+    const p = block.match(pubRe);
+    const title = (t?.[1] ?? t?.[2] ?? "").trim();
+    const url = (l?.[1] ?? "").trim();
+    const published_at = (p?.[1] ?? "").trim();
+    if (title && url) items.push({ title, url, source: "rss", published_at: published_at || null });
+  }
+  return items;
+}
+
+async function fetchRss(url, max = 20) {
+  const xml = await fetchText(url);
+  return parseRssItems(xml, max);
+}
+
+// ---------------------------
+// FREE STOCKS: Stooq CSV (free, no key) + optional AlphaVantage
+// ---------------------------
+function parseCsvLine(line) {
+  // simple CSV (no embedded commas expected for Stooq quotes)
+  return line.split(",").map(x => x.trim());
+}
+
+// Stooq: https://stooq.com/q/l/?s=aapl.us&f=sd2t2ohlcv&h&e=csv
+async function fetchStooqQuote(ticker) {
+  const t = ticker.toLowerCase();
+  const stooqSymbol = t.includes(".") ? t : `${t}.us`;
+
+  const url = new URL("https://stooq.com/q/l/");
+  url.searchParams.set("s", stooqSymbol);
+  url.searchParams.set("f", "sd2t2ohlcv"); // date, time, open, high, low, close, volume
+  url.searchParams.set("h", "");
+  url.searchParams.set("e", "csv");
+
+  const csv = await fetchText(url.toString());
+  const lines = csv.trim().split("\n");
+  if (lines.length < 2) return null;
+
+  const header = parseCsvLine(lines[0]);
+  const row = parseCsvLine(lines[1]);
+  const idx = (name) => header.indexOf(name);
+
+  const close = safeNumber(row[idx("Close")]);
+  const open = safeNumber(row[idx("Open")]);
+  const date = row[idx("Date")] ?? null;
+
+  if (close == null) return null;
+  const chg = (open != null) ? (close - open) : null;
+  const chgPct = (open != null && open !== 0) ? (chg / open) * 100 : null;
+
+  return {
+    ticker: ticker.toUpperCase(),
+    source: "stooq",
+    date,
+    open,
+    close,
+    change: chg,
+    change_pct: chgPct
+  };
+}
+
+// Optional Alpha Vantage (free tier but requires key)
+async function fetchAlphaVantageQuote(ticker, apiKey) {
+  const url = new URL("https://www.alphavantage.co/query");
+  url.searchParams.set("function", "GLOBAL_QUOTE");
+  url.searchParams.set("symbol", ticker);
+  url.searchParams.set("apikey", apiKey);
+
+  const json = await fetchJson(url.toString());
+  const q = json?.["Global Quote"];
+  if (!q) return null;
+
+  const close = safeNumber(q["05. price"]);
+  const prevClose = safeNumber(q["08. previous close"]);
+  const change = safeNumber(q["09. change"]);
+  const changePct = q["10. change percent"] ? safeNumber(String(q["10. change percent"]).replace("%","")) : null;
+
+  return {
+    ticker: ticker.toUpperCase(),
+    source: "alphavantage",
+    date: q["07. latest trading day"] ?? null,
+    close,
+    prev_close: prevClose,
+    change,
+    change_pct: changePct
+  };
 }
 
 // ---------------------------
@@ -636,7 +726,7 @@ function symbolForTrend(arrow) {
 async function main() {
   const FRED_API_KEY = mustGetEnv("FRED_API_KEY");
 
-  // Full Macro Sweep (construction + macro)
+  // Macro + construction series pack
   const FRED_SERIES = {
     // Construction anchors
     mortgage_30y: "MORTGAGE30US",
@@ -672,27 +762,22 @@ async function main() {
     unrate: "UNRATE",
     ism_pmi: "NAPM",
 
-    // Housing sentiment (if available)
+    // Housing sentiment
     nahb_hmi: "HMI",
   };
 
   const fred = {};
   for (const [k, seriesId] of Object.entries(FRED_SERIES)) {
     const obs = await fredObservations({ apiKey: FRED_API_KEY, seriesId, limit: 36 });
-    fred[k] = {
-      series_id: seriesId,
-      latest: obs[0] ?? null,
-      history: obs.slice().reverse(),
-    };
+    fred[k] = { series_id: seriesId, latest: obs[0] ?? null, history: obs.slice().reverse() };
   }
 
   const bps = await loadCensusBpsLatest();
   const laus = await loadBlsLausUnempRatesLatest();
 
-  // Median state unemployment
+  // State unemployment median
   const stateNameToFips = buildStateNameToFips();
   const states = Array.from(stateNameToFips.values()).sort();
-
   const stateUnemps = [];
   for (const fips of states) {
     const u = laus.stateUnemp.get(fips)?.value ?? null;
@@ -703,14 +788,13 @@ async function main() {
 
   // CEPS v2
   const cepsV2 = computeCepsV2({ fred, unempStateMedian: unempMedian });
-
   const ceps_score = cepsV2.ceps_score;
   const capIdx = cepsV2.capital;
 
   const risk_mode = ceps_score >= 70;
   const risk_thermometer_mode = risk_mode;
 
-  // Trends for Apple UI (simple arrows)
+  // Trends (for SwiftUI arrows)
   const trends = {
     mortgage_30y: trendArrow(latestValue(fred.mortgage_30y), prevValue(fred.mortgage_30y, 1)),
     permits: trendArrow(latestValue(fred.building_permits_total), prevValue(fred.building_permits_total, 1)),
@@ -719,9 +803,9 @@ async function main() {
     hy_oas: trendArrow(latestValue(fred.hy_oas), prevValue(fred.hy_oas, 1)),
   };
 
+  // Apple-native alerts
   const alerts = [];
   const sev = severityForScore(ceps_score);
-
   if (sev === "CRITICAL") {
     alerts.push({
       severity: "CRITICAL",
@@ -747,7 +831,7 @@ async function main() {
 
   const executiveSummary =
     ceps_score >= 70
-      ? "Pressure is elevated. Capital and credit stress are materially constraining the pipeline. Defensive posture recommended."
+      ? "Pressure is elevated. Capital and credit stress are constraining the pipeline. Defensive posture recommended."
       : "Pressure is stable. Capital is the primary transmission lever. Monitor permits momentum and credit spreads for inflection.";
 
   // Drilldown geo layer (unchanged)
@@ -786,7 +870,6 @@ async function main() {
   }
 
   const cbsas = Array.from(bps.cbsa.permit.keys()).sort();
-
   for (const cbsa of cbsas) {
     const p = bps.cbsa.permit.get(cbsa);
     const nodeKey = `cbsa:${cbsa}`;
@@ -811,7 +894,58 @@ async function main() {
     if (unemp == null) observed_gaps.push({ geo: nodeKey, metric: "laus_cbsa_unemployment_rate", reason: "no deterministic LAUS match for this CBSA name" });
   }
 
-  // Apple-native UI “cards” (simple, stable contract)
+  // ---------------------------
+  // NEWS (free)
+  // ---------------------------
+  const lookbackDays = safeNumber(process.env.NEWS_LOOKBACK_DAYS) ?? 3;
+
+  // Construction-focused query
+  const gdeltQuery =
+    '(construction OR "building permits" OR "housing starts" OR "commercial real estate" OR "general contractor" OR "homebuilder" OR "building code" OR "land acquisition") sourceCountry:US';
+
+  let news = [];
+  try {
+    news = await fetchGdeltNews({ query: gdeltQuery, lookbackDays, max: 25 });
+  } catch (e) {
+    // RSS fallback (ENR is often paywalled; we keep generic feeds that usually work)
+    try {
+      const rss = await fetchRss("https://news.google.com/rss/search?q=construction+industry+US&hl=en-US&gl=US&ceid=US:en", 25);
+      news = rss;
+    } catch {
+      news = [];
+    }
+  }
+
+  // ---------------------------
+  // STOCKS (free)
+  // ---------------------------
+  const tickers = (process.env.STOCK_TICKERS || "")
+    .split(",")
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  const alphaKey = process.env.ALPHAVANTAGE_API_KEY || null;
+
+  const stocks = [];
+  for (const t of tickers) {
+    try {
+      // Prefer free/no-key Stooq
+      const q = await fetchStooqQuote(t);
+      if (q) {
+        stocks.push(q);
+        continue;
+      }
+      // Optional fallback
+      if (alphaKey) {
+        const av = await fetchAlphaVantageQuote(t, alphaKey);
+        if (av) stocks.push(av);
+      }
+    } catch {
+      // skip
+    }
+  }
+
+  // Apple-native cards
   const ui_cards = [
     {
       id: "ceps",
@@ -851,8 +985,38 @@ async function main() {
     }
   ];
 
+  // ---------------------------
+  // GPT Payload (Construction AI)
+  // ---------------------------
+  const gpt_payload = {
+    product: "Construction AI",
+    generated_at_utc: isoUtcNow(),
+    executive: {
+      headline: "Construction Intelligence",
+      summary: executiveSummary,
+      severity: severityForScore(ceps_score),
+      band: bandForScore(ceps_score),
+    },
+    ceps_v2: {
+      score: ceps_score,
+      capital: cepsV2.capital,
+      pipeline: cepsV2.pipeline,
+      trade: cepsV2.trade,
+      components: cepsV2.components
+    },
+    signal_strip: [
+      { key: "mortgage_30y", value: latestValue(fred.mortgage_30y), arrow: trends.mortgage_30y },
+      { key: "permits", value: latestValue(fred.building_permits_total), arrow: trends.permits },
+      { key: "starts", value: latestValue(fred.housing_starts_total), arrow: trends.starts },
+      { key: "nfci", value: latestValue(fred.nfci), arrow: trends.nfci },
+      { key: "hy_oas", value: latestValue(fred.hy_oas), arrow: trends.hy_oas }
+    ],
+    news_brief: news.slice(0, 12),
+    stock_snapshot: stocks.slice(0, 25)
+  };
+
   const out = {
-    schema_version: "3.6.0",
+    schema_version: "3.7.0",
     generated_at: isoUtcNow(),
 
     executive: {
@@ -861,10 +1025,9 @@ async function main() {
       summary: executiveSummary
     },
 
-    // Headline score (keeps your existing workflow gate)
+    // Keep workflow gate
     ceps_score,
 
-    // v2 breakdown (for your iPad UI + future CPI engine)
     ceps_v2: {
       version: "2.0",
       band: bandForScore(ceps_score),
@@ -875,7 +1038,6 @@ async function main() {
       components: cepsV2.components
     },
 
-    // Existing fields you already use
     ceps_split: {
       residential: clamp(ceps_score - 3, 0, 100),
       institutional: clamp(ceps_score + 3, 0, 100)
@@ -897,13 +1059,22 @@ async function main() {
     risk_thermometer_mode,
     volatility_regime: "NORMAL",
 
-    // Apple design language: calm primitives for SwiftUI
+    // Apple-friendly primitives
     ui: {
       accent: "system",
       alerts,
       trends: Object.fromEntries(Object.entries(trends).map(([k, v]) => ([k, { arrow: v, symbol: symbolForTrend(v) }]))),
       cards: ui_cards
     },
+
+    // News + Stocks
+    market_intel: {
+      news: news.slice(0, 25),
+      stocks: stocks.slice(0, 50)
+    },
+
+    // GPT-optimized block
+    gpt_payload,
 
     observed: {
       sources: {
@@ -914,13 +1085,13 @@ async function main() {
           selected_state_file: bps.state.link,
           selected_cbsa_file: bps.cbsa.link
         },
-        bls_laus: { base: "https://download.bls.gov/pub/time.series/la/" }
+        bls_laus: { base: "https://download.bls.gov/pub/time.series/la/" },
+        gdelt: { api: "https://api.gdeltproject.org/api/v2/doc/doc" },
+        stooq: { api: "https://stooq.com/q/l/" }
       },
       coverage: { us: true, states_fips: states, cbsas },
 
-      // Full macro pack exposed for your iPad dashboard + GPT analytics
       macro_fred: fred,
-
       geo_data,
       observed_gaps
     }
