@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "source": "fmp_universe_v1",
+  "tickers": [
+    { "ticker": "DHI",  "company_name": "D.R. Horton",               "subsector": "Homebuilders" },
+    { "ticker": "LEN",  "company_name": "Lennar",                     "subsector": "Homebuilders" },
+    { "ticker": "PHM",  "company_name": "PulteGroup",                 "subsector": "Homebuilders" },
+    { "ticker": "NVR",  "company_name": "NVR",                        "subsector": "Homebuilders" },
+    { "ticker": "TOL",  "company_name": "Toll Brothers",              "subsector": "Homebuilders" },
+
+    { "ticker": "BLDR", "company_name": "Builders FirstSource",       "subsector": "Distributors" },
+    { "ticker": "WSO",  "company_name": "Watsco",                     "subsector": "Distributors" },
+    { "ticker": "WCC",  "company_name": "WESCO International",        "subsector": "Distributors" },
+
+    { "ticker": "VMC",  "company_name": "Vulcan Materials",           "subsector": "Materials" },
+    { "ticker": "MLM",  "company_name": "Martin Marietta",            "subsector": "Materials" },
+    { "ticker": "OC",   "company_name": "Owens Corning",              "subsector": "Building Products" },
+    { "ticker": "JHX",  "company_name": "James Hardie Industries",    "subsector": "Building Products" },
+
+    { "ticker": "CAT",  "company_name": "Caterpillar",                "subsector": "Equipment" },
+    { "ticker": "DE",   "company_name": "Deere",                      "subsector": "Equipment" },
+
+    { "ticker": "ACM",  "company_name": "AECOM",                      "subsector": "Engineering & Construction" },
+    { "ticker": "J",    "company_name": "Jacobs",                     "subsector": "Engineering & Construction" }
+  ]
+}
