@@ -1,36 +1,32 @@
 {
-  "schema_version": "3.0.6",
-  "generated_at": "2026-03-01T00:22:12.874Z",
+  "schema_version": "3.2.0",
+  "generated_at": "2026-03-01T00:34:09.488Z",
   "executive": {
-    "headline": "Construction Intelligence — STABLE",
-    "confidence": "MEDIUM",
-    "summary": "Live macro inputs loaded via FRED. Composite pressure and split indicators updated."
+    "headline": "Construction Intelligence",
+    "confidence": "medium",
+    "summary": "Capital conditions are stable. Monitor mortgage trend and permits for inflection signals."
+  },
+  "ceps_score": 56,
+  "ceps_split": {
+    "residential": 53,
+    "institutional": 60
+  },
+  "builder_momentum": {
+    "value": 43
   },
   "capital": {
-    "pressure_index": 53,
+    "pressure_index": 46,
     "band": "NEUTRAL",
     "subindices": {
-      "residential": 54,
-      "institutional": 51
+      "residential": 57,
+      "institutional": 34
     },
     "history": [
       {
         "date": "2026-03-01",
-        "value": 53
+        "value": 46
       }
     ]
-  },
-  "ceps_score": 47,
-  "ceps_split": {
-    "residential": 48,
-    "institutional": 46
-  },
-  "builder_momentum": {
-    "value": 43,
-    "components": {
-      "starts_yoy": -7.26552179656539,
-      "permits_yoy": -2.1621621621621623
-    }
   },
   "correlations": {
     "cpi_vs_builders": 0,
@@ -38,23 +34,41 @@
   },
   "risk_mode": false,
   "risk_thermometer_mode": false,
-  "volatility_regime": "NORMAL",
+  "volatility_regime": "LOW",
   "shock_flags": {
     "rate_shock": false,
     "equity_drawdown": false,
     "volatility_spike": false
   },
-  "regime_history": [
-    {
-      "date": "2026-03-01",
-      "ceps": 47,
-      "cpi": 53,
-      "volatility": "NORMAL",
-      "regime": "NEUTRAL"
-    }
-  ],
+  "predictive_engine": {
+    "horizon_days": 30,
+    "projected_cpi_30d": 46,
+    "prob_cpi_ge_70": 2,
+    "drivers": [
+      {
+        "key": "mortgage30_trend",
+        "value": -0.11999999999999922
+      },
+      {
+        "key": "permits_yoy",
+        "value": -2.1621621621621623
+      },
+      {
+        "key": "housing_starts_yoy",
+        "value": -7.26552179656539
+      },
+      {
+        "key": "unrate_trend",
+        "value": 0
+      },
+      {
+        "key": "cpi_yoy",
+        "value": 2.8286797395498917
+      }
+    ]
+  },
   "acceleration_engine": {
-    "divergence": 6,
+    "divergence": 2,
     "deltas": {
       "cpi_7d": null,
       "cpi_30d": null,
@@ -72,15 +86,13 @@
       "equity_easing_divergence": false,
       "builder_early_warning": false
     },
-    "alert_level": "STABLE"
+    "alert_level": "MONITOR"
   },
   "signals": [
     {
       "name": "30Y Mortgage Rate",
       "region": "US",
       "units": "%",
-      "series_id": "MORTGAGE30US",
-      "value": 5.98,
       "yoy": -3.3925686591276247,
       "history": [
         {
@@ -185,8 +197,6 @@
       "name": "CPI (All Urban Consumers)",
       "region": "US",
       "units": "index",
-      "series_id": "CPIAUCSL",
-      "value": 326.588,
       "yoy": 2.8286797395498917,
       "history": [
         {
@@ -291,8 +301,6 @@
       "name": "Unemployment Rate",
       "region": "US",
       "units": "%",
-      "series_id": "UNRATE",
-      "value": 4.3,
       "yoy": 4.87804878048781,
       "history": [
         {
@@ -397,8 +405,6 @@
       "name": "Housing Starts",
       "region": "US",
       "units": "thousands",
-      "series_id": "HOUST",
-      "value": 1404,
       "yoy": -7.26552179656539,
       "history": [
         {
@@ -503,8 +509,6 @@
       "name": "Building Permits",
       "region": "US",
       "units": "thousands",
-      "series_id": "PERMIT",
-      "value": 1448,
       "yoy": -2.1621621621621623,
       "history": [
         {
@@ -609,8 +613,6 @@
       "name": "Construction Spending (Total)",
       "region": "US",
       "units": "millions",
-      "series_id": "TTLCONS",
-      "value": 2168775,
       "yoy": -0.36142829183669156,
       "history": [
         {
@@ -715,8 +717,6 @@
       "name": "Construction Spending (Residential)",
       "region": "US",
       "units": "millions",
-      "series_id": "TLRESCONS",
-      "value": 928451,
       "yoy": -1.2006589098617269,
       "history": [
         {
@@ -821,8 +821,6 @@
       "name": "Construction Spending (Nonresidential)",
       "region": "US",
       "units": "millions",
-      "series_id": "TLNRESCONS",
-      "value": 1240324,
       "yoy": 0.27609145054324935,
       "history": [
         {
@@ -924,81 +922,23 @@
       ]
     }
   ],
-  "panels": {
-    "permits": {
-      "state": {
-        "max_states": 12,
-        "states": [
-          {
-            "code": "TX",
-            "name": "Texas",
-            "series_id": "TXBPPRIVSA"
-          },
-          {
-            "code": "FL",
-            "name": "Florida",
-            "series_id": "FLBPPRIVSA"
-          },
-          {
-            "code": "CA",
-            "name": "California",
-            "series_id": "CABPPRIVSA"
-          },
-          {
-            "code": "GA",
-            "name": "Georgia",
-            "series_id": "GABPPRIVSA"
-          },
-          {
-            "code": "NC",
-            "name": "North Carolina",
-            "series_id": "NCBPPRIVSA"
-          }
-        ]
-      },
-      "msa": {
-        "max_msas": 12,
-        "msas": [
-          {
-            "code": "DALLAS",
-            "name": "Dallas–Fort Worth, TX",
-            "series_id": "DALL148BPPRIVSA"
-          },
-          {
-            "code": "MIAMI",
-            "name": "Miami–Fort Lauderdale, FL",
-            "series_id": "MIAM112BPPRIVSA"
-          },
-          {
-            "code": "LOSANGELES",
-            "name": "Los Angeles–Long Beach, CA",
-            "series_id": "LOSA106BPPRIVSA"
-          },
-          {
-            "code": "ATLANTA",
-            "name": "Atlanta, GA",
-            "series_id": "ATLA013BPPRIVSA"
-          },
-          {
-            "code": "CHARLOTTE",
-            "name": "Charlotte, NC",
-            "series_id": "CHAR737BPPRIVSA"
-          },
-          {
-            "code": "HOUSTON",
-            "name": "Houston, TX",
-            "series_id": "HOUS448BPPRIVSA"
-          }
-        ]
-      }
-    }
-  },
   "alerts": [
     {
-      "id": "core_regime",
-      "title": "STABLE — NEUTRAL",
+      "id": "banner",
+      "title": "MONITOR — STABLE",
       "severity": "MONITOR",
-      "why_it_matters": "Composite pressure is contained; monitor for inflections in permits/starts."
+      "why_it_matters": "Composite conditions remain stable; continue monitoring leading indicators."
+    }
+  ],
+  "regime_history": [
+    {
+      "date": "2026-03-01",
+      "ceps": 56,
+      "cpi": 46,
+      "volatility": "LOW",
+      "regime": "NEUTRAL",
+      "projected_cpi_30d": 46,
+      "prob_cpi_ge_70": 2
     }
   ]
 }
