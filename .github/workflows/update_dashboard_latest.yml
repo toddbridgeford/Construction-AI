@@ -23,9 +23,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          # Optional but recommended caching once package-lock exists
-          cache: "npm"
-          cache-dependency-path: scripts/package-lock.json
 
       - name: Ensure dashboard_latest.json exists
         run: |
@@ -48,10 +45,10 @@ jobs:
 
       - name: Run Build Script
         env:
-          # REQUIRED
+          # REQUIRED (already in your repo)
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
 
-          # OPTIONAL (passed through for later use)
+          # OPTIONAL (you said you have these keys; we pass them through now)
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
 
