@@ -728,6 +728,37 @@ function buildNewsClusters(news) {
   for (const k of Object.keys(clusters)) clusters[k] = clusters[k].slice(0, 12);
   return clusters;
 }
+async function fetchNewsApiTopHeadlines({
+  apiKey,
+  country = "us",
+  category = "business",
+  pageSize = 30
+}) {
+  if (!apiKey) return [];
+
+  const url = new URL("https://newsapi.org/v2/top-headlines");
+  url.searchParams.set("country", country);
+  url.searchParams.set("category", category);
+  url.searchParams.set("pageSize", String(pageSize));
+
+  const json = await fetchJson(url.toString(), {
+    headers: { "X-Api-Key": apiKey }
+  });
+
+  const arts = Array.isArray(json?.articles) ? json.articles : [];
+
+  return arts
+    .map(a => ({
+      title: a.title ?? null,
+      url: a.url ?? null,
+      source: a.source?.name ?? null,
+      published_at: a.publishedAt ?? null,
+      description: a.description ?? null,
+      premium: true,
+      feed: "top_headlines"
+    }))
+    .filter(x => x.title && x.url);
+}
 function buildLandTracker(news) {
   const landItems = news
     .map(n => ({ ...n, themes: classifyNewsItem(n.title) }))
