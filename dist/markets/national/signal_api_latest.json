@@ -5,89 +5,33 @@
     "mode": "data_assisted",
     "run_date": "2026-03-02",
     "region": {
-      "label": "United States",
-      "name": "National"
+      "name": "United States",
+      "geo_id": null
     }
   },
   "provenance": {
-    "generated_at": "2026-03-02T14:40:54.350Z",
+    "as_of": "2026-03-02",
     "sources": [
       {
-        "name": "fred",
-        "series": "https://api.stlouisfed.org/fred/series/observations",
+        "name": "FRED",
+        "series": "macro_fred_pack",
         "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
+        "last_updated": null,
         "url": "https://api.stlouisfed.org/fred/series/observations"
       },
       {
-        "name": "census_bps",
-        "series": "census_bps",
+        "name": "Census BPS",
+        "series": "bps_monthly",
         "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
-        "url": null
+        "last_updated": null,
+        "url": "https://www.census.gov/construction/bps/msamonthly.html"
       },
       {
-        "name": "bls_laus",
-        "series": "https://download.bls.gov/pub/time.series/la/",
+        "name": "BLS LAUS",
+        "series": "laus_unemployment",
         "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
+        "last_updated": null,
         "url": "https://download.bls.gov/pub/time.series/la/"
-      },
-      {
-        "name": "gdelt",
-        "series": "https://api.gdeltproject.org/api/v2/doc/doc",
-        "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
-        "url": "https://api.gdeltproject.org/api/v2/doc/doc"
-      },
-      {
-        "name": "newsapi_everything",
-        "series": "https://newsapi.org/v2/everything",
-        "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
-        "url": "https://newsapi.org/v2/everything"
-      },
-      {
-        "name": "newsapi_top_headlines",
-        "series": "https://newsapi.org/v2/top-headlines",
-        "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
-        "url": "https://newsapi.org/v2/top-headlines"
-      },
-      {
-        "name": "stooq",
-        "series": "https://stooq.com/q/l/",
-        "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
-        "url": "https://stooq.com/q/l/"
-      },
-      {
-        "name": "alphavantage",
-        "series": "https://www.alphavantage.co/query",
-        "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
-        "url": "https://www.alphavantage.co/query"
-      },
-      {
-        "name": "sam_gov",
-        "series": "https://api.sam.gov/opportunities/v2/search",
-        "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
-        "url": "https://api.sam.gov/opportunities/v2/search"
-      },
-      {
-        "name": "usaspending",
-        "series": "https://api.usaspending.gov/api/v2/award/search/",
-        "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
-        "url": "https://api.usaspending.gov/api/v2/award/search/"
-      },
-      {
-        "name": "eia",
-        "series": "https://api.eia.gov",
-        "release_date": null,
-        "last_updated": "2026-03-02T14:40:54.350Z",
-        "url": "https://api.eia.gov"
       }
     ]
   },
@@ -95,10 +39,10 @@
     "pressure_index": {
       "value": 46,
       "direction": "→",
-      "zone": "watch",
+      "zone": "Compression Phase",
       "delta_3m": 0,
       "momentum_band": "Stable",
-      "risk_state": "🟡",
+      "risk_state": "🟢",
       "drivers": {
         "capital": 39,
         "pipeline": 47,
@@ -107,34 +51,167 @@
         "regulatory": 50,
         "macro": 43
       },
-      "overlays": {
-        "stock_overlay": 0,
-        "news_overlay": 0,
-        "energy_overlay": 0,
-        "total_overlay_points": 0
-      },
       "subindices": {
-        "cpi_sf": 44,
-        "cpi_mf": 45,
-        "cpi_inst": 47,
-        "cpi_infra": 47,
-        "cpi_r": 44,
-        "cpi_i": 47
+        "cpi_sf": null,
+        "cpi_mf": null,
+        "cpi_inst": null,
+        "cpi_infra": null,
+        "cpi_r": null,
+        "cpi_i": null
+      },
+      "divergences": {
+        "r_minus_i": -3,
+        "sf_minus_mf": -1,
+        "inst_minus_infra": -1
+      }
+    },
+    "capital_stress_index": {
+      "value": 39,
+      "risk_state": "🟢",
+      "overlays": {
+        "active_triggers": [],
+        "overlay_points": 0
+      }
+    },
+    "residential_index": {
+      "value": null,
+      "risk_state": "🟡",
+      "bifurcation": {
+        "single_family": "🟡",
+        "multifamily": "🟡"
+      }
+    },
+    "institutional_infra_index": {
+      "value": null,
+      "risk_state": "🟡",
+      "overlays": {
+        "active_triggers": [],
+        "overlay_points": 0
+      }
+    },
+    "contractor_margin_index": {
+      "value": 50,
+      "risk_state": "🟢",
+      "overlays": {
+        "active_triggers": [],
+        "overlay_points": 0
+      }
+    },
+    "distributor_inventory_index": {
+      "value": null,
+      "risk_state": "🟡",
+      "overlays": {
+        "active_triggers": [],
+        "overlay_points": 0
+      }
+    },
+    "manufacturer_pricing_index": {
+      "value": null,
+      "risk_state": "🟡",
+      "overlays": {
+        "active_triggers": [],
+        "overlay_points": 0
       }
     }
   },
+  "ecosystem_pulse": {
+    "home_builders": "🟡",
+    "architects": "🟡",
+    "general_contractors": "🟡",
+    "distributors": "🟡",
+    "manufacturers": "🟡"
+  },
+  "ecosystem_power": {
+    "index": 56,
+    "risk_state": "🟢",
+    "drivers": [
+      "slowdown_band"
+    ],
+    "actors": [
+      {
+        "actor": "general_contractors",
+        "power": 55,
+        "tier": "Tier B",
+        "control": true
+      },
+      {
+        "actor": "subcontractors",
+        "power": 50,
+        "tier": "Tier C",
+        "control": false
+      },
+      {
+        "actor": "distributors",
+        "power": 45,
+        "tier": "Tier C",
+        "control": false
+      }
+    ],
+    "transmission": [
+      "Baseline: GC sets terms; subs compete; distributors transmit price/terms, not control."
+    ],
+    "call": "GCs are primary control node; protect scope clarity and buyout timing."
+  },
+  "thermometer": {
+    "active": false,
+    "trigger_reason": [],
+    "display": {
+      "cpi_value": 46,
+      "zone": "Compression Phase",
+      "delta_3m": 0,
+      "risk_state": "🟢"
+    }
+  },
+  "heatmap": {
+    "as_of": "2026-03-02",
+    "regions": [
+      {
+        "name": "National",
+        "velocity": "→",
+        "pressure": "🟢",
+        "capital": "🟢",
+        "residential": "🟡",
+        "institutional": "🟡",
+        "contractors": "🟡",
+        "distribution": "🟡",
+        "manufacturing": "🟡"
+      }
+    ]
+  },
   "regime": {
-    "cycle_state": null,
-    "modifier": null,
-    "confidence": "medium"
+    "cycle_state": "",
+    "modifier": "",
+    "confidence": "medium",
+    "inflection_triggers": [
+      {
+        "name": "Freeze Threshold",
+        "condition": "CPI >= 76",
+        "active": false
+      },
+      {
+        "name": "Acceleration",
+        "condition": "Δ3m >= +8",
+        "active": false
+      },
+      {
+        "name": "Capital Override",
+        "condition": "Capital >= 80",
+        "active": false
+      }
+    ]
+  },
+  "actions": {
+    "strategic_posture": [
+      "Top Headlines Active: NewsAPI Top Headlines is active for executive signal strip."
+    ],
+    "decision_delta": []
   },
   "diagnostics": {
-    "missing_inputs": [
-      "regime.primary"
-    ],
+    "missing_inputs": [],
     "non_deterministic_blocks": [],
     "notes": [
-      "Signal API built from dashboard_latest.json (hardened mode)."
+      "Built deterministically from dashboard_latest.json",
+      "Includes Ecosystem Power Index (EPI) v1"
     ]
   }
 }

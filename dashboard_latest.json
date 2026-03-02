@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-02T14:40:54.350Z",
+  "generated_at": "2026-03-02T15:03:06.470Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -13,10 +13,6 @@
     "momentum": "Stable",
     "history": [
       {
-        "date": "2026-03-01",
-        "value": 46
-      },
-      {
         "date": "2026-03-02",
         "value": 46
       },
@@ -31,6 +27,10 @@
       {
         "date": "2026-03-02",
         "value": 50
+      },
+      {
+        "date": "2026-03-02",
+        "value": 46
       },
       {
         "date": "2026-03-02",
@@ -482,6 +482,15 @@
         "description": "Block earned some praise for its \"relatively generous\" severance package. Here is a look at what other Big Tech companies have offered in the past."
       },
       {
+        "title": "Power Hungry: How The AI Boom Is Forcing A Clean Energy Reckoning",
+        "url": "https://www.forbes.com/sites/kensilverstein/2026/03/01/the-ai-energy-tax-data-centers-are-driving-up-your-electric-bills/",
+        "source": "Forbes",
+        "published_at": "2026-03-01T15:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Surging electricity demand from AI data centers is colliding with a federal energy policy that favors slow-build fossil fuels over fast-deploy renewables. Price impact?"
+      },
+      {
         "title": "Delaware History, Apple, Google Circle, More: Sunday ResearchBuzz, March 1, 2026",
         "url": "https://researchbuzz.me/2026/03/01/delaware-history-apple-google-circle-more-sunday-researchbuzz-march-1-2026/",
         "source": "Researchbuzz.me",
@@ -861,7 +870,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -870,7 +879,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -1146,15 +1155,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "The deal could ease some of Wall Street's fears about Amazon's monster $200 billion capex spending, and accelerate its development of AI tools."
-      },
-      {
-        "title": "Galacticoaster opens at Legoland Florida",
-        "url": "https://www.themeparkinsider.com/flume/202602/12325/",
-        "source": "Theme Park Insider",
-        "published_at": "2026-02-27T21:48:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "By Robert Niles: Legoland's most expensive ride ever is now open in Florida.Galacticoaster opened today at Legoland Florida. The ART Engineering indoor launch coaster is one of two installations for Legoland in the United States, composing Merlin Entertainmen…"
       }
     ],
     "news_with_impact": [
@@ -1520,6 +1520,19 @@
         "impact_score": 40,
         "themes": [
           "other"
+        ]
+      },
+      {
+        "title": "Power Hungry: How The AI Boom Is Forcing A Clean Energy Reckoning",
+        "url": "https://www.forbes.com/sites/kensilverstein/2026/03/01/the-ai-energy-tax-data-centers-are-driving-up-your-electric-bills/",
+        "source": "Forbes",
+        "published_at": "2026-03-01T15:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Surging electricity demand from AI data centers is colliding with a federal energy policy that favors slow-build fossil fuels over fast-deploy renewables. Price impact?",
+        "impact_score": 40,
+        "themes": [
+          "materials"
         ]
       },
       {
@@ -2070,7 +2083,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -2083,7 +2096,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -2483,19 +2496,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "Galacticoaster opens at Legoland Florida",
-        "url": "https://www.themeparkinsider.com/flume/202602/12325/",
-        "source": "Theme Park Insider",
-        "published_at": "2026-02-27T21:48:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "By Robert Niles: Legoland's most expensive ride ever is now open in Florida.Galacticoaster opened today at Legoland Florida. The ART Engineering indoor launch coaster is one of two installations for Legoland in the United States, composing Merlin Entertainmen…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2796,6 +2796,19 @@
       ],
       "materials": [
         {
+          "title": "Power Hungry: How The AI Boom Is Forcing A Clean Energy Reckoning",
+          "url": "https://www.forbes.com/sites/kensilverstein/2026/03/01/the-ai-energy-tax-data-centers-are-driving-up-your-electric-bills/",
+          "source": "Forbes",
+          "published_at": "2026-03-01T15:00:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Surging electricity demand from AI data centers is colliding with a federal energy policy that favors slow-build fossil fuels over fast-deploy renewables. Price impact?",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
           "title": "We Must Defend Black History — It Fuels Freedom Dreams of Students Under Attack",
           "url": "https://truthout.org/articles/we-must-defend-black-history-it-fuels-freedom-dreams-of-students-under-attack/",
           "source": "Truthout",
@@ -3089,177 +3102,177 @@
       {
         "ticker": "PHM",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 134.96,
-        "close": 137.2,
-        "change": 2.2399999999999807,
-        "change_pct": 1.6597510373443838
+        "date": "2026-03-02",
+        "open": 134.14,
+        "close": 133.86,
+        "change": -0.2799999999999727,
+        "change_pct": -0.20873714030115756
       },
       {
         "ticker": "LEN",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 111.425,
-        "close": 114.36,
-        "change": 2.9350000000000023,
-        "change_pct": 2.6340587839353846
+        "date": "2026-03-02",
+        "open": 111.65,
+        "close": 111.101,
+        "change": -0.5490000000000066,
+        "change_pct": -0.49171518137035963
       },
       {
         "ticker": "NVR",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 7400.985,
-        "close": 7517.79,
-        "change": 116.80500000000029,
-        "change_pct": 1.5782358699551517
+        "date": "2026-03-02",
+        "open": 7371.05,
+        "close": 7392.25,
+        "change": 21.199999999999818,
+        "change_pct": 0.2876116699791728
       },
       {
         "ticker": "TOL",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 157.8,
-        "close": 157.24,
-        "change": -0.5600000000000023,
-        "change_pct": -0.35487959442332206
+        "date": "2026-03-02",
+        "open": 153.34,
+        "close": 153.89,
+        "change": 0.549999999999983,
+        "change_pct": 0.35868005738879805
       },
       {
         "ticker": "HD",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 374,
         "close": 380.72,
-        "change": 6.720000000000027,
-        "change_pct": 1.7967914438502746
+        "prev_close": 375.09,
+        "change": 5.63,
+        "change_pct": 1.501
       },
       {
         "ticker": "LOW",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 261.45,
-        "close": 264.57,
-        "change": 3.1200000000000045,
-        "change_pct": 1.193344807802641
+        "date": "2026-03-02",
+        "open": 260,
+        "close": 258.355,
+        "change": -1.6449999999999818,
+        "change_pct": -0.6326923076923007
       },
       {
         "ticker": "VMC",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 307.67,
-        "close": 310,
-        "change": 2.329999999999984,
-        "change_pct": 0.7573049046055786
+        "date": "2026-03-02",
+        "open": 303.5901,
+        "close": 304.015,
+        "change": 0.4248999999999796,
+        "change_pct": 0.13995845055552852
       },
       {
         "ticker": "MLM",
-        "source": "alphavantage",
-        "date": "2026-02-27",
-        "close": 676.57,
-        "prev_close": 678.46,
-        "change": -1.89,
-        "change_pct": -0.2786
+        "source": "stooq",
+        "date": "2026-03-02",
+        "open": 666.25,
+        "close": 660.96,
+        "change": -5.289999999999964,
+        "change_pct": -0.7939962476547787
       },
       {
         "ticker": "BLDR",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 103.07,
-        "close": 104.29,
-        "change": 1.220000000000013,
-        "change_pct": 1.1836615892112285
+        "date": "2026-03-02",
+        "open": 101.26,
+        "close": 101.4975,
+        "change": 0.23749999999999716,
+        "change_pct": 0.23454473632233572
       },
       {
         "ticker": "FBIN",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 54.06,
-        "close": 54.34,
-        "change": 0.28000000000000114,
-        "change_pct": 0.5179430262671126
+        "date": "2026-03-02",
+        "open": 53.485,
+        "close": 52.6,
+        "change": -0.884999999999998,
+        "change_pct": -1.6546695335140655
       },
       {
         "ticker": "OC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 121,
         "close": 122.07,
-        "change": 1.0699999999999932,
-        "change_pct": 0.8842975206611514
+        "prev_close": 122.28,
+        "change": -0.21,
+        "change_pct": -0.1717
       },
       {
         "ticker": "EXP",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 224.05,
-        "close": 223.8,
-        "change": -0.25,
-        "change_pct": -0.11158223610801159
+        "date": "2026-03-02",
+        "open": 216.81,
+        "close": 217.78,
+        "change": 0.9699999999999989,
+        "change_pct": 0.4473963378072962
       },
       {
         "ticker": "CAT",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 745,
-        "close": 742.83,
-        "change": -2.169999999999959,
-        "change_pct": -0.29127516778522944
+        "date": "2026-03-02",
+        "open": 733.25,
+        "close": 735.965,
+        "change": 2.715000000000032,
+        "change_pct": 0.3702693487896395
       },
       {
         "ticker": "DE",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 615.76,
-        "close": 629.71,
-        "change": 13.950000000000045,
-        "change_pct": 2.265493049239971
+        "date": "2026-03-02",
+        "open": 625.65,
+        "close": 628.03,
+        "change": 2.3799999999999955,
+        "change_pct": 0.3804043794453761
       },
       {
         "ticker": "URI",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 845.89,
-        "close": 840,
-        "change": -5.889999999999986,
-        "change_pct": -0.696308030594993
+        "date": "2026-03-02",
+        "open": 822.33,
+        "close": 824.445,
+        "change": 2.115000000000009,
+        "change_pct": 0.25719601619787785
       },
       {
         "ticker": "TPC",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 79.21,
-        "close": 75.37,
-        "change": -3.839999999999989,
-        "change_pct": -4.847872743340474
+        "date": "2026-03-02",
+        "open": 74.2293,
+        "close": 72.445,
+        "change": -1.7843000000000018,
+        "change_pct": -2.4037677844193626
       },
       {
         "ticker": "CRH",
         "source": "stooq",
-        "date": "2026-02-27",
-        "open": 118.65,
-        "close": 119.98,
-        "change": 1.3299999999999983,
-        "change_pct": 1.1209439528023584
+        "date": "2026-03-02",
+        "open": 117.12,
+        "close": 117.01,
+        "change": -0.10999999999999943,
+        "change_pct": -0.09392076502732191
       }
     ],
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": 1.2820932193623196
+        "avg_change_pct": 0.16782788113929073
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.4817178613713649
+        "avg_change_pct": -0.35448862630555683
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": 1.1836615892112285
+        "avg_change_pct": 0.23454473632233572
       },
       "equipment": {
         "count": 3,
-        "avg_change_pct": 0.42596995028658285
+        "avg_change_pct": 0.33595658147763113
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 1.4950681258264578
+        "avg_change_pct": 0.4341538461538496
       }
     },
     "stock_pressure_overlay": 0,
@@ -3342,7 +3355,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-02T14:40:54.350Z",
+    "generated_at_utc": "2026-03-02T15:03:06.470Z",
     "regime_history": {
       "current_regime_duration_days": 1,
       "previous_regime": null,
@@ -3447,177 +3460,177 @@
         {
           "ticker": "PHM",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 134.96,
-          "close": 137.2,
-          "change": 2.2399999999999807,
-          "change_pct": 1.6597510373443838
+          "date": "2026-03-02",
+          "open": 134.14,
+          "close": 133.86,
+          "change": -0.2799999999999727,
+          "change_pct": -0.20873714030115756
         },
         {
           "ticker": "LEN",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 111.425,
-          "close": 114.36,
-          "change": 2.9350000000000023,
-          "change_pct": 2.6340587839353846
+          "date": "2026-03-02",
+          "open": 111.65,
+          "close": 111.101,
+          "change": -0.5490000000000066,
+          "change_pct": -0.49171518137035963
         },
         {
           "ticker": "NVR",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 7400.985,
-          "close": 7517.79,
-          "change": 116.80500000000029,
-          "change_pct": 1.5782358699551517
+          "date": "2026-03-02",
+          "open": 7371.05,
+          "close": 7392.25,
+          "change": 21.199999999999818,
+          "change_pct": 0.2876116699791728
         },
         {
           "ticker": "TOL",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 157.8,
-          "close": 157.24,
-          "change": -0.5600000000000023,
-          "change_pct": -0.35487959442332206
+          "date": "2026-03-02",
+          "open": 153.34,
+          "close": 153.89,
+          "change": 0.549999999999983,
+          "change_pct": 0.35868005738879805
         },
         {
           "ticker": "HD",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 374,
           "close": 380.72,
-          "change": 6.720000000000027,
-          "change_pct": 1.7967914438502746
+          "prev_close": 375.09,
+          "change": 5.63,
+          "change_pct": 1.501
         },
         {
           "ticker": "LOW",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 261.45,
-          "close": 264.57,
-          "change": 3.1200000000000045,
-          "change_pct": 1.193344807802641
+          "date": "2026-03-02",
+          "open": 260,
+          "close": 258.355,
+          "change": -1.6449999999999818,
+          "change_pct": -0.6326923076923007
         },
         {
           "ticker": "VMC",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 307.67,
-          "close": 310,
-          "change": 2.329999999999984,
-          "change_pct": 0.7573049046055786
+          "date": "2026-03-02",
+          "open": 303.5901,
+          "close": 304.015,
+          "change": 0.4248999999999796,
+          "change_pct": 0.13995845055552852
         },
         {
           "ticker": "MLM",
-          "source": "alphavantage",
-          "date": "2026-02-27",
-          "close": 676.57,
-          "prev_close": 678.46,
-          "change": -1.89,
-          "change_pct": -0.2786
+          "source": "stooq",
+          "date": "2026-03-02",
+          "open": 666.25,
+          "close": 660.96,
+          "change": -5.289999999999964,
+          "change_pct": -0.7939962476547787
         },
         {
           "ticker": "BLDR",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 103.07,
-          "close": 104.29,
-          "change": 1.220000000000013,
-          "change_pct": 1.1836615892112285
+          "date": "2026-03-02",
+          "open": 101.26,
+          "close": 101.4975,
+          "change": 0.23749999999999716,
+          "change_pct": 0.23454473632233572
         },
         {
           "ticker": "FBIN",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 54.06,
-          "close": 54.34,
-          "change": 0.28000000000000114,
-          "change_pct": 0.5179430262671126
+          "date": "2026-03-02",
+          "open": 53.485,
+          "close": 52.6,
+          "change": -0.884999999999998,
+          "change_pct": -1.6546695335140655
         },
         {
           "ticker": "OC",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 121,
           "close": 122.07,
-          "change": 1.0699999999999932,
-          "change_pct": 0.8842975206611514
+          "prev_close": 122.28,
+          "change": -0.21,
+          "change_pct": -0.1717
         },
         {
           "ticker": "EXP",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 224.05,
-          "close": 223.8,
-          "change": -0.25,
-          "change_pct": -0.11158223610801159
+          "date": "2026-03-02",
+          "open": 216.81,
+          "close": 217.78,
+          "change": 0.9699999999999989,
+          "change_pct": 0.4473963378072962
         },
         {
           "ticker": "CAT",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 745,
-          "close": 742.83,
-          "change": -2.169999999999959,
-          "change_pct": -0.29127516778522944
+          "date": "2026-03-02",
+          "open": 733.25,
+          "close": 735.965,
+          "change": 2.715000000000032,
+          "change_pct": 0.3702693487896395
         },
         {
           "ticker": "DE",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 615.76,
-          "close": 629.71,
-          "change": 13.950000000000045,
-          "change_pct": 2.265493049239971
+          "date": "2026-03-02",
+          "open": 625.65,
+          "close": 628.03,
+          "change": 2.3799999999999955,
+          "change_pct": 0.3804043794453761
         },
         {
           "ticker": "URI",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 845.89,
-          "close": 840,
-          "change": -5.889999999999986,
-          "change_pct": -0.696308030594993
+          "date": "2026-03-02",
+          "open": 822.33,
+          "close": 824.445,
+          "change": 2.115000000000009,
+          "change_pct": 0.25719601619787785
         },
         {
           "ticker": "TPC",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 79.21,
-          "close": 75.37,
-          "change": -3.839999999999989,
-          "change_pct": -4.847872743340474
+          "date": "2026-03-02",
+          "open": 74.2293,
+          "close": 72.445,
+          "change": -1.7843000000000018,
+          "change_pct": -2.4037677844193626
         },
         {
           "ticker": "CRH",
           "source": "stooq",
-          "date": "2026-02-27",
-          "open": 118.65,
-          "close": 119.98,
-          "change": 1.3299999999999983,
-          "change_pct": 1.1209439528023584
+          "date": "2026-03-02",
+          "open": 117.12,
+          "close": 117.01,
+          "change": -0.10999999999999943,
+          "change_pct": -0.09392076502732191
         }
       ],
       "sector_rollups": {
         "builders": {
           "count": 5,
-          "avg_change_pct": 1.2820932193623196
+          "avg_change_pct": 0.16782788113929073
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": 0.4817178613713649
+          "avg_change_pct": -0.35448862630555683
         },
         "distribution": {
           "count": 1,
-          "avg_change_pct": 1.1836615892112285
+          "avg_change_pct": 0.23454473632233572
         },
         "equipment": {
           "count": 3,
-          "avg_change_pct": 0.42596995028658285
+          "avg_change_pct": 0.33595658147763113
         },
         "retail": {
           "count": 2,
-          "avg_change_pct": 1.4950681258264578
+          "avg_change_pct": 0.4341538461538496
         }
       },
       "stock_pressure_overlay": 0
@@ -4126,6 +4139,19 @@
           ]
         },
         {
+          "title": "Power Hungry: How The AI Boom Is Forcing A Clean Energy Reckoning",
+          "url": "https://www.forbes.com/sites/kensilverstein/2026/03/01/the-ai-energy-tax-data-centers-are-driving-up-your-electric-bills/",
+          "source": "Forbes",
+          "published_at": "2026-03-01T15:00:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Surging electricity demand from AI data centers is colliding with a federal energy policy that favors slow-build fossil fuels over fast-deploy renewables. Price impact?",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
           "title": "Delaware History, Apple, Google Circle, More: Sunday ResearchBuzz, March 1, 2026",
           "url": "https://researchbuzz.me/2026/03/01/delaware-history-apple-google-circle-more-sunday-researchbuzz-march-1-2026/",
           "source": "Researchbuzz.me",
@@ -4527,19 +4553,6 @@
           "themes": [
             "other"
           ]
-        },
-        {
-          "title": "If you love bass as much as I do, you’ll adore Skullcandy’s new gaming headset — but it comes at a hefty cost",
-          "url": "https://www.techradar.com/gaming/gaming-accessories/skullcandy-crusher-plyr-720-review",
-          "source": "TechRadar",
-          "published_at": "2026-02-28T18:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The Skullcandy Crusher PLYR 720 certainly nail the bass — but is all that bass really worth the price of admission?",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
         }
       ],
       "clusters": {
@@ -4706,6 +4719,19 @@
           }
         ],
         "materials": [
+          {
+            "title": "Power Hungry: How The AI Boom Is Forcing A Clean Energy Reckoning",
+            "url": "https://www.forbes.com/sites/kensilverstein/2026/03/01/the-ai-energy-tax-data-centers-are-driving-up-your-electric-bills/",
+            "source": "Forbes",
+            "published_at": "2026-03-01T15:00:00Z",
+            "provider": "newsapi",
+            "feed": "everything",
+            "description": "Surging electricity demand from AI data centers is colliding with a federal energy policy that favors slow-build fossil fuels over fast-deploy renewables. Price impact?",
+            "impact_score": 40,
+            "themes": [
+              "materials"
+            ]
+          },
           {
             "title": "We Must Defend Black History — It Fuels Freedom Dreams of Students Under Attack",
             "url": "https://truthout.org/articles/we-must-defend-black-history-it-fuels-freedom-dreams-of-students-under-attack/",
