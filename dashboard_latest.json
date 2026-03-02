@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-02T04:11:29.495Z",
+  "generated_at": "2026-03-02T04:22:51.033Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -9,8 +9,8 @@
   "cpi": {
     "headline": 46,
     "zone": "Slowdown",
-    "delta_3m": -4,
-    "momentum": "Easing",
+    "delta_3m": 0,
+    "momentum": "Stable",
     "history": [
       {
         "date": "2026-03-01",
@@ -39,6 +39,10 @@
       {
         "date": "2026-03-02",
         "value": 50
+      },
+      {
+        "date": "2026-03-02",
+        "value": 46
       },
       {
         "date": "2026-03-02",
@@ -100,7 +104,7 @@
     "current_regime_duration_days": 1,
     "previous_regime": null,
     "last_flip_date": null,
-    "regime_stability": "🟡 Watch"
+    "regime_stability": "🟢 Stable"
   },
   "ui": {
     "accent": "system",
@@ -179,8 +183,8 @@
     "heat_strip": {
       "cpi": 46,
       "zone": "Slowdown",
-      "delta_3m": -4,
-      "momentum": "Easing",
+      "delta_3m": 0,
+      "momentum": "Stable",
       "risk_thermometer_mode": false,
       "freeze_risk": false
     },
@@ -2910,12 +2914,12 @@
       },
       {
         "ticker": "OC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 121,
         "close": 122.07,
-        "change": 1.0699999999999932,
-        "change_pct": 0.8842975206611514
+        "prev_close": 122.28,
+        "change": -0.21,
+        "change_pct": -0.1717
       },
       {
         "ticker": "EXP",
@@ -2979,7 +2983,7 @@
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.5567858062043967
+        "avg_change_pct": 0.38078621942753804
       },
       "distribution": {
         "count": 1,
@@ -3074,12 +3078,12 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-02T04:11:29.495Z",
+    "generated_at_utc": "2026-03-02T04:22:51.033Z",
     "regime_history": {
       "current_regime_duration_days": 1,
       "previous_regime": null,
       "last_flip_date": null,
-      "regime_stability": "🟡 Watch"
+      "regime_stability": "🟢 Stable"
     },
     "regime": {
       "primary": "Slowdown",
@@ -3089,8 +3093,8 @@
     "cpi": {
       "headline": 46,
       "zone": "Slowdown",
-      "delta_3m": -4,
-      "momentum": "Easing",
+      "delta_3m": 0,
+      "momentum": "Stable",
       "freeze_risk": false,
       "risk_thermometer_mode": false,
       "r": 44,
@@ -3268,12 +3272,12 @@
         },
         {
           "ticker": "OC",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 121,
           "close": 122.07,
-          "change": 1.0699999999999932,
-          "change_pct": 0.8842975206611514
+          "prev_close": 122.28,
+          "change": -0.21,
+          "change_pct": -0.1717
         },
         {
           "ticker": "EXP",
@@ -3337,7 +3341,7 @@
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": 0.5567858062043967
+          "avg_change_pct": 0.38078621942753804
         },
         "distribution": {
           "count": 1,
