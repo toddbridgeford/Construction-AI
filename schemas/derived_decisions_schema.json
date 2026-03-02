@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://construction-ai/schemas/derived_decisions_schema.json",
+  "title": "Derived Decisions Artifact",
+  "type": "object",
+  "required": ["artifact_type", "market", "generated_at", "metadata", "items"],
+  "properties": {
+    "artifact_type": { "const": "derived_decisions" },
+    "market": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "metadata": {
+      "type": "object",
+      "required": ["missing_inputs"],
+      "properties": {
+        "missing_inputs": { "type": "array", "items": { "type": "string" } },
+        "details": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": false
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "project_id",
+          "project_name",
+          "decision",
+          "primary_reason",
+          "deal_score",
+          "within_radius",
+          "award_status",
+          "next_step",
+          "verification_url",
+          "generated_at"
+        ],
+        "properties": {
+          "project_id": { "type": "string", "minLength": 1 },
+          "project_name": { "type": "string" },
+          "decision": { "type": "string", "enum": ["BID", "NO_BID", "WATCH"] },
+          "primary_reason": { "type": "string" },
+          "deal_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+          "within_radius": { "type": ["boolean", "null"] },
+          "award_status": { "type": "string", "enum": ["None", "Awarded", "Unknown"] },
+          "next_step": { "type": "string" },
+          "verification_url": { "type": ["string", "null"] },
+          "generated_at": { "type": "string", "format": "date-time" },
+          "details": { "type": "object", "additionalProperties": true }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,48 @@
+name: Build Artifacts Latest
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '15 11 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  build-artifacts-v2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: Predictive-Model
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install jsonschema reportlab
+
+      - name: Run v2 pipeline
+        run: python -m actions_v2.run_pipeline
+
+      - name: Validate new artifact schemas exist
+        run: |
+          test -f schemas/radius_eval_schema.json
+          test -f schemas/deal_scoring_schema.json
+          test -f schemas/derived_decisions_schema.json
+          test -f schemas/artifacts_schema.json
+
+      - name: Commit updated artifacts and schemas
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist/artifacts schemas
+          if ! git diff --cached --quiet; then
+            git commit -m "Artifact Engine v2 artifacts refresh"
+            git push origin Predictive-Model
+          fi

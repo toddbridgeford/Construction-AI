@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://construction-ai/schemas/radius_eval_schema.json",
+  "title": "Radius Evaluation Artifact",
+  "type": "object",
+  "required": ["artifact_type", "market", "generated_at", "metadata", "items"],
+  "properties": {
+    "artifact_type": { "const": "radius_eval" },
+    "market": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "metadata": {
+      "type": "object",
+      "required": ["missing_inputs"],
+      "properties": {
+        "missing_inputs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "details": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": false
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "project_id",
+          "project_name",
+          "address",
+          "project_lat",
+          "project_lon",
+          "origin_used",
+          "distance_miles",
+          "radius_miles",
+          "within_radius",
+          "confidence",
+          "verification_url"
+        ],
+        "properties": {
+          "project_id": { "type": "string", "minLength": 1 },
+          "project_name": { "type": "string" },
+          "address": { "type": ["string", "null"] },
+          "project_lat": { "type": ["number", "null"] },
+          "project_lon": { "type": ["number", "null"] },
+          "origin_used": { "type": "string" },
+          "distance_miles": { "type": ["number", "null"] },
+          "radius_miles": { "type": ["number", "null"] },
+          "within_radius": { "type": ["boolean", "null"] },
+          "confidence": { "type": "string", "enum": ["High", "Medium", "Low"] },
+          "verification_url": { "type": ["string", "null"] },
+          "details": { "type": "object", "additionalProperties": true }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

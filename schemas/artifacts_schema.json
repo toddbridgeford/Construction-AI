@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://construction-ai/schemas/artifacts_schema.json",
+  "title": "Generic Artifact Wrapper",
+  "type": "object",
+  "required": ["artifact_type", "market", "generated_at", "metadata", "items"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "enum": [
+        "radius_eval",
+        "deal_scoring",
+        "derived_decisions",
+        "bid_calendar",
+        "contacts",
+        "ci_checklist"
+      ]
+    },
+    "market": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "metadata": {
+      "type": "object",
+      "required": ["missing_inputs"],
+      "properties": {
+        "missing_inputs": { "type": "array", "items": { "type": "string" } },
+        "details": { "type": "object", "additionalProperties": true },
+        "raw": { "type": "object", "additionalProperties": true }
+      },
+      "additionalProperties": false
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "allOf": [
+          {
+            "if": {"properties": {"artifact_type": {"const": "radius_eval"}}},
+            "then": {"required": ["project_id", "distance_miles", "within_radius", "confidence"]}
+          },
+          {
+            "if": {"properties": {"artifact_type": {"const": "deal_scoring"}}},
+            "then": {"required": ["project_id", "deal_score", "component_scores", "confidence"]}
+          },
+          {
+            "if": {"properties": {"artifact_type": {"const": "derived_decisions"}}},
+            "then": {"required": ["project_id", "decision", "primary_reason", "deal_score"]}
+          },
+          {
+            "if": {"properties": {"artifact_type": {"const": "bid_calendar"}}},
+            "then": {"required": ["project_id", "window_basis", "confidence"]}
+          },
+          {
+            "if": {"properties": {"artifact_type": {"const": "contacts"}}},
+            "then": {"required": ["project_id", "name", "entity_type", "source_url", "confidence"]}
+          },
+          {
+            "if": {"properties": {"artifact_type": {"const": "ci_checklist"}}},
+            "then": {"required": ["project_id", "checklist_items", "confidence"]}
+          }
+        ],
+        "properties": {
+          "details": { "type": "object", "additionalProperties": true },
+          "raw": { "type": "object", "additionalProperties": true }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}
