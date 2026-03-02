@@ -1,4 +1,5 @@
-name: Update dashboard_latest.json (CPI + News + Stocks + SAM + USAspending + EIA)
+- name: Build multi-market Signal API (v1)
+  run: node scripts/build_markets_signal_api_latest.mjs
 
 on:
   workflow_dispatch:
