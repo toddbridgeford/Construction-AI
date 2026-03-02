@@ -1,7 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = process.cwd();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, "..");
 
 const MODEL_PATH = path.join(ROOT, process.env.MODEL_PATH || "framework/deal_scoring_engine_v1.json");
 const DEALS_PATH = path.join(ROOT, process.env.DEALS_PATH || "config/deal_opportunities_sample.json");

@@ -1,8 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
-const ROOT = process.cwd();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, "..");
 const orchestratorPath = process.env.ORCHESTRATOR_PATH || "framework/national_autonomous_run_orchestrator_v1.json";
 
 function readJson(filePath) {
