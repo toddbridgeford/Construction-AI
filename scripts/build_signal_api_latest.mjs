@@ -1,8 +1,5 @@
 // scripts/build_signal_api_latest.mjs
-// National Signal API v1 builder (deterministic, zero deps)
-//
-// Input: dashboard_latest.json
-// Output: signal_api_latest.json
+// National Signal API v1 builder (hardened, deterministic, zero deps)
 
 import fs from "node:fs";
 import path from "node:path";
@@ -12,6 +9,10 @@ const IN_PATH = path.join(ROOT, process.env.IN_PATH || "dashboard_latest.json");
 const OUT_PATH = path.join(ROOT, process.env.OUT_PATH || "signal_api_latest.json");
 const REGION_LABEL = process.env.REGION_LABEL || "United States";
 const REGION_NAME = process.env.REGION_NAME || "National";
+
+// --------------------------------------------------
+// Helpers
+// --------------------------------------------------
 
 function readJson(p) {
   return JSON.parse(fs.readFileSync(p, "utf8"));
@@ -63,6 +64,10 @@ function zoneFromValue(value) {
   return "stable";
 }
 
+// --------------------------------------------------
+// Provenance normalization
+// --------------------------------------------------
+
 function normalizeSources(dashboard) {
   const observedSources = dashboard?.observed?.sources;
   if (!observedSources || typeof observedSources !== "object") {
@@ -70,7 +75,7 @@ function normalizeSources(dashboard) {
       {
         name: "dashboard_latest",
         series: "dashboard_latest.json",
-        release_date: dashboard?.as_of || null,
+        release_date: null,
         last_updated: dashboard?.generated_at || null,
         url: null
       }
@@ -80,11 +85,15 @@ function normalizeSources(dashboard) {
   return Object.entries(observedSources).map(([name, source]) => ({
     name,
     series: source?.api || source?.base || name,
-    release_date: dashboard?.as_of || null,
+    release_date: null,
     last_updated: dashboard?.generated_at || null,
     url: source?.api || source?.base || null
   }));
 }
+
+// --------------------------------------------------
+// Main
+// --------------------------------------------------
 
 function main() {
   if (!exists(IN_PATH)) {
@@ -93,10 +102,16 @@ function main() {
 
   const dashboard = readJson(IN_PATH);
 
-  const cpiHeadline = safeNumber(dashboard?.cpi?.headline, 50);
+  const diagnostics = {
+    missing_inputs: [],
+    non_deterministic_blocks: [],
+    notes: []
+  };
+
+  const cpiHeadline = safeNumber(dashboard?.cpi?.headline, null);
+  if (cpiHeadline === null) diagnostics.missing_inputs.push("cpi.headline");
+
   const cpiDelta3m = safeNumber(dashboard?.cpi?.delta_3m, 0);
-  const riskState = riskStateFromValue(cpiHeadline);
-  const zone = zoneFromValue(cpiHeadline);
 
   const capital = safeNumber(dashboard?.cpi?.components?.capital, null);
   const pipeline = safeNumber(dashboard?.cpi?.components?.pipeline, null);
@@ -105,31 +120,64 @@ function main() {
   const regulatory = safeNumber(dashboard?.cpi?.components?.regulatory, null);
   const macro = safeNumber(dashboard?.cpi?.components?.macro_sentiment, null);
 
+  if (capital === null) diagnostics.missing_inputs.push("capital");
+  if (pipeline === null) diagnostics.missing_inputs.push("pipeline");
+
+  const stockOverlay = safeNumber(dashboard?.cpi?.components?.overlays?.stock_overlay, 0);
+  const newsOverlay = safeNumber(dashboard?.cpi?.components?.overlays?.news_pressure_overlay, 0);
+  const energyOverlay = safeNumber(dashboard?.cpi?.components?.overlays?.energy_overlay, 0);
+
+  const overlayPoints = stockOverlay + newsOverlay + energyOverlay;
+
+  // Correct regime extraction
+  const regimePrimary = dashboard?.regime?.primary || null;
+  const regimeModifier = dashboard?.regime?.modifier || null;
+  const regimeConfidence = dashboard?.regime?.confidence || "medium";
+
+  if (!regimePrimary) diagnostics.missing_inputs.push("regime.primary");
+
   const payload = {
     meta: {
       system: "Construction Intelligence OS",
       version: "signal_api_v1",
       mode: "data_assisted",
-      run_date: dashboard?.as_of || new Date().toISOString().slice(0, 10),
+      run_date: new Date().toISOString().slice(0, 10),
       region: {
         label: REGION_LABEL,
         name: REGION_NAME
       }
     },
+
     provenance: {
-      as_of: dashboard?.as_of || null,
       generated_at: dashboard?.generated_at || null,
       sources: normalizeSources(dashboard)
     },
+
     indices: {
       pressure_index: {
         value: cpiHeadline,
         direction: directionFromDelta(cpiDelta3m),
-        zone,
+        zone: zoneFromValue(cpiHeadline),
         delta_3m: cpiDelta3m,
         momentum_band: dashboard?.cpi?.momentum || "Unknown",
-        risk_state: riskState,
-        drivers: { capital, pipeline, trade, materials, regulatory, macro },
+        risk_state: riskStateFromValue(cpiHeadline),
+
+        drivers: {
+          capital,
+          pipeline,
+          trade,
+          materials,
+          regulatory,
+          macro
+        },
+
+        overlays: {
+          stock_overlay: stockOverlay,
+          news_overlay: newsOverlay,
+          energy_overlay: energyOverlay,
+          total_overlay_points: overlayPoints
+        },
+
         subindices: {
           cpi_sf: safeNumber(dashboard?.cpi?.cpi_sf, null),
           cpi_mf: safeNumber(dashboard?.cpi?.cpi_mf, null),
@@ -137,46 +185,20 @@ function main() {
           cpi_infra: safeNumber(dashboard?.cpi?.cpi_infra, null),
           cpi_r: safeNumber(dashboard?.cpi?.cpi_r, null),
           cpi_i: safeNumber(dashboard?.cpi?.cpi_i, null)
-        },
-        divergences: {
-          r_minus_i: safeNumber(dashboard?.cpi?.divergences?.r_minus_i, null),
-          sf_minus_mf: safeNumber(dashboard?.cpi?.divergences?.sf_minus_mf, null),
-          inst_minus_infra: safeNumber(dashboard?.cpi?.divergences?.inst_minus_infra, null)
         }
-      },
-      capital_stress_index: {
-        value: capital,
-        risk_state: riskStateFromValue(capital),
-        overlays: {
-          active_triggers: [],
-          overlay_points: safeNumber(dashboard?.cpi?.components?.overlays?.stock_overlay, 0)
-        }
-      },
-      residential_index: {
-        value: safeNumber(dashboard?.cpi?.cpi_r, null),
-        risk_state: riskStateFromValue(dashboard?.cpi?.cpi_r),
-        bifurcation: {
-          single_family: riskStateFromValue(dashboard?.cpi?.cpi_sf),
-          multifamily: riskStateFromValue(dashboard?.cpi?.cpi_mf)
-        }
-      },
-      institutional_infra_index: {
-        value: safeNumber(dashboard?.cpi?.cpi_i, null),
-        risk_state: riskStateFromValue(dashboard?.cpi?.cpi_i),
-        overlays: { active_triggers: [], overlay_points: safeNumber(dashboard?.market_intel?.news_pressure_overlay, 0) }
       }
     },
+
     regime: {
-      cycle_state: dashboard?.regime_history_display?.[0]?.primary_regime || "",
-      modifier: dashboard?.regime_history_display?.[0]?.secondary_modifier || "",
-      confidence: dashboard?.executive?.confidence || "medium"
+      cycle_state: regimePrimary,
+      modifier: regimeModifier,
+      confidence: regimeConfidence
     },
-    diagnostics: {
-      missing_inputs: [],
-      non_deterministic_blocks: [],
-      notes: ["Built from dashboard_latest.json with defensive defaults."]
-    }
+
+    diagnostics
   };
+
+  diagnostics.notes.push("Signal API built from dashboard_latest.json (hardened mode).");
 
   writeJson(OUT_PATH, payload);
   console.log(`Wrote ${OUT_PATH}`);
