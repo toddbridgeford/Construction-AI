@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-02T03:02:09.428Z",
+  "generated_at": "2026-03-02T03:40:48.307Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -9,8 +9,8 @@
   "cpi": {
     "headline": 46,
     "zone": "Slowdown",
-    "delta_3m": 0,
-    "momentum": "Stable",
+    "delta_3m": -4,
+    "momentum": "Easing",
     "history": [
       {
         "date": "2026-03-01",
@@ -39,6 +39,10 @@
       {
         "date": "2026-03-02",
         "value": 50
+      },
+      {
+        "date": "2026-03-02",
+        "value": 46
       },
       {
         "date": "2026-03-02",
@@ -92,7 +96,7 @@
     "current_regime_duration_days": 1,
     "previous_regime": null,
     "last_flip_date": null,
-    "regime_stability": "🟢 Stable"
+    "regime_stability": "🟡 Watch"
   },
   "ui": {
     "accent": "system",
@@ -106,8 +110,8 @@
     ],
     "trends": {
       "cpi": {
-        "arrow": "↓",
-        "symbol": "arrow.down.right"
+        "arrow": "→",
+        "symbol": "arrow.right"
       },
       "mortgage_30y": {
         "arrow": "↓",
@@ -136,7 +140,7 @@
         "title": "Construction Pressure",
         "subtitle": "Headline CPI • Slowdown",
         "value": 46,
-        "trend": "↓",
+        "trend": "→",
         "symbol": "gauge.with.dots",
         "severity": "NORMAL"
       },
@@ -171,8 +175,8 @@
     "heat_strip": {
       "cpi": 46,
       "zone": "Slowdown",
-      "delta_3m": 0,
-      "momentum": "Stable",
+      "delta_3m": -4,
+      "momentum": "Easing",
       "risk_thermometer_mode": false,
       "freeze_risk": false
     },
@@ -602,7 +606,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -611,7 +615,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -1623,7 +1627,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -1636,7 +1640,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -2848,12 +2852,12 @@
       },
       {
         "ticker": "HD",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-02-27",
+        "open": 374,
         "close": 380.72,
-        "prev_close": 375.09,
-        "change": 5.63,
-        "change_pct": 1.501
+        "change": 6.720000000000027,
+        "change_pct": 1.7967914438502746
       },
       {
         "ticker": "LOW",
@@ -2866,12 +2870,12 @@
       },
       {
         "ticker": "VMC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 307.67,
         "close": 310,
-        "change": 2.329999999999984,
-        "change_pct": 0.7573049046055786
+        "prev_close": 308.99,
+        "change": 1.01,
+        "change_pct": 0.3269
       },
       {
         "ticker": "MLM",
@@ -2902,12 +2906,12 @@
       },
       {
         "ticker": "OC",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-02-27",
+        "open": 121,
         "close": 122.07,
-        "prev_close": 122.28,
-        "change": -0.21,
-        "change_pct": -0.1717
+        "change": 1.0699999999999932,
+        "change_pct": 0.8842975206611514
       },
       {
         "ticker": "EXP",
@@ -2971,7 +2975,7 @@
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.4525203701951345
+        "avg_change_pct": 0.5567858062043967
       },
       "distribution": {
         "count": 1,
@@ -2983,7 +2987,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 1.3471724039013204
+        "avg_change_pct": 1.4950681258264578
       }
     },
     "stock_pressure_overlay": 0,
@@ -3066,12 +3070,12 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-02T03:02:09.428Z",
+    "generated_at_utc": "2026-03-02T03:40:48.306Z",
     "regime_history": {
       "current_regime_duration_days": 1,
       "previous_regime": null,
       "last_flip_date": null,
-      "regime_stability": "🟢 Stable"
+      "regime_stability": "🟡 Watch"
     },
     "regime": {
       "primary": "Slowdown",
@@ -3081,8 +3085,8 @@
     "cpi": {
       "headline": 46,
       "zone": "Slowdown",
-      "delta_3m": 0,
-      "momentum": "Stable",
+      "delta_3m": -4,
+      "momentum": "Easing",
       "freeze_risk": false,
       "risk_thermometer_mode": false,
       "r": 44,
@@ -3206,12 +3210,12 @@
         },
         {
           "ticker": "HD",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-02-27",
+          "open": 374,
           "close": 380.72,
-          "prev_close": 375.09,
-          "change": 5.63,
-          "change_pct": 1.501
+          "change": 6.720000000000027,
+          "change_pct": 1.7967914438502746
         },
         {
           "ticker": "LOW",
@@ -3224,12 +3228,12 @@
         },
         {
           "ticker": "VMC",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 307.67,
           "close": 310,
-          "change": 2.329999999999984,
-          "change_pct": 0.7573049046055786
+          "prev_close": 308.99,
+          "change": 1.01,
+          "change_pct": 0.3269
         },
         {
           "ticker": "MLM",
@@ -3260,12 +3264,12 @@
         },
         {
           "ticker": "OC",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-02-27",
+          "open": 121,
           "close": 122.07,
-          "prev_close": 122.28,
-          "change": -0.21,
-          "change_pct": -0.1717
+          "change": 1.0699999999999932,
+          "change_pct": 0.8842975206611514
         },
         {
           "ticker": "EXP",
@@ -3329,7 +3333,7 @@
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": 0.4525203701951345
+          "avg_change_pct": 0.5567858062043967
         },
         "distribution": {
           "count": 1,
@@ -3341,7 +3345,7 @@
         },
         "retail": {
           "count": 2,
-          "avg_change_pct": 1.3471724039013204
+          "avg_change_pct": 1.4950681258264578
         }
       },
       "stock_pressure_overlay": 0
@@ -4047,7 +4051,7 @@
         },
         {
           "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-          "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+          "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
           "source": "PCMag.com",
           "published_at": "2026-02-28T14:30:00Z",
           "provider": "newsapi",
@@ -4060,7 +4064,7 @@
         },
         {
           "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-          "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+          "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
           "source": "PCMag.com",
           "published_at": "2026-02-28T14:30:00Z",
           "provider": "newsapi",

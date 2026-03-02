@@ -10,83 +10,83 @@
     }
   },
   "provenance": {
-    "as_of": "2026-03-02",
+    "generated_at": "2026-03-02T03:40:48.516Z",
     "sources": [
       {
         "name": "fred",
         "series": "https://api.stlouisfed.org/fred/series/observations",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://api.stlouisfed.org/fred/series/observations"
       },
       {
         "name": "census_bps",
         "series": "census_bps",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": null
       },
       {
         "name": "bls_laus",
         "series": "https://download.bls.gov/pub/time.series/la/",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://download.bls.gov/pub/time.series/la/"
       },
       {
         "name": "gdelt",
         "series": "https://api.gdeltproject.org/api/v2/doc/doc",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://api.gdeltproject.org/api/v2/doc/doc"
       },
       {
         "name": "newsapi_everything",
         "series": "https://newsapi.org/v2/everything",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://newsapi.org/v2/everything"
       },
       {
         "name": "newsapi_top_headlines",
         "series": "https://newsapi.org/v2/top-headlines",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://newsapi.org/v2/top-headlines"
       },
       {
         "name": "stooq",
         "series": "https://stooq.com/q/l/",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://stooq.com/q/l/"
       },
       {
         "name": "alphavantage",
         "series": "https://www.alphavantage.co/query",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://www.alphavantage.co/query"
       },
       {
         "name": "sam_gov",
         "series": "https://api.sam.gov/opportunities/v2/search",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://api.sam.gov/opportunities/v2/search"
       },
       {
         "name": "usaspending",
         "series": "https://api.usaspending.gov/api/v2/award/search/",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://api.usaspending.gov/api/v2/award/search/"
       },
       {
         "name": "eia",
         "series": "https://api.eia.gov",
         "release_date": null,
-        "last_updated": "2026-03-02T03:02:09.428Z",
+        "last_updated": "2026-03-02T03:40:48.307Z",
         "url": "https://api.eia.gov"
       }
     ]
@@ -107,137 +107,27 @@
         "regulatory": null,
         "macro": null
       },
-      "subindices": {
-        "cpi_sf": null,
-        "cpi_mf": null,
-        "cpi_inst": null,
-        "cpi_infra": null,
-        "cpi_r": null,
-        "cpi_i": null
-      },
-      "divergences": {
-        "r_minus_i": null,
-        "sf_minus_mf": null,
-        "inst_minus_infra": null
-      }
-    },
-    "capital_stress_index": {
-      "value": null,
-      "risk_state": "🟡",
       "overlays": {
-        "active_triggers": [],
-        "overlay_points": 0
-      }
-    },
-    "residential_index": {
-      "value": null,
-      "risk_state": "🟡",
-      "bifurcation": {
-        "single_family": "🟡",
-        "multifamily": "🟡"
-      }
-    },
-    "institutional_infra_index": {
-      "value": null,
-      "risk_state": "🟡",
-      "overlays": {
-        "active_triggers": [],
-        "overlay_points": 0
-      }
-    },
-    "contractor_margin_index": {
-      "value": null,
-      "risk_state": "🟡",
-      "overlays": {
-        "active_triggers": [],
-        "overlay_points": 0
-      }
-    },
-    "distributor_inventory_index": {
-      "value": null,
-      "risk_state": "🟡",
-      "overlays": {
-        "active_triggers": [],
-        "overlay_points": 0
-      }
-    },
-    "manufacturer_pricing_index": {
-      "value": null,
-      "risk_state": "🟡",
-      "overlays": {
-        "active_triggers": [],
-        "overlay_points": 0
+        "stock_overlay": 0,
+        "news_overlay": 0,
+        "energy_overlay": 0,
+        "total_overlay_points": 0
       }
     }
-  },
-  "ecosystem_pulse": {
-    "home_builders": "🟡",
-    "architects": "🟡",
-    "general_contractors": "🟡",
-    "distributors": "🟡",
-    "manufacturers": "🟡"
-  },
-  "thermometer": {
-    "active": false,
-    "trigger_reason": [
-      "Market CPI not computed in v1 (mapping not provided)"
-    ],
-    "display": {
-      "cpi_value": null,
-      "zone": null,
-      "delta_3m": null,
-      "risk_state": "🟡"
-    }
-  },
-  "heatmap": {
-    "as_of": "2026-03-02",
-    "regions": [
-      {
-        "name": "phoenix",
-        "velocity": "→",
-        "pressure": "🟡",
-        "capital": "🟡",
-        "residential": "🟡",
-        "institutional": "🟡",
-        "contractors": "🟡",
-        "distribution": "🟡",
-        "manufacturing": "🟡"
-      }
-    ]
   },
   "regime": {
-    "cycle_state": "",
-    "modifier": "",
-    "confidence": "medium",
-    "inflection_triggers": [
-      {
-        "name": "Freeze Threshold",
-        "condition": "CPI >= 76",
-        "active": false
-      },
-      {
-        "name": "Acceleration",
-        "condition": "Δ3m >= +8",
-        "active": false
-      },
-      {
-        "name": "Capital Override",
-        "condition": "Capital >= 80",
-        "active": false
-      }
-    ]
-  },
-  "actions": {
-    "strategic_posture": [],
-    "decision_delta": []
+    "cycle_state": null,
+    "modifier": null,
+    "confidence": "medium"
   },
   "diagnostics": {
     "missing_inputs": [
-      "Market-specific deterministic scoring mappings (capital/pipeline/trade/materials/regulatory/macro)"
+      "Market deterministic scoring not implemented (v1 skeleton)"
     ],
     "non_deterministic_blocks": [],
     "notes": [
-      "Multi-market v1: skeleton payload emitted deterministically."
+      "Multi-market v1 skeleton emitted.",
+      "National signal remains canonical reference."
     ]
   }
 }
