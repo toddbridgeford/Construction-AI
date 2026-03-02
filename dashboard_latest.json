@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-02T00:06:04.126Z",
+  "generated_at": "2026-03-02T00:40:23.609Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -22,6 +22,10 @@
       },
       {
         "date": "2026-03-01",
+        "value": 46
+      },
+      {
+        "date": "2026-03-02",
         "value": 46
       },
       {
@@ -2721,12 +2725,12 @@
     "stocks": [
       {
         "ticker": "DHI",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 158.485,
         "close": 160.39,
-        "change": 1.9049999999999727,
-        "change_pct": 1.2020064990377464
+        "prev_close": 158.97,
+        "change": 1.42,
+        "change_pct": 0.8933
       },
       {
         "ticker": "PHM",
@@ -2766,12 +2770,12 @@
       },
       {
         "ticker": "HD",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-02-27",
+        "open": 374,
         "close": 380.72,
-        "prev_close": 375.09,
-        "change": 5.63,
-        "change_pct": 1.501
+        "change": 6.720000000000027,
+        "change_pct": 1.7967914438502746
       },
       {
         "ticker": "LOW",
@@ -2802,12 +2806,12 @@
       },
       {
         "ticker": "BLDR",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 103.07,
         "close": 104.29,
-        "change": 1.220000000000013,
-        "change_pct": 1.1836615892112285
+        "prev_close": 104.56,
+        "change": -0.27,
+        "change_pct": -0.2582
       },
       {
         "ticker": "FBIN",
@@ -2885,7 +2889,7 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": 1.3438345191698686
+        "avg_change_pct": 1.2820932193623196
       },
       "materials": {
         "count": 6,
@@ -2893,7 +2897,7 @@
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": 1.1836615892112285
+        "avg_change_pct": -0.2582
       },
       "equipment": {
         "count": 3,
@@ -2901,7 +2905,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 1.3471724039013204
+        "avg_change_pct": 1.4950681258264578
       }
     },
     "stock_pressure_overlay": 0,
@@ -2984,7 +2988,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-02T00:06:04.126Z",
+    "generated_at_utc": "2026-03-02T00:40:23.609Z",
     "regime_history": {
       "current_regime_duration_days": 1,
       "previous_regime": null,
@@ -3079,12 +3083,12 @@
       "stocks": [
         {
           "ticker": "DHI",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 158.485,
           "close": 160.39,
-          "change": 1.9049999999999727,
-          "change_pct": 1.2020064990377464
+          "prev_close": 158.97,
+          "change": 1.42,
+          "change_pct": 0.8933
         },
         {
           "ticker": "PHM",
@@ -3124,12 +3128,12 @@
         },
         {
           "ticker": "HD",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-02-27",
+          "open": 374,
           "close": 380.72,
-          "prev_close": 375.09,
-          "change": 5.63,
-          "change_pct": 1.501
+          "change": 6.720000000000027,
+          "change_pct": 1.7967914438502746
         },
         {
           "ticker": "LOW",
@@ -3160,12 +3164,12 @@
         },
         {
           "ticker": "BLDR",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 103.07,
           "close": 104.29,
-          "change": 1.220000000000013,
-          "change_pct": 1.1836615892112285
+          "prev_close": 104.56,
+          "change": -0.27,
+          "change_pct": -0.2582
         },
         {
           "ticker": "FBIN",
@@ -3243,7 +3247,7 @@
       "sector_rollups": {
         "builders": {
           "count": 5,
-          "avg_change_pct": 1.3438345191698686
+          "avg_change_pct": 1.2820932193623196
         },
         "materials": {
           "count": 6,
@@ -3251,7 +3255,7 @@
         },
         "distribution": {
           "count": 1,
-          "avg_change_pct": 1.1836615892112285
+          "avg_change_pct": -0.2582
         },
         "equipment": {
           "count": 3,
@@ -3259,7 +3263,7 @@
         },
         "retail": {
           "count": 2,
-          "avg_change_pct": 1.3471724039013204
+          "avg_change_pct": 1.4950681258264578
         }
       },
       "stock_pressure_overlay": 0
