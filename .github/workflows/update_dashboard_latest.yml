@@ -9,41 +9,71 @@ on:
 permissions:
   contents: write
 
+# Prevent overlapping runs (e.g., slow API day + schedule overlap)
+concurrency:
+  group: update-dashboard-latest-predictive-model
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        shell: bash
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repo (Predictive-Model)
         uses: actions/checkout@v4
         with:
           ref: Predictive-Model
           fetch-depth: 0
 
-      - name: Setup Node
+      - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: Ensure output files exist
+      - name: Log run metadata
         run: |
+          set -euo pipefail
+          echo "Branch: $(git rev-parse --abbrev-ref HEAD)"
+          echo "SHA:    $(git rev-parse --short HEAD)"
+          echo "UTC:    $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          node --version
+          npm --version
+
+      - name: Ensure output directories exist
+        run: |
+          set -euo pipefail
+          mkdir -p dist/markets
+          # do NOT pre-create outputs as {} unless absent; preserve existing files for diffs
           if [ ! -f dashboard_latest.json ]; then echo '{}' > dashboard_latest.json; fi
           if [ ! -f signal_api_latest.json ]; then echo '{}' > signal_api_latest.json; fi
-          mkdir -p dist/markets
           if [ ! -f dist/markets/index.json ]; then echo '{}' > dist/markets/index.json; fi
 
-      - name: Validate Required Files
+      - name: Validate required files exist
         run: |
+          set -euo pipefail
           test -f scripts/build_dashboard_latest.mjs
           test -f scripts/build_signal_api_latest.mjs
           test -f scripts/build_markets_signal_api_latest.mjs
           test -f scripts/package.json
           test -f config/markets.json
 
-      - name: Install script dependencies
-        run: npm --prefix scripts install --silent
+      - name: Install script dependencies (safe)
+        working-directory: scripts
+        run: |
+          set -euo pipefail
+          # Prefer deterministic installs when a lockfile exists
+          if [ -f package-lock.json ]; then
+            npm ci --silent --no-audit --no-fund
+          else
+            npm install --silent --no-audit --no-fund
+          fi
 
-      - name: Run Dashboard Build Script
+      - name: Build dashboard_latest.json
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
@@ -88,22 +118,30 @@ jobs:
           EIA_SERIES_IDS: "PET.RWTC.D"
           EIA_MAX_POINTS: "120"
         run: |
+          set -euo pipefail
           node scripts/build_dashboard_latest.mjs
 
-      - name: Validate dashboard_latest.json parses
+      - name: Validate dashboard_latest.json (parse + required fields + non-empty)
         run: |
-          node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8'))"
-
-      - name: Fail if dashboard missing CPI
-        run: |
+          set -euo pipefail
+          test -s dashboard_latest.json
           node - <<'NODE'
           const fs = require('fs');
           const j = JSON.parse(fs.readFileSync('dashboard_latest.json','utf8'));
-          if (typeof j.cpi?.headline !== 'number') {
+
+          // Hard gates
+          if (typeof j?.cpi?.headline !== 'number') {
             console.error("Missing cpi.headline in dashboard_latest.json");
             process.exit(1);
           }
-          console.log("Headline CPI:", j.cpi.headline);
+          if (!j?.generated_at && !j?.generated_at_utc && !j?.generated_at) {
+            // Not fatal if schema differs, but your file sets generated_at
+            console.warn("Warn: generated_at not found (non-fatal).");
+          }
+
+          console.log("OK: Headline CPI =", j.cpi.headline);
+          console.log("OK: Zone =", j.cpi.zone);
+          console.log("OK: Δ3m =", j.cpi.delta_3m);
           NODE
 
       - name: Build signal_api_latest.json (Signal API v1)
@@ -113,10 +151,13 @@ jobs:
           REGION_LABEL: "United States"
           REGION_NAME: "National"
         run: |
+          set -euo pipefail
           node scripts/build_signal_api_latest.mjs
 
-      - name: Validate signal_api_latest.json parses and has version
+      - name: Validate signal_api_latest.json (parse + version + non-empty)
         run: |
+          set -euo pipefail
+          test -s signal_api_latest.json
           node - <<'NODE'
           const fs = require('fs');
           const j = JSON.parse(fs.readFileSync('signal_api_latest.json','utf8'));
@@ -124,27 +165,38 @@ jobs:
             console.error("signal_api_latest.json invalid: meta.version != signal_api_v1");
             process.exit(1);
           }
-          console.log("Signal API version:", j.meta.version);
+          console.log("OK: Signal API version =", j.meta.version);
           NODE
 
       - name: Build multi-market Signal API outputs (v1)
         run: |
+          set -euo pipefail
           node scripts/build_markets_signal_api_latest.mjs
 
-      - name: Validate markets index exists
+      - name: Validate markets outputs
         run: |
+          set -euo pipefail
           test -f dist/markets/index.json
+          test -s dist/markets/index.json
           node -e "JSON.parse(require('fs').readFileSync('dist/markets/index.json','utf8'))"
+          # Ensure at least one market output exists (if your config defines markets)
+          count=$(ls -1 dist/markets/*/signal_api_latest.json 2>/dev/null | wc -l | tr -d ' ')
+          echo "Markets signal_api_latest.json count: $count"
+          if [ "$count" -lt 1 ]; then
+            echo "Warning: No market outputs were produced (non-fatal). Check config/markets.json."
+          fi
 
-      - name: Commit changes (if any)
+      - name: Commit changes (only if changed)
         run: |
+          set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add dashboard_latest.json
           git add signal_api_latest.json
           git add dist/markets/index.json
-          git add dist/markets/**/signal_api_latest.json
+          git add dist/markets/**/signal_api_latest.json || true
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
@@ -155,4 +207,6 @@ jobs:
           git push origin Predictive-Model
 
       - name: Complete job
-        run: echo "✅ Done."
+        run: |
+          set -euo pipefail
+          echo "✅ Done."
