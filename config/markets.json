@@ -1,3 +1,4 @@
+// config/markets.json
 {
   "version": 1,
   "default_market": "national",
