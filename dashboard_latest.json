@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-02T15:03:06.470Z",
+  "generated_at": "2026-03-02T15:27:54.278Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -18,15 +18,15 @@
       },
       {
         "date": "2026-03-02",
+        "value": 50
+      },
+      {
+        "date": "2026-03-02",
+        "value": 50
+      },
+      {
+        "date": "2026-03-02",
         "value": 46
-      },
-      {
-        "date": "2026-03-02",
-        "value": 50
-      },
-      {
-        "date": "2026-03-02",
-        "value": 50
       },
       {
         "date": "2026-03-02",
@@ -870,7 +870,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -879,7 +879,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -2083,7 +2083,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -2096,7 +2096,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -3104,90 +3104,90 @@
         "source": "stooq",
         "date": "2026-03-02",
         "open": 134.14,
-        "close": 133.86,
-        "change": -0.2799999999999727,
-        "change_pct": -0.20873714030115756
+        "close": 134.17,
+        "change": 0.030000000000001137,
+        "change_pct": 0.02236469360369848
       },
       {
         "ticker": "LEN",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 111.65,
-        "close": 111.101,
-        "change": -0.5490000000000066,
-        "change_pct": -0.49171518137035963
+        "close": 111.2,
+        "change": -0.45000000000000284,
+        "change_pct": -0.40304523063144004
       },
       {
         "ticker": "NVR",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 7371.05,
-        "close": 7392.25,
-        "change": 21.199999999999818,
-        "change_pct": 0.2876116699791728
+        "close": 7445.18,
+        "change": 74.13000000000011,
+        "change_pct": 1.0056911837526554
       },
       {
         "ticker": "TOL",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 153.34,
-        "close": 153.89,
-        "change": 0.549999999999983,
-        "change_pct": 0.35868005738879805
+        "close": 154.145,
+        "change": 0.8050000000000068,
+        "change_pct": 0.5249771749054434
       },
       {
         "ticker": "HD",
-        "source": "alphavantage",
-        "date": "2026-02-27",
-        "close": 380.72,
-        "prev_close": 375.09,
-        "change": 5.63,
-        "change_pct": 1.501
+        "source": "stooq",
+        "date": "2026-03-02",
+        "open": 374.99,
+        "close": 373.65,
+        "change": -1.3400000000000318,
+        "change_pct": -0.3573428624763412
       },
       {
         "ticker": "LOW",
-        "source": "stooq",
-        "date": "2026-03-02",
-        "open": 260,
-        "close": 258.355,
-        "change": -1.6449999999999818,
-        "change_pct": -0.6326923076923007
+        "source": "alphavantage",
+        "date": "2026-02-27",
+        "close": 264.57,
+        "prev_close": 264.39,
+        "change": 0.18,
+        "change_pct": 0.0681
       },
       {
         "ticker": "VMC",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 303.5901,
-        "close": 304.015,
-        "change": 0.4248999999999796,
-        "change_pct": 0.13995845055552852
+        "close": 306.12,
+        "change": 2.529899999999998,
+        "change_pct": 0.8333275689819918
       },
       {
         "ticker": "MLM",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 666.25,
-        "close": 660.96,
-        "change": -5.289999999999964,
-        "change_pct": -0.7939962476547787
+        "close": 669.045,
+        "change": 2.794999999999959,
+        "change_pct": 0.4195121951219451
       },
       {
         "ticker": "BLDR",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 101.26,
-        "close": 101.4975,
-        "change": 0.23749999999999716,
-        "change_pct": 0.23454473632233572
+        "close": 101.805,
+        "change": 0.5450000000000017,
+        "change_pct": 0.5382184475607364
       },
       {
         "ticker": "FBIN",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 53.485,
-        "close": 52.6,
-        "change": -0.884999999999998,
-        "change_pct": -1.6546695335140655
+        "close": 52.68,
+        "change": -0.8049999999999997,
+        "change_pct": -1.505094886416752
       },
       {
         "ticker": "OC",
@@ -3203,76 +3203,76 @@
         "source": "stooq",
         "date": "2026-03-02",
         "open": 216.81,
-        "close": 217.78,
-        "change": 0.9699999999999989,
-        "change_pct": 0.4473963378072962
+        "close": 220.165,
+        "change": 3.3549999999999898,
+        "change_pct": 1.547437848807707
       },
       {
         "ticker": "CAT",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 733.25,
-        "close": 735.965,
-        "change": 2.715000000000032,
-        "change_pct": 0.3702693487896395
+        "close": 746.09,
+        "change": 12.840000000000032,
+        "change_pct": 1.7511080804636936
       },
       {
         "ticker": "DE",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 625.65,
-        "close": 628.03,
-        "change": 2.3799999999999955,
-        "change_pct": 0.3804043794453761
+        "close": 632.66,
+        "change": 7.009999999999991,
+        "change_pct": 1.1204347478622219
       },
       {
         "ticker": "URI",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 822.33,
-        "close": 824.445,
-        "change": 2.115000000000009,
-        "change_pct": 0.25719601619787785
+        "close": 829.83,
+        "change": 7.5,
+        "change_pct": 0.9120426106307686
       },
       {
         "ticker": "TPC",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 74.2293,
-        "close": 72.445,
-        "change": -1.7843000000000018,
-        "change_pct": -2.4037677844193626
+        "close": 72.735,
+        "change": -1.4942999999999955,
+        "change_pct": -2.013086476633884
       },
       {
         "ticker": "CRH",
         "source": "stooq",
         "date": "2026-03-02",
         "open": 117.12,
-        "close": 117.01,
-        "change": -0.10999999999999943,
-        "change_pct": -0.09392076502732191
+        "close": 116.9626,
+        "change": -0.15740000000000975,
+        "change_pct": -0.13439207650274054
       }
     ],
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": 0.16782788113929073
+        "avg_change_pct": 0.4086575643260715
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -0.35448862630555683
+        "avg_change_pct": 0.16484844166535856
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": 0.23454473632233572
+        "avg_change_pct": 0.5382184475607364
       },
       "equipment": {
         "count": 3,
-        "avg_change_pct": 0.33595658147763113
+        "avg_change_pct": 1.2611951463188946
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 0.4341538461538496
+        "avg_change_pct": -0.14462143123817062
       }
     },
     "stock_pressure_overlay": 0,
@@ -3355,7 +3355,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-02T15:03:06.470Z",
+    "generated_at_utc": "2026-03-02T15:27:54.278Z",
     "regime_history": {
       "current_regime_duration_days": 1,
       "previous_regime": null,
@@ -3462,90 +3462,90 @@
           "source": "stooq",
           "date": "2026-03-02",
           "open": 134.14,
-          "close": 133.86,
-          "change": -0.2799999999999727,
-          "change_pct": -0.20873714030115756
+          "close": 134.17,
+          "change": 0.030000000000001137,
+          "change_pct": 0.02236469360369848
         },
         {
           "ticker": "LEN",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 111.65,
-          "close": 111.101,
-          "change": -0.5490000000000066,
-          "change_pct": -0.49171518137035963
+          "close": 111.2,
+          "change": -0.45000000000000284,
+          "change_pct": -0.40304523063144004
         },
         {
           "ticker": "NVR",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 7371.05,
-          "close": 7392.25,
-          "change": 21.199999999999818,
-          "change_pct": 0.2876116699791728
+          "close": 7445.18,
+          "change": 74.13000000000011,
+          "change_pct": 1.0056911837526554
         },
         {
           "ticker": "TOL",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 153.34,
-          "close": 153.89,
-          "change": 0.549999999999983,
-          "change_pct": 0.35868005738879805
+          "close": 154.145,
+          "change": 0.8050000000000068,
+          "change_pct": 0.5249771749054434
         },
         {
           "ticker": "HD",
-          "source": "alphavantage",
-          "date": "2026-02-27",
-          "close": 380.72,
-          "prev_close": 375.09,
-          "change": 5.63,
-          "change_pct": 1.501
+          "source": "stooq",
+          "date": "2026-03-02",
+          "open": 374.99,
+          "close": 373.65,
+          "change": -1.3400000000000318,
+          "change_pct": -0.3573428624763412
         },
         {
           "ticker": "LOW",
-          "source": "stooq",
-          "date": "2026-03-02",
-          "open": 260,
-          "close": 258.355,
-          "change": -1.6449999999999818,
-          "change_pct": -0.6326923076923007
+          "source": "alphavantage",
+          "date": "2026-02-27",
+          "close": 264.57,
+          "prev_close": 264.39,
+          "change": 0.18,
+          "change_pct": 0.0681
         },
         {
           "ticker": "VMC",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 303.5901,
-          "close": 304.015,
-          "change": 0.4248999999999796,
-          "change_pct": 0.13995845055552852
+          "close": 306.12,
+          "change": 2.529899999999998,
+          "change_pct": 0.8333275689819918
         },
         {
           "ticker": "MLM",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 666.25,
-          "close": 660.96,
-          "change": -5.289999999999964,
-          "change_pct": -0.7939962476547787
+          "close": 669.045,
+          "change": 2.794999999999959,
+          "change_pct": 0.4195121951219451
         },
         {
           "ticker": "BLDR",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 101.26,
-          "close": 101.4975,
-          "change": 0.23749999999999716,
-          "change_pct": 0.23454473632233572
+          "close": 101.805,
+          "change": 0.5450000000000017,
+          "change_pct": 0.5382184475607364
         },
         {
           "ticker": "FBIN",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 53.485,
-          "close": 52.6,
-          "change": -0.884999999999998,
-          "change_pct": -1.6546695335140655
+          "close": 52.68,
+          "change": -0.8049999999999997,
+          "change_pct": -1.505094886416752
         },
         {
           "ticker": "OC",
@@ -3561,76 +3561,76 @@
           "source": "stooq",
           "date": "2026-03-02",
           "open": 216.81,
-          "close": 217.78,
-          "change": 0.9699999999999989,
-          "change_pct": 0.4473963378072962
+          "close": 220.165,
+          "change": 3.3549999999999898,
+          "change_pct": 1.547437848807707
         },
         {
           "ticker": "CAT",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 733.25,
-          "close": 735.965,
-          "change": 2.715000000000032,
-          "change_pct": 0.3702693487896395
+          "close": 746.09,
+          "change": 12.840000000000032,
+          "change_pct": 1.7511080804636936
         },
         {
           "ticker": "DE",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 625.65,
-          "close": 628.03,
-          "change": 2.3799999999999955,
-          "change_pct": 0.3804043794453761
+          "close": 632.66,
+          "change": 7.009999999999991,
+          "change_pct": 1.1204347478622219
         },
         {
           "ticker": "URI",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 822.33,
-          "close": 824.445,
-          "change": 2.115000000000009,
-          "change_pct": 0.25719601619787785
+          "close": 829.83,
+          "change": 7.5,
+          "change_pct": 0.9120426106307686
         },
         {
           "ticker": "TPC",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 74.2293,
-          "close": 72.445,
-          "change": -1.7843000000000018,
-          "change_pct": -2.4037677844193626
+          "close": 72.735,
+          "change": -1.4942999999999955,
+          "change_pct": -2.013086476633884
         },
         {
           "ticker": "CRH",
           "source": "stooq",
           "date": "2026-03-02",
           "open": 117.12,
-          "close": 117.01,
-          "change": -0.10999999999999943,
-          "change_pct": -0.09392076502732191
+          "close": 116.9626,
+          "change": -0.15740000000000975,
+          "change_pct": -0.13439207650274054
         }
       ],
       "sector_rollups": {
         "builders": {
           "count": 5,
-          "avg_change_pct": 0.16782788113929073
+          "avg_change_pct": 0.4086575643260715
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": -0.35448862630555683
+          "avg_change_pct": 0.16484844166535856
         },
         "distribution": {
           "count": 1,
-          "avg_change_pct": 0.23454473632233572
+          "avg_change_pct": 0.5382184475607364
         },
         "equipment": {
           "count": 3,
-          "avg_change_pct": 0.33595658147763113
+          "avg_change_pct": 1.2611951463188946
         },
         "retail": {
           "count": 2,
-          "avg_change_pct": 0.4341538461538496
+          "avg_change_pct": -0.14462143123817062
         }
       },
       "stock_pressure_overlay": 0
