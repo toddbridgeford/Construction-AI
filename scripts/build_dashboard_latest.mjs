@@ -1473,7 +1473,7 @@ function updateRegimeHistory(prior, nextRegime, nextCpi) {
 // MAIN
 // ---------------------------
 async function main() {
-  const FRED_API_KEY = mustGetEnv("FRED_API_KEY");
+  const FRED_API_KEY = getEnv("FRED_API_KEY", null);
   const prior = readPriorDashboardSafe();
 
   const fallbackBps = {
@@ -1516,6 +1516,9 @@ async function main() {
 
   // ---- FRED (safe fetch each series)
   const fred = {};
+  if (!FRED_API_KEY) {
+    console.warn("[warn] Missing FRED_API_KEY; continuing with empty FRED series fallbacks.");
+  }
   for (const [k, seriesId] of Object.entries(FRED_SERIES)) {
     fred[k] = await fredSeriesSafe(FRED_API_KEY, seriesId, 48);
   }
