@@ -1,4 +1,5 @@
-name: Update dashboard_latest.json + signal_api_latest.json + markets (CPI + News + Stocks + SAM + USAspending + EIA)
+# .github/workflows/update_dashboard_latest.yml
+name: Update dashboard + signal API + markets (CPI + News + Stocks + SAM + USAspending + EIA)
 
 on:
   workflow_dispatch:
@@ -26,16 +27,10 @@ jobs:
 
       - name: Ensure output files exist
         run: |
-          if [ ! -f dashboard_latest.json ]; then
-            echo '{}' > dashboard_latest.json
-          fi
-          if [ ! -f signal_api_latest.json ]; then
-            echo '{}' > signal_api_latest.json
-          fi
+          if [ ! -f dashboard_latest.json ]; then echo '{}' > dashboard_latest.json; fi
+          if [ ! -f signal_api_latest.json ]; then echo '{}' > signal_api_latest.json; fi
           mkdir -p dist/markets
-          if [ ! -f dist/markets/index.json ]; then
-            echo '{}' > dist/markets/index.json
-          fi
+          if [ ! -f dist/markets/index.json ]; then echo '{}' > dist/markets/index.json; fi
 
       - name: Validate Required Files
         run: |
