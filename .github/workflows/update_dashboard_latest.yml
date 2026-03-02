@@ -1,5 +1,4 @@
-- name: Build multi-market Signal API (v1)
-  run: node scripts/build_markets_signal_api_latest.mjs
+name: Update dashboard_latest.json + signal_api_latest.json + markets (CPI + News + Stocks + SAM + USAspending + EIA)
 
 on:
   workflow_dispatch:
@@ -25,21 +24,31 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Ensure dashboard_latest.json exists
+      - name: Ensure output files exist
         run: |
           if [ ! -f dashboard_latest.json ]; then
             echo '{}' > dashboard_latest.json
+          fi
+          if [ ! -f signal_api_latest.json ]; then
+            echo '{}' > signal_api_latest.json
+          fi
+          mkdir -p dist/markets
+          if [ ! -f dist/markets/index.json ]; then
+            echo '{}' > dist/markets/index.json
           fi
 
       - name: Validate Required Files
         run: |
           test -f scripts/build_dashboard_latest.mjs
+          test -f scripts/build_signal_api_latest.mjs
+          test -f scripts/build_markets_signal_api_latest.mjs
           test -f scripts/package.json
+          test -f config/markets.json
 
       - name: Install script dependencies
         run: npm --prefix scripts install --silent
 
-      - name: Run Build Script
+      - name: Run Dashboard Build Script
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
@@ -86,7 +95,7 @@ jobs:
         run: |
           node scripts/build_dashboard_latest.mjs
 
-      - name: Validate Output JSON
+      - name: Validate dashboard_latest.json parses
         run: |
           node -e "JSON.parse(require('fs').readFileSync('dashboard_latest.json','utf8'))"
 
@@ -102,19 +111,52 @@ jobs:
           console.log("Headline CPI:", j.cpi.headline);
           NODE
 
+      - name: Build signal_api_latest.json (Signal API v1)
+        env:
+          IN_PATH: "dashboard_latest.json"
+          OUT_PATH: "signal_api_latest.json"
+          REGION_LABEL: "United States"
+          REGION_NAME: "National"
+        run: |
+          node scripts/build_signal_api_latest.mjs
+
+      - name: Validate signal_api_latest.json parses and has version
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const j = JSON.parse(fs.readFileSync('signal_api_latest.json','utf8'));
+          if (j?.meta?.version !== 'signal_api_v1') {
+            console.error("signal_api_latest.json invalid: meta.version != signal_api_v1");
+            process.exit(1);
+          }
+          console.log("Signal API version:", j.meta.version);
+          NODE
+
+      - name: Build multi-market Signal API outputs (v1)
+        run: |
+          node scripts/build_markets_signal_api_latest.mjs
+
+      - name: Validate markets index exists
+        run: |
+          test -f dist/markets/index.json
+          node -e "JSON.parse(require('fs').readFileSync('dist/markets/index.json','utf8'))"
+
       - name: Commit changes (if any)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add dashboard_latest.json
+          git add signal_api_latest.json
+          git add dist/markets/index.json
+          git add dist/markets/**/signal_api_latest.json
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
 
-          git commit -m "Update dashboard_latest.json (CPI + News + Stocks + SAM + USAspending + EIA)"
+          git commit -m "Update dashboard + signal API + markets"
           git push origin Predictive-Model
 
       - name: Complete job
