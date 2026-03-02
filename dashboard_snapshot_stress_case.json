@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-03-02T10:00:00Z",
+  "executive": {
+    "headline": "Construction Intelligence",
+    "confidence": "high",
+    "summary": "Funding stress and permit pullback indicate elevated near-term risk."
+  },
+  "cpi": {
+    "headline": 74,
+    "zone": "Stress",
+    "delta_3m": 19,
+    "momentum": "Accelerating",
+    "components": {
+      "capital": 82,
+      "pipeline": 79,
+      "trade": 69,
+      "materials": 76,
+      "regulatory": 71,
+      "macro_sentiment": 68
+    }
+  },
+  "volatility_regime": "STRESS",
+  "regime_history": [
+    {
+      "date": "2026-03-02",
+      "primary_regime": "Stress",
+      "secondary_modifier": "Credit Shock",
+      "confidence": "high",
+      "cpi_level": 74,
+      "capital_score": 82,
+      "pipeline_score": 79,
+      "flip_trigger": "HY spread > 600 bps",
+      "duration_days": 8,
+      "status": "Active"
+    }
+  ],
+  "ui": {
+    "alerts": [
+      {
+        "severity": "CRITICAL",
+        "title": "Credit stress detected",
+        "message": "High-yield spread regime crossed stress threshold."
+      }
+    ],
+    "cards": [
+      {
+        "id": "headline_cpi",
+        "title": "Construction Pressure",
+        "value": 74,
+        "severity": "CRITICAL"
+      }
+    ],
+    "heat_strip": {
+      "cpi": 74,
+      "zone": "Stress",
+      "delta_3m": 19,
+      "momentum": "Accelerating"
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://construction-ai/schema/dashboard_schema.json",
+  "title": "Dashboard Latest Schema",
+  "description": "Canonical schema for dashboard_latest.json.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "executive",
+    "cpi",
+    "volatility_regime",
+    "regime_history",
+    "ui"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "executive": {
+      "type": "object",
+      "required": ["headline", "confidence", "summary"],
+      "properties": {
+        "headline": { "type": "string", "minLength": 1 },
+        "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+        "summary": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "cpi": {
+      "type": "object",
+      "required": ["headline", "zone", "delta_3m", "momentum", "components"],
+      "properties": {
+        "headline": { "type": "number", "minimum": 0, "maximum": 100 },
+        "zone": { "type": "string" },
+        "delta_3m": { "type": "number" },
+        "momentum": { "type": "string" },
+        "components": {
+          "type": "object",
+          "required": ["capital", "pipeline", "trade", "materials", "regulatory", "macro_sentiment"],
+          "properties": {
+            "capital": { "type": "number", "minimum": 0, "maximum": 100 },
+            "pipeline": { "type": "number", "minimum": 0, "maximum": 100 },
+            "trade": { "type": "number", "minimum": 0, "maximum": 100 },
+            "materials": { "type": "number", "minimum": 0, "maximum": 100 },
+            "regulatory": { "type": "number", "minimum": 0, "maximum": 100 },
+            "macro_sentiment": { "type": "number", "minimum": 0, "maximum": 100 }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "volatility_regime": {
+      "type": "string",
+      "enum": ["NORMAL", "WATCH", "STRESS"]
+    },
+    "regime_history": {
+      "type": "array",
+      "items": { "$ref": "./regime_history_schema.json" }
+    },
+    "ui": {
+      "type": "object",
+      "required": ["alerts", "cards", "heat_strip"],
+      "properties": {
+        "alerts": { "type": "array" },
+        "cards": { "type": "array" },
+        "heat_strip": { "type": "object" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "default": "NORMAL",
+  "levels": [
+    {
+      "name": "INFO",
+      "rank": 1,
+      "color": "#3B82F6",
+      "description": "Informational update with no risk action required."
+    },
+    {
+      "name": "NORMAL",
+      "rank": 2,
+      "color": "#10B981",
+      "description": "Expected conditions and no immediate action."
+    },
+    {
+      "name": "WATCH",
+      "rank": 3,
+      "color": "#F59E0B",
+      "description": "Monitoring advised due to increasing pressure."
+    },
+    {
+      "name": "WARNING",
+      "rank": 4,
+      "color": "#F97316",
+      "description": "Elevated risk; prepare contingency response."
+    },
+    {
+      "name": "CRITICAL",
+      "rank": 5,
+      "color": "#EF4444",
+      "description": "Immediate risk response required."
+    }
+  ]
+}

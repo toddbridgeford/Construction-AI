@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://construction-ai/schema/regime_history_schema.json",
+  "title": "Regime History Entry",
+  "type": "object",
+  "required": [
+    "date",
+    "primary_regime",
+    "secondary_modifier",
+    "confidence",
+    "cpi_level",
+    "capital_score",
+    "pipeline_score",
+    "flip_trigger",
+    "duration_days",
+    "status"
+  ],
+  "properties": {
+    "date": { "type": "string", "format": "date" },
+    "primary_regime": { "type": "string", "minLength": 1 },
+    "secondary_modifier": { "type": "string" },
+    "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+    "cpi_level": { "type": "number", "minimum": 0, "maximum": 100 },
+    "capital_score": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+    "pipeline_score": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+    "flip_trigger": { "type": ["string", "null"] },
+    "duration_days": { "type": ["integer", "null"], "minimum": 0 },
+    "status": { "type": "string", "enum": ["Active", "Closed"] }
+  },
+  "additionalProperties": false
+}

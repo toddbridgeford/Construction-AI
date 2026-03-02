@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2026-02-15",
+    "primary_regime": "Slowdown",
+    "secondary_modifier": "Neutral",
+    "confidence": "medium",
+    "cpi_level": 48,
+    "capital_score": 43,
+    "pipeline_score": 50,
+    "flip_trigger": null,
+    "duration_days": 16,
+    "status": "Closed"
+  },
+  {
+    "date": "2026-03-02",
+    "primary_regime": "Stress",
+    "secondary_modifier": "Credit Shock",
+    "confidence": "high",
+    "cpi_level": 74,
+    "capital_score": 82,
+    "pipeline_score": 79,
+    "flip_trigger": "HY spread > 600 bps",
+    "duration_days": 8,
+    "status": "Active"
+  }
+]
