@@ -65,7 +65,19 @@ function mustGetEnv(name) {
 }
 function getEnv(name, fallback = null) {
   const v = process.env[name];
-  return v == null || String(v).trim() === "" ? fallback : v;
+  const normalized = v == null ? "" : String(v).trim();
+  if (!normalized) return fallback;
+
+  // Guard against placeholder values copied from env.example.
+  const placeholderValues = new Set([
+    "replace_with_your_fred_api_key",
+    "your_fred_api_key",
+    "changeme",
+    "todo"
+  ]);
+  if (placeholderValues.has(normalized.toLowerCase())) return fallback;
+
+  return normalized;
 }
 function safeNumber(x) {
   if (x === null || x === undefined) return null;
