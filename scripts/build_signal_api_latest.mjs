@@ -1,163 +1,185 @@
-// scripts/build_markets_signal_api_latest.mjs
-// Multi-market Signal API v1 builder (zero deps, deterministic)
+// scripts/build_signal_api_latest.mjs
+// National Signal API v1 builder (deterministic, zero deps)
 //
-// Creates:
-// - dist/markets/index.json
-// - dist/markets/<marketId>/signal_api_latest.json (one per market)
-//
-// v1 behavior:
-// - Copies root signal_api_latest.json into dist/markets/national/
-// - Emits deterministic skeleton Signal API payloads for other markets
-//   until market-specific scoring mappings are provided.
+// Input: dashboard_latest.json
+// Output: signal_api_latest.json
 
 import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = process.cwd();
-const MARKETS_PATH = path.join(ROOT, "config", "markets.json");
-const DIST_DIR = path.join(ROOT, "dist", "markets");
-const INDEX_PATH = path.join(DIST_DIR, "index.json");
-const NATIONAL_SIGNAL_PATH = path.join(ROOT, "signal_api_latest.json");
+const IN_PATH = path.join(ROOT, process.env.IN_PATH || "dashboard_latest.json");
+const OUT_PATH = path.join(ROOT, process.env.OUT_PATH || "signal_api_latest.json");
+const REGION_LABEL = process.env.REGION_LABEL || "United States";
+const REGION_NAME = process.env.REGION_NAME || "National";
 
 function readJson(p) {
   return JSON.parse(fs.readFileSync(p, "utf8"));
 }
+
 function writeJson(p, obj) {
   fs.mkdirSync(path.dirname(p), { recursive: true });
   fs.writeFileSync(p, JSON.stringify(obj, null, 2), "utf8");
 }
-function isoDate() {
-  return new Date().toISOString().slice(0, 10);
-}
+
 function exists(p) {
-  try { fs.accessSync(p); return true; } catch { return false; }
+  try {
+    fs.accessSync(p);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
-function makeMarketSignalSkeleton({ market, runDate, mode, provenanceSources }) {
-  return {
-    meta: {
-      system: "Construction Intelligence OS",
-      version: "signal_api_v1",
-      mode,
-      run_date: runDate,
-      region: { name: market.label, geo_id: market.cbsa ?? null }
-    },
-    provenance: { as_of: runDate, sources: provenanceSources },
-    indices: {
-      pressure_index: {
-        value: null,
-        direction: "→",
-        zone: null,
-        delta_3m: null,
-        momentum_band: "Unknown",
-        risk_state: "🟡",
-        drivers: { capital: null, pipeline: null, trade: null, materials: null, regulatory: null, macro: null },
-        subindices: { cpi_sf: null, cpi_mf: null, cpi_inst: null, cpi_infra: null, cpi_r: null, cpi_i: null },
-        divergences: { r_minus_i: null, sf_minus_mf: null, inst_minus_infra: null }
-      },
-      capital_stress_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } },
-      residential_index: { value: null, risk_state: "🟡", bifurcation: { single_family: "🟡", multifamily: "🟡" } },
-      institutional_infra_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } },
-      contractor_margin_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } },
-      distributor_inventory_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } },
-      manufacturer_pricing_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } }
-    },
-    ecosystem_pulse: {
-      home_builders: "🟡",
-      architects: "🟡",
-      general_contractors: "🟡",
-      distributors: "🟡",
-      manufacturers: "🟡"
-    },
-    thermometer: {
-      active: false,
-      trigger_reason: ["Market CPI not computed in v1 (mapping not provided)"],
-      display: { cpi_value: null, zone: null, delta_3m: null, risk_state: "🟡" }
-    },
-    heatmap: {
-      as_of: runDate,
-      regions: [
-        {
-          name: market.id,
-          velocity: "→",
-          pressure: "🟡",
-          capital: "🟡",
-          residential: "🟡",
-          institutional: "🟡",
-          contractors: "🟡",
-          distribution: "🟡",
-          manufacturing: "🟡"
-        }
-      ]
-    },
-    regime: {
-      cycle_state: "",
-      modifier: "",
-      confidence: "medium",
-      inflection_triggers: [
-        { name: "Freeze Threshold", condition: "CPI >= 76", active: false },
-        { name: "Acceleration", condition: "Δ3m >= +8", active: false },
-        { name: "Capital Override", condition: "Capital >= 80", active: false }
-      ]
-    },
-    actions: { strategic_posture: [], decision_delta: [] },
-    diagnostics: {
-      missing_inputs: ["Market-specific deterministic scoring mappings (capital/pipeline/trade/materials/regulatory/macro)"],
-      non_deterministic_blocks: [],
-      notes: ["Multi-market v1: skeleton payload emitted deterministically."]
-    }
-  };
+function safeNumber(value, fallback = null) {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : fallback;
+  }
+  return fallback;
+}
+
+function riskStateFromValue(value) {
+  const v = safeNumber(value, 50);
+  if (v >= 76) return "🔴";
+  if (v >= 61) return "🟠";
+  if (v >= 46) return "🟡";
+  return "🟢";
+}
+
+function directionFromDelta(delta) {
+  const d = safeNumber(delta, 0);
+  if (d > 0.2) return "↑";
+  if (d < -0.2) return "↓";
+  return "→";
+}
+
+function zoneFromValue(value) {
+  const v = safeNumber(value, 50);
+  if (v >= 76) return "freeze";
+  if (v >= 61) return "elevated";
+  if (v >= 46) return "watch";
+  return "stable";
+}
+
+function normalizeSources(dashboard) {
+  const observedSources = dashboard?.observed?.sources;
+  if (!observedSources || typeof observedSources !== "object") {
+    return [
+      {
+        name: "dashboard_latest",
+        series: "dashboard_latest.json",
+        release_date: dashboard?.as_of || null,
+        last_updated: dashboard?.generated_at || null,
+        url: null
+      }
+    ];
+  }
+
+  return Object.entries(observedSources).map(([name, source]) => ({
+    name,
+    series: source?.api || source?.base || name,
+    release_date: dashboard?.as_of || null,
+    last_updated: dashboard?.generated_at || null,
+    url: source?.api || source?.base || null
+  }));
 }
 
 function main() {
-  if (!exists(MARKETS_PATH)) throw new Error(`Missing ${MARKETS_PATH}`);
-  if (!exists(NATIONAL_SIGNAL_PATH)) throw new Error(`Missing ${NATIONAL_SIGNAL_PATH}. Build national first.`);
-
-  const runDate = isoDate();
-  const cfg = readJson(MARKETS_PATH);
-  const markets = Array.isArray(cfg.markets) ? cfg.markets : [];
-  if (markets.length === 0) throw new Error("config/markets.json has no markets[]");
-
-  const national = readJson(NATIONAL_SIGNAL_PATH);
-  const provenanceSources =
-    national?.provenance?.sources ??
-    [{ name: "GitHub Build", series: "signal_api_latest.json", release_date: null, last_updated: null, url: null }];
-
-  const registry = {
-    version: 1,
-    generated_at: new Date().toISOString(),
-    default_market: cfg.default_market || "national",
-    markets: markets.map((m) => ({
-      id: m.id,
-      label: m.label,
-      type: m.type,
-      cbsa: m.cbsa ?? null,
-      path: `dist/markets/${m.id}/signal_api_latest.json`
-    }))
-  };
-
-  fs.mkdirSync(DIST_DIR, { recursive: true });
-  writeJson(INDEX_PATH, registry);
-
-  for (const market of markets) {
-    const outPath = path.join(DIST_DIR, market.id, "signal_api_latest.json");
-
-    if (market.id === "national") {
-      writeJson(outPath, national);
-      continue;
-    }
-
-    const skeleton = makeMarketSignalSkeleton({
-      market,
-      runDate,
-      mode: national?.meta?.mode || "data_assisted",
-      provenanceSources
-    });
-    writeJson(outPath, skeleton);
+  if (!exists(IN_PATH)) {
+    throw new Error(`Missing input file: ${IN_PATH}`);
   }
 
-  console.log(`Wrote ${INDEX_PATH}`);
-  console.log(`Wrote ${markets.length} market payload(s) under dist/markets/`);
+  const dashboard = readJson(IN_PATH);
+
+  const cpiHeadline = safeNumber(dashboard?.cpi?.headline, 50);
+  const cpiDelta3m = safeNumber(dashboard?.cpi?.delta_3m, 0);
+  const riskState = riskStateFromValue(cpiHeadline);
+  const zone = zoneFromValue(cpiHeadline);
+
+  const capital = safeNumber(dashboard?.cpi?.components?.capital, null);
+  const pipeline = safeNumber(dashboard?.cpi?.components?.pipeline, null);
+  const trade = safeNumber(dashboard?.cpi?.components?.trade, null);
+  const materials = safeNumber(dashboard?.cpi?.components?.materials, null);
+  const regulatory = safeNumber(dashboard?.cpi?.components?.regulatory, null);
+  const macro = safeNumber(dashboard?.cpi?.components?.macro_sentiment, null);
+
+  const payload = {
+    meta: {
+      system: "Construction Intelligence OS",
+      version: "signal_api_v1",
+      mode: "data_assisted",
+      run_date: dashboard?.as_of || new Date().toISOString().slice(0, 10),
+      region: {
+        label: REGION_LABEL,
+        name: REGION_NAME
+      }
+    },
+    provenance: {
+      as_of: dashboard?.as_of || null,
+      generated_at: dashboard?.generated_at || null,
+      sources: normalizeSources(dashboard)
+    },
+    indices: {
+      pressure_index: {
+        value: cpiHeadline,
+        direction: directionFromDelta(cpiDelta3m),
+        zone,
+        delta_3m: cpiDelta3m,
+        momentum_band: dashboard?.cpi?.momentum || "Unknown",
+        risk_state: riskState,
+        drivers: { capital, pipeline, trade, materials, regulatory, macro },
+        subindices: {
+          cpi_sf: safeNumber(dashboard?.cpi?.cpi_sf, null),
+          cpi_mf: safeNumber(dashboard?.cpi?.cpi_mf, null),
+          cpi_inst: safeNumber(dashboard?.cpi?.cpi_inst, null),
+          cpi_infra: safeNumber(dashboard?.cpi?.cpi_infra, null),
+          cpi_r: safeNumber(dashboard?.cpi?.cpi_r, null),
+          cpi_i: safeNumber(dashboard?.cpi?.cpi_i, null)
+        },
+        divergences: {
+          r_minus_i: safeNumber(dashboard?.cpi?.divergences?.r_minus_i, null),
+          sf_minus_mf: safeNumber(dashboard?.cpi?.divergences?.sf_minus_mf, null),
+          inst_minus_infra: safeNumber(dashboard?.cpi?.divergences?.inst_minus_infra, null)
+        }
+      },
+      capital_stress_index: {
+        value: capital,
+        risk_state: riskStateFromValue(capital),
+        overlays: {
+          active_triggers: [],
+          overlay_points: safeNumber(dashboard?.cpi?.components?.overlays?.stock_overlay, 0)
+        }
+      },
+      residential_index: {
+        value: safeNumber(dashboard?.cpi?.cpi_r, null),
+        risk_state: riskStateFromValue(dashboard?.cpi?.cpi_r),
+        bifurcation: {
+          single_family: riskStateFromValue(dashboard?.cpi?.cpi_sf),
+          multifamily: riskStateFromValue(dashboard?.cpi?.cpi_mf)
+        }
+      },
+      institutional_infra_index: {
+        value: safeNumber(dashboard?.cpi?.cpi_i, null),
+        risk_state: riskStateFromValue(dashboard?.cpi?.cpi_i),
+        overlays: { active_triggers: [], overlay_points: safeNumber(dashboard?.market_intel?.news_pressure_overlay, 0) }
+      }
+    },
+    regime: {
+      cycle_state: dashboard?.regime_history_display?.[0]?.primary_regime || "",
+      modifier: dashboard?.regime_history_display?.[0]?.secondary_modifier || "",
+      confidence: dashboard?.executive?.confidence || "medium"
+    },
+    diagnostics: {
+      missing_inputs: [],
+      non_deterministic_blocks: [],
+      notes: ["Built from dashboard_latest.json with defensive defaults."]
+    }
+  };
+
+  writeJson(OUT_PATH, payload);
+  console.log(`Wrote ${OUT_PATH}`);
 }
 
 main();
