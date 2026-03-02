@@ -1,85 +1,163 @@
-// scripts/build_signal_api_latest.mjs
-// Transforms dashboard_latest.json into signal_api_latest.json
-// Clean machine-grade signal contract for Construction AI GPT
+// scripts/build_markets_signal_api_latest.mjs
+// Multi-market Signal API v1 builder (zero deps, deterministic)
+//
+// Creates:
+// - dist/markets/index.json
+// - dist/markets/<marketId>/signal_api_latest.json (one per market)
+//
+// v1 behavior:
+// - Copies root signal_api_latest.json into dist/markets/national/
+// - Emits deterministic skeleton Signal API payloads for other markets
+//   until market-specific scoring mappings are provided.
 
 import fs from "node:fs";
 import path from "node:path";
 
-const ROOT = path.resolve(process.cwd());
-const DASHBOARD = path.join(ROOT, "dashboard_latest.json");
-const OUTFILE = path.join(ROOT, "signal_api_latest.json");
+const ROOT = process.cwd();
+const MARKETS_PATH = path.join(ROOT, "config", "markets.json");
+const DIST_DIR = path.join(ROOT, "dist", "markets");
+const INDEX_PATH = path.join(DIST_DIR, "index.json");
+const NATIONAL_SIGNAL_PATH = path.join(ROOT, "signal_api_latest.json");
 
-function clamp(x, lo = 0, hi = 100) {
-  return Math.max(lo, Math.min(hi, x));
+function readJson(p) {
+  return JSON.parse(fs.readFileSync(p, "utf8"));
+}
+function writeJson(p, obj) {
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  fs.writeFileSync(p, JSON.stringify(obj, null, 2), "utf8");
+}
+function isoDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+function exists(p) {
+  try { fs.accessSync(p); return true; } catch { return false; }
 }
 
-function signalDirection(curr, prev) {
-  if (curr == null || prev == null) return "stable";
-  if (curr > prev) return "accelerating";
-  if (curr < prev) return "cooling";
-  return "stable";
-}
-
-function buildSignal(dashboard) {
-  const cpi = dashboard.cpi;
-  const pillars = cpi.components;
-
-  const prev = dashboard.cpi.history?.[dashboard.cpi.history.length - 2]?.value ?? null;
-  const direction = signalDirection(cpi.headline, prev);
-
+function makeMarketSignalSkeleton({ market, runDate, mode, provenanceSources }) {
   return {
-    schema_version: "1.0.0",
-    generated_at: dashboard.generated_at,
-
-    geography: {
-      country: "US",
-      primary_market: "Denver"
+    meta: {
+      system: "Construction Intelligence OS",
+      version: "signal_api_v1",
+      mode,
+      run_date: runDate,
+      region: { name: market.label, geo_id: market.cbsa ?? null }
     },
-
+    provenance: { as_of: runDate, sources: provenanceSources },
+    indices: {
+      pressure_index: {
+        value: null,
+        direction: "→",
+        zone: null,
+        delta_3m: null,
+        momentum_band: "Unknown",
+        risk_state: "🟡",
+        drivers: { capital: null, pipeline: null, trade: null, materials: null, regulatory: null, macro: null },
+        subindices: { cpi_sf: null, cpi_mf: null, cpi_inst: null, cpi_infra: null, cpi_r: null, cpi_i: null },
+        divergences: { r_minus_i: null, sf_minus_mf: null, inst_minus_infra: null }
+      },
+      capital_stress_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } },
+      residential_index: { value: null, risk_state: "🟡", bifurcation: { single_family: "🟡", multifamily: "🟡" } },
+      institutional_infra_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } },
+      contractor_margin_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } },
+      distributor_inventory_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } },
+      manufacturer_pricing_index: { value: null, risk_state: "🟡", overlays: { active_triggers: [], overlay_points: 0 } }
+    },
+    ecosystem_pulse: {
+      home_builders: "🟡",
+      architects: "🟡",
+      general_contractors: "🟡",
+      distributors: "🟡",
+      manufacturers: "🟡"
+    },
+    thermometer: {
+      active: false,
+      trigger_reason: ["Market CPI not computed in v1 (mapping not provided)"],
+      display: { cpi_value: null, zone: null, delta_3m: null, risk_state: "🟡" }
+    },
+    heatmap: {
+      as_of: runDate,
+      regions: [
+        {
+          name: market.id,
+          velocity: "→",
+          pressure: "🟡",
+          capital: "🟡",
+          residential: "🟡",
+          institutional: "🟡",
+          contractors: "🟡",
+          distribution: "🟡",
+          manufacturing: "🟡"
+        }
+      ]
+    },
     regime: {
-      primary: dashboard.regime_history_display?.previous_regime ?? null,
-      risk_mode: dashboard.risk_mode,
-      freeze_risk: cpi.freeze_risk,
-      delta_3m: cpi.delta_3m,
-      direction
+      cycle_state: "",
+      modifier: "",
+      confidence: "medium",
+      inflection_triggers: [
+        { name: "Freeze Threshold", condition: "CPI >= 76", active: false },
+        { name: "Acceleration", condition: "Δ3m >= +8", active: false },
+        { name: "Capital Override", condition: "Capital >= 80", active: false }
+      ]
     },
-
-    cpi: {
-      headline: cpi.headline,
-      residential: cpi.cpi_r,
-      institutional: cpi.cpi_i,
-      sf: cpi.cpi_sf,
-      mf: cpi.cpi_mf,
-      inst: cpi.cpi_inst,
-      infra: cpi.cpi_infra,
-      zone: cpi.zone
-    },
-
-    pillars: {
-      capital: pillars.capital,
-      pipeline: pillars.pipeline,
-      trade: pillars.trade,
-      materials: pillars.materials,
-      regulatory: pillars.regulatory,
-      macro: pillars.macro_sentiment
-    },
-
-    overlays: {
-      stock: pillars.overlays.stock_overlay,
-      news: pillars.overlays.news_pressure_overlay,
-      energy: pillars.overlays.energy_overlay
-    },
-
-    ecosystem_pressure: dashboard.ui?.ecosystem_pulse ?? null
+    actions: { strategic_posture: [], decision_delta: [] },
+    diagnostics: {
+      missing_inputs: ["Market-specific deterministic scoring mappings (capital/pipeline/trade/materials/regulatory/macro)"],
+      non_deterministic_blocks: [],
+      notes: ["Multi-market v1: skeleton payload emitted deterministically."]
+    }
   };
 }
 
 function main() {
-  const dashboard = JSON.parse(fs.readFileSync(DASHBOARD, "utf8"));
-  const signal = buildSignal(dashboard);
+  if (!exists(MARKETS_PATH)) throw new Error(`Missing ${MARKETS_PATH}`);
+  if (!exists(NATIONAL_SIGNAL_PATH)) throw new Error(`Missing ${NATIONAL_SIGNAL_PATH}. Build national first.`);
 
-  fs.writeFileSync(OUTFILE, JSON.stringify(signal, null, 2));
-  console.log("Wrote signal_api_latest.json");
+  const runDate = isoDate();
+  const cfg = readJson(MARKETS_PATH);
+  const markets = Array.isArray(cfg.markets) ? cfg.markets : [];
+  if (markets.length === 0) throw new Error("config/markets.json has no markets[]");
+
+  const national = readJson(NATIONAL_SIGNAL_PATH);
+  const provenanceSources =
+    national?.provenance?.sources ??
+    [{ name: "GitHub Build", series: "signal_api_latest.json", release_date: null, last_updated: null, url: null }];
+
+  const registry = {
+    version: 1,
+    generated_at: new Date().toISOString(),
+    default_market: cfg.default_market || "national",
+    markets: markets.map((m) => ({
+      id: m.id,
+      label: m.label,
+      type: m.type,
+      cbsa: m.cbsa ?? null,
+      path: `dist/markets/${m.id}/signal_api_latest.json`
+    }))
+  };
+
+  fs.mkdirSync(DIST_DIR, { recursive: true });
+  writeJson(INDEX_PATH, registry);
+
+  for (const market of markets) {
+    const outPath = path.join(DIST_DIR, market.id, "signal_api_latest.json");
+
+    if (market.id === "national") {
+      writeJson(outPath, national);
+      continue;
+    }
+
+    const skeleton = makeMarketSignalSkeleton({
+      market,
+      runDate,
+      mode: national?.meta?.mode || "data_assisted",
+      provenanceSources
+    });
+    writeJson(outPath, skeleton);
+  }
+
+  console.log(`Wrote ${INDEX_PATH}`);
+  console.log(`Wrote ${markets.length} market payload(s) under dist/markets/`);
 }
 
 main();
