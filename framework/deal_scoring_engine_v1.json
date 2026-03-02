@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "name": "construction_ai_deal_scoring_index",
+  "description": "Bid / No Bid scoring model with owner-developer relationship graph inputs and subcontractor capacity risk mapping.",
+  "score_range": {
+    "min": 0,
+    "max": 100
+  },
+  "weights": {
+    "strategic_fit": 0.24,
+    "relationship_graph": 0.22,
+    "subcontractor_capacity_health": 0.18,
+    "market_timing": 0.14,
+    "margin_potential": 0.12,
+    "execution_readiness": 0.10,
+    "risk_penalty": -0.18
+  },
+  "relationship_graph": {
+    "edge_weight_defaults": {
+      "developer_to_owner": 0.55,
+      "contractor_to_owner": 0.30,
+      "contractor_to_developer": 0.15
+    },
+    "staleness_penalty": {
+      "0-12_months": 1.0,
+      "13-24_months": 0.85,
+      "25+_months": 0.65
+    }
+  },
+  "subcontractor_capacity_risk": {
+    "healthy_utilization_pct_max": 78,
+    "watch_utilization_pct_max": 88,
+    "critical_utilization_pct_min": 95,
+    "trade_weights": {
+      "electrical": 0.30,
+      "mechanical": 0.25,
+      "civil": 0.20,
+      "steel": 0.15,
+      "finishes": 0.10
+    }
+  },
+  "decision_engine": {
+    "auto_no_bid_if": {
+      "deal_score_lte": 45,
+      "subcontractor_capacity_risk_gte": 75,
+      "owner_relationship_score_lte": 30
+    },
+    "bands": [
+      {
+        "name": "Bid",
+        "score_min": 70,
+        "score_max": 100,
+        "confidence": "high"
+      },
+      {
+        "name": "Conditional Bid",
+        "score_min": 55,
+        "score_max": 69,
+        "confidence": "medium"
+      },
+      {
+        "name": "No Bid",
+        "score_min": 0,
+        "score_max": 54,
+        "confidence": "high"
+      }
+    ]
+  }
+}

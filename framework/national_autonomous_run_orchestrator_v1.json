@@ -12,7 +12,17 @@
       "id": "build_dashboard_latest",
       "type": "node_script",
       "script": "scripts/build_dashboard_latest.mjs",
-      "outputs": ["dashboard_latest.json"]
+      "outputs": [
+        "dashboard_latest.json"
+      ]
+    },
+    {
+      "id": "build_deal_scoring_latest",
+      "type": "node_script",
+      "script": "scripts/build_deal_scoring_latest.mjs",
+      "outputs": [
+        "deal_scoring_latest.json"
+      ]
     }
   ],
   "outputs": {
