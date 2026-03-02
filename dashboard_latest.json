@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-01T21:04:32.028Z",
+  "generated_at": "2026-03-02T00:06:04.126Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -9,7 +9,7 @@
   "cpi": {
     "headline": 46,
     "zone": "Slowdown",
-    "delta_3m": null,
+    "delta_3m": 0,
     "momentum": "Stable",
     "history": [
       {
@@ -22,6 +22,10 @@
       },
       {
         "date": "2026-03-01",
+        "value": 46
+      },
+      {
+        "date": "2026-03-02",
         "value": 46
       }
     ],
@@ -64,15 +68,15 @@
       "capital_score": 39,
       "pipeline_score": 47,
       "flip_trigger": null,
-      "duration_days": 0,
+      "duration_days": 1,
       "status": "Active"
     }
   ],
   "regime_history_display": {
-    "current_regime_duration_days": 0,
+    "current_regime_duration_days": 1,
     "previous_regime": null,
     "last_flip_date": null,
-    "regime_stability": "🟡 Watch"
+    "regime_stability": "🟢 Stable"
   },
   "ui": {
     "accent": "system",
@@ -151,7 +155,7 @@
     "heat_strip": {
       "cpi": 46,
       "zone": "Slowdown",
-      "delta_3m": null,
+      "delta_3m": 0,
       "momentum": "Stable",
       "risk_thermometer_mode": false,
       "freeze_risk": false
@@ -180,19 +184,28 @@
     },
     "news_badge": {
       "sources": {
-        "newsapi:top_headlines": 16,
+        "newsapi:top_headlines": 14,
         "newsapi:everything": 77
       },
-      "total": 93,
+      "total": 91,
       "overlay": 0
     }
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 16,
+      "newsapi:top_headlines": 14,
       "newsapi:everything": 77
     },
     "news_unified": [
+      {
+        "title": "Trump allies claim victory as the Ellisons expand their media empire - The Washington Post",
+        "url": "https://www.washingtonpost.com/business/2026/02/28/trump-paramount-warner-bros/",
+        "source": "The Washington Post",
+        "published_at": "2026-02-28T19:00:17Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Paramount’s Warner Bros. deal is seen by many as a win for conservatives seeking greater sway over the media — and raises new scrutiny over President Trump’s role in it."
+      },
       {
         "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
         "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
@@ -201,6 +214,15 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Millions of workers don’t have employer-sponsored retirement accounts. But the president’s proposal in the State of the Union speech may not answer their needs."
+      },
+      {
+        "title": "Amazon strikes $50B OpenAI deal to launch stateful AI services - Axios",
+        "url": "https://www.axios.com/2026/02/27/amazon-openai-stateful-ai-deal",
+        "source": "Axios",
+        "published_at": "2026-02-28T16:40:25Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "AWS can offer custom OpenAI models, bolstering Amazon's enterprise and Alexa efforts."
       },
       {
         "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
@@ -212,24 +234,6 @@
         "description": ""
       },
       {
-        "title": "David Ellison Delivered. Now It’s Up to Makan Delrahim to Close the Warner Bros. Deal - The Hollywood Reporter",
-        "url": "http://www.hollywoodreporter.com/business/business-news/david-ellison-makan-delrahim-warner-bros-deal-1236517978/",
-        "source": "Hollywood Reporter",
-        "published_at": "2026-02-28T14:06:25Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "State attorneys general. Foreign approvals. Consumer lawsuits. Even without the Justice Department stepping in, Paramount still faces several roadblocks to completing its acquisition of Warner Bros."
-      },
-      {
-        "title": "What’s at Stake for Oil Markets as Trump Strikes Iran - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-02-28/iran-strikes-what-s-at-stake-for-oil-markets-as-trump-attacks-tehran",
-        "source": "Bloomberg",
-        "published_at": "2026-02-28T13:20:53Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "President Donald Trump’s decision to strike Iran creates new risks for a significant chunk of the world’s oil supply."
-      },
-      {
         "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
         "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
         "source": "Business Insider",
@@ -239,22 +243,13 @@
         "description": "Block earned some praise for its \"relatively generous\" severance package. Here is a look at what other Big Tech companies have offered in the past."
       },
       {
-        "title": "The week the AI scare turned real and America realized maybe it isn't ready for what's coming - Fortune",
-        "url": "https://fortune.com/2026/02/28/ai-scare-trade-mass-layoffs-white-collar-recession-citrini-shumer-viral-doomsday-essays/",
-        "source": "Fortune",
-        "published_at": "2026-02-28T10:05:00Z",
+        "title": "The week when AI changed everything - CNN",
+        "url": "https://www.cnn.com/2026/02/28/business/ai-week-anthropic-nvidia-block",
+        "source": "CNN",
+        "published_at": "2026-02-28T08:00:33Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "From the \"Ghost GDP\" to mass layoffs at tech companies, this was the week AI's new collar economy took full effect."
-      },
-      {
-        "title": "Amazon deal with OpenAI shakes up AI landscape - Axios",
-        "url": "https://www.axios.com/2026/02/27/ai-amazon-openai-chips",
-        "source": "Axios",
-        "published_at": "2026-02-28T09:49:59Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Amazon's new $50 billion bet on OpenAI reshuffles the AI power map."
+        "description": "Tech made waves in the news and markets this week, from announcing mass layoffs to reigniting disruption fears that startled investors."
       },
       {
         "title": "Dow Jones Futures: Trump's Anthropic Move Hits Market ETFs; Don't Forget S&P 500's Hottest Stocks - Investor's Business Daily",
@@ -329,13 +324,22 @@
         "description": "U.S. wholesale prices came in hotter than expected last month. The Labor Department reported Friday that its producer price index, which measures inflation before it hits consumers, rose 0.5% from December and 2.9% from January 2025. Economists had forecast a…"
       },
       {
-        "title": "State Farm to offer $100 average refund to car insurance customers - CBS News",
-        "url": "https://www.cbsnews.com/news/state-farm-auto-insurance-customer-refund/",
-        "source": "CBS News",
-        "published_at": "2026-02-27T16:29:00Z",
+        "title": "Jess Wilson pledges faster land release in growth areas",
+        "url": "https://berwicknews.starcommunity.com.au/news/2026-03-01/jess-wilson-pledges-faster-land-release-in-growth-areas/",
+        "source": "Starcommunity.com.au",
+        "published_at": "2026-02-28T22:03:32Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Refund amounts for State Farm customers will vary based on their place of residence and insurance premiums."
+        "feed": "everything",
+        "description": "Opposition Leader Jess Wilson has unveiled the first plank of the Coalition’s housing strategy to fast-track development in growth areas as the State heads into an election year. Her housing strategy for the growth areas includes fast-tracking existing Precin…"
+      },
+      {
+        "title": "Marketing News of the Month: Super Bowl, Valentine's Day, Winter Olympics, and More",
+        "url": "https://www.debbielaskeysblog.com/2026/02/marketing-news-of-month-super-bowl.html",
+        "source": "Debbielaskeysblog.com",
+        "published_at": "2026-02-28T21:50:32Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Blog by Debbie Laskey about marketing, branding, social media, management, leadership, employee engagement, customer experiences, public relations."
       },
       {
         "title": "Bragar Eagel & Squire, P.C. Reminds Stockholders that a Class Action Lawsuit Has Been Filed Against CoreWeave, Inc. and Encourages Investors to Contact the Firm Before March 13th",
@@ -986,6 +990,15 @@
         "description": "The International Atomic Energy Agency (IAEA) stressed to member states that it \"cannot verify whether Iran has suspended all enrichment-related activities.\""
       },
       {
+        "title": "Vatican issues stamp honoring Ukrainian Catholics as war enters fourth year",
+        "url": "https://www.ewtnnews.com/vatican/vatican-issues-stamp-honoring-ukrainian-catholics-as-war-enters-fourth-year",
+        "source": "Ewtnnews.com",
+        "published_at": "2026-02-27T17:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The stamp features the Ukrainian Greek Catholic Cathedral of the Resurrection of Christ in Kyiv."
+      },
+      {
         "title": "Don't Call It a Realignment",
         "url": "https://reason.com/2026/02/27/dont-call-it-a-realignment/",
         "source": "Reason",
@@ -1002,36 +1015,22 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Strategic minority investment will support Alterra’s rapidly growing IOS platform, further institutionalizing the industrial outdoor storage asset class Strategic minority investment will support Alterra’s rapidly growing IOS platform, further institutionaliz…"
-      },
-      {
-        "title": "Central Asia’s Water Crisis Deepens as Leaders Clash Over Control",
-        "url": "https://oilprice.com/Energy/Energy-General/Central-Asias-Water-Crisis-Deepens-as-Leaders-Clash-Over-Control.html",
-        "source": "OilPrice.com",
-        "published_at": "2026-02-27T17:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Central Asian states increasingly acknowledge a need to change the way they manage their rapidly dwindling water resources. But while all involved acknowledge that the current management framework is inadequate, Central Asian leaders are having trouble findin…"
-      },
-      {
-        "title": "Elon Musk's 'secretive network' engaged in 'highly unusual' moves to back Trump: NYT",
-        "url": "https://www.rawstory.com/musk-trump-money-elon/",
-        "source": "Raw Story",
-        "published_at": "2026-02-27T16:45:35Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Billionaire Elon Musk’s relocation from California to Texas was accompanied by his creation of a shadowy and complex network of companies he controls, making it difficult to follow the money as he continues to mix personal with professional expenditures.Accor…"
-      },
-      {
-        "title": "The D Brief: Anthropic says no to DOD; Afghanistan-Pakistan war; Ukraine tactics update; US laser downs DHS drone; And a bit more.",
-        "url": "https://www.defenseone.com/threats/2026/02/the-d-brief-february-27-2026/411756/",
-        "source": "Defense One",
-        "published_at": "2026-02-27T16:36:12Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": ""
       }
     ],
     "news_with_impact": [
+      {
+        "title": "Trump allies claim victory as the Ellisons expand their media empire - The Washington Post",
+        "url": "https://www.washingtonpost.com/business/2026/02/28/trump-paramount-warner-bros/",
+        "source": "The Washington Post",
+        "published_at": "2026-02-28T19:00:17Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Paramount’s Warner Bros. deal is seen by many as a win for conservatives seeking greater sway over the media — and raises new scrutiny over President Trump’s role in it.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
       {
         "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
         "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
@@ -1043,6 +1042,19 @@
         "impact_score": 40,
         "themes": [
           "other"
+        ]
+      },
+      {
+        "title": "Amazon strikes $50B OpenAI deal to launch stateful AI services - Axios",
+        "url": "https://www.axios.com/2026/02/27/amazon-openai-stateful-ai-deal",
+        "source": "Axios",
+        "published_at": "2026-02-28T16:40:25Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "AWS can offer custom OpenAI models, bolstering Amazon's enterprise and Alexa efforts.",
+        "impact_score": 40,
+        "themes": [
+          "trade"
         ]
       },
       {
@@ -1059,32 +1071,6 @@
         ]
       },
       {
-        "title": "David Ellison Delivered. Now It’s Up to Makan Delrahim to Close the Warner Bros. Deal - The Hollywood Reporter",
-        "url": "http://www.hollywoodreporter.com/business/business-news/david-ellison-makan-delrahim-warner-bros-deal-1236517978/",
-        "source": "Hollywood Reporter",
-        "published_at": "2026-02-28T14:06:25Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "State attorneys general. Foreign approvals. Consumer lawsuits. Even without the Justice Department stepping in, Paramount still faces several roadblocks to completing its acquisition of Warner Bros.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "What’s at Stake for Oil Markets as Trump Strikes Iran - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-02-28/iran-strikes-what-s-at-stake-for-oil-markets-as-trump-attacks-tehran",
-        "source": "Bloomberg",
-        "published_at": "2026-02-28T13:20:53Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "President Donald Trump’s decision to strike Iran creates new risks for a significant chunk of the world’s oil supply.",
-        "impact_score": 55,
-        "themes": [
-          "trade"
-        ]
-      },
-      {
         "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
         "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
         "source": "Business Insider",
@@ -1098,26 +1084,13 @@
         ]
       },
       {
-        "title": "The week the AI scare turned real and America realized maybe it isn't ready for what's coming - Fortune",
-        "url": "https://fortune.com/2026/02/28/ai-scare-trade-mass-layoffs-white-collar-recession-citrini-shumer-viral-doomsday-essays/",
-        "source": "Fortune",
-        "published_at": "2026-02-28T10:05:00Z",
+        "title": "The week when AI changed everything - CNN",
+        "url": "https://www.cnn.com/2026/02/28/business/ai-week-anthropic-nvidia-block",
+        "source": "CNN",
+        "published_at": "2026-02-28T08:00:33Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "From the \"Ghost GDP\" to mass layoffs at tech companies, this was the week AI's new collar economy took full effect.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Amazon deal with OpenAI shakes up AI landscape - Axios",
-        "url": "https://www.axios.com/2026/02/27/ai-amazon-openai-chips",
-        "source": "Axios",
-        "published_at": "2026-02-28T09:49:59Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Amazon's new $50 billion bet on OpenAI reshuffles the AI power map.",
+        "description": "Tech made waves in the news and markets this week, from announcing mass layoffs to reigniting disruption fears that startled investors.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1229,13 +1202,26 @@
         ]
       },
       {
-        "title": "State Farm to offer $100 average refund to car insurance customers - CBS News",
-        "url": "https://www.cbsnews.com/news/state-farm-auto-insurance-customer-refund/",
-        "source": "CBS News",
-        "published_at": "2026-02-27T16:29:00Z",
+        "title": "Jess Wilson pledges faster land release in growth areas",
+        "url": "https://berwicknews.starcommunity.com.au/news/2026-03-01/jess-wilson-pledges-faster-land-release-in-growth-areas/",
+        "source": "Starcommunity.com.au",
+        "published_at": "2026-02-28T22:03:32Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Refund amounts for State Farm customers will vary based on their place of residence and insurance premiums.",
+        "feed": "everything",
+        "description": "Opposition Leader Jess Wilson has unveiled the first plank of the Coalition’s housing strategy to fast-track development in growth areas as the State heads into an election year. Her housing strategy for the growth areas includes fast-tracking existing Precin…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Marketing News of the Month: Super Bowl, Valentine's Day, Winter Olympics, and More",
+        "url": "https://www.debbielaskeysblog.com/2026/02/marketing-news-of-month-super-bowl.html",
+        "source": "Debbielaskeysblog.com",
+        "published_at": "2026-02-28T21:50:32Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Blog by Debbie Laskey about marketing, branding, social media, management, leadership, employee engagement, customer experiences, public relations.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2178,6 +2164,19 @@
         ]
       },
       {
+        "title": "Vatican issues stamp honoring Ukrainian Catholics as war enters fourth year",
+        "url": "https://www.ewtnnews.com/vatican/vatican-issues-stamp-honoring-ukrainian-catholics-as-war-enters-fourth-year",
+        "source": "Ewtnnews.com",
+        "published_at": "2026-02-27T17:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The stamp features the Ukrainian Greek Catholic Cathedral of the Resurrection of Christ in Kyiv.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
         "title": "Don't Call It a Realignment",
         "url": "https://reason.com/2026/02/27/dont-call-it-a-realignment/",
         "source": "Reason",
@@ -2202,45 +2201,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "Central Asia’s Water Crisis Deepens as Leaders Clash Over Control",
-        "url": "https://oilprice.com/Energy/Energy-General/Central-Asias-Water-Crisis-Deepens-as-Leaders-Clash-Over-Control.html",
-        "source": "OilPrice.com",
-        "published_at": "2026-02-27T17:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Central Asian states increasingly acknowledge a need to change the way they manage their rapidly dwindling water resources. But while all involved acknowledge that the current management framework is inadequate, Central Asian leaders are having trouble findin…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Elon Musk's 'secretive network' engaged in 'highly unusual' moves to back Trump: NYT",
-        "url": "https://www.rawstory.com/musk-trump-money-elon/",
-        "source": "Raw Story",
-        "published_at": "2026-02-27T16:45:35Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Billionaire Elon Musk’s relocation from California to Texas was accompanied by his creation of a shadowy and complex network of companies he controls, making it difficult to follow the money as he continues to mix personal with professional expenditures.Accor…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "The D Brief: Anthropic says no to DOD; Afghanistan-Pakistan war; Ukraine tactics update; US laser downs DHS drone; And a bit more.",
-        "url": "https://www.defenseone.com/threats/2026/02/the-d-brief-february-27-2026/411756/",
-        "source": "Defense One",
-        "published_at": "2026-02-27T16:36:12Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2258,19 +2218,6 @@
         ]
       },
       {
-        "title": "What’s at Stake for Oil Markets as Trump Strikes Iran - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-02-28/iran-strikes-what-s-at-stake-for-oil-markets-as-trump-attacks-tehran",
-        "source": "Bloomberg",
-        "published_at": "2026-02-28T13:20:53Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "President Donald Trump’s decision to strike Iran creates new risks for a significant chunk of the world’s oil supply.",
-        "impact_score": 55,
-        "themes": [
-          "trade"
-        ]
-      },
-      {
         "title": "Ha Jung-woo stubbornly holds onto his Mad Concrete Dreams",
         "url": "https://dramabeans.com/2026/02/ha-jung-woo-stubbornly-holds-onto-his-mad-concrete-dreams/",
         "source": "Dramabeans.com",
@@ -2281,6 +2228,19 @@
         "impact_score": 55,
         "themes": [
           "materials"
+        ]
+      },
+      {
+        "title": "Trump allies claim victory as the Ellisons expand their media empire - The Washington Post",
+        "url": "https://www.washingtonpost.com/business/2026/02/28/trump-paramount-warner-bros/",
+        "source": "The Washington Post",
+        "published_at": "2026-02-28T19:00:17Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Paramount’s Warner Bros. deal is seen by many as a win for conservatives seeking greater sway over the media — and raises new scrutiny over President Trump’s role in it.",
+        "impact_score": 40,
+        "themes": [
+          "other"
         ]
       },
       {
@@ -2297,6 +2257,19 @@
         ]
       },
       {
+        "title": "Amazon strikes $50B OpenAI deal to launch stateful AI services - Axios",
+        "url": "https://www.axios.com/2026/02/27/amazon-openai-stateful-ai-deal",
+        "source": "Axios",
+        "published_at": "2026-02-28T16:40:25Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "AWS can offer custom OpenAI models, bolstering Amazon's enterprise and Alexa efforts.",
+        "impact_score": 40,
+        "themes": [
+          "trade"
+        ]
+      },
+      {
         "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
         "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
         "source": "Barron's",
@@ -2304,19 +2277,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "David Ellison Delivered. Now It’s Up to Makan Delrahim to Close the Warner Bros. Deal - The Hollywood Reporter",
-        "url": "http://www.hollywoodreporter.com/business/business-news/david-ellison-makan-delrahim-warner-bros-deal-1236517978/",
-        "source": "Hollywood Reporter",
-        "published_at": "2026-02-28T14:06:25Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "State attorneys general. Foreign approvals. Consumer lawsuits. Even without the Justice Department stepping in, Paramount still faces several roadblocks to completing its acquisition of Warner Bros.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2336,26 +2296,13 @@
         ]
       },
       {
-        "title": "The week the AI scare turned real and America realized maybe it isn't ready for what's coming - Fortune",
-        "url": "https://fortune.com/2026/02/28/ai-scare-trade-mass-layoffs-white-collar-recession-citrini-shumer-viral-doomsday-essays/",
-        "source": "Fortune",
-        "published_at": "2026-02-28T10:05:00Z",
+        "title": "The week when AI changed everything - CNN",
+        "url": "https://www.cnn.com/2026/02/28/business/ai-week-anthropic-nvidia-block",
+        "source": "CNN",
+        "published_at": "2026-02-28T08:00:33Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "From the \"Ghost GDP\" to mass layoffs at tech companies, this was the week AI's new collar economy took full effect.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Amazon deal with OpenAI shakes up AI landscape - Axios",
-        "url": "https://www.axios.com/2026/02/27/ai-amazon-openai-chips",
-        "source": "Axios",
-        "published_at": "2026-02-28T09:49:59Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Amazon's new $50 billion bet on OpenAI reshuffles the AI power map.",
+        "description": "Tech made waves in the news and markets this week, from announcing mass layoffs to reigniting disruption fears that startled investors.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2369,6 +2316,19 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "The major indexes are below 50-day lines while equal-weight ETFs are at highs.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Jim Cramer Calls Nvidia's After-Hours Dip Is A 'Mistake,' Analyst Says Investors Now Expect Outsized Results Each Quarter - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/jim-cramer-calls-nvidias-hours-013038264.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-02-28T01:30:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "On Wednesday, Nvidia Corp (NASDAQ:NVDA) delivered blockbuster quarterly results and raised its outlook, but the stock's muted after-hours reaction sparked...",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2462,14 +2422,14 @@
       ],
       "trade": [
         {
-          "title": "What’s at Stake for Oil Markets as Trump Strikes Iran - Bloomberg",
-          "url": "https://www.bloomberg.com/news/articles/2026-02-28/iran-strikes-what-s-at-stake-for-oil-markets-as-trump-attacks-tehran",
-          "source": "Bloomberg",
-          "published_at": "2026-02-28T13:20:53Z",
+          "title": "Amazon strikes $50B OpenAI deal to launch stateful AI services - Axios",
+          "url": "https://www.axios.com/2026/02/27/amazon-openai-stateful-ai-deal",
+          "source": "Axios",
+          "published_at": "2026-02-28T16:40:25Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "President Donald Trump’s decision to strike Iran creates new risks for a significant chunk of the world’s oil supply.",
-          "impact_score": 55,
+          "description": "AWS can offer custom OpenAI models, bolstering Amazon's enterprise and Alexa efforts.",
+          "impact_score": 40,
           "themes": [
             "trade"
           ]
@@ -2548,6 +2508,19 @@
       "land": [],
       "other": [
         {
+          "title": "Trump allies claim victory as the Ellisons expand their media empire - The Washington Post",
+          "url": "https://www.washingtonpost.com/business/2026/02/28/trump-paramount-warner-bros/",
+          "source": "The Washington Post",
+          "published_at": "2026-02-28T19:00:17Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Paramount’s Warner Bros. deal is seen by many as a win for conservatives seeking greater sway over the media — and raises new scrutiny over President Trump’s role in it.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
           "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
           "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
           "source": "The Washington Post",
@@ -2574,19 +2547,6 @@
           ]
         },
         {
-          "title": "David Ellison Delivered. Now It’s Up to Makan Delrahim to Close the Warner Bros. Deal - The Hollywood Reporter",
-          "url": "http://www.hollywoodreporter.com/business/business-news/david-ellison-makan-delrahim-warner-bros-deal-1236517978/",
-          "source": "Hollywood Reporter",
-          "published_at": "2026-02-28T14:06:25Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "State attorneys general. Foreign approvals. Consumer lawsuits. Even without the Justice Department stepping in, Paramount still faces several roadblocks to completing its acquisition of Warner Bros.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
           "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
           "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
           "source": "Business Insider",
@@ -2600,26 +2560,13 @@
           ]
         },
         {
-          "title": "The week the AI scare turned real and America realized maybe it isn't ready for what's coming - Fortune",
-          "url": "https://fortune.com/2026/02/28/ai-scare-trade-mass-layoffs-white-collar-recession-citrini-shumer-viral-doomsday-essays/",
-          "source": "Fortune",
-          "published_at": "2026-02-28T10:05:00Z",
+          "title": "The week when AI changed everything - CNN",
+          "url": "https://www.cnn.com/2026/02/28/business/ai-week-anthropic-nvidia-block",
+          "source": "CNN",
+          "published_at": "2026-02-28T08:00:33Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "From the \"Ghost GDP\" to mass layoffs at tech companies, this was the week AI's new collar economy took full effect.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Amazon deal with OpenAI shakes up AI landscape - Axios",
-          "url": "https://www.axios.com/2026/02/27/ai-amazon-openai-chips",
-          "source": "Axios",
-          "published_at": "2026-02-28T09:49:59Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Amazon's new $50 billion bet on OpenAI reshuffles the AI power map.",
+          "description": "Tech made waves in the news and markets this week, from announcing mass layoffs to reigniting disruption fears that startled investors.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -2702,6 +2649,19 @@
           "themes": [
             "other"
           ]
+        },
+        {
+          "title": "Jess Wilson pledges faster land release in growth areas",
+          "url": "https://berwicknews.starcommunity.com.au/news/2026-03-01/jess-wilson-pledges-faster-land-release-in-growth-areas/",
+          "source": "Starcommunity.com.au",
+          "published_at": "2026-02-28T22:03:32Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Opposition Leader Jess Wilson has unveiled the first plank of the Coalition’s housing strategy to fast-track development in growth areas as the State heads into an election year. Her housing strategy for the growth areas includes fast-tracking existing Precin…",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
         }
       ],
       "commercial": [
@@ -2761,12 +2721,12 @@
     "stocks": [
       {
         "ticker": "DHI",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-02-27",
+        "open": 158.485,
         "close": 160.39,
-        "prev_close": 158.97,
-        "change": 1.42,
-        "change_pct": 0.8933
+        "change": 1.9049999999999727,
+        "change_pct": 1.2020064990377464
       },
       {
         "ticker": "PHM",
@@ -2806,12 +2766,12 @@
       },
       {
         "ticker": "HD",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 374,
         "close": 380.72,
-        "change": 6.720000000000027,
-        "change_pct": 1.7967914438502746
+        "prev_close": 375.09,
+        "change": 5.63,
+        "change_pct": 1.501
       },
       {
         "ticker": "LOW",
@@ -2833,12 +2793,12 @@
       },
       {
         "ticker": "MLM",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-02-27",
+        "open": 672.52,
         "close": 676.57,
-        "prev_close": 678.46,
-        "change": -1.89,
-        "change_pct": -0.2786
+        "change": 4.050000000000068,
+        "change_pct": 0.6022125736037691
       },
       {
         "ticker": "BLDR",
@@ -2925,11 +2885,11 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": 1.2820932193623196
+        "avg_change_pct": 1.3438345191698686
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.4817178613713649
+        "avg_change_pct": 0.628519956971993
       },
       "distribution": {
         "count": 1,
@@ -2941,13 +2901,13 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 1.4950681258264578
+        "avg_change_pct": 1.3471724039013204
       }
     },
     "stock_pressure_overlay": 0,
     "sam_gov": {
       "enabled": true,
-      "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=gca_OfPmvU49Bch9iFrQ0msfuSJMFrOOiXX89ykqaes7qFQ&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-19",
+      "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=gca_OfPmvU49Bch9iFrQ0msfuSJMFrOOiXX89ykqaes7qFQ&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-20",
       "items": []
     },
     "usaspending": {
@@ -3024,12 +2984,12 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-01T21:04:32.028Z",
+    "generated_at_utc": "2026-03-02T00:06:04.126Z",
     "regime_history": {
-      "current_regime_duration_days": 0,
+      "current_regime_duration_days": 1,
       "previous_regime": null,
       "last_flip_date": null,
-      "regime_stability": "🟡 Watch"
+      "regime_stability": "🟢 Stable"
     },
     "regime": {
       "primary": "Slowdown",
@@ -3039,7 +2999,7 @@
     "cpi": {
       "headline": 46,
       "zone": "Slowdown",
-      "delta_3m": null,
+      "delta_3m": 0,
       "momentum": "Stable",
       "freeze_risk": false,
       "risk_thermometer_mode": false,
@@ -3119,12 +3079,12 @@
       "stocks": [
         {
           "ticker": "DHI",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-02-27",
+          "open": 158.485,
           "close": 160.39,
-          "prev_close": 158.97,
-          "change": 1.42,
-          "change_pct": 0.8933
+          "change": 1.9049999999999727,
+          "change_pct": 1.2020064990377464
         },
         {
           "ticker": "PHM",
@@ -3164,12 +3124,12 @@
         },
         {
           "ticker": "HD",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 374,
           "close": 380.72,
-          "change": 6.720000000000027,
-          "change_pct": 1.7967914438502746
+          "prev_close": 375.09,
+          "change": 5.63,
+          "change_pct": 1.501
         },
         {
           "ticker": "LOW",
@@ -3191,12 +3151,12 @@
         },
         {
           "ticker": "MLM",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-02-27",
+          "open": 672.52,
           "close": 676.57,
-          "prev_close": 678.46,
-          "change": -1.89,
-          "change_pct": -0.2786
+          "change": 4.050000000000068,
+          "change_pct": 0.6022125736037691
         },
         {
           "ticker": "BLDR",
@@ -3283,11 +3243,11 @@
       "sector_rollups": {
         "builders": {
           "count": 5,
-          "avg_change_pct": 1.2820932193623196
+          "avg_change_pct": 1.3438345191698686
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": 0.4817178613713649
+          "avg_change_pct": 0.628519956971993
         },
         "distribution": {
           "count": 1,
@@ -3299,14 +3259,14 @@
         },
         "retail": {
           "count": 2,
-          "avg_change_pct": 1.4950681258264578
+          "avg_change_pct": 1.3471724039013204
         }
       },
       "stock_pressure_overlay": 0
     },
     "news": {
       "sources": {
-        "newsapi:top_headlines": 16,
+        "newsapi:top_headlines": 14,
         "newsapi:everything": 77
       },
       "news_pressure_overlay": 0,
@@ -3325,19 +3285,6 @@
           ]
         },
         {
-          "title": "What’s at Stake for Oil Markets as Trump Strikes Iran - Bloomberg",
-          "url": "https://www.bloomberg.com/news/articles/2026-02-28/iran-strikes-what-s-at-stake-for-oil-markets-as-trump-attacks-tehran",
-          "source": "Bloomberg",
-          "published_at": "2026-02-28T13:20:53Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "President Donald Trump’s decision to strike Iran creates new risks for a significant chunk of the world’s oil supply.",
-          "impact_score": 55,
-          "themes": [
-            "trade"
-          ]
-        },
-        {
           "title": "Ha Jung-woo stubbornly holds onto his Mad Concrete Dreams",
           "url": "https://dramabeans.com/2026/02/ha-jung-woo-stubbornly-holds-onto-his-mad-concrete-dreams/",
           "source": "Dramabeans.com",
@@ -3348,6 +3295,19 @@
           "impact_score": 55,
           "themes": [
             "materials"
+          ]
+        },
+        {
+          "title": "Trump allies claim victory as the Ellisons expand their media empire - The Washington Post",
+          "url": "https://www.washingtonpost.com/business/2026/02/28/trump-paramount-warner-bros/",
+          "source": "The Washington Post",
+          "published_at": "2026-02-28T19:00:17Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Paramount’s Warner Bros. deal is seen by many as a win for conservatives seeking greater sway over the media — and raises new scrutiny over President Trump’s role in it.",
+          "impact_score": 40,
+          "themes": [
+            "other"
           ]
         },
         {
@@ -3364,6 +3324,19 @@
           ]
         },
         {
+          "title": "Amazon strikes $50B OpenAI deal to launch stateful AI services - Axios",
+          "url": "https://www.axios.com/2026/02/27/amazon-openai-stateful-ai-deal",
+          "source": "Axios",
+          "published_at": "2026-02-28T16:40:25Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "AWS can offer custom OpenAI models, bolstering Amazon's enterprise and Alexa efforts.",
+          "impact_score": 40,
+          "themes": [
+            "trade"
+          ]
+        },
+        {
           "title": "Berkshire Hathaway’s Earnings Are Nearly Here. Greg Abel’s Letter Will Be Top of Mind for Investors. - Barron's",
           "url": "https://www.barrons.com/articles/berkshire-hathaways-earnings-stock-price-2020a5d3",
           "source": "Barron's",
@@ -3371,19 +3344,6 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "David Ellison Delivered. Now It’s Up to Makan Delrahim to Close the Warner Bros. Deal - The Hollywood Reporter",
-          "url": "http://www.hollywoodreporter.com/business/business-news/david-ellison-makan-delrahim-warner-bros-deal-1236517978/",
-          "source": "Hollywood Reporter",
-          "published_at": "2026-02-28T14:06:25Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "State attorneys general. Foreign approvals. Consumer lawsuits. Even without the Justice Department stepping in, Paramount still faces several roadblocks to completing its acquisition of Warner Bros.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3403,26 +3363,13 @@
           ]
         },
         {
-          "title": "The week the AI scare turned real and America realized maybe it isn't ready for what's coming - Fortune",
-          "url": "https://fortune.com/2026/02/28/ai-scare-trade-mass-layoffs-white-collar-recession-citrini-shumer-viral-doomsday-essays/",
-          "source": "Fortune",
-          "published_at": "2026-02-28T10:05:00Z",
+          "title": "The week when AI changed everything - CNN",
+          "url": "https://www.cnn.com/2026/02/28/business/ai-week-anthropic-nvidia-block",
+          "source": "CNN",
+          "published_at": "2026-02-28T08:00:33Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "From the \"Ghost GDP\" to mass layoffs at tech companies, this was the week AI's new collar economy took full effect.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Amazon deal with OpenAI shakes up AI landscape - Axios",
-          "url": "https://www.axios.com/2026/02/27/ai-amazon-openai-chips",
-          "source": "Axios",
-          "published_at": "2026-02-28T09:49:59Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Amazon's new $50 billion bet on OpenAI reshuffles the AI power map.",
+          "description": "Tech made waves in the news and markets this week, from announcing mass layoffs to reigniting disruption fears that startled investors.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3440,9 +3387,35 @@
           "themes": [
             "other"
           ]
+        },
+        {
+          "title": "Jim Cramer Calls Nvidia's After-Hours Dip Is A 'Mistake,' Analyst Says Investors Now Expect Outsized Results Each Quarter - Yahoo Finance",
+          "url": "https://finance.yahoo.com/news/jim-cramer-calls-nvidias-hours-013038264.html",
+          "source": "Yahoo Entertainment",
+          "published_at": "2026-02-28T01:30:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "On Wednesday, Nvidia Corp (NASDAQ:NVDA) delivered blockbuster quarterly results and raised its outlook, but the stock's muted after-hours reaction sparked...",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
         }
       ],
       "unified": [
+        {
+          "title": "Trump allies claim victory as the Ellisons expand their media empire - The Washington Post",
+          "url": "https://www.washingtonpost.com/business/2026/02/28/trump-paramount-warner-bros/",
+          "source": "The Washington Post",
+          "published_at": "2026-02-28T19:00:17Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Paramount’s Warner Bros. deal is seen by many as a win for conservatives seeking greater sway over the media — and raises new scrutiny over President Trump’s role in it.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
         {
           "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
           "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
@@ -3454,6 +3427,19 @@
           "impact_score": 40,
           "themes": [
             "other"
+          ]
+        },
+        {
+          "title": "Amazon strikes $50B OpenAI deal to launch stateful AI services - Axios",
+          "url": "https://www.axios.com/2026/02/27/amazon-openai-stateful-ai-deal",
+          "source": "Axios",
+          "published_at": "2026-02-28T16:40:25Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "AWS can offer custom OpenAI models, bolstering Amazon's enterprise and Alexa efforts.",
+          "impact_score": 40,
+          "themes": [
+            "trade"
           ]
         },
         {
@@ -3470,32 +3456,6 @@
           ]
         },
         {
-          "title": "David Ellison Delivered. Now It’s Up to Makan Delrahim to Close the Warner Bros. Deal - The Hollywood Reporter",
-          "url": "http://www.hollywoodreporter.com/business/business-news/david-ellison-makan-delrahim-warner-bros-deal-1236517978/",
-          "source": "Hollywood Reporter",
-          "published_at": "2026-02-28T14:06:25Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "State attorneys general. Foreign approvals. Consumer lawsuits. Even without the Justice Department stepping in, Paramount still faces several roadblocks to completing its acquisition of Warner Bros.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "What’s at Stake for Oil Markets as Trump Strikes Iran - Bloomberg",
-          "url": "https://www.bloomberg.com/news/articles/2026-02-28/iran-strikes-what-s-at-stake-for-oil-markets-as-trump-attacks-tehran",
-          "source": "Bloomberg",
-          "published_at": "2026-02-28T13:20:53Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "President Donald Trump’s decision to strike Iran creates new risks for a significant chunk of the world’s oil supply.",
-          "impact_score": 55,
-          "themes": [
-            "trade"
-          ]
-        },
-        {
           "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
           "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
           "source": "Business Insider",
@@ -3509,26 +3469,13 @@
           ]
         },
         {
-          "title": "The week the AI scare turned real and America realized maybe it isn't ready for what's coming - Fortune",
-          "url": "https://fortune.com/2026/02/28/ai-scare-trade-mass-layoffs-white-collar-recession-citrini-shumer-viral-doomsday-essays/",
-          "source": "Fortune",
-          "published_at": "2026-02-28T10:05:00Z",
+          "title": "The week when AI changed everything - CNN",
+          "url": "https://www.cnn.com/2026/02/28/business/ai-week-anthropic-nvidia-block",
+          "source": "CNN",
+          "published_at": "2026-02-28T08:00:33Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "From the \"Ghost GDP\" to mass layoffs at tech companies, this was the week AI's new collar economy took full effect.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Amazon deal with OpenAI shakes up AI landscape - Axios",
-          "url": "https://www.axios.com/2026/02/27/ai-amazon-openai-chips",
-          "source": "Axios",
-          "published_at": "2026-02-28T09:49:59Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Amazon's new $50 billion bet on OpenAI reshuffles the AI power map.",
+          "description": "Tech made waves in the news and markets this week, from announcing mass layoffs to reigniting disruption fears that startled investors.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3640,13 +3587,26 @@
           ]
         },
         {
-          "title": "State Farm to offer $100 average refund to car insurance customers - CBS News",
-          "url": "https://www.cbsnews.com/news/state-farm-auto-insurance-customer-refund/",
-          "source": "CBS News",
-          "published_at": "2026-02-27T16:29:00Z",
+          "title": "Jess Wilson pledges faster land release in growth areas",
+          "url": "https://berwicknews.starcommunity.com.au/news/2026-03-01/jess-wilson-pledges-faster-land-release-in-growth-areas/",
+          "source": "Starcommunity.com.au",
+          "published_at": "2026-02-28T22:03:32Z",
           "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Refund amounts for State Farm customers will vary based on their place of residence and insurance premiums.",
+          "feed": "everything",
+          "description": "Opposition Leader Jess Wilson has unveiled the first plank of the Coalition’s housing strategy to fast-track development in growth areas as the State heads into an election year. Her housing strategy for the growth areas includes fast-tracking existing Precin…",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Marketing News of the Month: Super Bowl, Valentine's Day, Winter Olympics, and More",
+          "url": "https://www.debbielaskeysblog.com/2026/02/marketing-news-of-month-super-bowl.html",
+          "source": "Debbielaskeysblog.com",
+          "published_at": "2026-02-28T21:50:32Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Blog by Debbie Laskey about marketing, branding, social media, management, leadership, employee engagement, customer experiences, public relations.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -4311,14 +4271,14 @@
         ],
         "trade": [
           {
-            "title": "What’s at Stake for Oil Markets as Trump Strikes Iran - Bloomberg",
-            "url": "https://www.bloomberg.com/news/articles/2026-02-28/iran-strikes-what-s-at-stake-for-oil-markets-as-trump-attacks-tehran",
-            "source": "Bloomberg",
-            "published_at": "2026-02-28T13:20:53Z",
+            "title": "Amazon strikes $50B OpenAI deal to launch stateful AI services - Axios",
+            "url": "https://www.axios.com/2026/02/27/amazon-openai-stateful-ai-deal",
+            "source": "Axios",
+            "published_at": "2026-02-28T16:40:25Z",
             "provider": "newsapi",
             "feed": "top_headlines",
-            "description": "President Donald Trump’s decision to strike Iran creates new risks for a significant chunk of the world’s oil supply.",
-            "impact_score": 55,
+            "description": "AWS can offer custom OpenAI models, bolstering Amazon's enterprise and Alexa efforts.",
+            "impact_score": 40,
             "themes": [
               "trade"
             ]
@@ -4397,6 +4357,19 @@
         "land": [],
         "other": [
           {
+            "title": "Trump allies claim victory as the Ellisons expand their media empire - The Washington Post",
+            "url": "https://www.washingtonpost.com/business/2026/02/28/trump-paramount-warner-bros/",
+            "source": "The Washington Post",
+            "published_at": "2026-02-28T19:00:17Z",
+            "provider": "newsapi",
+            "feed": "top_headlines",
+            "description": "Paramount’s Warner Bros. deal is seen by many as a win for conservatives seeking greater sway over the media — and raises new scrutiny over President Trump’s role in it.",
+            "impact_score": 40,
+            "themes": [
+              "other"
+            ]
+          },
+          {
             "title": "Column | Trump wants to give workers $1,000 for retirement. Can it work? - The Washington Post",
             "url": "https://www.washingtonpost.com/business/2026/02/28/trump-retirement-accounts-tsp/",
             "source": "The Washington Post",
@@ -4423,19 +4396,6 @@
             ]
           },
           {
-            "title": "David Ellison Delivered. Now It’s Up to Makan Delrahim to Close the Warner Bros. Deal - The Hollywood Reporter",
-            "url": "http://www.hollywoodreporter.com/business/business-news/david-ellison-makan-delrahim-warner-bros-deal-1236517978/",
-            "source": "Hollywood Reporter",
-            "published_at": "2026-02-28T14:06:25Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "State attorneys general. Foreign approvals. Consumer lawsuits. Even without the Justice Department stepping in, Paramount still faces several roadblocks to completing its acquisition of Warner Bros.",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
             "title": "Here is how Block's severance package compares to other tech companies in past layoffs - Business Insider",
             "url": "https://www.businessinsider.com/block-severance-package-comparison-big-tech-layoffs-2026-2",
             "source": "Business Insider",
@@ -4449,26 +4409,13 @@
             ]
           },
           {
-            "title": "The week the AI scare turned real and America realized maybe it isn't ready for what's coming - Fortune",
-            "url": "https://fortune.com/2026/02/28/ai-scare-trade-mass-layoffs-white-collar-recession-citrini-shumer-viral-doomsday-essays/",
-            "source": "Fortune",
-            "published_at": "2026-02-28T10:05:00Z",
+            "title": "The week when AI changed everything - CNN",
+            "url": "https://www.cnn.com/2026/02/28/business/ai-week-anthropic-nvidia-block",
+            "source": "CNN",
+            "published_at": "2026-02-28T08:00:33Z",
             "provider": "newsapi",
             "feed": "top_headlines",
-            "description": "From the \"Ghost GDP\" to mass layoffs at tech companies, this was the week AI's new collar economy took full effect.",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "Amazon deal with OpenAI shakes up AI landscape - Axios",
-            "url": "https://www.axios.com/2026/02/27/ai-amazon-openai-chips",
-            "source": "Axios",
-            "published_at": "2026-02-28T09:49:59Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "Amazon's new $50 billion bet on OpenAI reshuffles the AI power map.",
+            "description": "Tech made waves in the news and markets this week, from announcing mass layoffs to reigniting disruption fears that startled investors.",
             "impact_score": 40,
             "themes": [
               "other"
@@ -4551,6 +4498,19 @@
             "themes": [
               "other"
             ]
+          },
+          {
+            "title": "Jess Wilson pledges faster land release in growth areas",
+            "url": "https://berwicknews.starcommunity.com.au/news/2026-03-01/jess-wilson-pledges-faster-land-release-in-growth-areas/",
+            "source": "Starcommunity.com.au",
+            "published_at": "2026-02-28T22:03:32Z",
+            "provider": "newsapi",
+            "feed": "everything",
+            "description": "Opposition Leader Jess Wilson has unveiled the first plank of the Coalition’s housing strategy to fast-track development in growth areas as the State heads into an election year. Her housing strategy for the growth areas includes fast-tracking existing Precin…",
+            "impact_score": 40,
+            "themes": [
+              "other"
+            ]
           }
         ],
         "commercial": [
@@ -4613,7 +4573,7 @@
     "project_pipeline": {
       "sam_gov": {
         "enabled": true,
-        "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=gca_OfPmvU49Bch9iFrQ0msfuSJMFrOOiXX89ykqaes7qFQ&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-19",
+        "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=gca_OfPmvU49Bch9iFrQ0msfuSJMFrOOiXX89ykqaes7qFQ&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-20",
         "items": []
       },
       "usaspending": {
