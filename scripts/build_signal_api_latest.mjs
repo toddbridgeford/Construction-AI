@@ -8,8 +8,10 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = process.cwd();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, "..");
 const IN_PATH = path.join(ROOT, process.env.IN_PATH || "dashboard_latest.json");
 const OUT_PATH = path.join(ROOT, process.env.OUT_PATH || "signal_api_latest.json");
 
