@@ -1,0 +1,175 @@
+{
+  "version": "1.0.0",
+  "market": "denver",
+  "title": "Denver Polyiso Envelope CI Checklist",
+  "lens": "Evidence-first preconstruction and submittal risk control",
+  "decision_gates": [
+    {
+      "gate_id": "DG-01",
+      "question": "Do submitted polyiso assemblies map to an approved NFPA 285 tested configuration?",
+      "pass_condition": "Exact assembly match or approved engineering judgment with signed manufacturer letter.",
+      "fail_action": "Block release for procurement and trigger alternate assembly review."
+    },
+    {
+      "gate_id": "DG-02",
+      "question": "Are submittals complete with ICC-ES reports, flame spread, smoke developed, and thermal data?",
+      "pass_condition": "All listed evidence is complete and current.",
+      "fail_action": "Return submittal as incomplete and hold schedule commitments."
+    },
+    {
+      "gate_id": "DG-03",
+      "question": "Does VE proposal preserve code compliance, warranty continuity, and attachment engineering?",
+      "pass_condition": "VE package includes sealed analysis and no downgrade in required ratings.",
+      "fail_action": "Reject VE option and document basis in bidder bulletin."
+    }
+  ],
+  "nfpa_285_matrix": [
+    {
+      "assembly_family": "Metal composite panel over polyiso on steel stud backup",
+      "test_reference": "NFPA 285 test report with matching cladding, insulation thickness, and WRB",
+      "accepted_substitutions": [
+        "Equivalent polyiso product from same manufacturer family with identical facer and density",
+        "WRB substitution only when listed in tested assembly engineering judgment"
+      ],
+      "trigger": "Any change in cladding type, insulation thickness, or attachment pattern"
+    },
+    {
+      "assembly_family": "Fiber cement rainscreen with cavity insulation and continuous polyiso",
+      "test_reference": "NFPA 285 listing and manufacturer engineering judgment package",
+      "accepted_substitutions": [
+        "Fastener and clip substitutions with stamped thermal and structural impact memo"
+      ],
+      "trigger": "Introduction of alternate clip system or cavity depth"
+    }
+  ],
+  "sections": [
+    {
+      "section_id": "SEC-01",
+      "title": "Evidence Intake and Document Control",
+      "objective": "Ensure every compliance decision is based on traceable, current evidence.",
+      "checks": [
+        {
+          "check_id": "C-01-01",
+          "prompt": "Confirm latest drawing set, spec sections, and addenda are logged.",
+          "required_evidence": [
+            "Issued-for-bid drawing index",
+            "Spec section 07 thermal and moisture protection",
+            "Current addenda log"
+          ],
+          "decision_logic": "Pass only when all documents are version-aligned and dated within active bid period.",
+          "severity": "high",
+          "owner": "Precon Manager"
+        },
+        {
+          "check_id": "C-01-02",
+          "prompt": "Validate manufacturer technical data sheets and installation instructions are current.",
+          "required_evidence": [
+            "Manufacturer data sheet revision history",
+            "Installation instruction bulletin",
+            "Warranty requirements summary"
+          ],
+          "decision_logic": "Fail if any technical document is superseded or product code mismatches submittal.",
+          "severity": "high",
+          "owner": "Envelope Specialist"
+        }
+      ]
+    },
+    {
+      "section_id": "SEC-02",
+      "title": "NFPA 285 and Code Matrix Verification",
+      "objective": "Prevent non-compliant exterior wall assemblies from entering procurement.",
+      "checks": [
+        {
+          "check_id": "C-02-01",
+          "prompt": "Map each wall type to NFPA 285 tested assembly lineage.",
+          "required_evidence": [
+            "Wall type schedule",
+            "NFPA 285 test report",
+            "Manufacturer engineering judgment letters"
+          ],
+          "decision_logic": "Pass only when each wall type has direct traceability to tested assembly or accepted engineering judgment.",
+          "severity": "critical",
+          "owner": "Code Compliance Lead"
+        },
+        {
+          "check_id": "C-02-02",
+          "prompt": "Verify Denver and IBC amendment triggers for fire performance and combustibility.",
+          "required_evidence": [
+            "Local code amendment excerpts",
+            "IBC compliance matrix",
+            "Architect code narrative"
+          ],
+          "decision_logic": "Fail if local amendment requirements are unaddressed in basis-of-design or substitutions.",
+          "severity": "critical",
+          "owner": "Code Compliance Lead"
+        }
+      ]
+    },
+    {
+      "section_id": "SEC-03",
+      "title": "Submittal Completeness Checkpoints",
+      "objective": "Enforce first-pass completeness to avoid schedule and procurement churn.",
+      "checks": [
+        {
+          "check_id": "C-03-01",
+          "prompt": "Confirm all product options include ESR listing, ASTM test data, and thermal values.",
+          "required_evidence": [
+            "ICC-ES report",
+            "ASTM E84 test summary",
+            "R-value and LTTR documentation"
+          ],
+          "decision_logic": "Pass only if every proposed option includes complete code and performance documents.",
+          "severity": "high",
+          "owner": "Submittal Coordinator"
+        },
+        {
+          "check_id": "C-03-02",
+          "prompt": "Verify accessory compatibility (adhesives, fasteners, air barrier interfaces).",
+          "required_evidence": [
+            "Manufacturer compatibility letter",
+            "Fastener pullout calculations",
+            "Interface detail sketches"
+          ],
+          "decision_logic": "Fail when any interface lacks explicit compatibility approval.",
+          "severity": "high",
+          "owner": "Envelope Specialist"
+        }
+      ]
+    },
+    {
+      "section_id": "SEC-04",
+      "title": "VE Defense and Risk Positioning",
+      "objective": "Screen VE proposals for hidden compliance, warranty, and constructability regressions.",
+      "checks": [
+        {
+          "check_id": "C-04-01",
+          "prompt": "Quantify VE scope delta against baseline assembly and code obligations.",
+          "required_evidence": [
+            "Baseline assembly matrix",
+            "VE alternate scope sheet",
+            "Cost and schedule delta model"
+          ],
+          "decision_logic": "Pass when VE demonstrates equal-or-better compliance and no unresolved risk transfer.",
+          "severity": "critical",
+          "owner": "Precon Director"
+        },
+        {
+          "check_id": "C-04-02",
+          "prompt": "Confirm VE alternatives preserve warranty chain and installer qualifications.",
+          "required_evidence": [
+            "Warranty comparison table",
+            "Approved installer roster",
+            "Manufacturer delegation letter"
+          ],
+          "decision_logic": "Fail if warranty duration, coverage scope, or approved installer status is reduced.",
+          "severity": "high",
+          "owner": "Risk Manager"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "operator_grade": true,
+    "compliance_mode": "evidence_first"
+  }
+}
