@@ -28,6 +28,11 @@ function isoDate(value) {
   return value.toISOString().slice(0, 10);
 }
 
+function safeString(value, fallback = '') {
+  if (value === null || value === undefined) return fallback;
+  return String(value);
+}
+
 function addDays(date, days) {
   const out = new Date(date.getTime());
   out.setUTCDate(out.getUTCDate() + days);
@@ -109,6 +114,7 @@ async function buildForMarket(marketDirName) {
   const payload = await readJson(inputFile);
   const generatedAt = payload.generated_at || new Date().toISOString();
   const generatedDate = new Date(generatedAt);
+  const baselineDate = Number.isNaN(generatedDate.getTime()) ? new Date() : generatedDate;
 
   const bidCalendar = {
     version: payload.version || '1.0.0',
@@ -135,11 +141,11 @@ async function buildForMarket(marketDirName) {
   };
 
   for (const project of payload.projects || []) {
-    const estimate = estimateBidWindow(project, generatedDate);
+    const estimate = estimateBidWindow(project, baselineDate);
     bidCalendar.records.push({
-      project_id: project.project_id,
-      project_name: project.name,
-      stage: project.stage,
+      project_id: safeString(project.project_id, 'unknown-project'),
+      project_name: safeString(project.name, 'Unnamed project'),
+      stage: safeString(project.stage, 'unknown'),
       estimated_bid_date: estimate.estimated_bid_date,
       bid_window_days: estimate.bid_window_days,
       confidence: estimate.confidence,
@@ -148,10 +154,10 @@ async function buildForMarket(marketDirName) {
 
     for (const contact of project.contacts || []) {
       contacts.records.push({
-        project_id: project.project_id,
-        project_name: project.name,
-        contact_name: contact.name,
-        contact_role: contact.role,
+        project_id: safeString(project.project_id, 'unknown-project'),
+        project_name: safeString(project.name, 'Unnamed project'),
+        contact_name: safeString(contact.name, 'Unknown contact'),
+        contact_role: safeString(contact.role, 'unknown'),
         company: contact.company || null,
         email: contact.email || null,
         phone: contact.phone || null,
@@ -162,7 +168,7 @@ async function buildForMarket(marketDirName) {
 
   bidCalendar.records.sort((a, b) => {
     if (a.estimated_bid_date === b.estimated_bid_date) {
-      return a.project_id.localeCompare(b.project_id);
+      return safeString(a.project_id).localeCompare(safeString(b.project_id));
     }
     if (a.estimated_bid_date === null) return 1;
     if (b.estimated_bid_date === null) return -1;
@@ -170,9 +176,9 @@ async function buildForMarket(marketDirName) {
   });
 
   contacts.records.sort((a, b) => {
-    const projectCompare = a.project_id.localeCompare(b.project_id);
+    const projectCompare = safeString(a.project_id).localeCompare(safeString(b.project_id));
     if (projectCompare !== 0) return projectCompare;
-    return a.contact_name.localeCompare(b.contact_name);
+    return safeString(a.contact_name).localeCompare(safeString(b.contact_name));
   });
 
   const marketArtifactsDir = path.join(artifactsRoot, marketDirName);
