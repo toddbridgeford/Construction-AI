@@ -6,11 +6,16 @@ import pathlib
 import sys
 from datetime import datetime, timezone
 
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import LETTER
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.lib.units import inch
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+try:
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import LETTER
+    from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+    from reportlab.lib.units import inch
+    from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+
+    REPORTLAB_AVAILABLE = True
+except ModuleNotFoundError:
+    REPORTLAB_AVAILABLE = False
 
 
 def load_checklist(repo_root: pathlib.Path, market: str) -> dict:
@@ -21,6 +26,9 @@ def load_checklist(repo_root: pathlib.Path, market: str) -> dict:
 
 
 def build_story(payload: dict) -> list:
+    if not REPORTLAB_AVAILABLE:
+        raise RuntimeError("ReportLab unavailable; use fallback PDF writer")
+
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
         "ChecklistTitle",
@@ -125,6 +133,66 @@ def build_story(payload: dict) -> list:
     return story
 
 
+def _escape_pdf_text(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+
+
+def build_fallback_pdf(output_path: pathlib.Path, payload: dict) -> None:
+    """Dependency-free PDF fallback for environments without reportlab."""
+    lines = [
+        payload.get("title", "CI Checklist"),
+        f"Market: {payload.get('market', 'unknown')} | Lens: {payload.get('lens', 'unknown')}",
+        f"Generated (UTC): {datetime.now(timezone.utc).isoformat()}",
+        "",
+        "Decision Gates",
+    ]
+    for gate in payload.get("decision_gates", []):
+        lines.append(f"- {gate.get('gate_id', '?')}: {gate.get('question', '')}")
+
+    lines.extend(["", "Section Checks"])
+    for section in payload.get("sections", []):
+        lines.append(f"{section.get('section_id', '?')}: {section.get('title', '')}")
+        for check in section.get("checks", []):
+            lines.append(f"  • {check.get('check_id', '?')}: {check.get('prompt', '')}")
+
+    y = 770
+    text_ops: list[str] = ["BT", "/F1 10 Tf", "50 790 Td"]
+    for idx, line in enumerate(lines):
+        if idx > 0:
+            text_ops.append("0 -12 Td")
+        text_ops.append(f"({_escape_pdf_text(line)}) Tj")
+        y -= 12
+        if y < 40:
+            break
+    text_ops.append("ET")
+    stream_data = "\n".join(text_ops).encode("latin-1", errors="replace")
+
+    objects = [
+        b"1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj\n",
+        b"2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj\n",
+        b"3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >> endobj\n",
+        b"4 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj\n",
+        f"5 0 obj << /Length {len(stream_data)} >> stream\n".encode("ascii") + stream_data + b"\nendstream endobj\n",
+    ]
+
+    pdf = bytearray(b"%PDF-1.4\n")
+    offsets = [0]
+    for obj in objects:
+        offsets.append(len(pdf))
+        pdf.extend(obj)
+
+    xref_start = len(pdf)
+    pdf.extend(f"xref\n0 {len(offsets)}\n".encode("ascii"))
+    pdf.extend(b"0000000000 65535 f \n")
+    for offset in offsets[1:]:
+        pdf.extend(f"{offset:010d} 00000 n \n".encode("ascii"))
+
+    pdf.extend(
+        f"trailer << /Size {len(offsets)} /Root 1 0 R >>\nstartxref\n{xref_start}\n%%EOF\n".encode("ascii")
+    )
+    output_path.write_bytes(pdf)
+
+
 def main() -> int:
     market = sys.argv[1] if len(sys.argv) > 1 else "denver"
     repo_root = pathlib.Path(__file__).resolve().parents[1]
@@ -134,16 +202,20 @@ def main() -> int:
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / "ci_checklist_latest.pdf"
 
-    doc = SimpleDocTemplate(
-        str(output_path),
-        pagesize=LETTER,
-        leftMargin=0.6 * inch,
-        rightMargin=0.6 * inch,
-        topMargin=0.6 * inch,
-        bottomMargin=0.6 * inch,
-        title=payload["title"],
-    )
-    doc.build(build_story(payload))
+    if REPORTLAB_AVAILABLE:
+        doc = SimpleDocTemplate(
+            str(output_path),
+            pagesize=LETTER,
+            leftMargin=0.6 * inch,
+            rightMargin=0.6 * inch,
+            topMargin=0.6 * inch,
+            bottomMargin=0.6 * inch,
+            title=payload["title"],
+        )
+        doc.build(build_story(payload))
+    else:
+        print("reportlab not installed; writing dependency-free fallback PDF.")
+        build_fallback_pdf(output_path, payload)
     return 0
 
 
