@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "records": [
+    {
+      "project_type": "data_center",
+      "region": "TX",
+      "contractor_id": "turner_construction",
+      "bids_submitted": 12,
+      "wins": 4
+    }
+  ]
+}
