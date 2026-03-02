@@ -1,35 +1,36 @@
-# Swift Playground Rewrite
+# Swift Playground Assets
 
-This folder contains a Swift Playground-compatible rewrite of the repository's JavaScript dashboard generator (`scripts/build_dashboard_latest.mjs`).
+This folder now includes two Swift Playground-compatible assets:
 
-## File
+- `ConstructionDashboardBuilder.swift`: data-pipeline script that generates dashboard JSON.
+- `ConstructionOpsPlaygroundApp.swift`: full SwiftUI iPad app for operational monitoring with ChatGPT + Notion + GitHub integrations.
 
-- `ConstructionDashboardBuilder.swift`: standalone script you can run in **Swift Playground** or with the Swift CLI.
+## `ConstructionOpsPlaygroundApp.swift` highlights
 
-## What this rewrite does
+- SwiftUI-only, dependency-free architecture suitable for iPad Swift Playgrounds.
+- Configurable GitHub Actions workflow polling (owner/repo/workflow file/token).
+- Configurable Notion database query integration (database ID/token).
+- Configurable OpenAI chat completion call for status summaries.
+- Defensive decoding and failure-safe network handling.
+- Local caching via `UserDefaults` so failed refreshes do not block the UI.
+- Event log + status banner feedback for actionable errors.
 
-- Re-implements shared utility functions (`safeNumber`, trend arrows, URL normalization, date helpers).
-- Adds a safe FRED fetch pipeline that does not crash the entire run when one series fails.
-- Loads repository JSON configuration files from `config/`.
-- Produces `dashboard_latest_swift.json` by default.
+## Running on iPad Swift Playgrounds
 
-## Run in Swift Playground
+1. Create a new **App** playground in Swift Playgrounds.
+2. Replace its default source with `ConstructionOpsPlaygroundApp.swift`.
+3. Run the app once, then open **Connections** and fill credentials.
+4. Tap:
+   - **Refresh GitHub**
+   - **Refresh Notion**
+   - **Generate Summary**
 
-1. Open `ConstructionDashboardBuilder.swift` in Swift Playground.
-2. Set environment variables if needed:
-   - `FRED_API_KEY` (optional unless using `FRED_SERIES_IDS`)
-   - `FRED_SERIES_IDS` (comma-separated, optional)
-   - `OUT_PATH` (optional output path)
-3. Run the file.
+If APIs fail, the app displays warning banners and keeps the latest cached data visible.
 
-## Run from command line
+## `ConstructionDashboardBuilder.swift`
+
+This standalone script rewrites the JavaScript dashboard generator and can still be run with:
 
 ```bash
 swift swift-playground/ConstructionDashboardBuilder.swift
-```
-
-With FRED series:
-
-```bash
-FRED_API_KEY=your_key FRED_SERIES_IDS=CPIAUCSL,UNRATE swift swift-playground/ConstructionDashboardBuilder.swift
 ```
