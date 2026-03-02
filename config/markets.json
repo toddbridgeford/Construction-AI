@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "default_market": "national",
+  "markets": [
+    {
+      "id": "national",
+      "label": "United States",
+      "type": "national"
+    },
+    {
+      "id": "denver",
+      "label": "Denver-Aurora-Lakewood, CO MSA",
+      "type": "msa",
+      "cbsa": "19740",
+      "fred": {
+        "permits_series": null,
+        "unemployment_series": null
+      }
+    },
+    {
+      "id": "phoenix",
+      "label": "Phoenix-Mesa-Chandler, AZ MSA",
+      "type": "msa",
+      "cbsa": "38060",
+      "fred": {
+        "permits_series": null,
+        "unemployment_series": null
+      }
+    }
+  ]
+}
