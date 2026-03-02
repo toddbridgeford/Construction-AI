@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: dashboard-latest-${{ github.ref_name }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -16,7 +20,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          ref: Predictive-Model
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - name: Setup Node
@@ -114,7 +118,7 @@ jobs:
           fi
 
           git commit -m "Update dashboard_latest.json (CPI + News + Stocks + SAM + USAspending + EIA)"
-          git push origin Predictive-Model
+          git push origin "${GITHUB_REF_NAME}"
 
       - name: Complete job
         run: echo "✅ Done."
