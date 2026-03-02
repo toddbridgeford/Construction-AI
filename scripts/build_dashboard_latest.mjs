@@ -1431,6 +1431,16 @@ async function main() {
   const FRED_API_KEY = mustGetEnv("FRED_API_KEY");
   const prior = readPriorDashboardSafe();
 
+  const fallbackBps = {
+    cbsa: { link: null, permit: new Map() },
+    state: { link: null, permit: new Map() }
+  };
+  const fallbackLaus = {
+    stateUnemp: new Map(),
+    metroUnemp: new Map(),
+    microUnemp: new Map()
+  };
+
   // IMPORTANT FIX: Your screenshot showed FRED 400 for series_id=NAPM.
   // We use NAPMNOI as default (ISM PMI: New Orders Index) which is commonly available.
   // If you want the exact PMI headline series later, we can map it explicitly and validate.
@@ -1466,8 +1476,14 @@ async function main() {
   }
 
   // ---- Census + BLS
-  const bps = await loadCensusBpsLatest();
-  const laus = await loadBlsLausUnempRatesLatest();
+  const bps = await loadCensusBpsLatest().catch((err) => {
+    console.warn(`[warn] Census BPS unavailable; continuing with fallback data. ${err?.message || err}`);
+    return fallbackBps;
+  });
+  const laus = await loadBlsLausUnempRatesLatest().catch((err) => {
+    console.warn(`[warn] BLS LAUS unavailable; continuing with fallback data. ${err?.message || err}`);
+    return fallbackLaus;
+  });
 
   const stateNameToFips = buildStateNameToFips();
   const states = Array.from(stateNameToFips.values()).sort();
@@ -1584,7 +1600,7 @@ async function main() {
     gdeltNews = [];
   }
 
-  const NEWS_API_KEY = getEnv("NEWS_API_KEY", null);
+  const NEWS_API_KEY = getEnv("NEWS_API_KEY", getEnv("NEWSAPI_KEY", null));
 
   const newsApiLookback = safeNumber(getEnv("NEWSAPI_LOOKBACK_DAYS", "10")) ?? 10;
   const newsApiMax = safeNumber(getEnv("NEWSAPI_MAX", "80")) ?? 80;
