@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-02T03:40:48.307Z",
+  "generated_at": "2026-03-02T04:11:29.495Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -39,6 +39,10 @@
       {
         "date": "2026-03-02",
         "value": 50
+      },
+      {
+        "date": "2026-03-02",
+        "value": 46
       },
       {
         "date": "2026-03-02",
@@ -3070,7 +3074,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-02T03:40:48.306Z",
+    "generated_at_utc": "2026-03-02T04:11:29.495Z",
     "regime_history": {
       "current_regime_duration_days": 1,
       "previous_regime": null,
