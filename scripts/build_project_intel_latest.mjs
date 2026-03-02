@@ -1,16 +1,26 @@
-function haversineMiles(lat1, lon1, lat2, lon2) {
-  const R = 3958.8; // Earth radius in miles
-  const toRad = deg => deg * (Math.PI / 180);
+// scripts/build_project_intel_latest.mjs
+// Backward-compatible entrypoint for legacy project-intel builds.
+// Delegates to the maintained Projects Intelligence Plane builder.
 
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
+import path from "node:path";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) *
-      Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) ** 2;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dirname, "..");
+const targetScript = path.join(ROOT, "scripts", "build_projects_plane_latest.mjs");
 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
+console.warn("[deprecated] build_project_intel_latest.mjs now delegates to build_projects_plane_latest.mjs");
+
+const result = spawnSync(process.execPath, [targetScript], {
+  cwd: ROOT,
+  stdio: "inherit",
+  env: process.env
+});
+
+if (typeof result.status === "number") {
+  process.exit(result.status);
 }
+
+console.error("Failed to run delegated project intelligence build.");
+process.exit(1);
