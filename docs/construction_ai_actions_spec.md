@@ -194,13 +194,18 @@ contacts = build_contacts(
 checklist_path = first_existing([
     f"dist/artifacts/{market}/ci_checklist_latest.json"
 ])
+local_checklist_path = "./ci_checklist_latest.json"
 if checklist_path:
     assert validate_schema(checklist_path, "schemas/ci_checklist_schema.json")["ok"]
+    write_file(checklist_path, local_checklist_path)
+    checklist_source_for_persistence = checklist_path
+    checklist_path = local_checklist_path
 else:
     checklist_path = generate_checklist_from_schema_template(
         "schemas/ci_checklist_schema.json",
-        output_path="./ci_checklist_latest.json"
+        output_path=local_checklist_path
     )
+    checklist_source_for_persistence = checklist_path
 
 build_ci_checklist_pdf(
     checklist_json_path=checklist_path,
@@ -211,7 +216,7 @@ build_ci_checklist_pdf(
 if persistence_enabled:
     write_file("./bid_calendar_latest.json", f"dist/artifacts/{market}/bid_calendar_latest.json")
     write_file("./contacts_latest.json", f"dist/artifacts/{market}/contacts_latest.json")
-    write_file("./ci_checklist_latest.json", f"dist/artifacts/{market}/ci_checklist_latest.json")
+    write_file(checklist_source_for_persistence, f"dist/artifacts/{market}/ci_checklist_latest.json")
     write_file("./ci_checklist_latest.pdf", f"dist/artifacts/{market}/ci_checklist_latest.pdf")
 ```
 
