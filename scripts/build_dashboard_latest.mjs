@@ -68,14 +68,17 @@ function getEnv(name, fallback = null) {
   const normalized = v == null ? "" : String(v).trim();
   if (!normalized) return fallback;
 
-  // Guard against placeholder values copied from env.example.
-  const placeholderValues = new Set([
-    "replace_with_your_fred_api_key",
-    "your_fred_api_key",
-    "changeme",
-    "todo"
-  ]);
-  if (placeholderValues.has(normalized.toLowerCase())) return fallback;
+  // Guard against placeholder values copied from env.example, but only for API key-like vars.
+  const isApiKeyEnv = /(?:^|_)(?:API_?)?KEY$/.test(name);
+  if (isApiKeyEnv) {
+    const placeholderValues = new Set([
+      "replace_with_your_fred_api_key",
+      "your_fred_api_key",
+      "changeme",
+      "todo"
+    ]);
+    if (placeholderValues.has(normalized.toLowerCase())) return fallback;
+  }
 
   return normalized;
 }
