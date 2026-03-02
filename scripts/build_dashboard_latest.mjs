@@ -1518,9 +1518,19 @@ async function main() {
   const fred = {};
   if (!FRED_API_KEY) {
     console.warn("[warn] Missing FRED_API_KEY; continuing with empty FRED series fallbacks.");
-  }
-  for (const [k, seriesId] of Object.entries(FRED_SERIES)) {
-    fred[k] = await fredSeriesSafe(FRED_API_KEY, seriesId, 48);
+    for (const [k, seriesId] of Object.entries(FRED_SERIES)) {
+      fred[k] = {
+        series_id: seriesId,
+        ok: false,
+        error: "Missing FRED_API_KEY",
+        latest: null,
+        history: []
+      };
+    }
+  } else {
+    for (const [k, seriesId] of Object.entries(FRED_SERIES)) {
+      fred[k] = await fredSeriesSafe(FRED_API_KEY, seriesId, 48);
+    }
   }
 
   // ---- Census + BLS
