@@ -152,3 +152,14 @@ Then move to higher-impact automations (with review gates), such as:
 - **Org repositories not visible:** ask your GitHub org admin to approve the app and required SSO.
 - **Access denied errors:** re-run authorization and ensure the repo is included in selected repositories.
 - **Workflow cannot call OpenAI API:** verify `OPENAI_API_KEY` secret exists and outbound network is allowed in GitHub Actions.
+
+## Repository-specific autonomous mode (this repo)
+
+This repository now includes `.github/workflows/autonomous_dashboard_refresh.yml`, which:
+
+- Runs daily (and via manual dispatch)
+- Executes `node scripts/run_orchestrator.mjs`
+- Regenerates `dashboard_latest.json`
+- Opens a PR automatically when data changed
+
+To enable it, add the API secrets listed in `docs/repository_review.md` and run the workflow once manually from **Actions**.
