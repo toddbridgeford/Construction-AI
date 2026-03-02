@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "last_updated": "YYYY-MM-DD",
+  "contractors": [
+    {
+      "id": "turner_construction",
+      "name": "Turner Construction",
+      "hq_city": "New York",
+      "hq_state": "NY",
+      "service_radius_miles": 250,
+      "trades": ["general_contractor"],
+      "project_types": ["commercial", "healthcare", "data_center", "industrial"],
+      "annual_revenue_band": "1B+",
+      "public_sector_experience": true,
+      "bonding_capacity_band": "high",
+      "safety_score_band": "high"
+    }
+  ]
+}
