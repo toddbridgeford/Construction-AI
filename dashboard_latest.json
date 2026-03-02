@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-02T04:22:51.033Z",
+  "generated_at": "2026-03-02T04:52:49.032Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -39,6 +39,10 @@
       {
         "date": "2026-03-02",
         "value": 50
+      },
+      {
+        "date": "2026-03-02",
+        "value": 46
       },
       {
         "date": "2026-03-02",
@@ -213,16 +217,16 @@
     "news_badge": {
       "sources": {
         "newsapi:top_headlines": 18,
-        "newsapi:everything": 76
+        "newsapi:everything": 75
       },
-      "total": 94,
+      "total": 93,
       "overlay": 0
     }
   },
   "market_intel": {
     "news_sources": {
       "newsapi:top_headlines": 18,
-      "newsapi:everything": 76
+      "newsapi:everything": 75
     },
     "news_unified": [
       {
@@ -614,7 +618,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -623,7 +627,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -1061,15 +1065,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "The agency says Iran has four declared enrichment facilities, but it has lost \"continuity of knowledge\" about stockpiles."
-      },
-      {
-        "title": "Why Rare Earth Magnets Are the Real Battlefield Between the U.S. and China",
-        "url": "https://apnews.com/press-release/pr-newswire/why-rare-earth-magnets-are-the-real-battlefield-between-the-u-s-and-china-a7f348c969ca8f79d814c11a8400883c",
-        "source": "Associated Press",
-        "published_at": "2026-02-27T17:41:07Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "OilPrice.com Market Commentary NEW YORK, Feb. 27, 2026 /PRNewswire/ -- The struggle for geopolitical supremacy is rapidly becoming a struggle over one critical resource - rare earth magnets."
       }
     ],
     "news_with_impact": [
@@ -1635,7 +1630,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -1648,7 +1643,7 @@
       },
       {
         "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-        "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+        "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
         "source": "PCMag.com",
         "published_at": "2026-02-28T14:30:00Z",
         "provider": "newsapi",
@@ -2282,19 +2277,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "Why Rare Earth Magnets Are the Real Battlefield Between the U.S. and China",
-        "url": "https://apnews.com/press-release/pr-newswire/why-rare-earth-magnets-are-the-real-battlefield-between-the-u-s-and-china-a7f348c969ca8f79d814c11a8400883c",
-        "source": "Associated Press",
-        "published_at": "2026-02-27T17:41:07Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "OilPrice.com Market Commentary NEW YORK, Feb. 27, 2026 /PRNewswire/ -- The struggle for geopolitical supremacy is rapidly becoming a struggle over one critical resource - rare earth magnets.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2869,21 +2851,21 @@
       },
       {
         "ticker": "LOW",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-02-27",
-        "open": 261.45,
         "close": 264.57,
-        "change": 3.1200000000000045,
-        "change_pct": 1.193344807802641
+        "prev_close": 264.39,
+        "change": 0.18,
+        "change_pct": 0.0681
       },
       {
         "ticker": "VMC",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-02-27",
+        "open": 307.67,
         "close": 310,
-        "prev_close": 308.99,
-        "change": 1.01,
-        "change_pct": 0.3269
+        "change": 2.329999999999984,
+        "change_pct": 0.7573049046055786
       },
       {
         "ticker": "MLM",
@@ -2983,7 +2965,7 @@
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.38078621942753804
+        "avg_change_pct": 0.4525203701951345
       },
       "distribution": {
         "count": 1,
@@ -2995,7 +2977,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 1.4950681258264578
+        "avg_change_pct": 0.9324457219251373
       }
     },
     "stock_pressure_overlay": 0,
@@ -3078,7 +3060,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-02T04:22:51.033Z",
+    "generated_at_utc": "2026-03-02T04:52:49.032Z",
     "regime_history": {
       "current_regime_duration_days": 1,
       "previous_regime": null,
@@ -3227,21 +3209,21 @@
         },
         {
           "ticker": "LOW",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-02-27",
-          "open": 261.45,
           "close": 264.57,
-          "change": 3.1200000000000045,
-          "change_pct": 1.193344807802641
+          "prev_close": 264.39,
+          "change": 0.18,
+          "change_pct": 0.0681
         },
         {
           "ticker": "VMC",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-02-27",
+          "open": 307.67,
           "close": 310,
-          "prev_close": 308.99,
-          "change": 1.01,
-          "change_pct": 0.3269
+          "change": 2.329999999999984,
+          "change_pct": 0.7573049046055786
         },
         {
           "ticker": "MLM",
@@ -3341,7 +3323,7 @@
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": 0.38078621942753804
+          "avg_change_pct": 0.4525203701951345
         },
         "distribution": {
           "count": 1,
@@ -3353,7 +3335,7 @@
         },
         "retail": {
           "count": 2,
-          "avg_change_pct": 1.4950681258264578
+          "avg_change_pct": 0.9324457219251373
         }
       },
       "stock_pressure_overlay": 0
@@ -3361,7 +3343,7 @@
     "news": {
       "sources": {
         "newsapi:top_headlines": 18,
-        "newsapi:everything": 76
+        "newsapi:everything": 75
       },
       "news_pressure_overlay": 0,
       "top_high_impact": [
@@ -4059,7 +4041,7 @@
         },
         {
           "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-          "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+          "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
           "source": "PCMag.com",
           "published_at": "2026-02-28T14:30:00Z",
           "provider": "newsapi",
@@ -4072,7 +4054,7 @@
         },
         {
           "title": "After Years of Shining in Europe, Balcony Solar Comes Out of the Dark in the US",
-          "url": "https://uk.pcmag.com/batteries-power/163455/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
+          "url": "https://me.pcmag.com/en/batteries-power/35630/after-years-of-shining-in-europe-balcony-solar-comes-out-of-the-dark-in-the-us",
           "source": "PCMag.com",
           "published_at": "2026-02-28T14:30:00Z",
           "provider": "newsapi",
