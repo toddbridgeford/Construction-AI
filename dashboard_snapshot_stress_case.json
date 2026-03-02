@@ -17,6 +17,12 @@
     "cpi_mf": 62,
     "cpi_inst": 60,
     "cpi_infra": 59,
+    "history": [
+      {
+        "date": "2026-02-20",
+        "value": 62
+      }
+    ],
     "components": {
       "capital": 30,
       "pipeline": 40,
@@ -28,5 +34,51 @@
   },
   "risk_mode": true,
   "risk_thermometer_mode": true,
-  "volatility_regime": "CRITICAL"
+  "volatility_regime": "CRITICAL",
+  "regime_history": [
+    {
+      "date": "2026-02-20",
+      "primary_regime": "Contraction",
+      "secondary_modifier": "Freeze Risk",
+      "confidence": "high",
+      "cpi_level": 62,
+      "capital_score": 30,
+      "pipeline_score": 40,
+      "flip_trigger": "Capital and pipeline both under stress thresholds.",
+      "duration_days": 1,
+      "status": "Active"
+    }
+  ],
+  "regime_history_display": {
+    "current_regime_duration_days": 1,
+    "previous_regime": "Stress",
+    "last_flip_date": "2026-02-20",
+    "regime_stability": "Fragile"
+  },
+  "ui": {
+    "alerts": [
+      {
+        "severity": "high",
+        "title": "Freeze risk active",
+        "detail": "Capital and pipeline are simultaneously weak under a critical volatility regime."
+      }
+    ],
+    "trends": {
+      "cpi": "up",
+      "momentum": "heating"
+    },
+    "cards": [
+      {
+        "id": "cpi",
+        "title": "Composite Pressure Index",
+        "value": 62,
+        "status": "Contraction"
+      }
+    ],
+    "heat_strip": {
+      "cpi": 62,
+      "momentum": "Heating",
+      "freeze_risk": true
+    }
+  }
 }
