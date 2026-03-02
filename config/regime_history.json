@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "1970-01-01T00:00:00.000Z",
+  "source": "dashboard_latest.json",
+  "retention_policy": {
+    "active_window_days": 365,
+    "archive_closed_regimes": true,
+    "max_entries": 1000
+  },
+  "entries": [
+    {
+      "date": "1970-01-01",
+      "primary_regime": "Slowdown",
+      "secondary_modifier": "Neutral",
+      "confidence": "medium",
+      "cpi_level": 46,
+      "capital_score": 39,
+      "pipeline_score": 47,
+      "flip_trigger": null,
+      "duration_days": 0,
+      "status": "Active",
+      "lineage": {
+        "computed_by": "scripts/build_dashboard_latest.mjs",
+        "run_id": "local-template",
+        "notes": "Template entry. Replaced by GitHub Actions Monday CPI pipeline."
+      }
+    }
+  ],
+  "display": {
+    "current_regime_duration_days": 0,
+    "previous_regime": null,
+    "last_flip_date": null,
+    "regime_stability": "🟢 Stable"
+  }
+}
