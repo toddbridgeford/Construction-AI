@@ -10,6 +10,49 @@ import XLSX from "xlsx";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
+
+function loadEnvFiles() {
+  const candidates = [path.join(ROOT, ".env"), path.join(__dirname, ".env")];
+  for (const envPath of candidates) {
+    if (!fs.existsSync(envPath)) continue;
+    const rows = fs.readFileSync(envPath, "utf8").split(/\r?\n/);
+    for (const row of rows) {
+      const trimmed = row.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const cleaned = trimmed.startsWith("export ") ? trimmed.slice(7).trim() : trimmed;
+      const eqIdx = cleaned.indexOf("=");
+      if (eqIdx <= 0) continue;
+
+      const key = cleaned.slice(0, eqIdx).trim();
+      if (!key || process.env[key] !== undefined) continue;
+
+      let value = cleaned.slice(eqIdx + 1).trim();
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      process.env[key] = value;
+    }
+  }
+}
+
+function sanitizeUrlForLogs(url) {
+  try {
+    const parsed = new URL(url);
+    for (const secretKey of ["api_key", "apikey", "token", "access_token", "key"]) {
+      if (parsed.searchParams.has(secretKey)) {
+        parsed.searchParams.set(secretKey, "[REDACTED]");
+      }
+    }
+    return parsed.toString();
+  } catch {
+    return String(url || "");
+  }
+}
+
+loadEnvFiles();
 const OUTFILE = path.join(ROOT, process.env.OUT_PATH || "dashboard_latest.json");
 
 // ---------------------------
@@ -96,7 +139,7 @@ async function fetchText(url, opts = {}) {
     headers: { ...DEFAULT_HEADERS, ...(opts.headers || {}) },
     ...opts
   });
-  if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
+  if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${sanitizeUrlForLogs(url)}`);
   return await res.text();
 }
 async function fetchJson(url, opts = {}) {
@@ -105,7 +148,7 @@ async function fetchJson(url, opts = {}) {
 }
 async function fetchBuffer(url) {
   const res = await fetch(url, { redirect: "follow", headers: DEFAULT_HEADERS });
-  if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${url}`);
+  if (!res.ok) throw new Error(`Fetch failed ${res.status} for ${sanitizeUrlForLogs(url)}`);
   const ab = await res.arrayBuffer();
   return Buffer.from(ab);
 }
