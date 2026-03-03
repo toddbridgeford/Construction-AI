@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-03T22:32:09.239Z",
+  "generated_at": "2026-03-03T22:43:16.330Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -12,6 +12,10 @@
     "delta_3m": 0,
     "momentum": "Stable",
     "history": [
+      {
+        "date": "2026-03-03",
+        "value": 46
+      },
       {
         "date": "2026-03-03",
         "value": 46
@@ -340,6 +344,15 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations."
+      },
+      {
+        "title": "Monomoy CRE, LLC Announces Martin Emigh as Director of Client Services",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247923/0/en/Monomoy-CRE-LLC-Announces-Martin-Emigh-as-Director-of-Client-Services.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T22:34:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "CHARLESTON, S.C., March 02, 2026 (GLOBE NEWSWIRE) -- Monomoy CRE, LLC (“we,” “us,” “our,” or “Monomoy”)  is pleased to announce that Marty Emigh has joined the company as Director of Client Services, bringing more than 25 years of experience in the constructi…"
       },
       {
         "title": "Mark Zuckerberg, Wife Priscilla Make History with $170 Million Purchase",
@@ -900,15 +913,6 @@
         "description": "War in Iran.  America's AI vs. China's AI.  And Trump's new tariffs aren't legal either."
       },
       {
-        "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…"
-      },
-      {
         "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
         "source": "GlobeNewswire",
@@ -916,6 +920,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…"
+      },
+      {
+        "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T11:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…"
       },
       {
         "title": "American Catholics launch crowdfunding effort to gift Pope Leo XIV papal tiara",
@@ -1042,15 +1055,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "L&T’s skill training centre in Mayurbhanj is attempting to rewrite the future of tribal communities in a remote, underdeveloped area."
-      },
-      {
-        "title": "L&T shares crash over 7% as US, Israel attacks on Iran flag Middle East presence. Check details",
-        "url": "https://economictimes.indiatimes.com/markets/stocks/news/lt-shares-crash-over-7-as-us-israel-attacks-on-iran-flag-middle-east-presence-check-details/articleshow/128937052.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-02T04:57:24Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "L&T share price crash, Larsen and Toubro stock news, Middle East war impact India stocks, Iran Israel conflict markets, infrastructure stocks India, L&T Middle East exposure, BSE top losers today, geopolitics stock market India, JM Financial L&T outlook, Indi…"
       }
     ],
     "news_with_impact": [
@@ -1257,6 +1261,19 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Monomoy CRE, LLC Announces Martin Emigh as Director of Client Services",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247923/0/en/Monomoy-CRE-LLC-Announces-Martin-Emigh-as-Director-of-Client-Services.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T22:34:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "CHARLESTON, S.C., March 02, 2026 (GLOBE NEWSWIRE) -- Monomoy CRE, LLC (“we,” “us,” “our,” or “Monomoy”)  is pleased to announce that Marty Emigh has joined the company as Director of Client Services, bringing more than 25 years of experience in the constructi…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2070,19 +2087,6 @@
         ]
       },
       {
-        "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
         "source": "GlobeNewswire",
@@ -2090,6 +2094,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T11:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2272,19 +2289,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "L&T’s skill training centre in Mayurbhanj is attempting to rewrite the future of tribal communities in a remote, underdeveloped area.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "L&T shares crash over 7% as US, Israel attacks on Iran flag Middle East presence. Check details",
-        "url": "https://economictimes.indiatimes.com/markets/stocks/news/lt-shares-crash-over-7-as-us-israel-attacks-on-iran-flag-middle-east-presence-check-details/articleshow/128937052.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-02T04:57:24Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "L&T share price crash, Larsen and Toubro stock news, Middle East war impact India stocks, Iran Israel conflict markets, infrastructure stocks India, L&T Middle East exposure, BSE top losers today, geopolitics stock market India, JM Financial L&T outlook, Indi…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2834,12 +2838,12 @@
       },
       {
         "ticker": "NVR",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 7272.29,
-        "close": 7361.1,
-        "change": 88.8100000000004,
-        "change_pct": 1.2212109253068897
+        "close": 7367.97,
+        "prev_close": 7415.75,
+        "change": -47.78,
+        "change_pct": -0.6443
       },
       {
         "ticker": "TOL",
@@ -2971,7 +2975,7 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": 0.9962437409730078
+        "avg_change_pct": 0.6231415559116299
       },
       "materials": {
         "count": 6,
@@ -3070,7 +3074,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-03T22:32:09.239Z",
+    "generated_at_utc": "2026-03-03T22:43:16.330Z",
     "regime_history": {
       "current_regime_duration_days": 0,
       "previous_regime": null,
@@ -3202,12 +3206,12 @@
         },
         {
           "ticker": "NVR",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-03-03",
-          "open": 7272.29,
-          "close": 7361.1,
-          "change": 88.8100000000004,
-          "change_pct": 1.2212109253068897
+          "close": 7367.97,
+          "prev_close": 7415.75,
+          "change": -47.78,
+          "change_pct": -0.6443
         },
         {
           "ticker": "TOL",
@@ -3339,7 +3343,7 @@
       "sector_rollups": {
         "builders": {
           "count": 5,
-          "avg_change_pct": 0.9962437409730078
+          "avg_change_pct": 0.6231415559116299
         },
         "materials": {
           "count": 6,
@@ -3702,6 +3706,19 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Monomoy CRE, LLC Announces Martin Emigh as Director of Client Services",
+          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247923/0/en/Monomoy-CRE-LLC-Announces-Martin-Emigh-as-Director-of-Client-Services.html",
+          "source": "GlobeNewswire",
+          "published_at": "2026-03-02T22:34:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "CHARLESTON, S.C., March 02, 2026 (GLOBE NEWSWIRE) -- Monomoy CRE, LLC (“we,” “us,” “our,” or “Monomoy”)  is pleased to announce that Marty Emigh has joined the company as Director of Client Services, bringing more than 25 years of experience in the constructi…",
           "impact_score": 40,
           "themes": [
             "other"
@@ -4261,19 +4278,6 @@
           "provider": "newsapi",
           "feed": "everything",
           "description": "The transcript from this week’s, MiB: Jeff Chang, President and Co-Founder of Vest, is below. You can stream and download our full conversation, including any podcast extras, on Apple Podcasts, Spotify, YouTube (video), YouTube (audio), and Bloomberg. All of …",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "A framework for subjective motion production: A construal approach with Mandarin evidence",
-          "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0343884",
-          "source": "Plos.org",
-          "published_at": "2026-03-02T14:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "This study develops and validates an experimental framework for investigating the production of subjective motion sentences (e.g., The road winds through the valley), a phenomenon that has been examined mainly from comprehension perspectives. Using Mandarin a…",
           "impact_score": 40,
           "themes": [
             "other"
