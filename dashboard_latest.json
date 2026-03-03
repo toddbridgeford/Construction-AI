@@ -1,64 +1,21 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-03T21:57:26.866Z",
-
+  "generated_at": "2026-03-03T22:12:10.224Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
     "summary": "Pressure stable. Monitor capital direction, spreads, permits, and headline impact for inflection."
   },
-
-  "gpt_payload": {
-    "signal_strip": [
-      {
-        "id": "mortgage_30y",
-        "title": "Mortgage 30Y",
-        "direction": "down",
-        "state": "risk",
-        "confidence": "medium",
-        "value": 7.1
-      },
-      {
-        "id": "permits",
-        "title": "Permits",
-        "direction": "up",
-        "state": "growth",
-        "confidence": "medium",
-        "value": 1460
-      },
-      {
-        "id": "starts",
-        "title": "Housing Starts",
-        "direction": "up",
-        "state": "growth",
-        "confidence": "medium",
-        "value": 1450
-      },
-      {
-        "id": "nfci",
-        "title": "Chicago Fed NFCI",
-        "direction": "up",
-        "state": "neutral",
-        "confidence": "medium",
-        "value": -0.22
-      },
-      {
-        "id": "hy_oas",
-        "title": "High Yield Spread",
-        "direction": "down",
-        "state": "risk",
-        "confidence": "medium",
-        "value": 3.9
-      }
-    ]
-  },
-
   "cpi": {
     "headline": 46,
     "zone": "Slowdown",
     "delta_3m": null,
     "momentum": "Stable",
     "history": [
+      {
+        "date": "2026-03-03",
+        "value": 46
+      },
       {
         "date": "2026-03-03",
         "value": 46
@@ -220,16 +177,16 @@
     "news_badge": {
       "sources": {
         "newsapi:top_headlines": 16,
-        "newsapi:everything": 78
+        "newsapi:everything": 79
       },
-      "total": 94,
+      "total": 95,
       "overlay": 0
     }
   },
   "market_intel": {
     "news_sources": {
       "newsapi:top_headlines": 16,
-      "newsapi:everything": 78
+      "newsapi:everything": 79
     },
     "news_unified": [
       {
@@ -375,6 +332,33 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations."
+      },
+      {
+        "title": "Collective Metals Announces Flow-Through Financing",
+        "url": "https://financialpost.com/globe-newswire/collective-metals-announces-flow-through-financing-2",
+        "source": "Financial Post",
+        "published_at": "2026-03-02T22:02:17Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) — COLLECTIVE METALS INC. (CSE: COMT | OTC: CLLMF | FSE: TO1) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up to C$1,…"
+      },
+      {
+        "title": "Collective Metals Announces Flow-Through Financing",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247908/0/en/Collective-Metals-Announces-Flow-Through-Financing.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T22:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) -- COLLECTIVE METALS INC. (CSE: COMT\r\n | OTC: CLLMF\r\n | FSE: TO1\r\n) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up …"
+      },
+      {
+        "title": "Prime Power Announces “Texas Titan #1,” a 1-Gigawatt Power Initiative Designed to Support the AI Infrastructure Boom",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247912/0/en/Prime-Power-Announces-Texas-Titan-1-a-1-Gigawatt-Power-Initiative-Designed-to-Support-the-AI-Infrastructure-Boom.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T22:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "HOUSTON, March 03, 2026 (GLOBE NEWSWIRE) -- Prime Power\r\n today announced the launch of “Texas Titan #1,” a large-scale power generation and infrastructure project designed to support the rapidly expanding energy demands of next-generation data centers and ar…"
       },
       {
         "title": "“Pay a fair share”: Sanders, Khanna propose wealth tax on billionaires",
@@ -899,15 +883,6 @@
         "description": "War in Iran.  America's AI vs. China's AI.  And Trump's new tariffs aren't legal either."
       },
       {
-        "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…"
-      },
-      {
         "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
         "source": "GlobeNewswire",
@@ -915,6 +890,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…"
+      },
+      {
+        "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T11:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…"
       },
       {
         "title": "American Catholics launch crowdfunding effort to gift Pope Leo XIV papal tiara",
@@ -1059,24 +1043,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Why is the Grizzly Bear on the California Flag? A Symbol of Resilience The California grizzly bear adorns the California flag as a poignant, albeit ironic, symbol of the state’s wild, untamed spirit and a powerful reminder of its rapidly vanished natural heri…"
-      },
-      {
-        "title": "What is Iran’s Revolutionary Guard? Role, history and growing regional influence",
-        "url": "https://economictimes.indiatimes.com/news/international/world-news/what-is-irans-revolutionary-guard-role-history-and-growing-regional-influence/articleshow/128936522.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-02T04:34:25Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Iran's Revolutionary Guard is a powerful force within its government. It oversees missiles and conducts overseas attacks. The Guard's influence grew after the 1979 revolution and a war with Iraq. It has expanded into private enterprise. The Guard's Quds Force…"
-      },
-      {
-        "title": "Bad Bets: Massive EV Subsidies Not Paying Off",
-        "url": "https://wattsupwiththat.com/2026/03/01/bad-bets-massive-ev-subsidies-not-paying-off/",
-        "source": "Wattsupwiththat.com",
-        "published_at": "2026-03-02T02:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "“There have been massive, mounting losses that are going to have to be made up somewhere,” Pyle said. “Washington bludgeoned carmakers into a timetable of efficiency standards and the carmakers went along with it. People should be vehemently opposed to anythi…"
       }
     ],
     "news_with_impact": [
@@ -1283,6 +1249,45 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Collective Metals Announces Flow-Through Financing",
+        "url": "https://financialpost.com/globe-newswire/collective-metals-announces-flow-through-financing-2",
+        "source": "Financial Post",
+        "published_at": "2026-03-02T22:02:17Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) — COLLECTIVE METALS INC. (CSE: COMT | OTC: CLLMF | FSE: TO1) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up to C$1,…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Collective Metals Announces Flow-Through Financing",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247908/0/en/Collective-Metals-Announces-Flow-Through-Financing.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T22:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) -- COLLECTIVE METALS INC. (CSE: COMT\r\n | OTC: CLLMF\r\n | FSE: TO1\r\n) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Prime Power Announces “Texas Titan #1,” a 1-Gigawatt Power Initiative Designed to Support the AI Infrastructure Boom",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247912/0/en/Prime-Power-Announces-Texas-Titan-1-a-1-Gigawatt-Power-Initiative-Designed-to-Support-the-AI-Infrastructure-Boom.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T22:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "HOUSTON, March 03, 2026 (GLOBE NEWSWIRE) -- Prime Power\r\n today announced the launch of “Texas Titan #1,” a large-scale power generation and infrastructure project designed to support the rapidly expanding energy demands of next-generation data centers and ar…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2044,19 +2049,6 @@
         ]
       },
       {
-        "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
         "source": "GlobeNewswire",
@@ -2064,6 +2056,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T11:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2272,32 +2277,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Why is the Grizzly Bear on the California Flag? A Symbol of Resilience The California grizzly bear adorns the California flag as a poignant, albeit ironic, symbol of the state’s wild, untamed spirit and a powerful reminder of its rapidly vanished natural heri…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "What is Iran’s Revolutionary Guard? Role, history and growing regional influence",
-        "url": "https://economictimes.indiatimes.com/news/international/world-news/what-is-irans-revolutionary-guard-role-history-and-growing-regional-influence/articleshow/128936522.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-02T04:34:25Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Iran's Revolutionary Guard is a powerful force within its government. It oversees missiles and conducts overseas attacks. The Guard's influence grew after the 1979 revolution and a war with Iraq. It has expanded into private enterprise. The Guard's Quds Force…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Bad Bets: Massive EV Subsidies Not Paying Off",
-        "url": "https://wattsupwiththat.com/2026/03/01/bad-bets-massive-ev-subsidies-not-paying-off/",
-        "source": "Wattsupwiththat.com",
-        "published_at": "2026-03-02T02:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "“There have been massive, mounting losses that are going to have to be made up somewhere,” Pyle said. “Washington bludgeoned carmakers into a timetable of efficiency standards and the carmakers went along with it. People should be vehemently opposed to anythi…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2865,12 +2844,12 @@
       },
       {
         "ticker": "HD",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 364.17,
-        "close": 366.92,
-        "change": 2.75,
-        "change_pct": 0.7551418293654063
+        "close": 366.96,
+        "prev_close": 370.81,
+        "change": -3.85,
+        "change_pct": -1.0383
       },
       {
         "ticker": "LOW",
@@ -2892,21 +2871,21 @@
       },
       {
         "ticker": "MLM",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-03",
-        "close": 656.55,
-        "prev_close": 665.35,
-        "change": -8.8,
-        "change_pct": -1.3226
+        "open": 655.37,
+        "close": 656.78,
+        "change": 1.4099999999999682,
+        "change_pct": 0.2151456429192621
       },
       {
         "ticker": "BLDR",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 96.6,
-        "close": 97.45,
-        "change": 0.8500000000000085,
-        "change_pct": 0.8799171842650192
+        "close": 97.53,
+        "prev_close": 99.41,
+        "change": -1.88,
+        "change_pct": -1.8912
       },
       {
         "ticker": "FBIN",
@@ -2919,12 +2898,12 @@
       },
       {
         "ticker": "OC",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-03",
-        "close": 114.66,
-        "prev_close": 116.71,
-        "change": -2.05,
-        "change_pct": -1.7565
+        "open": 111.2233,
+        "close": 114.56,
+        "change": 3.3367000000000075,
+        "change_pct": 3.0000008990921936
       },
       {
         "ticker": "EXP",
@@ -2988,11 +2967,11 @@
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -0.6810974497659187
+        "avg_change_pct": 0.3679436405693239
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": 0.8799171842650192
+        "avg_change_pct": -1.8912
       },
       "equipment": {
         "count": 3,
@@ -3000,7 +2979,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 1.2099837283169148
+        "avg_change_pct": 0.3132628136342116
       }
     },
     "stock_pressure_overlay": 0,
@@ -3083,7 +3062,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-03T21:57:26.866Z",
+    "generated_at_utc": "2026-03-03T22:12:10.224Z",
     "regime_history": {
       "current_regime_duration_days": 0,
       "previous_regime": null,
@@ -3223,12 +3202,12 @@
         },
         {
           "ticker": "HD",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-03-03",
-          "open": 364.17,
-          "close": 366.92,
-          "change": 2.75,
-          "change_pct": 0.7551418293654063
+          "close": 366.96,
+          "prev_close": 370.81,
+          "change": -3.85,
+          "change_pct": -1.0383
         },
         {
           "ticker": "LOW",
@@ -3250,21 +3229,21 @@
         },
         {
           "ticker": "MLM",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-03-03",
-          "close": 656.55,
-          "prev_close": 665.35,
-          "change": -8.8,
-          "change_pct": -1.3226
+          "open": 655.37,
+          "close": 656.78,
+          "change": 1.4099999999999682,
+          "change_pct": 0.2151456429192621
         },
         {
           "ticker": "BLDR",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-03-03",
-          "open": 96.6,
-          "close": 97.45,
-          "change": 0.8500000000000085,
-          "change_pct": 0.8799171842650192
+          "close": 97.53,
+          "prev_close": 99.41,
+          "change": -1.88,
+          "change_pct": -1.8912
         },
         {
           "ticker": "FBIN",
@@ -3277,12 +3256,12 @@
         },
         {
           "ticker": "OC",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-03-03",
-          "close": 114.66,
-          "prev_close": 116.71,
-          "change": -2.05,
-          "change_pct": -1.7565
+          "open": 111.2233,
+          "close": 114.56,
+          "change": 3.3367000000000075,
+          "change_pct": 3.0000008990921936
         },
         {
           "ticker": "EXP",
@@ -3346,11 +3325,11 @@
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": -0.6810974497659187
+          "avg_change_pct": 0.3679436405693239
         },
         "distribution": {
           "count": 1,
-          "avg_change_pct": 0.8799171842650192
+          "avg_change_pct": -1.8912
         },
         "equipment": {
           "count": 3,
@@ -3358,7 +3337,7 @@
         },
         "retail": {
           "count": 2,
-          "avg_change_pct": 1.2099837283169148
+          "avg_change_pct": 0.3132628136342116
         }
       },
       "stock_pressure_overlay": 0
@@ -3366,7 +3345,7 @@
     "news": {
       "sources": {
         "newsapi:top_headlines": 16,
-        "newsapi:everything": 78
+        "newsapi:everything": 79
       },
       "news_pressure_overlay": 0,
       "top_high_impact": [
@@ -3705,6 +3684,45 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Collective Metals Announces Flow-Through Financing",
+          "url": "https://financialpost.com/globe-newswire/collective-metals-announces-flow-through-financing-2",
+          "source": "Financial Post",
+          "published_at": "2026-03-02T22:02:17Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) — COLLECTIVE METALS INC. (CSE: COMT | OTC: CLLMF | FSE: TO1) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up to C$1,…",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Collective Metals Announces Flow-Through Financing",
+          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247908/0/en/Collective-Metals-Announces-Flow-Through-Financing.html",
+          "source": "GlobeNewswire",
+          "published_at": "2026-03-02T22:00:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) -- COLLECTIVE METALS INC. (CSE: COMT\r\n | OTC: CLLMF\r\n | FSE: TO1\r\n) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up …",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Prime Power Announces “Texas Titan #1,” a 1-Gigawatt Power Initiative Designed to Support the AI Infrastructure Boom",
+          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247912/0/en/Prime-Power-Announces-Texas-Titan-1-a-1-Gigawatt-Power-Initiative-Designed-to-Support-the-AI-Infrastructure-Boom.html",
+          "source": "GlobeNewswire",
+          "published_at": "2026-03-02T22:00:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "HOUSTON, March 03, 2026 (GLOBE NEWSWIRE) -- Prime Power\r\n today announced the launch of “Texas Titan #1,” a large-scale power generation and infrastructure project designed to support the rapidly expanding energy demands of next-generation data centers and ar…",
           "impact_score": 40,
           "themes": [
             "other"
@@ -4238,45 +4256,6 @@
           "provider": "newsapi",
           "feed": "everything",
           "description": "Author summary As the notorious aflatoxin producing pathogenic fungi in agriculture and medicine, Aspergillus flavus is widely distributed, contaminating various crops, and inducing invasive aspergillosis mainly to immunodeficiency-patients. Since the drug-re…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Access to information in deaf and hard-of-hearing people",
-          "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0343904",
-          "source": "Plos.org",
-          "published_at": "2026-03-02T14:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Deaf and Hard of Hearing (HoH) people often face communication barriers that limit their access to crucial information. This study investigates which modalities deaf people used to gather information from various sources, and which factors predicted accessibi…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "A modular nanoparticle display strategy for varicella-zoster virus gE based on a licensed protein scaffold",
-          "url": "https://journals.plos.org/plospathogens/article?id=10.1371%2Fjournal.ppat.1013983",
-          "source": "Plos.org",
-          "published_at": "2026-03-02T14:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Author summary Shingles, caused by reactivation of the VZV, remains a major health concern in older adults, for whom vaccination is the most effective preventive measure. In this study, we designed a nanoparticle-based gE vaccine (Nano-gEVZV) using a hepatiti…",
-          "impact_score": 40,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "Andhra’s revived Capital Amaravati all set to welcome elite set of residents",
-          "url": "https://www.thehindubusinessline.com/news/andhras-revived-capital-amaravati-all-set-to-welcome-elite-set-of-residents/article70695983.ece",
-          "source": "BusinessLine",
-          "published_at": "2026-03-02T13:52:08Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Amaravati, Andhra Pradesh's new Capital, transforms from ghost town to vibrant power center, welcoming influential residents and ongoing developments.",
           "impact_score": 40,
           "themes": [
             "other"
