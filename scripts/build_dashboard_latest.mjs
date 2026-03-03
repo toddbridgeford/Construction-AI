@@ -1948,55 +1948,60 @@ async function main() {
       news_pressure_overlay
     },
 
-    ecosystem_pulse,
+        ecosystem_pulse,
 
-        signal_strip: [
-  {
-    key: "mortgage_30y",
-    value: mortgage30,
-    arrow: trends.mortgage_30y,
-    severity: trends.mortgage_30y === "↑" ? "WATCH" : "NORMAL",
-    interpretation: trends.mortgage_30y === "↑"
-      ? "Mortgage rates rising increases affordability pressure and can slow demand."
-      : "Mortgage rates easing reduces affordability pressure."
-  },
-  {
-    key: "permits",
-    value: permitsLatest,
-    arrow: trends.permits,
-    severity: trends.permits === "↓" ? "WATCH" : "NORMAL",
-    interpretation: trends.permits === "↓"
-      ? "Permits rolling over can signal weaker near-term pipeline."
-      : "Permits improving supports near-term pipeline."
-  },
-  {
-    key: "starts",
-    value: startsLatest,
-    arrow: trends.starts,
-    severity: trends.starts === "↓" ? "WATCH" : "NORMAL",
-    interpretation: trends.starts === "↓"
-      ? "Starts declining can signal softening construction activity."
-      : "Starts improving supports construction activity."
-  },
-  {
-    key: "nfci",
-    value: nfci,
-    arrow: trends.nfci,
-    severity: trends.nfci === "↑" ? "WATCH" : "NORMAL",
-    interpretation: trends.nfci === "↑"
-      ? "Financial conditions tightening can pressure credit availability."
-      : "Financial conditions easing supports risk appetite and lending."
-  },
-  {
-    key: "hy_oas",
-    value: hy,
-    arrow: trends.hy_oas,
-    severity: trends.hy_oas === "↑" ? "WATCH" : "NORMAL",
-    interpretation: trends.hy_oas === "↑"
-      ? "High-yield spreads widening increases credit stress risk."
-      : "High-yield spreads tightening reduces credit stress risk."
-  }
-],
+    signal_strip: [
+      {
+        key: "mortgage_30y",
+        value: mortgage30,
+        arrow: trends.mortgage_30y,
+        severity: trends.mortgage_30y === "↑" ? "WATCH" : "NORMAL",
+        interpretation:
+          trends.mortgage_30y === "↑"
+            ? "Mortgage rates rising increases affordability pressure and can slow demand."
+            : "Mortgage rates easing reduces affordability pressure."
+      },
+      {
+        key: "permits",
+        value: permitsLatest,
+        arrow: trends.permits,
+        severity: trends.permits === "↓" ? "WATCH" : "NORMAL",
+        interpretation:
+          trends.permits === "↓"
+            ? "Permits rolling over can signal weaker near-term pipeline."
+            : "Permits improving supports near-term pipeline."
+      },
+      {
+        key: "starts",
+        value: startsLatest,
+        arrow: trends.starts,
+        severity: trends.starts === "↓" ? "WATCH" : "NORMAL",
+        interpretation:
+          trends.starts === "↓"
+            ? "Starts declining can signal softening construction activity."
+            : "Starts improving supports construction activity."
+      },
+      {
+        key: "nfci",
+        value: nfci,
+        arrow: trends.nfci,
+        severity: trends.nfci === "↑" ? "WATCH" : "NORMAL",
+        interpretation:
+          trends.nfci === "↑"
+            ? "Financial conditions tightening can pressure credit availability."
+            : "Financial conditions easing supports risk appetite and lending."
+      },
+      {
+        key: "hy_oas",
+        value: hy,
+        arrow: trends.hy_oas,
+        severity: trends.hy_oas === "↑" ? "WATCH" : "NORMAL",
+        interpretation:
+          trends.hy_oas === "↑"
+            ? "High-yield spreads widening increases credit stress risk."
+            : "High-yield spreads tightening reduces credit stress risk."
+      }
+    ],
 
     market_intel: {
       stocks: stocks.slice(0, 40),
