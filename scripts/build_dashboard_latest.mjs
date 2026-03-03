@@ -1949,8 +1949,17 @@ async function main() {
     },
 
         ecosystem_pulse,
+    
 const regimeWatch = ["Slowdown", "Recession"].includes(regime.primary);
-    signal_strip: [
+
+// ---- GPT payload (Construction AI)
+const gpt_payload = {
+  product: "Construction AI",
+  generated_at_utc: isoUtcNow(),
+  ...
+  ecosystem_pulse,
+  signal_strip: [ ... ],
+};
   {
     key: "mortgage_30y",
     value: mortgage30,
