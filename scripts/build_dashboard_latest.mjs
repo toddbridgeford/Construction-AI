@@ -1911,7 +1911,7 @@ async function main() {
     ecosystem_pulse,
     news_badge: { sources: news_sources, total: news_unified.length, overlay: news_pressure_overlay }
   };
-
+  
   // ---- GPT payload (Construction AI)
   const gpt_payload = {
     product: "Construction AI",
