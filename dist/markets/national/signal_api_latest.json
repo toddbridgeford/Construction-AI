@@ -3,14 +3,14 @@
     "system": "Construction Intelligence OS",
     "version": "signal_api_v1",
     "mode": "data_assisted",
-    "run_date": "2026-03-02",
+    "run_date": "2026-03-03",
     "region": {
       "name": "United States",
       "geo_id": null
     }
   },
   "provenance": {
-    "as_of": "2026-03-02",
+    "as_of": "2026-03-03",
     "sources": [
       {
         "name": "FRED",
@@ -44,7 +44,7 @@
       "momentum_band": "Stable",
       "risk_state": "🟢",
       "drivers": {
-        "capital": 39,
+        "capital": 40,
         "pipeline": 47,
         "trade": 50,
         "materials": 50,
@@ -60,13 +60,13 @@
         "cpi_i": null
       },
       "divergences": {
-        "r_minus_i": -3,
-        "sf_minus_mf": -1,
-        "inst_minus_infra": -1
+        "r_minus_i": -2,
+        "sf_minus_mf": 0,
+        "inst_minus_infra": 0
       }
     },
     "capital_stress_index": {
-      "value": 39,
+      "value": 40,
       "risk_state": "🟢",
       "overlays": {
         "active_triggers": [],
@@ -163,7 +163,7 @@
     }
   },
   "heatmap": {
-    "as_of": "2026-03-02",
+    "as_of": "2026-03-03",
     "regions": [
       {
         "name": "National",
