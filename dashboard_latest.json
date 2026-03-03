@@ -2970,6 +2970,29 @@
   "gpt_payload": {
     "product": "Construction AI",
     "generated_at_utc": "2026-03-03T14:05:46.050Z",
+   "gpt_payload": {
+  "product": "Construction AI",
+  "generated_at_utc": "2026-03-03T04:20:44.155Z",
+
+  "signal_strip": [
+    {
+      "id": "mortgage_30y",
+      "title": "Mortgage 30Y",
+      "direction": "down",
+      "state": "risk",
+      "confidence": "medium",
+      "value": 7.1
+    },
+    {
+      "id": "permits",
+      "title": "Building Permits",
+      "direction": "up",
+      "state": "growth",
+      "confidence": "medium",
+      "value": 1470
+    }
+  ]
+} 
     "regime_history": {
       "current_regime_duration_days": 2,
       "previous_regime": null,
