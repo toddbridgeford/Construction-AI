@@ -1950,8 +1950,6 @@ const gpt_payload = {
       stock_overlay,
       news_pressure_overlay
     },
-
-        ecosystem_pulse,
     
 const regimeWatch = ["Slowdown", "Recession"].includes(regime.primary);
 
