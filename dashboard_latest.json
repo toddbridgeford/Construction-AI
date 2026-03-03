@@ -1,11 +1,58 @@
 {
   "schema_version": "4.4.0",
   "generated_at": "2026-03-03T21:57:26.866Z",
+
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
     "summary": "Pressure stable. Monitor capital direction, spreads, permits, and headline impact for inflection."
   },
+
+  "gpt_payload": {
+    "signal_strip": [
+      {
+        "id": "mortgage_30y",
+        "title": "Mortgage 30Y",
+        "direction": "down",
+        "state": "risk",
+        "confidence": "medium",
+        "value": 7.1
+      },
+      {
+        "id": "permits",
+        "title": "Permits",
+        "direction": "up",
+        "state": "growth",
+        "confidence": "medium",
+        "value": 1460
+      },
+      {
+        "id": "starts",
+        "title": "Housing Starts",
+        "direction": "up",
+        "state": "growth",
+        "confidence": "medium",
+        "value": 1450
+      },
+      {
+        "id": "nfci",
+        "title": "Chicago Fed NFCI",
+        "direction": "up",
+        "state": "neutral",
+        "confidence": "medium",
+        "value": -0.22
+      },
+      {
+        "id": "hy_oas",
+        "title": "High Yield Spread",
+        "direction": "down",
+        "state": "risk",
+        "confidence": "medium",
+        "value": 3.9
+      }
+    ]
+  },
+
   "cpi": {
     "headline": 46,
     "zone": "Slowdown",
