@@ -4,12 +4,11 @@ name: Update dashboard + signal API + markets (CPI + News + Stocks + SAM + USAsp
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 13 * * *" # daily (UTC)
+    - cron: "15 */6 * * *" # every 6 hours (UTC)
 
 permissions:
   contents: write
 
-# Prevent overlapping runs (e.g., slow API day + schedule overlap)
 concurrency:
   group: update-dashboard-latest-predictive-model
   cancel-in-progress: true
@@ -44,7 +43,7 @@ jobs:
           node --version
           npm --version
 
-            - name: Add retry helper (exponential backoff)
+      - name: Add retry helper (exponential backoff)
         run: |
           set -euo pipefail
           cat > /tmp/retry.sh <<'BASH'
@@ -75,7 +74,6 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p dist/markets
-          # do NOT pre-create outputs as {} unless absent; preserve existing files for diffs
           if [ ! -f dashboard_latest.json ]; then echo '{}' > dashboard_latest.json; fi
           if [ ! -f signal_api_latest.json ]; then echo '{}' > signal_api_latest.json; fi
           if [ ! -f dist/markets/index.json ]; then echo '{}' > dist/markets/index.json; fi
@@ -89,11 +87,20 @@ jobs:
           test -f scripts/package.json
           test -f config/markets.json
 
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: |
+            scripts/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node20-${{ hashFiles('scripts/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node20-
+
       - name: Install script dependencies (safe)
         working-directory: scripts
         run: |
           set -euo pipefail
-          # Prefer deterministic installs when a lockfile exists
           if [ -f package-lock.json ]; then
             npm ci --silent --no-audit --no-fund
           else
@@ -110,24 +117,20 @@ jobs:
           SAM_API_KEY: ${{ secrets.SAM_API_KEY }}
           EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
 
-          # NewsAPI.org
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
 
           FRED_OBSERVATION_START: "2020-01-01"
           OUT_PATH: "dashboard_latest.json"
 
-          # Free baseline (GDELT)
           NEWS_LOOKBACK_DAYS: "5"
           NEWS_MAX: "60"
 
-          # NewsAPI Everything (deep research stream)
           NEWSAPI_LOOKBACK_DAYS: "10"
           NEWSAPI_MAX: "80"
           NEWSAPI_QUERY: "(construction OR \"building permits\" OR \"housing starts\" OR \"commercial real estate\" OR \"general contractor\" OR homebuilder OR \"building code\" OR \"land acquisition\" OR \"pre-construction\" OR \"data center\") AND (US OR United States)"
           NEWSAPI_LANGUAGE: "en"
           NEWSAPI_SORTBY: "publishedAt"
 
-          # NewsAPI Top Headlines (executive stream)
           NEWSAPI_TOP_HEADLINES: "true"
           NEWSAPI_COUNTRY: "us"
           NEWSAPI_CATEGORY: "business"
@@ -136,17 +139,16 @@ jobs:
           STOCK_TICKERS: "DHI,PHM,LEN,NVR,TOL,HD,LOW,VMC,MLM,BLDR,FBIN,OC,USCR,EXP,CAT,DE,URI,TPC,CRH"
           ALPHAVANTAGE_PRIORITY_TICKERS: "DHI,PHM,LEN,NVR,TOL,BLDR,VMC,MLM,OC,HD,LOW"
 
-          # USAspending
           USASPENDING_LIMIT: "80"
           USASPENDING_NAICS: "23,5413,2373,2371,2362,2382"
           USASPENDING_KEYWORDS: "construction,design-build,general contractor,roofing,HVAC,electrical,plumbing,concrete,civil,road,bridge,data center"
 
-          # EIA series IDs
           EIA_SERIES_IDS: "PET.RWTC.D"
           EIA_MAX_POINTS: "120"
         run: |
           set -euo pipefail
-          node scripts/build_dashboard_latest.mjs
+          source /tmp/retry.sh
+          retry 5 node scripts/build_dashboard_latest.mjs
 
       - name: Validate dashboard_latest.json (parse + required fields + non-empty)
         run: |
@@ -156,13 +158,11 @@ jobs:
           const fs = require('fs');
           const j = JSON.parse(fs.readFileSync('dashboard_latest.json','utf8'));
 
-          // Hard gates
           if (typeof j?.cpi?.headline !== 'number') {
             console.error("Missing cpi.headline in dashboard_latest.json");
             process.exit(1);
           }
           if (!j?.generated_at && !j?.generated_at_utc && !j?.generated_at) {
-            // Not fatal if schema differs, but your file sets generated_at
             console.warn("Warn: generated_at not found (non-fatal).");
           }
 
@@ -179,7 +179,8 @@ jobs:
           REGION_NAME: "National"
         run: |
           set -euo pipefail
-          node scripts/build_signal_api_latest.mjs
+          source /tmp/retry.sh
+          retry 5 node scripts/build_signal_api_latest.mjs
 
       - name: Validate signal_api_latest.json (parse + version + non-empty)
         run: |
@@ -198,7 +199,8 @@ jobs:
       - name: Build multi-market Signal API outputs (v1)
         run: |
           set -euo pipefail
-          node scripts/build_markets_signal_api_latest.mjs
+          source /tmp/retry.sh
+          retry 5 node scripts/build_markets_signal_api_latest.mjs
 
       - name: Validate markets outputs
         run: |
@@ -206,7 +208,6 @@ jobs:
           test -f dist/markets/index.json
           test -s dist/markets/index.json
           node -e "JSON.parse(require('fs').readFileSync('dist/markets/index.json','utf8'))"
-          # Ensure at least one market output exists (if your config defines markets)
           count=$(ls -1 dist/markets/*/signal_api_latest.json 2>/dev/null | wc -l | tr -d ' ')
           echo "Markets signal_api_latest.json count: $count"
           if [ "$count" -lt 1 ]; then
@@ -232,6 +233,17 @@ jobs:
 
           git commit -m "Update dashboard + signal API + markets"
           git push origin Predictive-Model
+
+      - name: Upload artifacts (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard-run
+          path: |
+            dashboard_latest.json
+            signal_api_latest.json
+            dist/markets/index.json
+            dist/markets/**/signal_api_latest.json
 
       - name: Complete job
         run: |
