@@ -1951,58 +1951,52 @@ async function main() {
     ecosystem_pulse,
 
         signal_strip: [
-      {
-        id: "mortgage_30y",
-        title: "Mortgage 30Y",
-        direction: trends.mortgage_30y === "↑" ? "up" : trends.mortgage_30y === "↓" ? "down" : "flat",
-        state: trends.mortgage_30y === "↑" ? "risk" : trends.mortgage_30y === "↓" ? "relief" : "neutral",
-        confidence: "medium",
-        value: mortgage30,
-        // backward-compatible fields (safe to keep)
-        key: "mortgage_30y",
-        arrow: trends.mortgage_30y
-      },
-      {
-        id: "permits",
-        title: "Building Permits",
-        direction: trends.permits === "↑" ? "up" : trends.permits === "↓" ? "down" : "flat",
-        state: trends.permits === "↑" ? "growth" : trends.permits === "↓" ? "risk" : "neutral",
-        confidence: "medium",
-        value: permitsLatest,
-        key: "permits",
-        arrow: trends.permits
-      },
-      {
-        id: "starts",
-        title: "Housing Starts",
-        direction: trends.starts === "↑" ? "up" : trends.starts === "↓" ? "down" : "flat",
-        state: trends.starts === "↑" ? "growth" : trends.starts === "↓" ? "risk" : "neutral",
-        confidence: "medium",
-        value: startsLatest,
-        key: "starts",
-        arrow: trends.starts
-      },
-      {
-        id: "nfci",
-        title: "Chicago Fed NFCI",
-        direction: trends.nfci === "↑" ? "up" : trends.nfci === "↓" ? "down" : "flat",
-        state: trends.nfci === "↑" ? "risk" : trends.nfci === "↓" ? "relief" : "neutral",
-        confidence: "medium",
-        value: nfci,
-        key: "nfci",
-        arrow: trends.nfci
-      },
-      {
-        id: "hy_oas",
-        title: "High Yield Spread (OAS)",
-        direction: trends.hy_oas === "↑" ? "up" : trends.hy_oas === "↓" ? "down" : "flat",
-        state: trends.hy_oas === "↑" ? "risk" : trends.hy_oas === "↓" ? "relief" : "neutral",
-        confidence: "medium",
-        value: hy,
-        key: "hy_oas",
-        arrow: trends.hy_oas
-      }
-    ],
+  {
+    key: "mortgage_30y",
+    value: mortgage30,
+    arrow: trends.mortgage_30y,
+    severity: trends.mortgage_30y === "↑" ? "WATCH" : "NORMAL",
+    interpretation: trends.mortgage_30y === "↑"
+      ? "Mortgage rates rising increases affordability pressure and can slow demand."
+      : "Mortgage rates easing reduces affordability pressure."
+  },
+  {
+    key: "permits",
+    value: permitsLatest,
+    arrow: trends.permits,
+    severity: trends.permits === "↓" ? "WATCH" : "NORMAL",
+    interpretation: trends.permits === "↓"
+      ? "Permits rolling over can signal weaker near-term pipeline."
+      : "Permits improving supports near-term pipeline."
+  },
+  {
+    key: "starts",
+    value: startsLatest,
+    arrow: trends.starts,
+    severity: trends.starts === "↓" ? "WATCH" : "NORMAL",
+    interpretation: trends.starts === "↓"
+      ? "Starts declining can signal softening construction activity."
+      : "Starts improving supports construction activity."
+  },
+  {
+    key: "nfci",
+    value: nfci,
+    arrow: trends.nfci,
+    severity: trends.nfci === "↑" ? "WATCH" : "NORMAL",
+    interpretation: trends.nfci === "↑"
+      ? "Financial conditions tightening can pressure credit availability."
+      : "Financial conditions easing supports risk appetite and lending."
+  },
+  {
+    key: "hy_oas",
+    value: hy,
+    arrow: trends.hy_oas,
+    severity: trends.hy_oas === "↑" ? "WATCH" : "NORMAL",
+    interpretation: trends.hy_oas === "↑"
+      ? "High-yield spreads widening increases credit stress risk."
+      : "High-yield spreads tightening reduces credit stress risk."
+  }
+],
 
     market_intel: {
       stocks: stocks.slice(0, 40),
