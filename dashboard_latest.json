@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-03T22:20:06.355Z",
+  "generated_at": "2026-03-03T22:32:09.239Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -9,9 +9,13 @@
   "cpi": {
     "headline": 46,
     "zone": "Slowdown",
-    "delta_3m": null,
+    "delta_3m": 0,
     "momentum": "Stable",
     "history": [
+      {
+        "date": "2026-03-03",
+        "value": 46
+      },
       {
         "date": "2026-03-03",
         "value": 46
@@ -72,7 +76,7 @@
     "current_regime_duration_days": 0,
     "previous_regime": null,
     "last_flip_date": null,
-    "regime_stability": "🟡 Watch"
+    "regime_stability": "🟢 Stable"
   },
   "ui": {
     "accent": "system",
@@ -151,7 +155,7 @@
     "heat_strip": {
       "cpi": 46,
       "zone": "Slowdown",
-      "delta_3m": null,
+      "delta_3m": 0,
       "momentum": "Stable",
       "risk_thermometer_mode": false,
       "freeze_risk": false
@@ -2830,12 +2834,12 @@
       },
       {
         "ticker": "NVR",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-03",
-        "close": 7367.97,
-        "prev_close": 7415.75,
-        "change": -47.78,
-        "change_pct": -0.6443
+        "open": 7272.29,
+        "close": 7361.1,
+        "change": 88.8100000000004,
+        "change_pct": 1.2212109253068897
       },
       {
         "ticker": "TOL",
@@ -2866,12 +2870,12 @@
       },
       {
         "ticker": "VMC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 301.77,
-        "close": 300,
-        "change": -1.7699999999999818,
-        "change_pct": -0.586539417437115
+        "close": 299.98,
+        "prev_close": 306.2,
+        "change": -6.22,
+        "change_pct": -2.0314
       },
       {
         "ticker": "MLM",
@@ -2884,12 +2888,12 @@
       },
       {
         "ticker": "BLDR",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-03",
-        "close": 97.53,
-        "prev_close": 99.41,
-        "change": -1.88,
-        "change_pct": -1.8912
+        "open": 96.6,
+        "close": 97.45,
+        "change": 0.8500000000000085,
+        "change_pct": 0.8799171842650192
       },
       {
         "ticker": "FBIN",
@@ -2902,21 +2906,21 @@
       },
       {
         "ticker": "OC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 111.2233,
-        "close": 114.56,
-        "change": 3.3367000000000075,
-        "change_pct": 3.0000008990921936
+        "close": 114.66,
+        "prev_close": 116.71,
+        "change": -2.05,
+        "change_pct": -1.7565
       },
       {
         "ticker": "EXP",
         "source": "stooq",
         "date": "2026-03-03",
-        "open": 216.02,
+        "open": 215.625,
         "close": 213.88,
-        "change": -2.140000000000015,
-        "change_pct": -0.9906490139801938
+        "change": -1.7450000000000045,
+        "change_pct": -0.8092753623188428
       },
       {
         "ticker": "CAT",
@@ -2949,10 +2953,10 @@
         "ticker": "TPC",
         "source": "stooq",
         "date": "2026-03-03",
-        "open": 70.56,
+        "open": 70.79,
         "close": 69.95,
-        "change": -0.6099999999999994,
-        "change_pct": -0.8645124716553279
+        "change": -0.8400000000000034,
+        "change_pct": -1.1866082780053726
       },
       {
         "ticker": "CRH",
@@ -2967,15 +2971,15 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": 0.6231415559116299
+        "avg_change_pct": 0.9962437409730078
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.3679436405693239
+        "avg_change_pct": -0.6353876644296307
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": -1.8912
+        "avg_change_pct": 0.8799171842650192
       },
       "equipment": {
         "count": 3,
@@ -3066,12 +3070,12 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-03T22:20:06.355Z",
+    "generated_at_utc": "2026-03-03T22:32:09.239Z",
     "regime_history": {
       "current_regime_duration_days": 0,
       "previous_regime": null,
       "last_flip_date": null,
-      "regime_stability": "🟡 Watch"
+      "regime_stability": "🟢 Stable"
     },
     "regime": {
       "primary": "Slowdown",
@@ -3081,7 +3085,7 @@
     "cpi": {
       "headline": 46,
       "zone": "Slowdown",
-      "delta_3m": null,
+      "delta_3m": 0,
       "momentum": "Stable",
       "freeze_risk": false,
       "risk_thermometer_mode": false,
@@ -3132,54 +3136,39 @@
     },
     "signal_strip": [
       {
-        "id": "mortgage_30y",
-        "title": "Mortgage 30Y",
-        "direction": "down",
-        "state": "relief",
-        "confidence": "medium",
-        "value": 5.98,
         "key": "mortgage_30y",
-        "arrow": "↓"
+        "value": 5.98,
+        "arrow": "↓",
+        "severity": "NORMAL",
+        "interpretation": "Mortgage rates easing reduces affordability pressure."
       },
       {
-        "id": "permits",
-        "title": "Building Permits",
-        "direction": "up",
-        "state": "growth",
-        "confidence": "medium",
-        "value": 1448,
         "key": "permits",
-        "arrow": "↑"
+        "value": 1448,
+        "arrow": "↑",
+        "severity": "NORMAL",
+        "interpretation": "Permits improving supports near-term pipeline."
       },
       {
-        "id": "starts",
-        "title": "Housing Starts",
-        "direction": "up",
-        "state": "growth",
-        "confidence": "medium",
-        "value": 1404,
         "key": "starts",
-        "arrow": "↑"
+        "value": 1404,
+        "arrow": "↑",
+        "severity": "NORMAL",
+        "interpretation": "Starts improving supports construction activity."
       },
       {
-        "id": "nfci",
-        "title": "Chicago Fed NFCI",
-        "direction": "up",
-        "state": "risk",
-        "confidence": "medium",
-        "value": -0.56294,
         "key": "nfci",
-        "arrow": "↑"
+        "value": -0.56294,
+        "arrow": "↑",
+        "severity": "WATCH",
+        "interpretation": "Financial conditions tightening can pressure credit availability."
       },
       {
-        "id": "hy_oas",
-        "title": "High Yield Spread (OAS)",
-        "direction": "down",
-        "state": "relief",
-        "confidence": "medium",
-        "value": 3.03,
         "key": "hy_oas",
-        "arrow": "↓"
+        "value": 3.03,
+        "arrow": "↓",
+        "severity": "NORMAL",
+        "interpretation": "High-yield spreads tightening reduces credit stress risk."
       }
     ],
     "market_intel": {
@@ -3213,12 +3202,12 @@
         },
         {
           "ticker": "NVR",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-03-03",
-          "close": 7367.97,
-          "prev_close": 7415.75,
-          "change": -47.78,
-          "change_pct": -0.6443
+          "open": 7272.29,
+          "close": 7361.1,
+          "change": 88.8100000000004,
+          "change_pct": 1.2212109253068897
         },
         {
           "ticker": "TOL",
@@ -3249,12 +3238,12 @@
         },
         {
           "ticker": "VMC",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-03-03",
-          "open": 301.77,
-          "close": 300,
-          "change": -1.7699999999999818,
-          "change_pct": -0.586539417437115
+          "close": 299.98,
+          "prev_close": 306.2,
+          "change": -6.22,
+          "change_pct": -2.0314
         },
         {
           "ticker": "MLM",
@@ -3267,12 +3256,12 @@
         },
         {
           "ticker": "BLDR",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-03-03",
-          "close": 97.53,
-          "prev_close": 99.41,
-          "change": -1.88,
-          "change_pct": -1.8912
+          "open": 96.6,
+          "close": 97.45,
+          "change": 0.8500000000000085,
+          "change_pct": 0.8799171842650192
         },
         {
           "ticker": "FBIN",
@@ -3285,21 +3274,21 @@
         },
         {
           "ticker": "OC",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-03-03",
-          "open": 111.2233,
-          "close": 114.56,
-          "change": 3.3367000000000075,
-          "change_pct": 3.0000008990921936
+          "close": 114.66,
+          "prev_close": 116.71,
+          "change": -2.05,
+          "change_pct": -1.7565
         },
         {
           "ticker": "EXP",
           "source": "stooq",
           "date": "2026-03-03",
-          "open": 216.02,
+          "open": 215.625,
           "close": 213.88,
-          "change": -2.140000000000015,
-          "change_pct": -0.9906490139801938
+          "change": -1.7450000000000045,
+          "change_pct": -0.8092753623188428
         },
         {
           "ticker": "CAT",
@@ -3332,10 +3321,10 @@
           "ticker": "TPC",
           "source": "stooq",
           "date": "2026-03-03",
-          "open": 70.56,
+          "open": 70.79,
           "close": 69.95,
-          "change": -0.6099999999999994,
-          "change_pct": -0.8645124716553279
+          "change": -0.8400000000000034,
+          "change_pct": -1.1866082780053726
         },
         {
           "ticker": "CRH",
@@ -3350,15 +3339,15 @@
       "sector_rollups": {
         "builders": {
           "count": 5,
-          "avg_change_pct": 0.6231415559116299
+          "avg_change_pct": 0.9962437409730078
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": 0.3679436405693239
+          "avg_change_pct": -0.6353876644296307
         },
         "distribution": {
           "count": 1,
-          "avg_change_pct": -1.8912
+          "avg_change_pct": 0.8799171842650192
         },
         "equipment": {
           "count": 3,
