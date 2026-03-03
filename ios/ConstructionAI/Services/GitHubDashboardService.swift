@@ -9,12 +9,30 @@ struct GitHubDashboardService {
         request.timeoutInterval = Config.requestTimeout
         request.cachePolicy = .reloadIgnoringLocalCacheData
 
+        if let token = Config.githubToken {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+            Logging.log("GitHub token detected. Authenticated dashboard fetch enabled.")
+        } else {
+            Logging.log("No GitHub token configured. Falling back to unauthenticated dashboard fetch.")
+        }
+
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+        guard let http = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
 
-        let payload = try JSONDecoder().decode(DashboardPayload.self, from: data)
-        return (payload, Date())
+        guard http.statusCode == 200 else {
+            Logging.log("Dashboard fetch failed with HTTP status \(http.statusCode).")
+            throw URLError(.badServerResponse)
+        }
+
+        do {
+            let payload = try JSONDecoder().decode(DashboardPayload.self, from: data)
+            return (payload, Date())
+        } catch {
+            Logging.log("Dashboard decode failed: \(error.localizedDescription)")
+            throw error
+        }
     }
 }
