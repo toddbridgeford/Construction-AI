@@ -63,6 +63,37 @@ struct DashboardPayload: Codable {
             sources = []
         }
     }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(schemaVersion, forKey: .schemaVersion)
+        try container.encodeIfPresent(generatedAt, forKey: .generatedAt)
+        try container.encodeIfPresent(cpi, forKey: .cpi)
+
+        if executiveHeadline != nil || executiveSummary != nil {
+            var executive = container.nestedContainer(keyedBy: ExecutiveKeys.self, forKey: .executive)
+            try executive.encodeIfPresent(executiveHeadline, forKey: .headline)
+            try executive.encodeIfPresent(executiveSummary, forKey: .summary)
+        }
+
+        var ui = container.nestedContainer(keyedBy: UIKeys.self, forKey: .ui)
+        try ui.encode(alerts, forKey: .alerts)
+        try ui.encode(cards, forKey: .cards)
+
+        let payload = GPTPayload(signalStrip: signals)
+        try container.encode(payload, forKey: .gptPayload)
+
+        if !sources.isEmpty {
+            var observed = container.nestedContainer(keyedBy: ObservedKeys.self, forKey: .observed)
+            let sourceMap = Dictionary(uniqueKeysWithValues: sources.map { source in
+                (
+                    source.source,
+                    SourceDescriptor(api: nil, base: nil, statePage: source.detail)
+                )
+            })
+            try observed.encode(sourceMap, forKey: .sources)
+        }
+    }
 }
 
 struct CardItem: Codable, Identifiable, Hashable {
@@ -79,6 +110,17 @@ struct CardItem: Codable, Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, value, trend, symbol
         case severityRaw = "severity"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        title = try container.decodeIfPresent(String.self, forKey: .title) ?? "Untitled Card"
+        id = try container.decodeIfPresent(String.self, forKey: .id) ?? title
+        subtitle = try container.decodeIfPresent(String.self, forKey: .subtitle)
+        value = try container.decodeIfPresent(Double.self, forKey: .value)
+        trend = try container.decodeIfPresent(String.self, forKey: .trend)
+        symbol = try container.decodeIfPresent(String.self, forKey: .symbol)
+        severityRaw = try container.decodeIfPresent(String.self, forKey: .severityRaw)
     }
 }
 
