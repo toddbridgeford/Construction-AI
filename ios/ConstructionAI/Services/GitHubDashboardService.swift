@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 struct GitHubDashboardService {
     func fetchDashboard() async throws -> (DashboardPayload, Date) {

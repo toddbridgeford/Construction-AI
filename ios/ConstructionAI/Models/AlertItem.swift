@@ -25,4 +25,12 @@ struct AlertItem: Codable, Identifiable, Hashable {
         case severityRaw = "severity"
         case symbol, title, message
     }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        severityRaw = try container.decodeIfPresent(String.self, forKey: .severityRaw)
+        symbol = try container.decodeIfPresent(String.self, forKey: .symbol)
+        title = try container.decodeIfPresent(String.self, forKey: .title) ?? "Untitled Alert"
+        message = try container.decodeIfPresent(String.self, forKey: .message) ?? "No alert details provided."
+    }
 }
