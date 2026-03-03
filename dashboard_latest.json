@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-03T22:12:10.224Z",
+  "generated_at": "2026-03-03T22:20:06.355Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -12,6 +12,10 @@
     "delta_3m": null,
     "momentum": "Stable",
     "history": [
+      {
+        "date": "2026-03-03",
+        "value": 46
+      },
       {
         "date": "2026-03-03",
         "value": 46
@@ -332,6 +336,15 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations."
+      },
+      {
+        "title": "Mark Zuckerberg, Wife Priscilla Make History with $170 Million Purchase",
+        "url": "https://www.mensjournal.com/news/mark-zuckerberg-wife-priscilla-make-history-with-170-million-purchase",
+        "source": "Men's Journal",
+        "published_at": "2026-03-02T22:18:34Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Meta CEO Mark Zuckerberg and his wife Priscilla Chan have made a massive real estate purchase in Florida, according to multiple reports. Zuckerberg and Chan ..."
       },
       {
         "title": "Collective Metals Announces Flow-Through Financing",
@@ -883,15 +896,6 @@
         "description": "War in Iran.  America's AI vs. China's AI.  And Trump's new tariffs aren't legal either."
       },
       {
-        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…"
-      },
-      {
         "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
         "source": "GlobeNewswire",
@@ -899,6 +903,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…"
+      },
+      {
+        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T11:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…"
       },
       {
         "title": "American Catholics launch crowdfunding effort to gift Pope Leo XIV papal tiara",
@@ -1034,15 +1047,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "L&T share price crash, Larsen and Toubro stock news, Middle East war impact India stocks, Iran Israel conflict markets, infrastructure stocks India, L&T Middle East exposure, BSE top losers today, geopolitics stock market India, JM Financial L&T outlook, Indi…"
-      },
-      {
-        "title": "Why is the grizzly bear on the California flag?",
-        "url": "https://www.lifesciencesworld.com/why-is-the-grizzly-bear-on-the-california-flag/",
-        "source": "Lifesciencesworld.com",
-        "published_at": "2026-03-02T04:36:56Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Why is the Grizzly Bear on the California Flag? A Symbol of Resilience The California grizzly bear adorns the California flag as a poignant, albeit ironic, symbol of the state’s wild, untamed spirit and a powerful reminder of its rapidly vanished natural heri…"
       }
     ],
     "news_with_impact": [
@@ -1249,6 +1253,19 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Mark Zuckerberg, Wife Priscilla Make History with $170 Million Purchase",
+        "url": "https://www.mensjournal.com/news/mark-zuckerberg-wife-priscilla-make-history-with-170-million-purchase",
+        "source": "Men's Journal",
+        "published_at": "2026-03-02T22:18:34Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Meta CEO Mark Zuckerberg and his wife Priscilla Chan have made a massive real estate purchase in Florida, according to multiple reports. Zuckerberg and Chan ...",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2049,19 +2066,6 @@
         ]
       },
       {
-        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
         "source": "GlobeNewswire",
@@ -2069,6 +2073,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T11:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2264,19 +2281,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "L&T share price crash, Larsen and Toubro stock news, Middle East war impact India stocks, Iran Israel conflict markets, infrastructure stocks India, L&T Middle East exposure, BSE top losers today, geopolitics stock market India, JM Financial L&T outlook, Indi…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Why is the grizzly bear on the California flag?",
-        "url": "https://www.lifesciencesworld.com/why-is-the-grizzly-bear-on-the-california-flag/",
-        "source": "Lifesciencesworld.com",
-        "published_at": "2026-03-02T04:36:56Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Why is the Grizzly Bear on the California Flag? A Symbol of Resilience The California grizzly bear adorns the California flag as a poignant, albeit ironic, symbol of the state’s wild, untamed spirit and a powerful reminder of its rapidly vanished natural heri…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2826,12 +2830,12 @@
       },
       {
         "ticker": "NVR",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 7272.29,
-        "close": 7361.1,
-        "change": 88.8100000000004,
-        "change_pct": 1.2212109253068897
+        "close": 7367.97,
+        "prev_close": 7415.75,
+        "change": -47.78,
+        "change_pct": -0.6443
       },
       {
         "ticker": "TOL",
@@ -2844,12 +2848,12 @@
       },
       {
         "ticker": "HD",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-03",
-        "close": 366.96,
-        "prev_close": 370.81,
-        "change": -3.85,
-        "change_pct": -1.0383
+        "open": 364.17,
+        "close": 366.92,
+        "change": 2.75,
+        "change_pct": 0.7551418293654063
       },
       {
         "ticker": "LOW",
@@ -2963,7 +2967,7 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": 0.9962437409730078
+        "avg_change_pct": 0.6231415559116299
       },
       "materials": {
         "count": 6,
@@ -2979,7 +2983,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 0.3132628136342116
+        "avg_change_pct": 1.2099837283169148
       }
     },
     "stock_pressure_overlay": 0,
@@ -3062,7 +3066,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-03T22:12:10.224Z",
+    "generated_at_utc": "2026-03-03T22:20:06.355Z",
     "regime_history": {
       "current_regime_duration_days": 0,
       "previous_regime": null,
@@ -3128,28 +3132,53 @@
     },
     "signal_strip": [
       {
-        "key": "mortgage_30y",
+        "id": "mortgage_30y",
+        "title": "Mortgage 30Y",
+        "direction": "down",
+        "state": "relief",
+        "confidence": "medium",
         "value": 5.98,
+        "key": "mortgage_30y",
         "arrow": "↓"
       },
       {
-        "key": "permits",
+        "id": "permits",
+        "title": "Building Permits",
+        "direction": "up",
+        "state": "growth",
+        "confidence": "medium",
         "value": 1448,
+        "key": "permits",
         "arrow": "↑"
       },
       {
-        "key": "starts",
+        "id": "starts",
+        "title": "Housing Starts",
+        "direction": "up",
+        "state": "growth",
+        "confidence": "medium",
         "value": 1404,
+        "key": "starts",
         "arrow": "↑"
       },
       {
-        "key": "nfci",
+        "id": "nfci",
+        "title": "Chicago Fed NFCI",
+        "direction": "up",
+        "state": "risk",
+        "confidence": "medium",
         "value": -0.56294,
+        "key": "nfci",
         "arrow": "↑"
       },
       {
-        "key": "hy_oas",
+        "id": "hy_oas",
+        "title": "High Yield Spread (OAS)",
+        "direction": "down",
+        "state": "relief",
+        "confidence": "medium",
         "value": 3.03,
+        "key": "hy_oas",
         "arrow": "↓"
       }
     ],
@@ -3184,12 +3213,12 @@
         },
         {
           "ticker": "NVR",
-          "source": "stooq",
+          "source": "alphavantage",
           "date": "2026-03-03",
-          "open": 7272.29,
-          "close": 7361.1,
-          "change": 88.8100000000004,
-          "change_pct": 1.2212109253068897
+          "close": 7367.97,
+          "prev_close": 7415.75,
+          "change": -47.78,
+          "change_pct": -0.6443
         },
         {
           "ticker": "TOL",
@@ -3202,12 +3231,12 @@
         },
         {
           "ticker": "HD",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-03-03",
-          "close": 366.96,
-          "prev_close": 370.81,
-          "change": -3.85,
-          "change_pct": -1.0383
+          "open": 364.17,
+          "close": 366.92,
+          "change": 2.75,
+          "change_pct": 0.7551418293654063
         },
         {
           "ticker": "LOW",
@@ -3321,7 +3350,7 @@
       "sector_rollups": {
         "builders": {
           "count": 5,
-          "avg_change_pct": 0.9962437409730078
+          "avg_change_pct": 0.6231415559116299
         },
         "materials": {
           "count": 6,
@@ -3337,7 +3366,7 @@
         },
         "retail": {
           "count": 2,
-          "avg_change_pct": 0.3132628136342116
+          "avg_change_pct": 1.2099837283169148
         }
       },
       "stock_pressure_overlay": 0
@@ -3684,6 +3713,19 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Mark Zuckerberg, Wife Priscilla Make History with $170 Million Purchase",
+          "url": "https://www.mensjournal.com/news/mark-zuckerberg-wife-priscilla-make-history-with-170-million-purchase",
+          "source": "Men's Journal",
+          "published_at": "2026-03-02T22:18:34Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Meta CEO Mark Zuckerberg and his wife Priscilla Chan have made a massive real estate purchase in Florida, according to multiple reports. Zuckerberg and Chan ...",
           "impact_score": 40,
           "themes": [
             "other"
@@ -4243,19 +4285,6 @@
           "provider": "newsapi",
           "feed": "everything",
           "description": "This study develops and validates an experimental framework for investigating the production of subjective motion sentences (e.g., The road winds through the valley), a phenomenon that has been examined mainly from comprehension perspectives. Using Mandarin a…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "The chromatin remodeling factor Arp9 modulates drug-resistance and plays a key role in aflatoxins biosynthesis under mammalian-physiological-temperature in Aspergillus flavus",
-          "url": "https://journals.plos.org/plospathogens/article?id=10.1371%2Fjournal.ppat.1014021",
-          "source": "Plos.org",
-          "published_at": "2026-03-02T14:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Author summary As the notorious aflatoxin producing pathogenic fungi in agriculture and medicine, Aspergillus flavus is widely distributed, contaminating various crops, and inducing invasive aspergillosis mainly to immunodeficiency-patients. Since the drug-re…",
           "impact_score": 40,
           "themes": [
             "other"
