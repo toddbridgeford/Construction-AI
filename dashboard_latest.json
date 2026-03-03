@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-03T22:43:16.330Z",
+  "generated_at": "2026-03-03T23:15:50.480Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -12,6 +12,10 @@
     "delta_3m": 0,
     "momentum": "Stable",
     "history": [
+      {
+        "date": "2026-03-03",
+        "value": 46
+      },
       {
         "date": "2026-03-03",
         "value": 46
@@ -189,16 +193,16 @@
     "news_badge": {
       "sources": {
         "newsapi:top_headlines": 16,
-        "newsapi:everything": 79
+        "newsapi:everything": 78
       },
-      "total": 95,
+      "total": 94,
       "overlay": 0
     }
   },
   "market_intel": {
     "news_sources": {
       "newsapi:top_headlines": 16,
-      "newsapi:everything": 79
+      "newsapi:everything": 78
     },
     "news_unified": [
       {
@@ -344,6 +348,33 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations."
+      },
+      {
+        "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
+        "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
+        "source": "Raw Story",
+        "published_at": "2026-03-02T23:11:36Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…"
+      },
+      {
+        "title": "Watch Bill Clinton Testify on Why Trump Really Cut Ties With Epstein",
+        "url": "https://newrepublic.com/post/207249/watch-bill-clinton-testify-why-trump-cut-ties-epstein",
+        "source": "The New Republic",
+        "published_at": "2026-03-02T23:02:34Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Former President Bill Clinton may have just put a massive hole in President Donald Trump’s claims about how he and deceased sexual predator Jeffrey Epstein ended their friendship.In video testimony released by the House Oversight Committee on Monday, Clinton …"
+      },
+      {
+        "title": "Miners set to begin construction of two new uranium projects in Saskatchewan",
+        "url": "https://www.theglobeandmail.com/business/article-saskatchewan-uranium-mining-projects-denison-nexgen-nuclear-energy/",
+        "source": "The Globe And Mail",
+        "published_at": "2026-03-02T22:58:06Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Denison Mines to start development in March, while NexGen Energy sets sights on getting green light in June"
       },
       {
         "title": "Monomoy CRE, LLC Announces Martin Emigh as Director of Client Services",
@@ -913,15 +944,6 @@
         "description": "War in Iran.  America's AI vs. China's AI.  And Trump's new tariffs aren't legal either."
       },
       {
-        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…"
-      },
-      {
         "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
         "source": "GlobeNewswire",
@@ -929,6 +951,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…"
+      },
+      {
+        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T11:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…"
       },
       {
         "title": "American Catholics launch crowdfunding effort to gift Pope Leo XIV papal tiara",
@@ -1019,42 +1050,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Canada's high-speed push to replace its aging Victoria-class submarines reaches a pivotal moment on Monday as South Korea's Hanwha Ocean and Germany's TKMS submit formal bids in a program worth more than $20 billion. The contest — to supply up to 12 boats — w…"
-      },
-      {
-        "title": "Amazon's AWS reports outage after UAE data center struck by 'objects'",
-        "url": "https://www.channelnewsasia.com/business/amazons-aws-reports-outage-after-uae-data-center-struck-objects-5963461",
-        "source": "CNA",
-        "published_at": "2026-03-02T08:02:07Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "March 2 : Amazon cloud-computing unit's facilities in the Middle East were facing power and connectivity issues on Monday, the company said after its United Arab Emirates data center was struck by \"objects,\" triggering a fire.Amazon Web Services' UAE and Bahr…"
-      },
-      {
-        "title": "What to know about Iran's Revolutionary Guard, a powerful force within the country's theocracy",
-        "url": "https://abcnews.com/International/wireStory/irans-revolutionary-guard-powerful-force-countrys-theocracy-130666822",
-        "source": "Abcnews.com",
-        "published_at": "2026-03-02T06:58:35Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Iran's Revolutionary Guard has become a powerful force within the country's theocracy, answering only to the supreme leader"
-      },
-      {
-        "title": "Weight-loss drug pioneer announces €432m investment to build pill plant in Athlone",
-        "url": "https://www.irishtimes.com/business/2026/03/02/weight-loss-drug-pioneer-announces-432m-investment-to-build-pill-plant-in-athlone/",
-        "source": "The Irish Times",
-        "published_at": "2026-03-02T05:59:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Danish group Novo Nordisk says Irish plant will serve market for blockbuster weight loss drug outside the US"
-      },
-      {
-        "title": "The hidden hub transforming rural livelihoods",
-        "url": "https://www.thehindubusinessline.com/specials/corporate-file/the-hidden-hub-transforming-rural-livelihoods/article70693945.ece",
-        "source": "BusinessLine",
-        "published_at": "2026-03-02T05:09:12Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "L&T’s skill training centre in Mayurbhanj is attempting to rewrite the future of tribal communities in a remote, underdeveloped area."
       }
     ],
     "news_with_impact": [
@@ -1261,6 +1256,45 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
+        "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
+        "source": "Raw Story",
+        "published_at": "2026-03-02T23:11:36Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Watch Bill Clinton Testify on Why Trump Really Cut Ties With Epstein",
+        "url": "https://newrepublic.com/post/207249/watch-bill-clinton-testify-why-trump-cut-ties-epstein",
+        "source": "The New Republic",
+        "published_at": "2026-03-02T23:02:34Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Former President Bill Clinton may have just put a massive hole in President Donald Trump’s claims about how he and deceased sexual predator Jeffrey Epstein ended their friendship.In video testimony released by the House Oversight Committee on Monday, Clinton …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Miners set to begin construction of two new uranium projects in Saskatchewan",
+        "url": "https://www.theglobeandmail.com/business/article-saskatchewan-uranium-mining-projects-denison-nexgen-nuclear-energy/",
+        "source": "The Globe And Mail",
+        "published_at": "2026-03-02T22:58:06Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Denison Mines to start development in March, while NexGen Energy sets sights on getting green light in June",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2087,19 +2121,6 @@
         ]
       },
       {
-        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
         "source": "GlobeNewswire",
@@ -2107,6 +2128,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "TORONTO, March 02, 2026 (GLOBE NEWSWIRE) -- Hudbay Minerals Inc. (“Hudbay”) (TSX, NYSE: HBM) and Arizona Sonoran Copper Company Inc. (“ASCU”) (TSX: ASCU; OTCQX: ASCUF) are pleased to announce that they have entered into a definitive agreement (the “Arrangemen…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T11:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2241,58 +2275,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "Amazon's AWS reports outage after UAE data center struck by 'objects'",
-        "url": "https://www.channelnewsasia.com/business/amazons-aws-reports-outage-after-uae-data-center-struck-objects-5963461",
-        "source": "CNA",
-        "published_at": "2026-03-02T08:02:07Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "March 2 : Amazon cloud-computing unit's facilities in the Middle East were facing power and connectivity issues on Monday, the company said after its United Arab Emirates data center was struck by \"objects,\" triggering a fire.Amazon Web Services' UAE and Bahr…",
-        "impact_score": 40,
-        "themes": [
-          "commercial"
-        ]
-      },
-      {
-        "title": "What to know about Iran's Revolutionary Guard, a powerful force within the country's theocracy",
-        "url": "https://abcnews.com/International/wireStory/irans-revolutionary-guard-powerful-force-countrys-theocracy-130666822",
-        "source": "Abcnews.com",
-        "published_at": "2026-03-02T06:58:35Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Iran's Revolutionary Guard has become a powerful force within the country's theocracy, answering only to the supreme leader",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Weight-loss drug pioneer announces €432m investment to build pill plant in Athlone",
-        "url": "https://www.irishtimes.com/business/2026/03/02/weight-loss-drug-pioneer-announces-432m-investment-to-build-pill-plant-in-athlone/",
-        "source": "The Irish Times",
-        "published_at": "2026-03-02T05:59:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Danish group Novo Nordisk says Irish plant will serve market for blockbuster weight loss drug outside the US",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "The hidden hub transforming rural livelihoods",
-        "url": "https://www.thehindubusinessline.com/specials/corporate-file/the-hidden-hub-transforming-rural-livelihoods/article70693945.ece",
-        "source": "BusinessLine",
-        "published_at": "2026-03-02T05:09:12Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "L&T’s skill training centre in Mayurbhanj is attempting to rewrite the future of tribal communities in a remote, underdeveloped area.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2304,6 +2286,19 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
+        "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
+        "source": "Raw Story",
+        "published_at": "2026-03-02T23:11:36Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
         "impact_score": 65,
         "themes": [
           "capital"
@@ -2412,19 +2407,6 @@
         "themes": [
           "pipeline"
         ]
-      },
-      {
-        "title": "From Iran to Venezuela to New York, Trump wants to control the world's oil",
-        "url": "https://www.businessinsider.com/trump-energy-dominance-oil-iran-venezuela-2026-2",
-        "source": "Business Insider",
-        "published_at": "2026-03-02T09:17:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Forget Saudi Arabia. Trump is making America the world's most dominant petrostate.",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "news_pressure_overlay": 0,
@@ -2438,6 +2420,19 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
+          "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
+          "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
+          "source": "Raw Story",
+          "published_at": "2026-03-02T23:11:36Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
           "impact_score": 65,
           "themes": [
             "capital"
@@ -2782,19 +2777,6 @@
           "themes": [
             "commercial"
           ]
-        },
-        {
-          "title": "Amazon's AWS reports outage after UAE data center struck by 'objects'",
-          "url": "https://www.channelnewsasia.com/business/amazons-aws-reports-outage-after-uae-data-center-struck-objects-5963461",
-          "source": "CNA",
-          "published_at": "2026-03-02T08:02:07Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "March 2 : Amazon cloud-computing unit's facilities in the Middle East were facing power and connectivity issues on Monday, the company said after its United Arab Emirates data center was struck by \"objects,\" triggering a fire.Amazon Web Services' UAE and Bahr…",
-          "impact_score": 40,
-          "themes": [
-            "commercial"
-          ]
         }
       ]
     },
@@ -2838,12 +2820,12 @@
       },
       {
         "ticker": "NVR",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-03",
-        "close": 7367.97,
-        "prev_close": 7415.75,
-        "change": -47.78,
-        "change_pct": -0.6443
+        "open": 7272.29,
+        "close": 7361.1,
+        "change": 88.8100000000004,
+        "change_pct": 1.2212109253068897
       },
       {
         "ticker": "TOL",
@@ -2910,12 +2892,12 @@
       },
       {
         "ticker": "OC",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-03",
-        "close": 114.66,
-        "prev_close": 116.71,
-        "change": -2.05,
-        "change_pct": -1.7565
+        "open": 111.2233,
+        "close": 114.56,
+        "change": 3.3367000000000075,
+        "change_pct": 3.0000008990921936
       },
       {
         "ticker": "EXP",
@@ -2975,11 +2957,11 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": 0.6231415559116299
+        "avg_change_pct": 0.9962437409730078
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -0.6353876644296307
+        "avg_change_pct": 0.15736248541906822
       },
       "distribution": {
         "count": 1,
@@ -3074,7 +3056,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-03T22:43:16.330Z",
+    "generated_at_utc": "2026-03-03T23:15:50.480Z",
     "regime_history": {
       "current_regime_duration_days": 0,
       "previous_regime": null,
@@ -3206,12 +3188,12 @@
         },
         {
           "ticker": "NVR",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-03-03",
-          "close": 7367.97,
-          "prev_close": 7415.75,
-          "change": -47.78,
-          "change_pct": -0.6443
+          "open": 7272.29,
+          "close": 7361.1,
+          "change": 88.8100000000004,
+          "change_pct": 1.2212109253068897
         },
         {
           "ticker": "TOL",
@@ -3278,12 +3260,12 @@
         },
         {
           "ticker": "OC",
-          "source": "alphavantage",
+          "source": "stooq",
           "date": "2026-03-03",
-          "close": 114.66,
-          "prev_close": 116.71,
-          "change": -2.05,
-          "change_pct": -1.7565
+          "open": 111.2233,
+          "close": 114.56,
+          "change": 3.3367000000000075,
+          "change_pct": 3.0000008990921936
         },
         {
           "ticker": "EXP",
@@ -3343,11 +3325,11 @@
       "sector_rollups": {
         "builders": {
           "count": 5,
-          "avg_change_pct": 0.6231415559116299
+          "avg_change_pct": 0.9962437409730078
         },
         "materials": {
           "count": 6,
-          "avg_change_pct": -0.6353876644296307
+          "avg_change_pct": 0.15736248541906822
         },
         "distribution": {
           "count": 1,
@@ -3367,7 +3349,7 @@
     "news": {
       "sources": {
         "newsapi:top_headlines": 16,
-        "newsapi:everything": 79
+        "newsapi:everything": 78
       },
       "news_pressure_overlay": 0,
       "top_high_impact": [
@@ -3379,6 +3361,19 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
+          "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
+          "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
+          "source": "Raw Story",
+          "published_at": "2026-03-02T23:11:36Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
           "impact_score": 65,
           "themes": [
             "capital"
@@ -3486,19 +3481,6 @@
           "impact_score": 55,
           "themes": [
             "pipeline"
-          ]
-        },
-        {
-          "title": "From Iran to Venezuela to New York, Trump wants to control the world's oil",
-          "url": "https://www.businessinsider.com/trump-energy-dominance-oil-iran-venezuela-2026-2",
-          "source": "Business Insider",
-          "published_at": "2026-03-02T09:17:01Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Forget Saudi Arabia. Trump is making America the world's most dominant petrostate.",
-          "impact_score": 55,
-          "themes": [
-            "other"
           ]
         }
       ],
@@ -3706,6 +3688,45 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
+          "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
+          "source": "Raw Story",
+          "published_at": "2026-03-02T23:11:36Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
+          "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "Watch Bill Clinton Testify on Why Trump Really Cut Ties With Epstein",
+          "url": "https://newrepublic.com/post/207249/watch-bill-clinton-testify-why-trump-cut-ties-epstein",
+          "source": "The New Republic",
+          "published_at": "2026-03-02T23:02:34Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Former President Bill Clinton may have just put a massive hole in President Donald Trump’s claims about how he and deceased sexual predator Jeffrey Epstein ended their friendship.In video testimony released by the House Oversight Committee on Monday, Clinton …",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Miners set to begin construction of two new uranium projects in Saskatchewan",
+          "url": "https://www.theglobeandmail.com/business/article-saskatchewan-uranium-mining-projects-denison-nexgen-nuclear-energy/",
+          "source": "The Globe And Mail",
+          "published_at": "2026-03-02T22:58:06Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Denison Mines to start development in March, while NexGen Energy sets sights on getting green light in June",
           "impact_score": 40,
           "themes": [
             "other"
@@ -4243,45 +4264,6 @@
           "themes": [
             "materials"
           ]
-        },
-        {
-          "title": "Sad News! AI's RAM Hunger Finds a New Victim in the Orange Pi Neo Linux Handheld",
-          "url": "https://itsfoss.com/news/orange-pi-neo-delayed/",
-          "source": "Itsfoss.com",
-          "published_at": "2026-03-02T14:26:34Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Two years of work now sits on a shelf because AI needs the RAM more.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Monument Reports Second Quarter Fiscal 2026 Results",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247506/0/en/Monument-Reports-Second-Quarter-Fiscal-2026-Results.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T14:15:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Gross Revenue of US$49.23 Million and Cash Cost of US$1,288/Oz Gross Revenue of US$49.23 Million and Cash Cost of US$1,288/Oz",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Transcript: MiB: Jeff Chang, President and Co-Founder of Vest",
-          "url": "https://ritholtz.com/2026/03/transcript-mib-jeff/",
-          "source": "Ritholtz.com",
-          "published_at": "2026-03-02T14:00:53Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The transcript from this week’s, MiB: Jeff Chang, President and Co-Founder of Vest, is below. You can stream and download our full conversation, including any podcast extras, on Apple Podcasts, Spotify, YouTube (video), YouTube (audio), and Bloomberg. All of …",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
         }
       ],
       "clusters": {
@@ -4294,6 +4276,19 @@
             "provider": "newsapi",
             "feed": "top_headlines",
             "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
+            "impact_score": 65,
+            "themes": [
+              "capital"
+            ]
+          },
+          {
+            "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
+            "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
+            "source": "Raw Story",
+            "published_at": "2026-03-02T23:11:36Z",
+            "provider": "newsapi",
+            "feed": "everything",
+            "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
             "impact_score": 65,
             "themes": [
               "capital"
@@ -4634,19 +4629,6 @@
             "provider": "newsapi",
             "feed": "everything",
             "description": "Amazon’s cloud-computing facilities in the Middle East faced power and connectivity issues on Monday after unidentified “objects” struck its data center in the United Arab Emirates. The objects had triggered a fire on Sunday that forced authorities to eventua…",
-            "impact_score": 40,
-            "themes": [
-              "commercial"
-            ]
-          },
-          {
-            "title": "Amazon's AWS reports outage after UAE data center struck by 'objects'",
-            "url": "https://www.channelnewsasia.com/business/amazons-aws-reports-outage-after-uae-data-center-struck-objects-5963461",
-            "source": "CNA",
-            "published_at": "2026-03-02T08:02:07Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "March 2 : Amazon cloud-computing unit's facilities in the Middle East were facing power and connectivity issues on Monday, the company said after its United Arab Emirates data center was struck by \"objects,\" triggering a fire.Amazon Web Services' UAE and Bahr…",
             "impact_score": 40,
             "themes": [
               "commercial"
