@@ -1908,14 +1908,17 @@ async function main() {
       risk_thermometer_mode: rtm,
       freeze_risk: freezeRisk
     },
-    ecosystem_pulse,
-    news_badge: { sources: news_sources, total: news_unified.length, overlay: news_pressure_overlay }
-  };
-  
-  // ---- GPT payload (Construction AI)
-  const gpt_payload = {
-    product: "Construction AI",
-    generated_at_utc: isoUtcNow(),
+
+    const regimeWatch = ["Slowdown", "Recession"].includes(regime.primary);
+
+// ---- GPT payload (Construction AI)
+const gpt_payload = {
+  product: "Construction AI",
+  generated_at_utc: isoUtcNow(),
+  ...
+  ecosystem_pulse,
+  signal_strip: [ ... ],
+};
 
     regime_history: regime_history_display,
     regime: { primary: regime.primary, modifier: regime.modifier, confidence: regime.confidence },
