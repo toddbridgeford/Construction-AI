@@ -3,6 +3,21 @@ import Foundation
 struct CPIHistoryPoint: Codable, Hashable {
     let date: String
     let value: Double
+
+    enum CodingKeys: String, CodingKey {
+        case date, value
+    }
+
+    init(date: String, value: Double) {
+        self.date = date
+        self.value = value
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        date = container.decodeLossyString(forKey: .date) ?? "unknown"
+        value = container.decodeLossyDouble(forKey: .value) ?? 0
+    }
 }
 
 struct CPIModel: Codable, Hashable {
@@ -23,15 +38,15 @@ struct CPIModel: Codable, Hashable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        value = try container.decodeIfPresent(Double.self, forKey: .value)
-            ?? container.decodeIfPresent(Double.self, forKey: .headline)
-        zone = try container.decodeIfPresent(String.self, forKey: .zone)
-        delta3M = try container.decodeIfPresent(Double.self, forKey: .delta3M)
-        momentum = try container.decodeIfPresent(String.self, forKey: .momentum)
+        value = container.decodeLossyDouble(forKey: .value)
+            ?? container.decodeLossyDouble(forKey: .headline)
+        zone = container.decodeLossyString(forKey: .zone)
+        delta3M = container.decodeLossyDouble(forKey: .delta3M)
+        momentum = container.decodeLossyString(forKey: .momentum)
 
-        if let objectHistory = try container.decodeIfPresent([CPIHistoryPoint].self, forKey: .history) {
+        if let objectHistory = try? container.decode([CPIHistoryPoint].self, forKey: .history) {
             history = objectHistory
-        } else if let numericHistory = try container.decodeIfPresent([Double].self, forKey: .history) {
+        } else if let numericHistory = try? container.decode([Double].self, forKey: .history) {
             history = numericHistory.enumerated().map { index, value in
                 CPIHistoryPoint(date: "legacy_\(index)", value: value)
             }

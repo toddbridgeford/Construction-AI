@@ -27,12 +27,12 @@ struct DashboardPayload: Codable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        schemaVersion = try container.decodeIfPresent(String.self, forKey: .schemaVersion)
-        generatedAt = try container.decodeIfPresent(String.self, forKey: .generatedAt)
+        schemaVersion = container.decodeLossyString(forKey: .schemaVersion)
+        generatedAt = container.decodeLossyString(forKey: .generatedAt)
 
         if let executive = try? container.nestedContainer(keyedBy: ExecutiveKeys.self, forKey: .executive) {
-            executiveHeadline = try executive.decodeIfPresent(String.self, forKey: .headline)
-            executiveSummary = try executive.decodeIfPresent(String.self, forKey: .summary)
+            executiveHeadline = executive.decodeLossyString(forKey: .headline)
+            executiveSummary = executive.decodeLossyString(forKey: .summary)
         } else {
             executiveHeadline = nil
             executiveSummary = nil
@@ -114,13 +114,13 @@ struct CardItem: Codable, Identifiable, Hashable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        title = try container.decodeIfPresent(String.self, forKey: .title) ?? "Untitled Card"
-        id = try container.decodeIfPresent(String.self, forKey: .id) ?? title
-        subtitle = try container.decodeIfPresent(String.self, forKey: .subtitle)
-        value = try container.decodeIfPresent(Double.self, forKey: .value)
-        trend = try container.decodeIfPresent(String.self, forKey: .trend)
-        symbol = try container.decodeIfPresent(String.self, forKey: .symbol)
-        severityRaw = try container.decodeIfPresent(String.self, forKey: .severityRaw)
+        title = container.decodeLossyString(forKey: .title) ?? "Untitled Card"
+        id = container.decodeLossyString(forKey: .id) ?? title
+        subtitle = container.decodeLossyString(forKey: .subtitle)
+        value = container.decodeLossyDouble(forKey: .value)
+        trend = container.decodeLossyString(forKey: .trend)
+        symbol = container.decodeLossyString(forKey: .symbol)
+        severityRaw = container.decodeLossyString(forKey: .severityRaw)
     }
 }
 
