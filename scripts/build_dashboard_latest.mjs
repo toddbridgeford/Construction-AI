@@ -1949,59 +1949,59 @@ async function main() {
     },
 
         ecosystem_pulse,
-
+const regimeWatch = ["Slowdown", "Recession"].includes(regime.primary);
     signal_strip: [
-      {
-        key: "mortgage_30y",
-        value: mortgage30,
-        arrow: trends.mortgage_30y,
-        severity: trends.mortgage_30y === "↑" ? "WATCH" : "NORMAL",
-        interpretation:
-          trends.mortgage_30y === "↑"
-            ? "Mortgage rates rising increases affordability pressure and can slow demand."
-            : "Mortgage rates easing reduces affordability pressure."
-      },
-      {
-        key: "permits",
-        value: permitsLatest,
-        arrow: trends.permits,
-        severity: trends.permits === "↓" ? "WATCH" : "NORMAL",
-        interpretation:
-          trends.permits === "↓"
-            ? "Permits rolling over can signal weaker near-term pipeline."
-            : "Permits improving supports near-term pipeline."
-      },
-      {
-        key: "starts",
-        value: startsLatest,
-        arrow: trends.starts,
-        severity: trends.starts === "↓" ? "WATCH" : "NORMAL",
-        interpretation:
-          trends.starts === "↓"
-            ? "Starts declining can signal softening construction activity."
-            : "Starts improving supports construction activity."
-      },
-      {
-        key: "nfci",
-        value: nfci,
-        arrow: trends.nfci,
-        severity: trends.nfci === "↑" ? "WATCH" : "NORMAL",
-        interpretation:
-          trends.nfci === "↑"
-            ? "Financial conditions tightening can pressure credit availability."
-            : "Financial conditions easing supports risk appetite and lending."
-      },
-      {
-        key: "hy_oas",
-        value: hy,
-        arrow: trends.hy_oas,
-        severity: trends.hy_oas === "↑" ? "WATCH" : "NORMAL",
-        interpretation:
-          trends.hy_oas === "↑"
-            ? "High-yield spreads widening increases credit stress risk."
-            : "High-yield spreads tightening reduces credit stress risk."
-      }
-    ],
+  {
+    key: "mortgage_30y",
+    value: mortgage30,
+    arrow: trends.mortgage_30y,
+    severity: (regimeWatch || trends.mortgage_30y === "↑") ? "WATCH" : "NORMAL",
+    interpretation:
+      (regimeWatch || trends.mortgage_30y === "↑")
+        ? "Macro regime is tight and/or mortgage rates are rising, increasing affordability pressure."
+        : "Mortgage rates easing reduces affordability pressure."
+  },
+  {
+    key: "permits",
+    value: permitsLatest,
+    arrow: trends.permits,
+    severity: (regimeWatch || trends.permits === "↓") ? "WATCH" : "NORMAL",
+    interpretation:
+      (regimeWatch || trends.permits === "↓")
+        ? "Macro regime is tight and/or permits are rolling over, signaling weaker near-term pipeline."
+        : "Permits improving supports near-term pipeline."
+  },
+  {
+    key: "starts",
+    value: startsLatest,
+    arrow: trends.starts,
+    severity: (regimeWatch || trends.starts === "↓") ? "WATCH" : "NORMAL",
+    interpretation:
+      (regimeWatch || trends.starts === "↓")
+        ? "Macro regime is tight and/or starts are declining, signaling softening construction activity."
+        : "Starts improving supports construction activity."
+  },
+  {
+    key: "nfci",
+    value: nfci,
+    arrow: trends.nfci,
+    severity: (regimeWatch || trends.nfci === "↑") ? "WATCH" : "NORMAL",
+    interpretation:
+      (regimeWatch || trends.nfci === "↑")
+        ? "Macro regime is tight and/or financial conditions are tightening, which can pressure credit availability."
+        : "Financial conditions easing supports lending conditions."
+  },
+  {
+    key: "hy_oas",
+    value: hy,
+    arrow: trends.hy_oas,
+    severity: (regimeWatch || trends.hy_oas === "↑") ? "WATCH" : "NORMAL",
+    interpretation:
+      (regimeWatch || trends.hy_oas === "↑")
+        ? "Macro regime is tight and/or high-yield spreads are widening, increasing credit stress risk."
+        : "High-yield spreads tightening reduces credit stress risk."
+  }
+],
 
     market_intel: {
       stocks: stocks.slice(0, 40),
