@@ -44,6 +44,33 @@ jobs:
           node --version
           npm --version
 
+            - name: Add retry helper (exponential backoff)
+        run: |
+          set -euo pipefail
+          cat > /tmp/retry.sh <<'BASH'
+          retry () {
+            local -r max_attempts="${1:-5}"
+            shift || true
+            local attempt=1
+            local delay=5
+
+            until "$@"; do
+              exit_code=$?
+              if [ "$attempt" -ge "$max_attempts" ]; then
+                echo "❌ Command failed after ${attempt} attempts: $*"
+                return "$exit_code"
+              fi
+              echo "⚠️  Attempt ${attempt}/${max_attempts} failed (exit ${exit_code}). Retrying in ${delay}s: $*"
+              sleep "$delay"
+              attempt=$((attempt+1))
+              delay=$((delay*2))
+              if [ "$delay" -gt 90 ]; then delay=90; fi
+            done
+          }
+          export -f retry
+          echo "✅ retry() installed"
+          BASH
+
       - name: Ensure output directories exist
         run: |
           set -euo pipefail
