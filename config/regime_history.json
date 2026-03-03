@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-03-02T14:07:31.647Z",
+  "generated_at": "2026-03-03T13:43:58.419Z",
   "source": "dashboard_latest.json",
   "retention_policy": {
     "active_window_days": 365,
@@ -17,12 +17,12 @@
       "capital_score": 39,
       "pipeline_score": 47,
       "flip_trigger": null,
-      "duration_days": 1,
+      "duration_days": 2,
       "status": "Active"
     }
   ],
   "display": {
-    "current_regime_duration_days": 1,
+    "current_regime_duration_days": 2,
     "previous_regime": null,
     "last_flip_date": null,
     "regime_stability": "🟢 Stable"
