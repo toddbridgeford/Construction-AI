@@ -1957,61 +1957,93 @@ const regimeWatch = ["Slowdown", "Recession"].includes(regime.primary);
 const gpt_payload = {
   product: "Construction AI",
   generated_at_utc: isoUtcNow(),
-  ...
+
+  regime_history: regime_history_display,
+  regime: { primary: regime.primary, modifier: regime.modifier, confidence: regime.confidence },
+
+  cpi: {
+    headline: cpi.headline,
+    zone: zoneForCpi(cpi.headline),
+    delta_3m: delta3m,
+    momentum,
+    freeze_risk: freezeRisk,
+    risk_thermometer_mode: rtm,
+    r: cpi.cpi_r,
+    i: cpi.cpi_i,
+    sf: cpi.cpi_sf,
+    mf: cpi.cpi_mf,
+    inst: cpi.cpi_inst,
+    infra: cpi.cpi_infra,
+    divergences: cpi.divergences
+  },
+
+  six_pillar: {
+    capital: capitalScoreAdj,
+    pipeline: pipelineScore,
+    trade: tradeScore,
+    materials: materialsScore,
+    regulatory: 50,
+    macro_sentiment: macroScore,
+    materials_energy_overlay: eia.energy_overlay || 0,
+    stock_overlay,
+    news_pressure_overlay
+  },
+
   ecosystem_pulse,
-  signal_strip: [ ... ],
+
+  signal_strip: [
+    {
+      key: "mortgage_30y",
+      value: mortgage30,
+      arrow: trends.mortgage_30y,
+      severity: (regimeWatch || trends.mortgage_30y === "↑") ? "WATCH" : "NORMAL",
+      interpretation:
+        (regimeWatch || trends.mortgage_30y === "↑")
+          ? "Macro regime is tight and/or mortgage rates are rising, increasing affordability pressure."
+          : "Mortgage rates easing reduces affordability pressure."
+    },
+    {
+      key: "permits",
+      value: permitsLatest,
+      arrow: trends.permits,
+      severity: (regimeWatch || trends.permits === "↓") ? "WATCH" : "NORMAL",
+      interpretation:
+        (regimeWatch || trends.permits === "↓")
+          ? "Macro regime is tight and/or permits are rolling over, signaling weaker near-term pipeline."
+          : "Permits improving supports near-term pipeline."
+    },
+    {
+      key: "starts",
+      value: startsLatest,
+      arrow: trends.starts,
+      severity: (regimeWatch || trends.starts === "↓") ? "WATCH" : "NORMAL",
+      interpretation:
+        (regimeWatch || trends.starts === "↓")
+          ? "Macro regime is tight and/or starts are declining, signaling softening construction activity."
+          : "Starts improving supports construction activity."
+    },
+    {
+      key: "nfci",
+      value: nfci,
+      arrow: trends.nfci,
+      severity: (regimeWatch || trends.nfci === "↑") ? "WATCH" : "NORMAL",
+      interpretation:
+        (regimeWatch || trends.nfci === "↑")
+          ? "Macro regime is tight and/or financial conditions are tightening, which can pressure credit availability."
+          : "Financial conditions easing supports lending conditions."
+    },
+    {
+      key: "hy_oas",
+      value: hy,
+      arrow: trends.hy_oas,
+      severity: (regimeWatch || trends.hy_oas === "↑") ? "WATCH" : "NORMAL",
+      interpretation:
+        (regimeWatch || trends.hy_oas === "↑")
+          ? "Macro regime is tight and/or high-yield spreads are widening, increasing credit stress risk."
+          : "High-yield spreads tightening reduces credit stress risk."
+    }
+  ]
 };
-  {
-    key: "mortgage_30y",
-    value: mortgage30,
-    arrow: trends.mortgage_30y,
-    severity: (regimeWatch || trends.mortgage_30y === "↑") ? "WATCH" : "NORMAL",
-    interpretation:
-      (regimeWatch || trends.mortgage_30y === "↑")
-        ? "Macro regime is tight and/or mortgage rates are rising, increasing affordability pressure."
-        : "Mortgage rates easing reduces affordability pressure."
-  },
-  {
-    key: "permits",
-    value: permitsLatest,
-    arrow: trends.permits,
-    severity: (regimeWatch || trends.permits === "↓") ? "WATCH" : "NORMAL",
-    interpretation:
-      (regimeWatch || trends.permits === "↓")
-        ? "Macro regime is tight and/or permits are rolling over, signaling weaker near-term pipeline."
-        : "Permits improving supports near-term pipeline."
-  },
-  {
-    key: "starts",
-    value: startsLatest,
-    arrow: trends.starts,
-    severity: (regimeWatch || trends.starts === "↓") ? "WATCH" : "NORMAL",
-    interpretation:
-      (regimeWatch || trends.starts === "↓")
-        ? "Macro regime is tight and/or starts are declining, signaling softening construction activity."
-        : "Starts improving supports construction activity."
-  },
-  {
-    key: "nfci",
-    value: nfci,
-    arrow: trends.nfci,
-    severity: (regimeWatch || trends.nfci === "↑") ? "WATCH" : "NORMAL",
-    interpretation:
-      (regimeWatch || trends.nfci === "↑")
-        ? "Macro regime is tight and/or financial conditions are tightening, which can pressure credit availability."
-        : "Financial conditions easing supports lending conditions."
-  },
-  {
-    key: "hy_oas",
-    value: hy,
-    arrow: trends.hy_oas,
-    severity: (regimeWatch || trends.hy_oas === "↑") ? "WATCH" : "NORMAL",
-    interpretation:
-      (regimeWatch || trends.hy_oas === "↑")
-        ? "Macro regime is tight and/or high-yield spreads are widening, increasing credit stress risk."
-        : "High-yield spreads tightening reduces credit stress risk."
-  }
-],
 
     market_intel: {
       stocks: stocks.slice(0, 40),
