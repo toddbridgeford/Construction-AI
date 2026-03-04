@@ -31,9 +31,32 @@ jobs:
       - name: Validate Worker syntax
         run: node --check src/worker.js
 
+      - name: Prepare wrangler config for CI deploy
+        env:
+          CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}
+          CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${CLOUDFLARE_KV_NAMESPACE_ID:-}" ]; then
+            echo "Missing required secret: CLOUDFLARE_KV_NAMESPACE_ID"
+            exit 1
+          fi
+
+          preview_id="${CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID:-$CLOUDFLARE_KV_NAMESPACE_ID}"
+
+          cp wrangler.toml wrangler.ci.toml
+          sed -i "s/REPLACE_WITH_PROD_KV_NAMESPACE_ID/${CLOUDFLARE_KV_NAMESPACE_ID}/g" wrangler.ci.toml
+          sed -i "s/REPLACE_WITH_PREVIEW_KV_NAMESPACE_ID/${preview_id}/g" wrangler.ci.toml
+
+          if grep -Eq "REPLACE_WITH_(PROD|PREVIEW)_KV_NAMESPACE_ID" wrangler.ci.toml; then
+            echo "wrangler.ci.toml still contains unresolved KV placeholders"
+            exit 1
+          fi
+
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+          command: deploy --config wrangler.ci.toml
