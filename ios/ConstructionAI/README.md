@@ -5,6 +5,11 @@
 2. Build and run `ConstructionAIApp`.
 3. The app loads `dashboard_latest.json` plus configured `marketSignalFeeds`.
 
+
+## Swift Playgrounds compatibility
+- The app is fully SwiftUI lifecycle based (`ConstructionAIApp`) and does not require storyboard resources.
+- If a `LaunchScreen.storyboard` appears in your workspace, remove it because Swift Playgrounds on iPad does not support Interface Builder storyboard files.
+
 ## GitHub token configuration
 The app reads token values from UserDefaults, environment, or Info.plist keys:
 - `GITHUB_TOKEN`
