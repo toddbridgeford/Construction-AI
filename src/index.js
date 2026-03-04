@@ -2,105 +2,48 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // ---- CORS ----
-    if (request.method === "OPTIONS") return corsPreflight(request);
+    if (request.method === "OPTIONS") return corsPreflight();
 
     try {
-      // Simple router
       if (url.pathname === "/" || url.pathname === "/health") {
-        return json({ ok: true, service: "fred-stooq-worker" }, 200);
+        return json({ ok: true, service: "fred-stooq-notion-worker" });
       }
 
-      if (url.pathname === "/fred/observations") {
-        // /fred/observations?series_id=GDP&limit=12&sort_order=desc
-        const series_id = mustParam(url, "series_id");
-        const limit = clampInt(url.searchParams.get("limit") ?? "100", 1, 5000);
-        const sort_order = (url.searchParams.get("sort_order") ?? "desc").toLowerCase();
-        const observation_start = url.searchParams.get("observation_start"); // YYYY-MM-DD optional
-        const observation_end = url.searchParams.get("observation_end");     // YYYY-MM-DD optional
-
-        const upstream = new URL("https://api.stlouisfed.org/fred/series/observations");
-        upstream.searchParams.set("series_id", series_id);
-        upstream.searchParams.set("api_key", env.FRED_API_KEY);
-        upstream.searchParams.set("file_type", "json");
-        upstream.searchParams.set("limit", String(limit));
-        upstream.searchParams.set("sort_order", sort_order === "asc" ? "asc" : "desc");
-        if (observation_start) upstream.searchParams.set("observation_start", observation_start);
-        if (observation_end) upstream.searchParams.set("observation_end", observation_end);
-
-        return cachedFetchJSON(request, upstream.toString(), env, ctx);
+      // Debug endpoint: see what series ids Notion currently returns
+      if (url.pathname === "/notion/series") {
+        const series = await getSeriesIdsFromNotionCached(env, ctx);
+        return json({ count: series.length, series });
       }
 
-      if (url.pathname === "/fred/series") {
-        // /fred/series?series_id=GDP  (metadata)
-        const series_id = mustParam(url, "series_id");
-
-        const upstream = new URL("https://api.stlouisfed.org/fred/series");
-        upstream.searchParams.set("series_id", series_id);
-        upstream.searchParams.set("api_key", env.FRED_API_KEY);
-        upstream.searchParams.set("file_type", "json");
-
-        return cachedFetchJSON(request, upstream.toString(), env, ctx);
-      }
-
-      if (url.pathname === "/stooq/quote") {
-        // /stooq/quote?s=aapl.us
-        // Returns latest quote fields from stooq "q/l" JSON feed.
-        const s = mustParam(url, "s").toLowerCase();
-
-        // Stooq JSON quote endpoint
-        // docs are informal; this is widely used:
-        // https://stooq.com/q/l/?s=aapl.us&f=sd2t2ohlcv&h&e=json
-        const upstream = new URL("https://stooq.com/q/l/");
-        upstream.searchParams.set("s", s);
-        upstream.searchParams.set("f", "sd2t2ohlcvn"); // symbol,date,time,open,high,low,close,volume,name
-        upstream.searchParams.set("h", "");
-        upstream.searchParams.set("e", "json");
-
-        // Stooq sometimes returns text/json but not perfect headers; we still parse JSON.
-        return cachedFetchStooqJSON(request, upstream.toString(), env, ctx);
-      }
-
+      // Your dashboard endpoint: pulls all Notion series by default
       if (url.pathname === "/bundle") {
-        // Convenience endpoint for dashboards / Custom GPT Actions
-        // /bundle?fred=GDP,CPIAUCSL&stooq=spy.us,qqq.us
-        const fred = (url.searchParams.get("fred") ?? "")
-          .split(",")
-          .map(s => s.trim())
-          .filter(Boolean);
-
-        const stooq = (url.searchParams.get("stooq") ?? "")
-          .split(",")
-          .map(s => s.trim().toLowerCase())
-          .filter(Boolean);
-
         const limit = clampInt(url.searchParams.get("limit") ?? "60", 1, 5000);
 
-        const out = { fred: {}, stooq: {} };
+        // Allow overrides if you want
+        const fredOverride = (url.searchParams.get("fred") ?? "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
 
-        // FRED: pull observations for each series
+        const seriesIds = fredOverride.length
+          ? fredOverride
+          : await getSeriesIdsFromNotionCached(env, ctx);
+
+        const out = {
+          fred: {},
+          meta: { used_override: fredOverride.length > 0, series_count: seriesIds.length },
+        };
+
         await Promise.all(
-          fred.map(async (series_id) => {
+          seriesIds.map(async (series_id) => {
             const upstream = new URL("https://api.stlouisfed.org/fred/series/observations");
             upstream.searchParams.set("series_id", series_id);
             upstream.searchParams.set("api_key", env.FRED_API_KEY);
             upstream.searchParams.set("file_type", "json");
             upstream.searchParams.set("limit", String(limit));
             upstream.searchParams.set("sort_order", "desc");
-            out.fred[series_id] = await fetchJSONWithCache(request, upstream.toString(), env, ctx);
-          })
-        );
-
-        // Stooq: pull quotes
-        await Promise.all(
-          stooq.map(async (sym) => {
-            const upstream = new URL("https://stooq.com/q/l/");
-            upstream.searchParams.set("s", sym);
-            upstream.searchParams.set("f", "sd2t2ohlcvn");
-            upstream.searchParams.set("h", "");
-            upstream.searchParams.set("e", "json");
-            out.stooq[sym] = await fetchStooqJSONWithCache(request, upstream.toString(), env, ctx);
-          })
+            out.fred[series_id] = await fetchJSONWithCache(upstream.toString(), env, ctx);
+          }),
         );
 
         return json(out, 200, { "Cache-Control": `public, max-age=${ttl(env)}` });
@@ -113,18 +56,97 @@ export default {
   },
 };
 
-// ---------------- helpers ----------------
+// ---------------- Notion series extraction ----------------
+
+async function getSeriesIdsFromNotionCached(env, ctx) {
+  // Cache the extracted series list at the edge so /bundle is fast
+  const cache = caches.default;
+  const key = new Request("https://cache.local/notion-series", { method: "GET" });
+
+  const cached = await cache.match(key);
+  if (cached) return cached.json();
+
+  const series = await getSeriesIdsFromNotion(env);
+
+  const toCache = new Response(JSON.stringify(series), {
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": `public, max-age=${ttl(env)}`,
+    },
+  });
+  ctx.waitUntil(cache.put(key, toCache));
+  return series;
+}
+
+async function getSeriesIdsFromNotion(env) {
+  if (!env.NOTION_TOKEN) throw new Error("Missing NOTION_TOKEN secret");
+  if (!env.NOTION_DATABASE_ID) throw new Error("Missing NOTION_DATABASE_ID var");
+
+  // We query the database and pull the "Series ID" property from each page.
+  // Pagination supported via start_cursor.
+  const seriesSet = new Set();
+  let start_cursor = undefined;
+
+  while (true) {
+    const body = {
+      page_size: 100,
+      ...(start_cursor ? { start_cursor } : {}),
+      // Optional: only include rows where Series ID is not empty
+      filter: {
+        property: "Series ID",
+        select: { is_not_empty: true },
+      },
+    };
+
+    const res = await fetch(`https://api.notion.com/v1/databases/${env.NOTION_DATABASE_ID}/query`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.NOTION_TOKEN}`,
+        "Notion-Version": "2022-06-28",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      throw new Error(`Notion query failed (${res.status}): ${text.slice(0, 300)}`);
+    }
+
+    const data = await res.json();
+
+    for (const page of data.results ?? []) {
+      const prop = page?.properties?.["Series ID"];
+      const selected = prop?.select?.name;
+
+      // Your DB uses a Select for Series ID (based on the schema you shared)
+      if (selected && typeof selected === "string") {
+        seriesSet.add(selected.trim());
+      }
+    }
+
+    if (data.has_more && data.next_cursor) {
+      start_cursor = data.next_cursor;
+      continue;
+    }
+    break;
+  }
+
+  // Return stable ordering
+  return Array.from(seriesSet).sort((a, b) => a.localeCompare(b));
+}
+
+// ---------------- caching + common helpers ----------------
 
 function ttl(env) {
-  // seconds
-  const v = Number(env.CACHE_TTL_SECONDS ?? 60);
-  return Number.isFinite(v) ? Math.max(0, Math.min(3600, v)) : 60;
+  const v = Number(env.CACHE_TTL_SECONDS ?? 300);
+  return Number.isFinite(v) ? Math.max(0, Math.min(3600, v)) : 300;
 }
 
 function corsHeaders(extra = {}) {
   return {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,OPTIONS",
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
     ...extra,
   };
@@ -141,29 +163,13 @@ function json(obj, status = 200, extraHeaders = {}) {
   });
 }
 
-function mustParam(url, key) {
-  const v = url.searchParams.get(key);
-  if (!v) throw new Error(`Missing required query param: ${key}`);
-  return v;
-}
-
 function clampInt(value, min, max) {
   const n = parseInt(String(value), 10);
   if (!Number.isFinite(n)) return min;
   return Math.max(min, Math.min(max, n));
 }
 
-async function cachedFetchJSON(request, upstreamUrl, env, ctx) {
-  const data = await fetchJSONWithCache(request, upstreamUrl, env, ctx);
-  return json(data, 200, { "Cache-Control": `public, max-age=${ttl(env)}` });
-}
-
-async function cachedFetchStooqJSON(request, upstreamUrl, env, ctx) {
-  const data = await fetchStooqJSONWithCache(request, upstreamUrl, env, ctx);
-  return json(data, 200, { "Cache-Control": `public, max-age=${ttl(env)}` });
-}
-
-async function fetchJSONWithCache(request, upstreamUrl, env, ctx) {
+async function fetchJSONWithCache(upstreamUrl, env, ctx) {
   const cache = caches.default;
   const cacheKey = new Request(upstreamUrl, { method: "GET" });
 
@@ -171,54 +177,15 @@ async function fetchJSONWithCache(request, upstreamUrl, env, ctx) {
   if (cached) return cached.json();
 
   const res = await fetch(upstreamUrl, {
-    headers: {
-      "User-Agent": "cf-worker-fred-stooq",
-      "Accept": "application/json",
-    },
+    headers: { "User-Agent": "cf-worker-fred-notion", Accept: "application/json" },
   });
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Upstream error (${res.status}): ${text.slice(0, 300)}`);
+    throw new Error(`FRED upstream error (${res.status}): ${text.slice(0, 300)}`);
   }
 
   const data = await res.json();
-  // Store response in cache
-  const toCache = new Response(JSON.stringify(data), {
-    headers: { "Content-Type": "application/json", "Cache-Control": `public, max-age=${ttl(env)}` },
-  });
-  ctx.waitUntil(cache.put(cacheKey, toCache));
-  return data;
-}
-
-async function fetchStooqJSONWithCache(request, upstreamUrl, env, ctx) {
-  const cache = caches.default;
-  const cacheKey = new Request(upstreamUrl, { method: "GET" });
-
-  const cached = await cache.match(cacheKey);
-  if (cached) return cached.json();
-
-  const res = await fetch(upstreamUrl, {
-    headers: {
-      "User-Agent": "cf-worker-fred-stooq",
-      "Accept": "application/json, text/plain;q=0.9, */*;q=0.8",
-    },
-  });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(`Stooq upstream error (${res.status}): ${text.slice(0, 300)}`);
-  }
-
-  // Stooq sometimes returns with odd content-type; parse explicitly.
-  const text = await res.text();
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw new Error(`Stooq returned non-JSON: ${text.slice(0, 300)}`);
-  }
-
   const toCache = new Response(JSON.stringify(data), {
     headers: { "Content-Type": "application/json", "Cache-Control": `public, max-age=${ttl(env)}` },
   });
