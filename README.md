@@ -133,3 +133,44 @@ npm test
 ```
 
 This sanity-checks normalized payload shape expectations.
+
+## Construction AI Terminal Worker (Production)
+
+Live URL: `https://construction-ai-terminal.toddbridgeford.workers.dev`
+
+Implemented endpoints:
+
+- `GET /`
+- `GET /health`
+- `GET /notion/series`
+- `GET /fred/observations`
+- `GET /bundle`
+- `GET /cpi`
+
+Required Worker environment variables:
+
+- `NOTION_TOKEN` (secret)
+- `NOTION_DATABASE_ID` (plaintext)
+- `FRED_API_KEY` (secret)
+
+Optional Worker variable:
+
+- `CACHE_TTL_SECONDS`
+
+### Setup checklist
+
+1. Confirm `wrangler.toml` name is `construction-ai-terminal` and `main` points to `src/index.js`.
+2. Set required Cloudflare Worker variables and secrets.
+3. Deploy the `Predictive-Model` branch to production in Cloudflare.
+4. Validate endpoints using the commands below.
+
+### Validation commands
+
+```bash
+curl -s https://construction-ai-terminal.toddbridgeford.workers.dev/ | jq
+curl -s https://construction-ai-terminal.toddbridgeford.workers.dev/health | jq
+curl -s https://construction-ai-terminal.toddbridgeford.workers.dev/notion/series | jq
+curl -s "https://construction-ai-terminal.toddbridgeford.workers.dev/fred/observations?series_id=PERMIT&limit=10" | jq
+curl -s "https://construction-ai-terminal.toddbridgeford.workers.dev/bundle?limit=10" | jq
+curl -s https://construction-ai-terminal.toddbridgeford.workers.dev/cpi | jq
+```

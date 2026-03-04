@@ -1,10 +1,28 @@
 openapi: 3.1.0
 info:
   title: Construction AI Terminal API
-  version: 2.0.0
+  version: 3.0.0
 servers:
-  - url: https://toddbridgeford.workers.dev
+  - url: https://construction-ai-terminal.toddbridgeford.workers.dev
 paths:
+  /:
+    get:
+      operationId: root
+      responses:
+        '200':
+          description: Service metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  service: { type: string }
+                  endpoints:
+                    type: array
+                    items: { type: string }
+                  generated_at_utc: { type: string, format: date-time }
+                additionalProperties: true
   /health:
     get:
       operationId: health
@@ -19,92 +37,109 @@ paths:
                   ok: { type: boolean }
                   service: { type: string }
                 additionalProperties: true
+  /notion/series:
+    get:
+      operationId: notionSeries
+      responses:
+        '200':
+          description: FRED series IDs from Notion
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count: { type: integer }
+                  series:
+                    type: array
+                    items: { type: string }
+                  generated_at_utc: { type: string, format: date-time }
+                additionalProperties: true
+  /fred/observations:
+    get:
+      operationId: fredObservations
+      parameters:
+        - in: query
+          name: series_id
+          required: true
+          schema: { type: string }
+        - in: query
+          name: limit
+          required: false
+          schema: { type: integer, minimum: 1, maximum: 5000 }
+        - in: query
+          name: sort_order
+          required: false
+          schema: { type: string, enum: [asc, desc] }
+        - in: query
+          name: observation_start
+          required: false
+          schema: { type: string, format: date }
+        - in: query
+          name: observation_end
+          required: false
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: Raw FRED observations response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+                additionalProperties: true
+  /bundle:
+    get:
+      operationId: bundle
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          schema: { type: integer, minimum: 1, maximum: 5000 }
+      responses:
+        '200':
+          description: Notion series list with FRED payload per series
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      series_count: { type: integer }
+                      limit: { type: integer }
+                      generated_at_utc: { type: string, format: date-time }
+                    additionalProperties: true
+                  fred:
+                    type: object
+                    properties: {}
+                    additionalProperties: true
+                additionalProperties: true
   /cpi:
     get:
-      operationId: getCpi
+      operationId: cpi
       parameters:
         - in: query
-          name: location
-          required: true
-          schema:
-            type: string
+          name: limit
+          required: false
+          schema: { type: integer, minimum: 1, maximum: 5000 }
       responses:
         '200':
-          description: CPI snapshot
+          description: Computed CPI score from FRED series
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CpiSnapshot'
-  /market:
-    get:
-      operationId: getMarket
-      parameters:
-        - in: query
-          name: location
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Market snapshot
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MarketSnapshot'
-  /rank/metros:
-    get:
-      operationId: getMetroRank
-      responses:
-        '200':
-          description: Metro leaderboard
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LeaderboardSnapshot'
-components:
-  schemas:
-    CpiSnapshot:
-      type: object
-      properties:
-        market: { type: string }
-        headline_cpi: { type: number }
-        zone: { type: string }
-        delta_3m: { type: number }
-        components:
-          type: object
-          properties: {}
-          additionalProperties: true
-        generated_at_utc: { type: string, format: date-time }
-      additionalProperties: true
-    MarketSnapshot:
-      type: object
-      properties:
-        market: { type: string }
-        generated_at_utc: { type: string, format: date-time }
-        cpi:
-          $ref: '#/components/schemas/CpiSnapshot'
-        market_signals:
-          type: object
-          properties: {}
-          additionalProperties: true
-      additionalProperties: true
-    LeaderboardSnapshot:
-      type: object
-      properties:
-        generated_at_utc: { type: string, format: date-time }
-        cron:
-          oneOf:
-            - type: string
-            - type: 'null'
-        markets:
-          type: array
-          items:
-            type: object
-            properties:
-              rank: { type: integer }
-              market: { type: string }
-              headline_cpi: { type: number }
-              zone: { type: string }
-              delta_3m: { type: number }
-            additionalProperties: true
-      additionalProperties: true
+                type: object
+                properties:
+                  headline_cpi:
+                    oneOf:
+                      - type: number
+                      - type: 'null'
+                  zone: { type: string }
+                  delta_3m:
+                    oneOf:
+                      - type: number
+                      - type: 'null'
+                  series_used: { type: integer }
+                  generated_at_utc: { type: string, format: date-time }
+                additionalProperties: true
