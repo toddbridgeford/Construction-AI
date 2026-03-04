@@ -9,6 +9,7 @@ final class DashboardStore: ObservableObject {
     @Published var lastRefresh: Date?
     @Published var errorMessage: String?
     @Published var searchText: String = ""
+    @Published private(set) var debouncedSearchText: String = ""
     @Published var selectedSignal: SignalItem?
     @Published var selectedAlert: AlertItem?
     @Published var regions: [RegionItem] = []
@@ -16,6 +17,14 @@ final class DashboardStore: ObservableObject {
 
     private let service = GitHubDashboardService()
     private var refreshTask: Task<Void, Never>?
+    private var cancellables = Set<AnyCancellable>()
+
+    init() {
+        $searchText
+            .debounce(for: .milliseconds(220), scheduler: RunLoop.main)
+            .removeDuplicates()
+            .assign(to: &$debouncedSearchText)
+    }
 
     func bootstrap() {
         payload = DiskCache.load()
@@ -24,9 +33,7 @@ final class DashboardStore: ObservableObject {
             sourceHealth = payload?.sources ?? []
         }
         refreshTask?.cancel()
-        refreshTask = Task {
-            await refreshFromGitHub()
-        }
+        refreshTask = Task { await refreshFromGitHub() }
     }
 
     func refreshFromGitHub() async {
@@ -62,41 +69,35 @@ final class DashboardStore: ObservableObject {
         DiskCache.clear()
     }
 
-    var hasNoData: Bool {
-        payload == nil && !isLoading
-    }
-
-    var topSignals: [SignalItem] {
-        Array((payload?.signals ?? []).prefix(5))
-    }
+    var hasNoData: Bool { payload == nil && !isLoading }
+    var topSignals: [SignalItem] { Array((payload?.signals ?? []).prefix(5)) }
 
     var filteredAlerts: [AlertItem] {
         guard let alerts = payload?.alerts else { return [] }
-        guard !searchText.isEmpty else {
+        guard !debouncedSearchText.isEmpty else {
             return alerts.sorted { $0.severity.rawValue > $1.severity.rawValue }
         }
         return alerts.filter {
-            $0.title.localizedCaseInsensitiveContains(searchText) ||
-            $0.message.localizedCaseInsensitiveContains(searchText)
+            $0.title.localizedCaseInsensitiveContains(debouncedSearchText) ||
+            $0.message.localizedCaseInsensitiveContains(debouncedSearchText)
         }
     }
 
     var filteredSignals: [SignalItem] {
         guard let signals = payload?.signals else { return [] }
-        guard !searchText.isEmpty else { return signals }
-        return signals.filter { $0.key.localizedCaseInsensitiveContains(searchText) }
+        guard !debouncedSearchText.isEmpty else { return signals }
+        return signals.filter { $0.key.localizedCaseInsensitiveContains(debouncedSearchText) }
     }
 
     var filteredRegions: [RegionItem] {
-        guard !searchText.isEmpty else { return regions }
+        guard !debouncedSearchText.isEmpty else { return regions }
         return regions.filter {
-            $0.name.localizedCaseInsensitiveContains(searchText) ||
-            ($0.summary?.localizedCaseInsensitiveContains(searchText) ?? false)
+            $0.name.localizedCaseInsensitiveContains(debouncedSearchText) ||
+            ($0.summary?.localizedCaseInsensitiveContains(debouncedSearchText) ?? false)
         }
     }
 
-    private func selectionMatch<T: Hashable & Identifiable>(for current: T?, in candidates: [T]) -> T?
-    where T.ID: Hashable {
+    private func selectionMatch<T: Hashable & Identifiable>(for current: T?, in candidates: [T]) -> T? where T.ID: Hashable {
         guard let current else { return nil }
         return candidates.first(where: { $0.id == current.id })
     }

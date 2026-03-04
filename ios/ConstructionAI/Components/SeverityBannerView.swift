@@ -16,5 +16,8 @@ struct SeverityBannerView: View {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(alert.severity.rawValue) alert. \(alert.title). \(alert.message)")
+        .accessibilityHint("Contains quick alert actions")
     }
 }
