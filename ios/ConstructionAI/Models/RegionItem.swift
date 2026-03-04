@@ -10,6 +10,13 @@ struct RegionItem: Codable, Identifiable, Hashable {
         case id, name, summary, value
     }
 
+    init(id: String, name: String, summary: String?, value: Double?) {
+        self.id = id
+        self.name = name
+        self.summary = summary
+        self.value = value
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Unknown Region"

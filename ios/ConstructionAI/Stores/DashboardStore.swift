@@ -11,6 +11,8 @@ final class DashboardStore: ObservableObject {
     @Published var searchText: String = ""
     @Published var selectedSignal: SignalItem?
     @Published var selectedAlert: AlertItem?
+    @Published var regions: [RegionItem] = []
+    @Published var sourceHealth: [SourceHealthItem] = []
 
     private let service = GitHubDashboardService()
     private var refreshTask: Task<Void, Never>?
@@ -19,6 +21,7 @@ final class DashboardStore: ObservableObject {
         payload = DiskCache.load()
         if payload != nil {
             statusText = "Offline (cached)"
+            sourceHealth = payload?.sources ?? []
         }
         refreshTask?.cancel()
         refreshTask = Task {
@@ -32,21 +35,24 @@ final class DashboardStore: ObservableObject {
         statusText = "Loading…"
 
         do {
-            let (latest, fetchedAt) = try await service.fetchDashboard()
-            selectedSignal = selectionMatch(for: selectedSignal, in: latest.signals)
-            selectedAlert = selectionMatch(for: selectedAlert, in: latest.alerts)
-            payload = latest
-            lastRefresh = fetchedAt
-            statusText = "Loaded ✅ from GitHub"
-            DiskCache.save(latest)
+            let bundle = try await service.fetchDashboardBundle()
+            selectedSignal = selectionMatch(for: selectedSignal, in: bundle.payload.signals)
+            selectedAlert = selectionMatch(for: selectedAlert, in: bundle.payload.alerts)
+            payload = bundle.payload
+            regions = bundle.regions
+            sourceHealth = bundle.sourceHealth
+            lastRefresh = bundle.fetchedAt
+            statusText = "Loaded ✅ from APIs"
+            DiskCache.save(bundle.payload)
         } catch {
             if payload != nil {
                 statusText = "Offline (cached)"
-                errorMessage = "Could not refresh from GitHub. Showing last-good snapshot. \(error.localizedDescription)"
+                errorMessage = "Could not refresh from APIs. Showing last-good snapshot. \(error.localizedDescription)"
             } else {
                 statusText = "Offline (cached)"
                 errorMessage = "Unable to load dashboard. Check connection and retry. \(error.localizedDescription)"
             }
+            sourceHealth = payload?.sources ?? []
         }
 
         isLoading = false
@@ -81,7 +87,13 @@ final class DashboardStore: ObservableObject {
         return signals.filter { $0.key.localizedCaseInsensitiveContains(searchText) }
     }
 
-    var filteredRegions: [RegionItem] { [] }
+    var filteredRegions: [RegionItem] {
+        guard !searchText.isEmpty else { return regions }
+        return regions.filter {
+            $0.name.localizedCaseInsensitiveContains(searchText) ||
+            ($0.summary?.localizedCaseInsensitiveContains(searchText) ?? false)
+        }
+    }
 
     private func selectionMatch<T: Hashable & Identifiable>(for current: T?, in candidates: [T]) -> T?
     where T.ID: Hashable {

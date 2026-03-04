@@ -1,9 +1,15 @@
 import Foundation
 
 enum Config {
-    static let dashboardURL = URL(string: "https://github.com/toddbridgeford/Construction-AI/raw/Predictive-Model/dashboard_latest.json")!
+    static let dashboardURL = URL(string: "https://raw.githubusercontent.com/toddbridgeford/Construction-AI/Predictive-Model/dashboard_latest.json")!
     static let requestTimeout: TimeInterval = 20
     static let appSupportFolder = "ConstructionAI"
+
+    static let marketSignalFeeds: [MarketFeed] = [
+        .init(name: "National", url: URL(string: "https://raw.githubusercontent.com/toddbridgeford/Construction-AI/main/dist/markets/national/signal_api_latest.json")!),
+        .init(name: "Denver", url: URL(string: "https://raw.githubusercontent.com/toddbridgeford/Construction-AI/main/dist/markets/denver/signal_api_latest.json")!),
+        .init(name: "Phoenix", url: URL(string: "https://raw.githubusercontent.com/toddbridgeford/Construction-AI/main/dist/markets/phoenix/signal_api_latest.json")!)
+    ]
 
     // Keys can be injected from Info.plist, environment variables, or UserDefaults.
     // This keeps Swift Playgrounds usage simple while still supporting secure CI/runtime injection.
@@ -30,4 +36,9 @@ enum Config {
         }
         return nil
     }
+}
+
+struct MarketFeed: Hashable {
+    let name: String
+    let url: URL
 }
