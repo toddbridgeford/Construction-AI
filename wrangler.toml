@@ -1,0 +1,9 @@
+name = "construction-ai-worker"
+main = "src/worker.js"
+compatibility_date = "2026-03-04"
+
+[vars]
+CACHE_TTL_SECONDS = "120"
+
+[observability]
+enabled = true

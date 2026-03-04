@@ -1,0 +1,10 @@
+# Copy to .dev.vars for local wrangler dev/testing.
+# Do NOT commit real keys.
+
+FRED_API_KEY=""
+BLS_API_KEY=""
+CENSUS_API_KEY=""
+EIA_API_KEY=""
+ALPHAVANTAGE_API_KEY=""
+NEWS_API_KEY=""
+CACHE_TTL_SECONDS="120"

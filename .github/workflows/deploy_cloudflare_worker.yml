@@ -1,0 +1,39 @@
+name: Deploy Cloudflare Worker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - Predictive-Model
+    paths:
+      - 'src/worker.js'
+      - 'wrangler.toml'
+      - '.github/workflows/deploy_cloudflare_worker.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required Cloudflare files
+        run: |
+          set -euo pipefail
+          test -f src/worker.js
+          test -f wrangler.toml
+
+      - name: Validate Worker syntax
+        run: node --check src/worker.js
+
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
