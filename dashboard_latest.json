@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-04T02:01:19.314Z",
+  "generated_at": "2026-03-04T02:50:36.315Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -34,6 +34,10 @@
       },
       {
         "date": "2026-03-03",
+        "value": 46
+      },
+      {
+        "date": "2026-03-04",
         "value": 46
       },
       {
@@ -317,6 +321,15 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Availability Zone in ME-CENTRAL-1 brought offline in possible drone or missile attack"
+      },
+      {
+        "title": "FERMI DEADLINE FRIDAY: Bragar Eagel & Squire, P.C. Urgently Reminds Fermi, Inc. (NASDAQ:FRMI) Stockholders to Contact the Firm Before the Upcoming March 6th Class Action Deadline",
+        "url": "https://www.globenewswire.com/news-release/2026/03/03/3247961/0/en/FERMI-DEADLINE-FRIDAY-Bragar-Eagel-Squire-P-C-Urgently-Reminds-Fermi-Inc-NASDAQ-FRMI-Stockholders-to-Contact-the-Firm-Before-the-Upcoming-March-6th-Class-Action-Deadline.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-03T02:10:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "If you purchased or acquired Fermi: (a) common stock pursuant and/or traceable to the registration statement and prospectus (collectively, the “Registration Statement”) issued in connection with the Company’s October 2025 initial public offering (“IPO” or the…"
       },
       {
         "title": "What happens if you mess with a birds nest?",
@@ -1003,15 +1016,6 @@
         "description": "War in Iran.  America's AI vs. China's AI.  And Trump's new tariffs aren't legal either."
       },
       {
-        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…"
-      },
-      {
         "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
         "source": "GlobeNewswire",
@@ -1218,6 +1222,19 @@
         "themes": [
           "trade",
           "commercial"
+        ]
+      },
+      {
+        "title": "FERMI DEADLINE FRIDAY: Bragar Eagel & Squire, P.C. Urgently Reminds Fermi, Inc. (NASDAQ:FRMI) Stockholders to Contact the Firm Before the Upcoming March 6th Class Action Deadline",
+        "url": "https://www.globenewswire.com/news-release/2026/03/03/3247961/0/en/FERMI-DEADLINE-FRIDAY-Bragar-Eagel-Squire-P-C-Urgently-Reminds-Fermi-Inc-NASDAQ-FRMI-Stockholders-to-Contact-the-Firm-Before-the-Upcoming-March-6th-Class-Action-Deadline.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-03T02:10:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "If you purchased or acquired Fermi: (a) common stock pursuant and/or traceable to the registration statement and prospectus (collectively, the “Registration Statement”) issued in connection with the Company’s October 2025 initial public offering (“IPO” or the…",
+        "impact_score": 40,
+        "themes": [
+          "other"
         ]
       },
       {
@@ -2210,19 +2227,6 @@
         ]
       },
       {
-        "title": "RadNet Reports Fourth Quarter 2025 Results, Including Record Revenue and Adjusted EBITDA⁽¹⁾ and Releases 2026 Financial Guidance",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247156/10985/en/RadNet-Reports-Fourth-Quarter-2025-Results-Including-Record-Revenue-and-Adjusted-EBITDA-and-Releases-2026-Financial-Guidance.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Hudbay to Acquire Arizona Sonoran Creating the Third Largest Copper District in North America",
         "url": "https://www.globenewswire.com/news-release/2026/03/02/3247157/0/en/Hudbay-to-Acquire-Arizona-Sonoran-Creating-the-Third-Largest-Copper-District-in-North-America.html",
         "source": "GlobeNewswire",
@@ -2847,12 +2851,12 @@
       },
       {
         "ticker": "HD",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 364.17,
         "close": 366.92,
-        "change": 2.75,
-        "change_pct": 0.7551418293654063
+        "prev_close": 370.81,
+        "change": -3.89,
+        "change_pct": -1.0491
       },
       {
         "ticker": "LOW",
@@ -2865,12 +2869,12 @@
       },
       {
         "ticker": "VMC",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-03",
+        "open": 301.77,
         "close": 300,
-        "prev_close": 306.2,
-        "change": -6.2,
-        "change_pct": -2.0248
+        "change": -1.7699999999999818,
+        "change_pct": -0.586539417437115
       },
       {
         "ticker": "MLM",
@@ -2901,12 +2905,12 @@
       },
       {
         "ticker": "OC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 111.2233,
         "close": 114.56,
-        "change": 3.3367000000000075,
-        "change_pct": 3.0000008990921936
+        "prev_close": 116.71,
+        "change": -2.15,
+        "change_pct": -1.8422
       },
       {
         "ticker": "EXP",
@@ -2970,7 +2974,7 @@
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.15846248541906824
+        "avg_change_pct": -0.4088609006691499
       },
       "distribution": {
         "count": 1,
@@ -2982,7 +2986,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 1.2099837283169148
+        "avg_change_pct": 0.30786281363421164
       }
     },
     "stock_pressure_overlay": 0,
@@ -3065,7 +3069,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-04T02:01:19.314Z",
+    "generated_at_utc": "2026-03-04T02:50:36.315Z",
     "regime_history": {
       "current_regime_duration_days": 1,
       "previous_regime": null,
