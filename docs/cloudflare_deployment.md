@@ -20,6 +20,16 @@ Set in Worker settings:
 - `NEWS_FEEDS` (comma-separated RSS/Atom URLs)
 - Optional: `STOOQ_DEFAULT_TICKERS`
 
+
+## GitHub Actions deployment secrets
+
+Required repository secrets for `.github/workflows/deploy_cloudflare_worker.yml`:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+- `CLOUDFLARE_KV_NAMESPACE_ID` (production KV id bound to `CPI_SNAPSHOTS`)
+- Optional: `CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID` (falls back to `CLOUDFLARE_KV_NAMESPACE_ID` when unset)
+
 ## Notion integration setup
 
 1. Create an internal Notion integration.
