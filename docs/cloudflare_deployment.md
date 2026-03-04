@@ -1,43 +1,38 @@
 # Cloudflare Worker Deployment Checklist
 
-This repository includes a deployable Cloudflare Worker at `src/worker.js` with configuration in `wrangler.toml`.
+This repo deploys a Cloudflare Worker from `src/worker.js` via `wrangler.toml`.
 
-## What was added
+## Required Worker secrets
 
-- `wrangler.toml` with a Worker entrypoint and compatibility date
-- `.dev.vars.example` for local secret/environment setup
-- `.github/workflows/deploy_cloudflare_worker.yml` for GitHub Actions deployment
-
-## Required GitHub Secrets
-
-Add these in **Repository Settings → Secrets and variables → Actions**:
-
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
-
-## Optional Worker Runtime Secrets
-
-Set in Cloudflare dashboard or with `wrangler secret put`:
+Set via Cloudflare dashboard or `wrangler secret put`:
 
 - `FRED_API_KEY`
-- `BLS_API_KEY`
-- `CENSUS_API_KEY`
-- `EIA_API_KEY`
+- `NOTION_TOKEN`
 - `ALPHAVANTAGE_API_KEY`
-- `NEWS_API_KEY`
+- Optional: `BLS_API_KEY`
 
-## Local validation
+## Worker vars
+
+Set in Worker settings:
+
+- `NOTION_DATABASE_ID` (default: `312f63a1aa6f80af91d7c019f1f2b53d`)
+- `CACHE_TTL_SECONDS` (default: `300`)
+- `NEWS_FEEDS` (comma-separated RSS/Atom URLs)
+- Optional: `STOOQ_DEFAULT_TICKERS`
+
+## Notion integration setup
+
+1. Create an internal Notion integration.
+2. Share the **Construction AI** database with this integration with edit/insert permissions.
+3. Add the integration token as Worker secret `NOTION_TOKEN`.
+4. Confirm `Series ID` is a **Select** property in the database.
+
+## Local checks
 
 ```bash
 node --check src/worker.js
 ```
 
-## Cloudflare deployment paths
+## Deployment workflow
 
-The deployment workflow triggers on changes to:
-
-- `src/worker.js`
-- `wrangler.toml`
-- `.github/workflows/deploy_cloudflare_worker.yml`
-
-This keeps deployment scope aligned to actual Worker/runtime configuration updates.
+`.github/workflows/deploy_cloudflare_worker.yml` deploys on relevant Worker config/source changes.

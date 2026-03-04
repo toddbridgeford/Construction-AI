@@ -1,0 +1,255 @@
+openapi: 3.1.0
+info:
+  title: Construction AI Terminal API
+  version: 1.0.0
+servers:
+  - url: https://toddbridgeford.workers.dev
+paths:
+  /health:
+    get:
+      operationId: health
+      responses:
+        '200':
+          description: Health status
+          content:
+            application/json:
+              schema:
+                type: object
+  /notion/series:
+    get:
+      operationId: notionSeries
+      responses:
+        '200':
+          description: Notion series list
+          content:
+            application/json:
+              schema:
+                type: object
+  /notion/add:
+    post:
+      operationId: notionAdd
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Created Notion page
+          content:
+            application/json:
+              schema:
+                type: object
+  /bundle:
+    get:
+      operationId: bundle
+      parameters:
+        - in: query
+          name: limit
+          schema: { type: integer }
+        - in: query
+          name: fred
+          schema: { type: string }
+      responses:
+        '200':
+          description: FRED bundle
+          content:
+            application/json:
+              schema:
+                type: object
+  /fred/observations:
+    get:
+      operationId: fredObservations
+      parameters:
+        - in: query
+          name: series_id
+          required: true
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer }
+        - in: query
+          name: sort_order
+          schema: { type: string }
+        - in: query
+          name: observation_start
+          schema: { type: string, format: date }
+        - in: query
+          name: observation_end
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: FRED observations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FredObservations'
+  /stooq/quote:
+    get:
+      operationId: stooqQuote
+      parameters:
+        - in: query
+          name: s
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Stooq quote
+          content:
+            application/json:
+              schema:
+                type: object
+  /bls/timeseries:
+    post:
+      operationId: blsTimeseries
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: BLS response
+          content:
+            application/json:
+              schema:
+                type: object
+  /usaspending/awards:
+    post:
+      operationId: usaspendingAwards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: USAspending awards
+          content:
+            application/json:
+              schema:
+                type: object
+  /alphavantage/quote:
+    get:
+      operationId: alphaQuote
+      parameters:
+        - in: query
+          name: symbol
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Alpha Vantage quote
+          content:
+            application/json:
+              schema:
+                type: object
+  /alphavantage/daily:
+    get:
+      operationId: alphaDaily
+      parameters:
+        - in: query
+          name: symbol
+          required: true
+          schema: { type: string }
+        - in: query
+          name: outputsize
+          schema: { type: string }
+        - in: query
+          name: datatype
+          schema: { type: string }
+      responses:
+        '200':
+          description: Alpha Vantage daily
+          content:
+            application/json:
+              schema:
+                type: object
+            text/csv:
+              schema:
+                type: string
+  /alphavantage/intraday:
+    get:
+      operationId: alphaIntraday
+      parameters:
+        - in: query
+          name: symbol
+          required: true
+          schema: { type: string }
+        - in: query
+          name: interval
+          schema: { type: string }
+        - in: query
+          name: outputsize
+          schema: { type: string }
+        - in: query
+          name: datatype
+          schema: { type: string }
+      responses:
+        '200':
+          description: Alpha Vantage intraday
+          content:
+            application/json:
+              schema:
+                type: object
+            text/csv:
+              schema:
+                type: string
+  /alphavantage/news:
+    get:
+      operationId: alphaNews
+      parameters:
+        - in: query
+          name: tickers
+          schema: { type: string }
+        - in: query
+          name: topics
+          schema: { type: string }
+        - in: query
+          name: limit
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Alpha Vantage news sentiment
+          content:
+            application/json:
+              schema:
+                type: object
+  /news/feeds:
+    get:
+      operationId: newsFeeds
+      parameters:
+        - in: query
+          name: mode
+          schema: { type: string }
+      responses:
+        '200':
+          description: News feed list or fetch output
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  schemas:
+    FredObservations:
+      type: object
+      properties:
+        realtime_start: { type: string }
+        realtime_end: { type: string }
+        observation_start: { type: string }
+        observation_end: { type: string }
+        units: { type: string }
+        output_type: { type: integer }
+        file_type: { type: string }
+        order_by: { type: string }
+        sort_order: { type: string }
+        count: { type: integer }
+        offset: { type: integer }
+        limit: { type: integer }
+        observations:
+          type: array
+          items:
+            type: object

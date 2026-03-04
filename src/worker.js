@@ -1,344 +1,584 @@
-/**
- * Cloudflare Worker: Multi-API Proxy + Dashboard
- * Routes:
- *   GET  /health
- *   GET  /fred?series_id=...&start=YYYY-MM-DD&end=YYYY-MM-DD
- *   POST /bls   { "series": ["CEU0000000001", ...], "startyear":"2022","endyear":"2024" }
- *   GET  /census?dataset=acs/acs5&year=2022&path=/groups/DP03&for=us:1&in=...
- *   GET  /eia?path=/v2/...&<any other eia query params>
- *   GET  /av?<alphavantage query params>
- *   GET  /news?<newsapi query params>
- *   GET  /dashboard
- */
+const DEFAULT_NOTION_DATABASE_ID = "312f63a1aa6f80af91d7c019f1f2b53d";
 
-const JSON_HEADERS = { "content-type": "application/json; charset=utf-8" };
-
-// Basic CORS (tighten origin if you want)
-function corsHeaders(request) {
-  const origin = request.headers.get("Origin") || "*";
-  return {
-    "access-control-allow-origin": origin,
-    "access-control-allow-methods": "GET,POST,OPTIONS",
-    "access-control-allow-headers": "content-type,authorization",
-    "access-control-max-age": "86400",
-  };
-}
-
-function withCors(request, headers = {}) {
-  return { ...headers, ...corsHeaders(request) };
-}
-
-function jsonResponse(request, obj, status = 200, extraHeaders = {}) {
-  return new Response(JSON.stringify(obj, null, 2), {
-    status,
-    headers: withCors(request, { ...JSON_HEADERS, ...extraHeaders }),
-  });
-}
-
-function badRequest(request, message, details) {
-  return jsonResponse(request, { ok: false, error: message, details }, 400);
-}
-
-function notFound(request) {
-  return jsonResponse(request, { ok: false, error: "Not found" }, 404);
-}
-
-function isIsoDate(s) {
-  return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
-}
-
-async function safeFetchJson(url, init = {}) {
-  const res = await fetch(url, init);
-  const text = await res.text();
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    data = { raw: text };
-  }
-  return { ok: res.ok, status: res.status, data };
-}
-
-/** -------------------- FRED -------------------- **/
-async function handleFred(request, env, url) {
-  const seriesId = url.searchParams.get("series_id");
-  if (!seriesId) return badRequest(request, "Missing series_id");
-
-  const start = url.searchParams.get("start");
-  const end = url.searchParams.get("end");
-  if (start && !isIsoDate(start)) return badRequest(request, "start must be YYYY-MM-DD");
-  if (end && !isIsoDate(end)) return badRequest(request, "end must be YYYY-MM-DD");
-
-  const api = new URL("https://api.stlouisfed.org/fred/series/observations");
-  api.searchParams.set("series_id", seriesId);
-  api.searchParams.set("api_key", env.FRED_API_KEY);
-  api.searchParams.set("file_type", "json");
-  if (start) api.searchParams.set("observation_start", start);
-  if (end) api.searchParams.set("observation_end", end);
-
-  // pass-through optional parameters
-  const passthrough = [
-    "frequency",
-    "aggregation_method",
-    "units",
-    "output_type",
-    "sort_order",
-    "count",
-    "offset",
-    "limit",
-  ];
-  for (const p of passthrough) {
-    const v = url.searchParams.get(p);
-    if (v) api.searchParams.set(p, v);
-  }
-
-  const result = await safeFetchJson(api.toString());
-  return jsonResponse(request, { ok: true, provider: "FRED", request: { series_id: seriesId, start, end }, result });
-}
-
-/** -------------------- BLS -------------------- **/
-async function handleBls(request, env) {
-  if (request.method !== "POST") {
-    return badRequest(request, "BLS requires POST with JSON body");
-  }
-
-  let body;
-  try {
-    body = await request.json();
-  } catch {
-    return badRequest(request, "Invalid JSON body");
-  }
-
-  const series = body.series;
-  if (!Array.isArray(series) || series.length === 0) {
-    return badRequest(request, 'Body must include "series": ["SERIES_ID", ...]');
-  }
-  if (series.length > 50) {
-    return badRequest(request, "Max 50 series per request (BLS limit)");
-  }
-
-  const payload = {
-    seriesid: series,
-    startyear: body.startyear || undefined,
-    endyear: body.endyear || undefined,
-    registrationKey: env.BLS_API_KEY,
-    // optional BLS settings:
-    calculations: body.calculations ?? true,
-    annualaverage: body.annualaverage ?? false,
-    catalog: body.catalog ?? false,
-  };
-
-  // Remove undefined keys
-  Object.keys(payload).forEach((k) => payload[k] === undefined && delete payload[k]);
-
-  const result = await safeFetchJson("https://api.bls.gov/publicAPI/v2/timeseries/data/", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-
-  return jsonResponse(request, { ok: true, provider: "BLS", request: { series }, result });
-}
-
-/** -------------------- CENSUS -------------------- **/
-async function handleCensus(request, env, url) {
-  // Generic proxy for Census Data API:
-  // Example:
-  // /census?dataset=acs/acs5&year=2022&path=/groups/DP03&for=us:1
-  // becomes https://api.census.gov/data/2022/acs/acs5/groups/DP03.json?key=...&for=us:1
-
-  const dataset = url.searchParams.get("dataset"); // e.g. "acs/acs5"
-  const year = url.searchParams.get("year");       // e.g. "2022"
-  const path = url.searchParams.get("path");       // e.g. "/groups/DP03" or "/pums" etc.
-
-  if (!dataset || !year || !path) {
-    return badRequest(request, "Missing required params: dataset, year, path");
-  }
-
-  const api = new URL(`https://api.census.gov/data/${encodeURIComponent(year)}/${dataset}${path}.json`);
-  api.searchParams.set("key", env.CENSUS_API_KEY);
-
-  // pass-through everything except dataset/year/path
-  for (const [k, v] of url.searchParams.entries()) {
-    if (k === "dataset" || k === "year" || k === "path") continue;
-    api.searchParams.set(k, v);
-  }
-
-  const result = await safeFetchJson(api.toString());
-  return jsonResponse(request, { ok: true, provider: "CENSUS", request: { dataset, year, path }, result });
-}
-
-/** -------------------- EIA -------------------- **/
-async function handleEia(request, env, url) {
-  // EIA v2 supports: https://api.eia.gov/v2/{path}?api_key=...&...
-  // You provide:
-  // /eia?path=/v2/petroleum/pri/gnd/data&frequency=daily&data[0]=value...
-  const path = url.searchParams.get("path");
-  if (!path) return badRequest(request, "Missing path (e.g. /v2/petroleum/pri/gnd/data)");
-
-  const api = new URL(`https://api.eia.gov${path}`);
-  api.searchParams.set("api_key", env.EIA_API_KEY);
-
-  for (const [k, v] of url.searchParams.entries()) {
-    if (k === "path") continue;
-    api.searchParams.set(k, v);
-  }
-
-  const result = await safeFetchJson(api.toString());
-  return jsonResponse(request, { ok: true, provider: "EIA", request: { path }, result });
-}
-
-/** -------------------- ALPHAVANTAGE -------------------- **/
-async function handleAlphaVantage(request, env, url) {
-  // /av?function=TIME_SERIES_DAILY&symbol=SPY
-  const api = new URL("https://www.alphavantage.co/query");
-  api.searchParams.set("apikey", env.ALPHAVANTAGE_API_KEY);
-
-  // pass-through all params
-  for (const [k, v] of url.searchParams.entries()) {
-    api.searchParams.set(k, v);
-  }
-
-  const result = await safeFetchJson(api.toString());
-  return jsonResponse(request, { ok: true, provider: "ALPHAVANTAGE", request: Object.fromEntries(url.searchParams), result });
-}
-
-/** -------------------- NEWSAPI -------------------- **/
-async function handleNews(request, env, url) {
-  // /news?q=housing&language=en -> /v2/everything?...
-  // default endpoint: everything
-  const endpoint = url.searchParams.get("endpoint") || "everything"; // "top-headlines" or "everything"
-  const api = new URL(`https://newsapi.org/v2/${endpoint}`);
-
-  // pass-through params except endpoint
-  for (const [k, v] of url.searchParams.entries()) {
-    if (k === "endpoint") continue;
-    api.searchParams.set(k, v);
-  }
-
-  const result = await safeFetchJson(api.toString(), {
-    headers: {
-      // NewsAPI accepts apiKey query param OR header; header is cleaner
-      "X-Api-Key": env.NEWS_API_KEY,
-    },
-  });
-
-  return jsonResponse(request, { ok: true, provider: "NEWSAPI", request: { endpoint, params: Object.fromEntries(url.searchParams) }, result });
-}
-
-/** -------------------- DASHBOARD (sample aggregation) -------------------- **/
-async function handleDashboard(request, env) {
-  // Minimal “terminal snapshot”:
-  // - UNRATE (FRED)
-  // - CPIAUCSL (FRED)
-  // - DGS10 (FRED)
-  // - SPY daily (AlphaVantage)  [note: AV rate-limited; you might swap to stooq later]
-  // - News (NewsAPI)
-  //
-  // You can expand this to construction panels using Census+BLS+EIA.
-
-  const today = new Date();
-  const yyyy = today.getUTCFullYear();
-  const mm = String(today.getUTCMonth() + 1).padStart(2, "0");
-  const dd = String(today.getUTCDate()).padStart(2, "0");
-  const end = `${yyyy}-${mm}-${dd}`;
-
-  async function fredLatest(series_id) {
-    const api = new URL("https://api.stlouisfed.org/fred/series/observations");
-    api.searchParams.set("series_id", series_id);
-    api.searchParams.set("api_key", env.FRED_API_KEY);
-    api.searchParams.set("file_type", "json");
-    api.searchParams.set("sort_order", "desc");
-    api.searchParams.set("limit", "1");
-    api.searchParams.set("observation_end", end);
-    const r = await safeFetchJson(api.toString());
-    const obs = r?.data?.observations?.[0];
-    return { series_id, observation: obs || null };
-  }
-
-  async function avQuote(symbol) {
-    const api = new URL("https://www.alphavantage.co/query");
-    api.searchParams.set("function", "TIME_SERIES_DAILY");
-    api.searchParams.set("symbol", symbol);
-    api.searchParams.set("outputsize", "compact");
-    api.searchParams.set("apikey", env.ALPHAVANTAGE_API_KEY);
-    const r = await safeFetchJson(api.toString());
-    // Grab latest bar (keys are dates)
-    const ts = r?.data?.["Time Series (Daily)"];
-    if (!ts) return { symbol, latest: null, note: "AlphaVantage rate-limit or unexpected response" };
-    const dates = Object.keys(ts).sort().reverse();
-    const d0 = dates[0];
-    return { symbol, date: d0, bar: ts[d0] };
-  }
-
-  async function newsHeadlines() {
-    const api = new URL("https://newsapi.org/v2/top-headlines");
-    api.searchParams.set("q", "economy OR inflation OR housing OR construction");
-    api.searchParams.set("language", "en");
-    api.searchParams.set("pageSize", "5");
-    const r = await safeFetchJson(api.toString(), {
-      headers: { "X-Api-Key": env.NEWS_API_KEY },
-    });
-    const articles = r?.data?.articles?.map((a) => ({
-      title: a.title,
-      source: a.source?.name,
-      publishedAt: a.publishedAt,
-      url: a.url,
-    })) || [];
-    return { articles };
-  }
-
-  const [unrate, cpi, dgs10, spy, news] = await Promise.all([
-    fredLatest("UNRATE"),
-    fredLatest("CPIAUCSL"),
-    fredLatest("DGS10"),
-    avQuote("SPY"),
-    newsHeadlines(),
-  ]);
-
-  return jsonResponse(request, {
-    ok: true,
-    dashboard: {
-      asOf: end,
-      macro: { unrate, cpi, dgs10 },
-      markets: { spy },
-      news,
-    },
-  });
-}
-
-/** -------------------- Router -------------------- **/
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // Preflight CORS
-    if (request.method === "OPTIONS") {
-      return new Response(null, { status: 204, headers: withCors(request) });
-    }
+    if (request.method === "OPTIONS") return corsPreflight();
 
-    const path = url.pathname.replace(/\/+$/, ""); // trim trailing slash
     try {
-      if (path === "" || path === "/") {
-        return jsonResponse(request, {
-          ok: true,
-          name: "Multi-API Worker",
-          routes: ["/health", "/fred", "/bls", "/census", "/eia", "/av", "/news", "/dashboard"],
-        });
+      const path = url.pathname.replace(/\/+$/, "") || "/";
+
+      if (path === "/" || path === "/health") {
+        return json({ ok: true, service: "construction-ai-terminal" });
       }
-      if (path === "/health") return jsonResponse(request, { ok: true });
 
-      if (path === "/fred") return handleFred(request, env, url);
-      if (path === "/bls") return handleBls(request, env);
-      if (path === "/census") return handleCensus(request, env, url);
-      if (path === "/eia") return handleEia(request, env, url);
-      if (path === "/av") return handleAlphaVantage(request, env, url);
-      if (path === "/news") return handleNews(request, env, url);
-      if (path === "/dashboard") return handleDashboard(request, env);
+      if (path === "/notion/series" && request.method === "GET") {
+        ensureSecrets(env, ["NOTION_TOKEN"]);
+        const series = await getSeriesIdsFromNotionCached(env, ctx);
+        return json({ count: series.length, series }, 200, cacheControl(ttl(env)));
+      }
 
-      return notFound(request);
-    } catch (err) {
-      return jsonResponse(request, { ok: false, error: "Worker exception", message: String(err?.message || err) }, 500);
+      if (path === "/notion/add" && request.method === "POST") {
+        ensureSecrets(env, ["NOTION_TOKEN"]);
+        const body = await safeJsonBody(request);
+        if (!body?.properties || typeof body.properties !== "object") {
+          return jsonError(400, "invalid_request", "Body must include a Notion 'properties' object.");
+        }
+        const created = await notionCreatePage(env, body.properties, body.children);
+        return json(created);
+      }
+
+      if (path === "/fred/observations" && request.method === "GET") {
+        ensureSecrets(env, ["FRED_API_KEY"]);
+        const seriesId = mustParam(url, "series_id");
+        const upstream = new URL("https://api.stlouisfed.org/fred/series/observations");
+        upstream.searchParams.set("series_id", seriesId);
+        upstream.searchParams.set("api_key", env.FRED_API_KEY);
+        upstream.searchParams.set("file_type", "json");
+
+        const passthrough = ["limit", "sort_order", "observation_start", "observation_end", "units", "frequency", "aggregation_method", "output_type", "offset"];
+        for (const key of passthrough) {
+          const value = url.searchParams.get(key);
+          if (value) upstream.searchParams.set(key, value);
+        }
+
+        const payload = await fetchJSONWithCache(upstream.toString(), env, ctx);
+        return json(payload, 200, cacheControl(ttl(env)));
+      }
+
+      if (path === "/bundle" && request.method === "GET") {
+        ensureSecrets(env, ["FRED_API_KEY", "NOTION_TOKEN"]);
+        const limit = clampInt(url.searchParams.get("limit") ?? "60", 1, 5000);
+        const overrideSeries = (url.searchParams.get("fred") ?? "")
+          .split(",")
+          .map((x) => x.trim())
+          .filter(Boolean);
+
+        const seriesIds = overrideSeries.length > 0 ? uniqueSorted(overrideSeries) : await getSeriesIdsFromNotionCached(env, ctx);
+        const fred = {};
+
+        await mapWithConcurrency(seriesIds, 6, async (seriesId) => {
+          const upstream = new URL("https://api.stlouisfed.org/fred/series/observations");
+          upstream.searchParams.set("series_id", seriesId);
+          upstream.searchParams.set("api_key", env.FRED_API_KEY);
+          upstream.searchParams.set("file_type", "json");
+          upstream.searchParams.set("limit", String(limit));
+          upstream.searchParams.set("sort_order", "desc");
+          fred[seriesId] = await fetchJSONWithCache(upstream.toString(), env, ctx);
+        });
+
+        return json({
+          meta: { used_override: overrideSeries.length > 0, series_count: seriesIds.length },
+          fred,
+        }, 200, cacheControl(ttl(env)));
+      }
+
+      if (path === "/stooq/quote" && request.method === "GET") {
+        const symbol = mustParam(url, "s");
+        const upstream = new URL("https://stooq.com/q/l/");
+        upstream.searchParams.set("s", symbol);
+        upstream.searchParams.set("f", "sd2t2ohlcvn");
+        upstream.searchParams.set("h", "");
+        upstream.searchParams.set("e", "json");
+
+        const payload = await fetchPossiblyJsonWithCache(upstream.toString(), env, ctx);
+        return json(payload, 200, cacheControl(ttl(env)));
+      }
+
+      if (path === "/bls/timeseries" && request.method === "POST") {
+        const body = await safeJsonBody(request);
+        if (!Array.isArray(body?.seriesid) || body.seriesid.length === 0) {
+          return jsonError(400, "invalid_request", "Body must include non-empty seriesid array.");
+        }
+
+        const payload = {
+          seriesid: body.seriesid,
+          startyear: body.startyear,
+          endyear: body.endyear,
+          catalog: body.catalog,
+          calculations: body.calculations,
+          annualaverage: body.annualaverage,
+        };
+        if (env.BLS_API_KEY) payload.registrationKey = env.BLS_API_KEY;
+
+        const result = await fetchJSONPostWithCache(
+          "https://api.bls.gov/publicAPI/v2/timeseries/data/",
+          payload,
+          env,
+          ctx,
+        );
+        return json(result, 200, cacheControl(ttl(env)));
+      }
+
+      if (path === "/usaspending/awards" && request.method === "POST") {
+        const body = await safeJsonBody(request);
+        const result = await fetchJSONPostWithCache(
+          "https://api.usaspending.gov/api/v2/search/spending_by_award/",
+          body,
+          env,
+          ctx,
+        );
+        return json(result, 200, cacheControl(ttl(env)));
+      }
+
+      if (path === "/usaspending/awards/count" && request.method === "POST") {
+        const body = await safeJsonBody(request);
+        const result = await fetchJSONPostWithCache(
+          "https://api.usaspending.gov/api/v2/search/spending_by_award_count/",
+          body,
+          env,
+          ctx,
+        );
+        return json(result, 200, cacheControl(ttl(env)));
+      }
+
+      if (path === "/alphavantage/quote" && request.method === "GET") {
+        ensureSecrets(env, ["ALPHAVANTAGE_API_KEY"]);
+        const symbol = mustParam(url, "symbol");
+        return proxyAlphaVantage(env, ctx, {
+          function: "GLOBAL_QUOTE",
+          symbol,
+        }, false);
+      }
+
+      if (path === "/alphavantage/daily" && request.method === "GET") {
+        ensureSecrets(env, ["ALPHAVANTAGE_API_KEY"]);
+        const symbol = mustParam(url, "symbol");
+        const outputsize = allowValue(url.searchParams.get("outputsize") ?? "compact", ["compact", "full"]);
+        const datatype = allowValue(url.searchParams.get("datatype") ?? "json", ["json", "csv"]);
+        return proxyAlphaVantage(env, ctx, {
+          function: "TIME_SERIES_DAILY",
+          symbol,
+          outputsize,
+          datatype,
+        }, datatype === "csv");
+      }
+
+      if (path === "/alphavantage/intraday" && request.method === "GET") {
+        ensureSecrets(env, ["ALPHAVANTAGE_API_KEY"]);
+        const symbol = mustParam(url, "symbol");
+        const interval = allowValue(url.searchParams.get("interval") ?? "5min", ["1min", "5min", "15min", "30min", "60min"]);
+        const outputsize = allowValue(url.searchParams.get("outputsize") ?? "compact", ["compact", "full"]);
+        const datatype = allowValue(url.searchParams.get("datatype") ?? "json", ["json", "csv"]);
+
+        const params = {
+          function: "TIME_SERIES_INTRADAY",
+          symbol,
+          interval,
+          outputsize,
+          datatype,
+        };
+
+        const adjusted = url.searchParams.get("adjusted");
+        if (adjusted) params.adjusted = allowValue(adjusted, ["true", "false"]);
+        const extendedHours = url.searchParams.get("extended_hours");
+        if (extendedHours) params.extended_hours = allowValue(extendedHours, ["true", "false"]);
+        const month = url.searchParams.get("month");
+        if (month) params.month = month;
+
+        return proxyAlphaVantage(env, ctx, params, datatype === "csv");
+      }
+
+      if (path === "/alphavantage/news" && request.method === "GET") {
+        ensureSecrets(env, ["ALPHAVANTAGE_API_KEY"]);
+        const params = { function: "NEWS_SENTIMENT" };
+        const safe = ["tickers", "topics", "time_from", "time_to", "limit", "sort"];
+        for (const key of safe) {
+          const value = url.searchParams.get(key);
+          if (value) params[key] = value;
+        }
+        return proxyAlphaVantage(env, ctx, params, false);
+      }
+
+      if (path === "/news/feeds" && request.method === "GET") {
+        const mode = allowValue(url.searchParams.get("mode") ?? "fetch", ["list", "fetch"]);
+        const feeds = parseCommaList(env.NEWS_FEEDS);
+        if (mode === "list") return json({ count: feeds.length, feeds });
+
+        const results = [];
+        await mapWithConcurrency(feeds, 4, async (feedUrl) => {
+          try {
+            const text = await fetchTextWithCache(feedUrl, env, ctx);
+            const status = 200;
+            results.push({
+              url: feedUrl,
+              ok: true,
+              status,
+              content_type: sniffContentType(text),
+              text_truncated: text.slice(0, 4000),
+            });
+          } catch (error) {
+            results.push({
+              url: feedUrl,
+              ok: false,
+              status: 502,
+              content_type: null,
+              text_truncated: String(error?.message ?? error).slice(0, 4000),
+            });
+          }
+        });
+
+        return json({ count: results.length, results }, 200, cacheControl(ttl(env)));
+      }
+
+      return jsonError(404, "not_found", `No route for ${path}`);
+    } catch (error) {
+      if (error instanceof HttpError) {
+        return jsonError(error.status, error.error, error.message, error.headers);
+      }
+      return jsonError(500, "internal_error", String(error?.message ?? error));
     }
   },
 };
+
+class HttpError extends Error {
+  constructor(status, error, message, headers = {}) {
+    super(message);
+    this.status = status;
+    this.error = error;
+    this.headers = headers;
+  }
+}
+
+function json(payload, status = 200, extraHeaders = {}) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      ...corsHeaders(),
+      ...extraHeaders,
+    },
+  });
+}
+
+function jsonError(status, error, message, headers = {}) {
+  return json({ error, message }, status, headers);
+}
+
+function corsHeaders() {
+  return {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  };
+}
+
+function corsPreflight() {
+  return new Response(null, { status: 204, headers: corsHeaders() });
+}
+
+function mustParam(url, key) {
+  const value = url.searchParams.get(key);
+  if (!value) throw new HttpError(400, "invalid_request", `Missing required query parameter '${key}'.`);
+  return value;
+}
+
+function clampInt(value, min, max) {
+  const n = Number.parseInt(String(value), 10);
+  if (!Number.isFinite(n)) return min;
+  return Math.max(min, Math.min(max, n));
+}
+
+function ttl(env) {
+  const value = Number(env.CACHE_TTL_SECONDS ?? 300);
+  if (!Number.isFinite(value)) return 300;
+  return Math.max(1, Math.min(3600, Math.trunc(value)));
+}
+
+function cacheControl(seconds) {
+  return { "Cache-Control": `public, max-age=${seconds}` };
+}
+
+function notionDatabaseId(env) {
+  return env.NOTION_DATABASE_ID || DEFAULT_NOTION_DATABASE_ID;
+}
+
+function ensureSecrets(env, names) {
+  for (const name of names) {
+    if (!env[name]) throw new HttpError(500, "missing_secret", `Missing required secret: ${name}`);
+  }
+}
+
+function allowValue(value, allowed) {
+  if (allowed.includes(value)) return value;
+  throw new HttpError(400, "invalid_request", `Invalid value '${value}'. Allowed: ${allowed.join(", ")}`);
+}
+
+function parseCommaList(input) {
+  return String(input || "")
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
+}
+
+function uniqueSorted(values) {
+  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+}
+
+async function safeJsonBody(request) {
+  try {
+    return await request.json();
+  } catch {
+    throw new HttpError(400, "invalid_json", "Request body must be valid JSON.");
+  }
+}
+
+async function getSeriesIdsFromNotionCached(env, ctx) {
+  const cacheKey = "https://cache.local/notion-series";
+  const cache = caches.default;
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached.json();
+
+  const series = await getSeriesIdsFromNotion(env);
+  const response = new Response(JSON.stringify(series), {
+    headers: {
+      "Content-Type": "application/json",
+      ...cacheControl(ttl(env)),
+    },
+  });
+  ctx.waitUntil(cache.put(cacheKey, response));
+  return series;
+}
+
+async function getSeriesIdsFromNotion(env) {
+  const dbId = notionDatabaseId(env);
+  const seriesSet = new Set();
+  let startCursor;
+
+  while (true) {
+    const payload = {
+      page_size: 100,
+      filter: {
+        property: "Series ID",
+        select: { is_not_empty: true },
+      },
+      ...(startCursor ? { start_cursor: startCursor } : {}),
+    };
+
+    const response = await fetch(`https://api.notion.com/v1/databases/${dbId}/query`, {
+      method: "POST",
+      headers: notionHeaders(env),
+      body: JSON.stringify(payload),
+    });
+
+    const text = await response.text();
+    if (!response.ok) {
+      throw new HttpError(502, "upstream_error", `Notion query failed (${response.status}): ${text.slice(0, 300)}`);
+    }
+
+    const data = safeParseJson(text);
+    for (const row of data?.results || []) {
+      const selected = row?.properties?.["Series ID"]?.select?.name;
+      if (selected && typeof selected === "string") seriesSet.add(selected.trim());
+    }
+
+    if (data?.has_more && data?.next_cursor) {
+      startCursor = data.next_cursor;
+      continue;
+    }
+    break;
+  }
+
+  return uniqueSorted([...seriesSet]);
+}
+
+async function notionCreatePage(env, properties, children) {
+  const body = {
+    parent: { database_id: notionDatabaseId(env) },
+    properties,
+  };
+  if (Array.isArray(children)) body.children = children;
+
+  const response = await fetch("https://api.notion.com/v1/pages", {
+    method: "POST",
+    headers: notionHeaders(env),
+    body: JSON.stringify(body),
+  });
+
+  const text = await response.text();
+  const parsed = safeParseJson(text);
+  if (!response.ok) {
+    throw new HttpError(502, "upstream_error", `Notion page create failed (${response.status}): ${text.slice(0, 300)}`);
+  }
+  return parsed;
+}
+
+function notionHeaders(env) {
+  return {
+    Authorization: `Bearer ${env.NOTION_TOKEN}`,
+    "Notion-Version": "2022-06-28",
+    "Content-Type": "application/json",
+  };
+}
+
+async function fetchJSONWithCache(url, env, ctx) {
+  const cacheKey = new Request(url, { method: "GET" });
+  const cache = caches.default;
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached.json();
+
+  const response = await fetch(url);
+  const text = await response.text();
+  if (!response.ok) {
+    throw new HttpError(502, "upstream_error", `Upstream GET failed (${response.status}): ${text.slice(0, 300)}`);
+  }
+
+  const parsed = safeParseJson(text);
+  const toCache = new Response(JSON.stringify(parsed), {
+    headers: { "Content-Type": "application/json", ...cacheControl(ttl(env)) },
+  });
+  ctx.waitUntil(cache.put(cacheKey, toCache));
+  return parsed;
+}
+
+async function fetchPossiblyJsonWithCache(url, env, ctx) {
+  const cacheKey = new Request(url, { method: "GET" });
+  const cache = caches.default;
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached.json();
+
+  const response = await fetch(url);
+  const text = await response.text();
+  if (!response.ok) {
+    throw new HttpError(502, "upstream_error", `Upstream GET failed (${response.status}): ${text.slice(0, 300)}`);
+  }
+
+  const parsed = safeParseJson(text);
+  const toCache = new Response(JSON.stringify(parsed), {
+    headers: { "Content-Type": "application/json", ...cacheControl(ttl(env)) },
+  });
+  ctx.waitUntil(cache.put(cacheKey, toCache));
+  return parsed;
+}
+
+async function fetchJSONPostWithCache(url, body, env, ctx) {
+  const stable = stableStringify(body ?? {});
+  const hash = await sha256(stable);
+  const cacheKey = new Request(`https://cache.local/post/${hash}?u=${encodeURIComponent(url)}`, { method: "GET" });
+  const cache = caches.default;
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached.json();
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: stable,
+  });
+  const text = await response.text();
+  if (!response.ok) {
+    throw new HttpError(502, "upstream_error", `Upstream POST failed (${response.status}): ${text.slice(0, 300)}`);
+  }
+
+  const parsed = safeParseJson(text);
+  const toCache = new Response(JSON.stringify(parsed), {
+    headers: { "Content-Type": "application/json", ...cacheControl(ttl(env)) },
+  });
+  ctx.waitUntil(cache.put(cacheKey, toCache));
+  return parsed;
+}
+
+async function fetchTextWithCache(url, env, ctx) {
+  const cacheKey = new Request(url, { method: "GET" });
+  const cache = caches.default;
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached.text();
+
+  const response = await fetch(url);
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(`Feed fetch failed (${response.status})`);
+  }
+
+  const toCache = new Response(text, {
+    headers: { "Content-Type": response.headers.get("content-type") || "text/plain", ...cacheControl(ttl(env)) },
+  });
+  ctx.waitUntil(cache.put(cacheKey, toCache));
+  return text;
+}
+
+async function proxyAlphaVantage(env, ctx, params, wantsCsv) {
+  const upstream = new URL("https://www.alphavantage.co/query");
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null) upstream.searchParams.set(key, String(value));
+  }
+  upstream.searchParams.set("apikey", env.ALPHAVANTAGE_API_KEY);
+
+  const cache = caches.default;
+  const cacheKey = new Request(upstream.toString(), { method: "GET" });
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached;
+
+  const response = await fetch(upstream.toString());
+  const contentType = response.headers.get("content-type") || "";
+  const text = await response.text();
+
+  if (!response.ok) {
+    return jsonError(502, "upstream_error", `Alpha Vantage error (${response.status})`);
+  }
+
+  if (!wantsCsv || contentType.includes("json") || text.trim().startsWith("{")) {
+    const parsed = safeParseJson(text);
+    if (parsed?.Note || parsed?.["Error Message"]) {
+      return json(
+        { warning: "Alpha Vantage rate limited or returned an error.", upstream: parsed },
+        429,
+        { "Cache-Control": "no-store" },
+      );
+    }
+
+    const toCache = new Response(JSON.stringify(parsed), {
+      headers: { "Content-Type": "application/json", ...cacheControl(alphaTtl(env)) },
+    });
+    ctx.waitUntil(cache.put(cacheKey, toCache));
+    return toCache;
+  }
+
+  const toCache = new Response(text, {
+    headers: { "Content-Type": "text/csv; charset=utf-8", ...cacheControl(alphaTtl(env)) },
+  });
+  ctx.waitUntil(cache.put(cacheKey, toCache));
+  return toCache;
+}
+
+function alphaTtl(env) {
+  return Math.max(ttl(env), 900);
+}
+
+function safeParseJson(text) {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { raw: text };
+  }
+}
+
+function sniffContentType(text) {
+  const trimmed = text.trim();
+  if (trimmed.startsWith("<?xml") || trimmed.includes("<rss") || trimmed.includes("<feed")) return "application/xml";
+  if (trimmed.startsWith("{") || trimmed.startsWith("[")) return "application/json";
+  return "text/plain";
+}
+
+async function sha256(input) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function stableStringify(value) {
+  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map((v) => stableStringify(v)).join(",")}]`;
+  const keys = Object.keys(value).sort();
+  return `{${keys.map((k) => `${JSON.stringify(k)}:${stableStringify(value[k])}`).join(",")}}`;
+}
+
+async function mapWithConcurrency(items, concurrency, mapper) {
+  const queue = [...items];
+  const workers = new Array(Math.min(concurrency, queue.length)).fill(0).map(async () => {
+    while (queue.length > 0) {
+      const item = queue.shift();
+      if (item !== undefined) await mapper(item);
+    }
+  });
+  await Promise.all(workers);
+}

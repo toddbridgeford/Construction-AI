@@ -2,9 +2,11 @@
 # Do NOT commit real keys.
 
 FRED_API_KEY=""
-BLS_API_KEY=""
-CENSUS_API_KEY=""
-EIA_API_KEY=""
+NOTION_TOKEN=""
 ALPHAVANTAGE_API_KEY=""
-NEWS_API_KEY=""
-CACHE_TTL_SECONDS="120"
+BLS_API_KEY=""
+
+NOTION_DATABASE_ID="312f63a1aa6f80af91d7c019f1f2b53d"
+STOOQ_DEFAULT_TICKERS="spy.us,qqq.us"
+NEWS_FEEDS="https://feeds.bbci.co.uk/news/business/rss.xml,https://www.cnbc.com/id/10001147/device/rss/rss.html"
+CACHE_TTL_SECONDS="300"
