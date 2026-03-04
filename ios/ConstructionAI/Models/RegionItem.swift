@@ -6,9 +6,7 @@ struct RegionItem: Codable, Identifiable, Hashable {
     let summary: String?
     let value: Double?
 
-    enum CodingKeys: String, CodingKey {
-        case id, name, summary, value
-    }
+    enum CodingKeys: String, CodingKey { case id, name, summary, value }
 
     init(id: String, name: String, summary: String?, value: Double?) {
         self.id = id
@@ -19,9 +17,9 @@ struct RegionItem: Codable, Identifiable, Hashable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Unknown Region"
-        id = try container.decodeIfPresent(String.self, forKey: .id) ?? name
-        summary = try container.decodeIfPresent(String.self, forKey: .summary)
-        value = try container.decodeIfPresent(Double.self, forKey: .value)
+        name = container.decodeLossyString(forKey: .name) ?? "Unknown Region"
+        id = container.decodeLossyString(forKey: .id) ?? name
+        summary = container.decodeLossyString(forKey: .summary)
+        value = container.decodeLossyDouble(forKey: .value)
     }
 }

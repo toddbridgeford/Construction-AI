@@ -2,6 +2,15 @@ import Foundation
 
 enum TrendDirection {
     case up, down, flat, unknown
+
+    var symbol: String {
+        switch self {
+        case .up: return "arrow.up.right"
+        case .down: return "arrow.down.right"
+        case .flat: return "arrow.right"
+        case .unknown: return "questionmark"
+        }
+    }
 }
 
 enum Trend {
