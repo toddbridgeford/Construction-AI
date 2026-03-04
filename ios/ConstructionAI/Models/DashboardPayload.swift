@@ -19,6 +19,7 @@ struct DashboardPayload: Codable {
         case ui
         case gptPayload = "gpt_payload"
         case observed
+        case signals
     }
 
     enum ExecutiveKeys: String, CodingKey { case headline, summary }
@@ -48,8 +49,12 @@ struct DashboardPayload: Codable {
             cards = []
         }
 
-        if let gptPayload = try? container.decode(GPTPayload.self, forKey: .gptPayload) {
-            signals = gptPayload.signalStrip ?? []
+        if let gptPayload = try? container.decode(GPTPayload.self, forKey: .gptPayload),
+           let signalStrip = gptPayload.signalStrip,
+           !signalStrip.isEmpty {
+            signals = signalStrip
+        } else if let directSignals = try? container.decode([SignalItem].self, forKey: .signals) {
+            signals = directSignals
         } else {
             signals = []
         }

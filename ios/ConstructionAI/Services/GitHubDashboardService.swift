@@ -23,8 +23,13 @@ struct GitHubDashboardService {
         }
 
         guard http.statusCode == 200 else {
-            Logging.log("Dashboard fetch failed with HTTP status \(http.statusCode).")
-            throw URLError(.badServerResponse)
+            let bodyMessage = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+            if let bodyMessage, !bodyMessage.isEmpty {
+                Logging.log("Dashboard fetch failed with HTTP status \(http.statusCode): \(bodyMessage)")
+            } else {
+                Logging.log("Dashboard fetch failed with HTTP status \(http.statusCode).")
+            }
+            throw DashboardServiceError.httpStatus(http.statusCode)
         }
 
         do {
@@ -32,7 +37,21 @@ struct GitHubDashboardService {
             return (payload, Date())
         } catch {
             Logging.log("Dashboard decode failed: \(error.localizedDescription)")
-            throw error
+            throw DashboardServiceError.decoding(error)
+        }
+    }
+}
+
+enum DashboardServiceError: LocalizedError {
+    case httpStatus(Int)
+    case decoding(Error)
+
+    var errorDescription: String? {
+        switch self {
+        case .httpStatus(let status):
+            return "GitHub returned HTTP \(status)."
+        case .decoding:
+            return "Dashboard payload format changed and could not be decoded."
         }
     }
 }
