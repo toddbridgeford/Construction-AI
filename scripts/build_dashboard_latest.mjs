@@ -1907,50 +1907,9 @@ async function main() {
       momentum,
       risk_thermometer_mode: rtm,
       freeze_risk: freezeRisk
-    },
+    }
+  };
 
-    const regimeWatch = ["Slowdown", "Recession"].includes(regime.primary);
-
-// ---- GPT payload (Construction AI)
-const gpt_payload = {
-  product: "Construction AI",
-  generated_at_utc: isoUtcNow(),
-  ...
-  ecosystem_pulse,
-  signal_strip: [ ... ],
-};
-
-    regime_history: regime_history_display,
-    regime: { primary: regime.primary, modifier: regime.modifier, confidence: regime.confidence },
-
-    cpi: {
-      headline: cpi.headline,
-      zone: zoneForCpi(cpi.headline),
-      delta_3m: delta3m,
-      momentum,
-      freeze_risk: freezeRisk,
-      risk_thermometer_mode: rtm,
-      r: cpi.cpi_r,
-      i: cpi.cpi_i,
-      sf: cpi.cpi_sf,
-      mf: cpi.cpi_mf,
-      inst: cpi.cpi_inst,
-      infra: cpi.cpi_infra,
-      divergences: cpi.divergences
-    },
-
-    six_pillar: {
-      capital: capitalScoreAdj,
-      pipeline: pipelineScore,
-      trade: tradeScore,
-      materials: materialsScore,
-      regulatory: 50,
-      macro_sentiment: macroScore,
-      materials_energy_overlay: eia.energy_overlay || 0,
-      stock_overlay,
-      news_pressure_overlay
-    },
-    
 const regimeWatch = ["Slowdown", "Recession"].includes(regime.primary);
 
 // ---- GPT payload (Construction AI)
@@ -2045,30 +2004,6 @@ const gpt_payload = {
   ]
 };
 
-    market_intel: {
-      stocks: stocks.slice(0, 40),
-      sector_rollups,
-      stock_pressure_overlay: stock_overlay
-    },
-
-    news: {
-      sources: news_sources,
-      news_pressure_overlay,
-      top_high_impact,
-      unified: news_with_impact.slice(0, 60),
-      clusters: news_clusters,
-      land_tracker,
-      premium_status: NEWS_API_KEY ? (everythingRes?.error || topRes?.error ? "error" : "active") : "off",
-      premium_error: everythingRes?.error || topRes?.error || null
-    },
-
-    project_pipeline: {
-      sam_gov: sam,
-      usaspending: { windows: usaspending_windows }
-    },
-
-    energy: eia
-  };
 
   const out = {
     schema_version: "4.4.0",
