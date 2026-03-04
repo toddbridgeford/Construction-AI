@@ -6,7 +6,6 @@ on:
       - 'ios/ConstructionAI/**'
       - '.github/workflows/ios_build.yml'
   push:
-    branches: [ Predictive-Model ]
     paths:
       - 'ios/ConstructionAI/**'
 

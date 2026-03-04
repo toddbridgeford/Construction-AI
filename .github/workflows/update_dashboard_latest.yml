@@ -23,10 +23,9 @@ jobs:
         shell: bash
 
     steps:
-      - name: Checkout repo (Predictive-Model)
+      - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          ref: Predictive-Model
           fetch-depth: 0
 
       - name: Setup Node 20
@@ -224,7 +223,7 @@ jobs:
           git add dashboard_latest.json
           git add signal_api_latest.json
           git add dist/markets/index.json
-          git add dist/markets/**/signal_api_latest.json || true
+          find dist/markets -mindepth 2 -maxdepth 2 -type f -name signal_api_latest.json -print0 | xargs -0 -r git add
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
@@ -232,7 +231,7 @@ jobs:
           fi
 
           git commit -m "Update dashboard + signal API + markets"
-          git push origin Predictive-Model
+          git push origin "${GITHUB_REF_NAME}"
 
       - name: Upload artifacts (always)
         if: always()
