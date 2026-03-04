@@ -35,8 +35,8 @@ jobs:
         env:
           CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID || vars.CLOUDFLARE_KV_NAMESPACE_ID }}
           CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID || vars.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || vars.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
 
@@ -51,7 +51,9 @@ jobs:
           fi
 
           if [ -z "${CLOUDFLARE_KV_NAMESPACE_ID:-}" ]; then
-            echo "Missing required value: CLOUDFLARE_KV_NAMESPACE_ID (set it as a repository secret or variable)"
+            echo "Missing required value: CLOUDFLARE_KV_NAMESPACE_ID"
+            echo "Create a Cloudflare KV namespace (recommended name: CPI_SNAPSHOTS),"
+            echo "then add its ID as a GitHub Actions secret or variable named CLOUDFLARE_KV_NAMESPACE_ID."
             exit 1
           fi
 
@@ -69,6 +71,6 @@ jobs:
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN || vars.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy --config wrangler.ci.toml
