@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-04T19:08:20.185Z",
+  "generated_at": "2026-03-04T21:00:50.840Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -33,7 +33,7 @@
         "value": 46
       },
       {
-        "date": "2026-03-03",
+        "date": "2026-03-04",
         "value": 46
       },
       {
@@ -416,6 +416,42 @@
         "description": "Wall Street recalibrates expectations after Nvidia's massive quarter."
       },
       {
+        "title": "Our Critics Are Split on the Weirdest Whitney Biennial in Recent Memory",
+        "url": "https://www.artnews.com/art-news/reviews/2026-whitney-biennial-critics-conversation-1234775478/",
+        "source": "ARTnews",
+        "published_at": "2026-03-03T20:31:11Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "ARTnews senior editors Maximilíano Durón and Alex Greenberger offer their initial thoughts on the 2026 Whitney Biennial."
+      },
+      {
+        "title": "Luxury Cinema Chain iPic Files for Bankruptcy Amid Rocky 2025 Box Office",
+        "url": "http://www.hollywoodreporter.com/business/business-news/luxury-cinema-chain-ipic-bankruptcy-1236520773/",
+        "source": "Hollywood Reporter",
+        "published_at": "2026-03-03T19:58:15Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "iPic Theaters never fully recovered after emerging from bankruptcy in 2019. It pointed to drops in theater attendance and a not-so-viable arrangement with studios on box office splits."
+      },
+      {
+        "title": "Lupaka Gold sues Peru in U.S. over US$69 million arbitration award",
+        "url": "https://financialpost.com/commodities/mining/lupaka-gold-sues-peru",
+        "source": "Financial Post",
+        "published_at": "2026-03-03T19:48:59Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "A Canadian gold mining company sued Peru in the U.S. to collect US$69 million it was awarded over violent protests. Read more here"
+      },
+      {
+        "title": "1 in 3 auctioned coal blocks miss operational deadlines",
+        "url": "https://indianexpress.com/article/business/1-in-3-auctioned-coal-blocks-miss-operational-deadlines-10563814/",
+        "source": "The Indian Express",
+        "published_at": "2026-03-03T19:28:21Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "98 blocks scheduled to be operational by 2025-end, but only 55 producing coal"
+      },
+      {
         "title": "Govt terminates PMGSY road contracts worth Rs 2,543.05 lakh over delay, blacklists contractor",
         "url": "https://statetimes.in/govt-terminates-pmgsy-road-contracts-worth-rs-2543-05-lakh-over-delay-blacklists-contractor/",
         "source": "Statetimes.in",
@@ -740,15 +776,6 @@
         "description": "The World Baseball Classic represents baseball at its most intense and globally unified stage. Unlike the regular season, where players compete for franchises and long-term goals, the WBC compresses urgency, national pride, and elite talent into a high-stakes…"
       },
       {
-        "title": "Leaving the United States Behind",
-        "url": "https://www.theatlantic.com/magazine/2026/04/mixed-immigration-status-family-self-deportation/686062/",
-        "source": "The Atlantic",
-        "published_at": "2026-03-03T12:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The Cruz family spent years building a life in New York. Then the risks of staying became too great."
-      },
-      {
         "title": "HCI Group Authorizes $80 Million Stock Repurchase Program",
         "url": "https://www.globenewswire.com/news-release/2026/03/03/3248178/12000/en/HCI-Group-Authorizes-80-Million-Stock-Repurchase-Program.html",
         "source": "GlobeNewswire",
@@ -756,6 +783,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "TAMPA, Fla., March 03, 2026 (GLOBE NEWSWIRE) -- The board of directors of HCI Group, Inc. (NYSE:HCI) has authorized a program to repurchase up to $80 million of the company’s common shares, subject to market conditions."
+      },
+      {
+        "title": "Leaving the United States Behind",
+        "url": "https://www.theatlantic.com/magazine/2026/04/mixed-immigration-status-family-self-deportation/686062/",
+        "source": "The Atlantic",
+        "published_at": "2026-03-03T12:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Cruz family spent years building a life in New York. Then the risks of staying became too great."
       },
       {
         "title": "Investor Reminder: Plug Power Inc. Faces Federal Securities Fraud Allegations after Stock Drops 17% -- Contact BFA Law before April 3 Court Deadline (NASDAQ: PLUG)",
@@ -858,7 +894,7 @@
       },
       {
         "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
+        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-solidifies-after-tariff-ruling-usedtrucks-deals-and-steals-price-indices-offer-mixed-bags",
         "source": "Overdriveonline.com",
         "published_at": "2026-03-03T07:24:18Z",
         "provider": "newsapi",
@@ -867,7 +903,7 @@
       },
       {
         "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-solidifies-after-tariff-ruling-usedtrucks-deals-and-steals-price-indices-offer-mixed-bags",
+        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
         "source": "Overdriveonline.com",
         "published_at": "2026-03-03T07:24:18Z",
         "provider": "newsapi",
@@ -1080,42 +1116,6 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Former President Bill Clinton may have just put a massive hole in President Donald Trump’s claims about how he and deceased sexual predator Jeffrey Epstein ended their friendship.In video testimony released by the House Oversight Committee on Monday, Clinton …"
-      },
-      {
-        "title": "Miners set to begin construction of two new uranium projects in Saskatchewan",
-        "url": "https://www.theglobeandmail.com/business/article-saskatchewan-uranium-mining-projects-denison-nexgen-nuclear-energy/",
-        "source": "The Globe And Mail",
-        "published_at": "2026-03-02T22:58:06Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Denison Mines to start development in March, while NexGen Energy sets sights on getting green light in June"
-      },
-      {
-        "title": "Monomoy CRE, LLC Announces Martin Emigh as Director of Client Services",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247923/0/en/Monomoy-CRE-LLC-Announces-Martin-Emigh-as-Director-of-Client-Services.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T22:34:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "CHARLESTON, S.C., March 02, 2026 (GLOBE NEWSWIRE) -- Monomoy CRE, LLC (“we,” “us,” “our,” or “Monomoy”)  is pleased to announce that Marty Emigh has joined the company as Director of Client Services, bringing more than 25 years of experience in the constructi…"
-      },
-      {
-        "title": "Mark Zuckerberg, Wife Priscilla Make History with $170 Million Purchase",
-        "url": "https://www.mensjournal.com/news/mark-zuckerberg-wife-priscilla-make-history-with-170-million-purchase",
-        "source": "Men's Journal",
-        "published_at": "2026-03-02T22:18:34Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Meta CEO Mark Zuckerberg and his wife Priscilla Chan have made a massive real estate purchase in Florida, according to multiple reports. Zuckerberg and Chan ..."
-      },
-      {
-        "title": "Collective Metals Announces Flow-Through Financing",
-        "url": "https://financialpost.com/globe-newswire/collective-metals-announces-flow-through-financing-2",
-        "source": "Financial Post",
-        "published_at": "2026-03-02T22:02:17Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) — COLLECTIVE METALS INC. (CSE: COMT | OTC: CLLMF | FSE: TO1) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up to C$1,…"
       }
     ],
     "news_with_impact": [
@@ -1427,6 +1427,59 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Wall Street recalibrates expectations after Nvidia's massive quarter.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Our Critics Are Split on the Weirdest Whitney Biennial in Recent Memory",
+        "url": "https://www.artnews.com/art-news/reviews/2026-whitney-biennial-critics-conversation-1234775478/",
+        "source": "ARTnews",
+        "published_at": "2026-03-03T20:31:11Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "ARTnews senior editors Maximilíano Durón and Alex Greenberger offer their initial thoughts on the 2026 Whitney Biennial.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Luxury Cinema Chain iPic Files for Bankruptcy Amid Rocky 2025 Box Office",
+        "url": "http://www.hollywoodreporter.com/business/business-news/luxury-cinema-chain-ipic-bankruptcy-1236520773/",
+        "source": "Hollywood Reporter",
+        "published_at": "2026-03-03T19:58:15Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "iPic Theaters never fully recovered after emerging from bankruptcy in 2019. It pointed to drops in theater attendance and a not-so-viable arrangement with studios on box office splits.",
+        "impact_score": 85,
+        "themes": [
+          "capital",
+          "commercial"
+        ]
+      },
+      {
+        "title": "Lupaka Gold sues Peru in U.S. over US$69 million arbitration award",
+        "url": "https://financialpost.com/commodities/mining/lupaka-gold-sues-peru",
+        "source": "Financial Post",
+        "published_at": "2026-03-03T19:48:59Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "A Canadian gold mining company sued Peru in the U.S. to collect US$69 million it was awarded over violent protests. Read more here",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "1 in 3 auctioned coal blocks miss operational deadlines",
+        "url": "https://indianexpress.com/article/business/1-in-3-auctioned-coal-blocks-miss-operational-deadlines-10563814/",
+        "source": "The Indian Express",
+        "published_at": "2026-03-03T19:28:21Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "98 blocks scheduled to be operational by 2025-end, but only 55 producing coal",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1902,19 +1955,6 @@
         ]
       },
       {
-        "title": "Leaving the United States Behind",
-        "url": "https://www.theatlantic.com/magazine/2026/04/mixed-immigration-status-family-self-deportation/686062/",
-        "source": "The Atlantic",
-        "published_at": "2026-03-03T12:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The Cruz family spent years building a life in New York. Then the risks of staying became too great.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "HCI Group Authorizes $80 Million Stock Repurchase Program",
         "url": "https://www.globenewswire.com/news-release/2026/03/03/3248178/12000/en/HCI-Group-Authorizes-80-Million-Stock-Repurchase-Program.html",
         "source": "GlobeNewswire",
@@ -1922,6 +1962,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "TAMPA, Fla., March 03, 2026 (GLOBE NEWSWIRE) -- The board of directors of HCI Group, Inc. (NYSE:HCI) has authorized a program to repurchase up to $80 million of the company’s common shares, subject to market conditions.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Leaving the United States Behind",
+        "url": "https://www.theatlantic.com/magazine/2026/04/mixed-immigration-status-family-self-deportation/686062/",
+        "source": "The Atlantic",
+        "published_at": "2026-03-03T12:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Cruz family spent years building a life in New York. Then the risks of staying became too great.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2072,7 +2125,7 @@
       },
       {
         "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
+        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-solidifies-after-tariff-ruling-usedtrucks-deals-and-steals-price-indices-offer-mixed-bags",
         "source": "Overdriveonline.com",
         "published_at": "2026-03-03T07:24:18Z",
         "provider": "newsapi",
@@ -2085,7 +2138,7 @@
       },
       {
         "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-solidifies-after-tariff-ruling-usedtrucks-deals-and-steals-price-indices-offer-mixed-bags",
+        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
         "source": "Overdriveonline.com",
         "published_at": "2026-03-03T07:24:18Z",
         "provider": "newsapi",
@@ -2394,61 +2447,23 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "Miners set to begin construction of two new uranium projects in Saskatchewan",
-        "url": "https://www.theglobeandmail.com/business/article-saskatchewan-uranium-mining-projects-denison-nexgen-nuclear-energy/",
-        "source": "The Globe And Mail",
-        "published_at": "2026-03-02T22:58:06Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Denison Mines to start development in March, while NexGen Energy sets sights on getting green light in June",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Monomoy CRE, LLC Announces Martin Emigh as Director of Client Services",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247923/0/en/Monomoy-CRE-LLC-Announces-Martin-Emigh-as-Director-of-Client-Services.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T22:34:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "CHARLESTON, S.C., March 02, 2026 (GLOBE NEWSWIRE) -- Monomoy CRE, LLC (“we,” “us,” “our,” or “Monomoy”)  is pleased to announce that Marty Emigh has joined the company as Director of Client Services, bringing more than 25 years of experience in the constructi…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Mark Zuckerberg, Wife Priscilla Make History with $170 Million Purchase",
-        "url": "https://www.mensjournal.com/news/mark-zuckerberg-wife-priscilla-make-history-with-170-million-purchase",
-        "source": "Men's Journal",
-        "published_at": "2026-03-02T22:18:34Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Meta CEO Mark Zuckerberg and his wife Priscilla Chan have made a massive real estate purchase in Florida, according to multiple reports. Zuckerberg and Chan ...",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Collective Metals Announces Flow-Through Financing",
-        "url": "https://financialpost.com/globe-newswire/collective-metals-announces-flow-through-financing-2",
-        "source": "Financial Post",
-        "published_at": "2026-03-02T22:02:17Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) — COLLECTIVE METALS INC. (CSE: COMT | OTC: CLLMF | FSE: TO1) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up to C$1,…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
+      {
+        "title": "Luxury Cinema Chain iPic Files for Bankruptcy Amid Rocky 2025 Box Office",
+        "url": "http://www.hollywoodreporter.com/business/business-news/luxury-cinema-chain-ipic-bankruptcy-1236520773/",
+        "source": "Hollywood Reporter",
+        "published_at": "2026-03-03T19:58:15Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "iPic Theaters never fully recovered after emerging from bankruptcy in 2019. It pointed to drops in theater attendance and a not-so-viable arrangement with studios on box office splits.",
+        "impact_score": 85,
+        "themes": [
+          "capital",
+          "commercial"
+        ]
+      },
       {
         "title": "Blackstone’s Flagship Private Credit Fund Hit by Record Redemptions - Bloomberg",
         "url": "https://www.bloomberg.com/news/articles/2026-03-02/blackstone-allows-investors-to-pull-record-7-9-from-bcred-fund",
@@ -2565,19 +2580,6 @@
         "themes": [
           "materials"
         ]
-      },
-      {
-        "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
-        "source": "Overdriveonline.com",
-        "published_at": "2026-03-03T07:24:18Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Rates and volumes didn't see a huge boost from the Supreme Court's tariff ruling, good news in spot markets continued last week. Also: Used-truck prices for January remained in line with recent performance despite an uptick; free cervical cancer screenings fo…",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
       }
     ],
     "news_pressure_overlay": 0,
@@ -2594,6 +2596,20 @@
           "impact_score": 65,
           "themes": [
             "capital"
+          ]
+        },
+        {
+          "title": "Luxury Cinema Chain iPic Files for Bankruptcy Amid Rocky 2025 Box Office",
+          "url": "http://www.hollywoodreporter.com/business/business-news/luxury-cinema-chain-ipic-bankruptcy-1236520773/",
+          "source": "Hollywood Reporter",
+          "published_at": "2026-03-03T19:58:15Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "iPic Theaters never fully recovered after emerging from bankruptcy in 2019. It pointed to drops in theater attendance and a not-so-viable arrangement with studios on box office splits.",
+          "impact_score": 85,
+          "themes": [
+            "capital",
+            "commercial"
           ]
         },
         {
@@ -2801,7 +2817,7 @@
         },
         {
           "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-          "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
+          "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-solidifies-after-tariff-ruling-usedtrucks-deals-and-steals-price-indices-offer-mixed-bags",
           "source": "Overdriveonline.com",
           "published_at": "2026-03-03T07:24:18Z",
           "provider": "newsapi",
@@ -2814,7 +2830,7 @@
         },
         {
           "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-          "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-solidifies-after-tariff-ruling-usedtrucks-deals-and-steals-price-indices-offer-mixed-bags",
+          "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
           "source": "Overdriveonline.com",
           "published_at": "2026-03-03T07:24:18Z",
           "provider": "newsapi",
@@ -3016,6 +3032,20 @@
           ]
         },
         {
+          "title": "Luxury Cinema Chain iPic Files for Bankruptcy Amid Rocky 2025 Box Office",
+          "url": "http://www.hollywoodreporter.com/business/business-news/luxury-cinema-chain-ipic-bankruptcy-1236520773/",
+          "source": "Hollywood Reporter",
+          "published_at": "2026-03-03T19:58:15Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "iPic Theaters never fully recovered after emerging from bankruptcy in 2019. It pointed to drops in theater attendance and a not-so-viable arrangement with studios on box office splits.",
+          "impact_score": 85,
+          "themes": [
+            "capital",
+            "commercial"
+          ]
+        },
+        {
           "title": "Pomerantz Law Firm Announces the Filing of a Class Action Against Plug Power Inc.and Certain Officers – PLUG",
           "url": "https://www.globenewswire.com/news-release/2026/03/03/3248748/1087/en/Pomerantz-Law-Firm-Announces-the-Filing-of-a-Class-Action-Against-Plug-Power-Inc-and-Certain-Officers-PLUG.html",
           "source": "GlobeNewswire",
@@ -3097,63 +3127,63 @@
         "source": "stooq",
         "date": "2026-03-04",
         "open": 132.685,
-        "close": 131.795,
-        "change": -0.8900000000000148,
-        "change_pct": -0.6707615781738816
+        "close": 131.6831,
+        "change": -1.0019000000000062,
+        "change_pct": -0.7550966574970843
       },
       {
         "ticker": "LEN",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 107.01,
-        "close": 107.195,
-        "change": 0.18499999999998806,
-        "change_pct": 0.17288103915520797
+        "close": 107.06,
+        "change": 0.04999999999999716,
+        "change_pct": 0.04672460517708359
       },
       {
         "ticker": "NVR",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 7310,
-        "close": 7251.1,
-        "change": -58.899999999999636,
-        "change_pct": -0.8057455540355628
+        "close": 7250.96,
+        "change": -59.039999999999964,
+        "change_pct": -0.8076607387140898
       },
       {
         "ticker": "TOL",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 154.865,
-        "close": 152.94,
-        "change": -1.9250000000000114,
-        "change_pct": -1.2430181125496473
+        "close": 152.975,
+        "change": -1.8900000000000148,
+        "change_pct": -1.2204177832305652
       },
       {
         "ticker": "HD",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 366.13,
-        "close": 368.25,
-        "change": 2.1200000000000045,
-        "change_pct": 0.5790293065304686
+        "close": 368.57,
+        "change": 2.4399999999999977,
+        "change_pct": 0.6664299565728015
       },
       {
         "ticker": "LOW",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 258.01,
-        "close": 257.86,
-        "change": -0.14999999999997726,
-        "change_pct": -0.05813728150070822
+        "close": 258.385,
+        "change": 0.375,
+        "change_pct": 0.14534320375179258
       },
       {
         "ticker": "VMC",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 296.56,
-        "close": 295.81,
-        "change": -0.75,
-        "change_pct": -0.2528999190720259
+        "close": 295.96,
+        "change": -0.6000000000000227,
+        "change_pct": -0.2023199352576284
       },
       {
         "ticker": "MLM",
@@ -3169,103 +3199,103 @@
         "source": "stooq",
         "date": "2026-03-04",
         "open": 98.16,
-        "close": 96.33,
-        "change": -1.8299999999999983,
-        "change_pct": -1.8643031784841058
+        "close": 96.02,
+        "change": -2.1400000000000006,
+        "change_pct": -2.1801140994295034
       },
       {
         "ticker": "FBIN",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 51.88,
-        "close": 50.965,
-        "change": -0.9149999999999991,
-        "change_pct": -1.7636854279105612
+        "close": 50.975,
+        "change": -0.9050000000000011,
+        "change_pct": -1.7444101773323075
       },
       {
         "ticker": "OC",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 115.655,
-        "close": 117.54,
-        "change": 1.8850000000000051,
-        "change_pct": 1.6298473909472182
+        "close": 116.67,
+        "change": 1.0150000000000006,
+        "change_pct": 0.8776101335869616
       },
       {
         "ticker": "EXP",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 213.18,
-        "close": 212.175,
-        "change": -1.0049999999999955,
-        "change_pct": -0.4714325921756241
+        "close": 212.01,
+        "change": -1.170000000000016,
+        "change_pct": -0.5488319729805872
       },
       {
         "ticker": "CAT",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 736.58,
-        "close": 732.115,
-        "change": -4.465000000000032,
-        "change_pct": -0.6061799125689038
+        "close": 732.57,
+        "change": -4.009999999999991,
+        "change_pct": -0.5444079393955837
       },
       {
         "ticker": "DE",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 619.22,
-        "close": 614.905,
-        "change": -4.315000000000055,
-        "change_pct": -0.6968444171699968
+        "close": 615.745,
+        "change": -3.4750000000000227,
+        "change_pct": -0.5611898840476766
       },
       {
         "ticker": "URI",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 841.05,
-        "close": 845.11,
-        "change": 4.060000000000059,
-        "change_pct": 0.4827299209321752
+        "close": 850.46,
+        "change": 9.410000000000082,
+        "change_pct": 1.1188395458058478
       },
       {
         "ticker": "TPC",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 71.36,
-        "close": 73.92,
-        "change": 2.5600000000000023,
-        "change_pct": 3.587443946188344
+        "close": 73.67,
+        "change": 2.3100000000000023,
+        "change_pct": 3.237107623318389
       },
       {
         "ticker": "CRH",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 114.27,
-        "close": 112.94,
-        "change": -1.3299999999999983,
-        "change_pct": -1.1639100376301728
+        "close": 113.1,
+        "change": -1.1700000000000017,
+        "change_pct": -1.0238907849829366
       }
     ],
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": -0.7411888411207768
+        "avg_change_pct": -0.7791501148529312
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -0.5516800976401942
+        "avg_change_pct": -0.6549737894944163
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": -1.8643031784841058
+        "avg_change_pct": -2.1801140994295034
       },
       "equipment": {
         "count": 3,
-        "avg_change_pct": -0.2734314696022418
+        "avg_change_pct": 0.0044139074541958605
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 0.2604460125148802
+        "avg_change_pct": 0.405886580162297
       }
     },
     "stock_pressure_overlay": 0,
@@ -3348,7 +3378,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-04T19:08:20.185Z",
+    "generated_at_utc": "2026-03-04T21:00:50.840Z",
     "regime_history": {
       "current_regime_duration_days": 1,
       "previous_regime": null,
