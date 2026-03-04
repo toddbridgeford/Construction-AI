@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Construction AI Terminal</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Construction AI Terminal</h1>
+      <div class="controls">
+        <span id="status">Loading…</span>
+        <button id="refreshBtn" type="button">Refresh</button>
+      </div>
+    </header>
+
+    <section id="tickerStrip" class="ticker-strip"></section>
+
+    <main class="grid">
+      <section class="panel">
+        <h2>News Feed</h2>
+        <ul id="newsList" class="list"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>Construction</h2>
+        <ul id="constructionList" class="list"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>Signals / Trends</h2>
+        <ul id="signalsList" class="list"></ul>
+      </section>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>

@@ -1,82 +1,135 @@
-# Construction AI Terminal (Cloudflare Worker)
+# Construction AI Dashboard Pipeline
 
-Bloomberg-style construction intelligence terminal deployed to:
+This repo now includes a **Bloomberg-terminal-style dashboard pipeline** designed for Cloudflare free-tier hosting and iPad-friendly viewing.
 
-- https://toddbridgeford.workers.dev
+## Project Structure
 
-## Architecture
+- `cloudflare/worker/` → TypeScript Worker API + scheduled data refresh + KV persistence.
+- `dashboard/` → static dashboard site for Cloudflare Pages.
+- Existing repo workflows and historical scripts remain intact.
 
-The worker uses a **snapshot architecture**:
+## Normalized API Schema
 
-1. `scheduled()` computes market intelligence for each market.
-2. Snapshots are written to Cloudflare KV (`CPI_SNAPSHOTS`).
-3. Read endpoints serve from KV for fast and stable responses.
+`GET /api/dashboard` returns:
 
-KV keys:
-
-- `cpi:{market}`
-- `market:{market}`
-- `leaderboard:metros`
-
-Default fallback market registry:
-
-- nashville
-- austin
-- dallas
-- phoenix
-- atlanta
-- denver
-- charlotte
-- tampa
-
-## API Endpoints
-
-- `GET /health`
-- `GET /cpi?location={market}`
-- `GET /market?location={market}`
-- `GET /rank/metros`
-- `GET /refresh?location={market}`
-
-Proxy endpoints used by computation:
-
-- `GET /fred/observations`
-- `POST /bls/timeseries`
-- `POST /usaspending/awards`
-- `GET /alphavantage/*`
-- `GET /news/feeds`
-
-## Cloudflare + GitHub Actions Setup
-
-Required GitHub secrets:
-
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_KV_NAMESPACE_ID`
-- `CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID`
-
-The deploy workflow fails fast with explicit errors when any of these are missing.
-
-## Worker Runtime Variables / Secrets
-
-Recommended runtime configuration:
-
-- `FRED_API_KEY` (secret)
-- `BLS_API_KEY` (optional secret)
-- `ALPHAVANTAGE_API_KEY` (optional secret)
-- `NEWS_FEEDS` (comma-separated RSS URLs, optional var)
-- `MARKET_REGISTRY_JSON` (optional JSON list to override fallback markets)
-
-## Deploy
-
-GitHub Actions deploy command:
-
-```bash
-wrangler deploy --config wrangler.ci.toml
+```json
+{
+  "generated_at": "2026-03-04T12:00:00.000Z",
+  "tickers": [{ "symbol": "SPY", "price": 0, "change": 0, "changePct": 0 }],
+  "news": [{ "title": "", "source": "", "url": "", "publishedAt": "" }],
+  "construction": [{ "title": "", "value": "", "source": "" }],
+  "signals": [{ "name": "", "value": "", "direction": "up" }]
+}
 ```
 
-## OpenAPI
+## Worker Endpoints
 
-The GPT Actions schema is provided in:
+- `GET /api/health`
+- `GET /api/dashboard`
 
-- `openapi.yaml`
-- `docs/construction_ai_terminal_openapi.yaml`
+Worker behavior:
+
+- Uses providers to fetch ticker/news data.
+- Merges into normalized schema.
+- Persists latest snapshot + history ring in KV.
+- Runs scheduled refresh every 15 minutes (cron).
+- Returns CORS-enabled JSON responses.
+
+## Cloudflare Setup
+
+### 1) Create KV namespace
+
+```bash
+wrangler kv namespace create DASHBOARD_KV
+wrangler kv namespace create DASHBOARD_KV --preview
+```
+
+Copy IDs into `cloudflare/worker/wrangler.toml`.
+
+### 2) Install dependencies
+
+```bash
+cd cloudflare/worker
+npm install
+```
+
+### 3) Set secrets/vars (never commit real keys)
+
+```bash
+wrangler secret put NEWSAPI_KEY
+wrangler secret put ALPHAVANTAGE_API_KEY
+```
+
+Optional vars:
+
+```bash
+wrangler secret put SYMBOLS
+wrangler secret put HISTORY_LIMIT
+wrangler secret put ALLOWED_ORIGIN
+```
+
+For local development only, start from `cloudflare/worker/.env.example`.
+
+### 4) Deploy Worker
+
+```bash
+wrangler deploy
+```
+
+### 5) Create Cloudflare Pages project from `/dashboard`
+
+- Framework preset: **None**
+- Build command: *(none)*
+- Output directory: `/`
+- Root directory: `dashboard`
+
+### 6) Set Worker route
+
+Use either:
+
+- Dedicated API domain, e.g. `https://api.example.com/api/*`
+- Same-site route via Cloudflare custom domains.
+
+Dashboard fetch target is `GET /api/dashboard` (or `window.DASHBOARD_API_BASE + /api/dashboard`).
+
+### 7) Enable cron triggers
+
+`cloudflare/worker/wrangler.toml` includes:
+
+```toml
+[triggers]
+crons = ["*/15 * * * *"]
+```
+
+## Dashboard Runtime
+
+The dashboard automatically:
+
+- refreshes every 60 seconds
+- supports manual refresh button
+- renders graceful empty states if any panel is missing data
+
+## Local Development
+
+Run Worker locally:
+
+```bash
+cd cloudflare/worker
+npm run dev
+```
+
+Run static dashboard locally:
+
+```bash
+cd dashboard
+npm run dev
+```
+
+## Minimal Validation
+
+```bash
+cd cloudflare/worker
+npm test
+```
+
+This sanity-checks normalized payload shape expectations.

@@ -1,0 +1,10 @@
+name = "construction-ai-dashboard-api"
+main = "src/index.ts"
+compatibility_date = "2026-03-01"
+
+kv_namespaces = [
+  { binding = "DASHBOARD_KV", id = "REPLACE_WITH_KV_NAMESPACE_ID", preview_id = "REPLACE_WITH_KV_PREVIEW_ID" }
+]
+
+[triggers]
+crons = ["*/15 * * * *"]
