@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-03T23:15:50.480Z",
+  "generated_at": "2026-03-04T01:30:49.881Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -34,6 +34,10 @@
       },
       {
         "date": "2026-03-03",
+        "value": 46
+      },
+      {
+        "date": "2026-03-04",
         "value": 46
       }
     ],
@@ -76,12 +80,12 @@
       "capital_score": 39,
       "pipeline_score": 47,
       "flip_trigger": null,
-      "duration_days": 0,
+      "duration_days": 1,
       "status": "Active"
     }
   ],
   "regime_history_display": {
-    "current_regime_duration_days": 0,
+    "current_regime_duration_days": 1,
     "previous_regime": null,
     "last_flip_date": null,
     "regime_stability": "🟢 Stable"
@@ -167,52 +171,31 @@
       "momentum": "Stable",
       "risk_thermometer_mode": false,
       "freeze_risk": false
-    },
-    "ecosystem_pulse": {
-      "builders": {
-        "score": 41,
-        "state": "🟢"
-      },
-      "architects": {
-        "score": 44,
-        "state": "🟢"
-      },
-      "general_contractors": {
-        "score": 45,
-        "state": "🟢"
-      },
-      "distributors": {
-        "score": 46,
-        "state": "🟢"
-      },
-      "manufacturers": {
-        "score": 46,
-        "state": "🟢"
-      }
-    },
-    "news_badge": {
-      "sources": {
-        "newsapi:top_headlines": 16,
-        "newsapi:everything": 78
-      },
-      "total": 94,
-      "overlay": 0
     }
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 16,
+      "newsapi:top_headlines": 15,
       "newsapi:everything": 78
     },
     "news_unified": [
       {
-        "title": "Mortgage Rates Jump Back Into The 6's - Mortgage News Daily",
-        "url": "https://www.mortgagenewsdaily.com/markets/mortgage-rates-03022026",
-        "source": "Mortgage News Daily",
-        "published_at": "2026-03-02T20:19:26Z",
+        "title": "Stock Market Today: Dow Dips As Trump Says This On Iran; Warren Buffett Stock Flashes Sell Signal (Live Coverage) - Investor's Business Daily",
+        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-us-iran-attacks-nvidia-tesla/",
+        "source": "Investor's Business Daily",
+        "published_at": "2026-03-02T21:37:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…"
+        "description": "The Dow Jones index fell after President Trump spoke on Iran. A Warren Buffett stock dived but Palantir popped on the stock market today."
+      },
+      {
+        "title": "6G Gets an Early Launch Date - Droid Life",
+        "url": "https://www.droid-life.com/2026/03/02/6g-gets-an-early-launch-date/",
+        "source": "Droid Life",
+        "published_at": "2026-03-02T20:16:48Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Did the promises of 5G ever happen? I don’t know. 5G is fine. It seems mostly mature at this stage and our wireless networks in the US are all pretty good. T-Mobile’s network wins awards, Verizon’s does too, and AT&T’s is right there with both of them. I see …"
       },
       {
         "title": "Oil prices soar amid worries of sustained war in Iran - The Washington Post",
@@ -224,22 +207,40 @@
         "description": "The war in the Mideast has effectively halted shipping through the Strait of Hormuz, threatening to push up gas prices and raise the cost of other goods."
       },
       {
-        "title": "Berkshire Stock Slides After 30% Drop in Operating Earnings - WSJ",
-        "url": "https://www.wsj.com/livecoverage/stock-market-today-oil-prices-iran-attack-03-02-2026/card/berkshire-stock-slides-after-30-drop-in-operating-earnings-BfCbWZbTIyKhbT5RcqoH",
-        "source": "The Wall Street Journal",
-        "published_at": "2026-03-02T18:26:37Z",
+        "title": "Mortgage rates jump back above 6% as Iran strikes stoke fresh inflation fears - Yahoo Finance",
+        "url": "https://finance.yahoo.com/personal-finance/mortgages/article/mortgage-rates-jump-back-above-6-as-iran-strikes-stoke-fresh-inflation-fears-110002381.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-02T20:14:29Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null
+        "description": "Mortgage rates jumped on Monday as the US-Israeli strikes on Iran sent oil prices surging, and Treasury yields rose amid fresh concerns about inflation."
+      },
+      {
+        "title": "Iranian Ayatollah Khamenei’s Death Sparks Revolt Among Kalshi Customers - WIRED",
+        "url": "https://www.wired.com/story/iranian-ayatollah-khameneis-death-sparks-revolt-among-kalshi-customers/",
+        "source": "Wired",
+        "published_at": "2026-03-02T20:08:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "How Kalshi decided to settle a market tied to Iran’s supreme leader prompted anger among traders who felt the rules weren’t clear."
       },
       {
         "title": "Paramount Won’t Sell Cable Networks After WBD Merger, Touts “Incredible Footprint” Of Combined Linear Business - Deadline",
-        "url": "https://deadline.com/2026/03/paramount-keeping-cable-networks-after-warner-merger-1236741346/",
+        "url": "http://deadline.com/2026/03/paramount-keeping-cable-networks-after-warner-merger-1236741346/",
         "source": "Deadline",
         "published_at": "2026-03-02T18:10:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null
+        "description": "Paramount executives stressed that once merged with Warner Bros. Discovery, the company combined has no plans to unload any legacy cable networks."
+      },
+      {
+        "title": "Berkshire Hathaway shares drop nearly 5% after poor fourth-quarter results, no bold moves by new CEO Abel - CNBC",
+        "url": "https://www.cnbc.com/2026/03/02/berkshire-hathaway-shares-drop-4percent-after-poor-fourth-quarter-results.html",
+        "source": "CNBC",
+        "published_at": "2026-03-02T17:53:39Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Some had hoped for more aggressive signals on capital deployment given the company's swelling cash balance."
       },
       {
         "title": "Nvidia Invests In Lumentum, Coherent In Optical Networking Push - Investor's Business Daily",
@@ -260,42 +261,6 @@
         "description": "MCB Real Estate announced today that a new Costco Wholesale store is planned for the VIVA White Oak development. The proposed warehouse will be approximately 162,000 square feet and will […]"
       },
       {
-        "title": "S&P 500 turns positive in dramatic comeback as traders buy the dip after U.S.-Iran attacks: Live updates - CNBC",
-        "url": "https://www.cnbc.com/2026/03/01/stock-market-today-live-update.html",
-        "source": "CNBC",
-        "published_at": "2026-03-02T16:34:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The war between the U.S. and Iran is threatening to widen and jolt global energy supplies."
-      },
-      {
-        "title": "Iran war prediction market bets draw heat: 'Insane this is legal' - CNBC",
-        "url": "https://www.cnbc.com/2026/03/02/prediction-markets-iran-strikes-khamenei.html",
-        "source": "CNBC",
-        "published_at": "2026-03-02T16:22:16Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Wagers were placed over the weekend about the fate of Iranian leader Ayatollah Ali Khamenei, who was killed in the bombardment of Iran."
-      },
-      {
-        "title": "The best mobile tech announced at MWC 2026 so far - The Verge",
-        "url": "https://www.theverge.com/tech/882992/mobile-world-congress-mwc-2026-smartphones-laptops-headphones",
-        "source": "The Verge",
-        "published_at": "2026-03-02T15:52:37Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Robot phones, a folding smartphone you can dunk, and a modular laptop concept that lets you swap in ports as needed."
-      },
-      {
-        "title": "Iran attacks show US haven status is in peril - Financial Times",
-        "url": "https://www.ft.com/content/a8c8cfbd-b5fa-4c61-b72a-38531b029623",
-        "source": "Financial Times",
-        "published_at": "2026-03-02T15:27:29Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "In moments of extreme uncertainty investors usually rush to the safety of US government bonds, but not this time"
-      },
-      {
         "title": "‘I Like the Discipline,’ Says Investor About Netflix Stock - TipRanks",
         "url": "https://www.tipranks.com/news/i-like-the-discipline-says-investor-about-netflix-stock",
         "source": "Tipranks.com",
@@ -303,6 +268,15 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "It’s finally over, the months-long bidding war that had massive implications for the entertainment industry. Netflix (NASDAQ:NFLX) threw in the towel on its proposed acquisition of Warner Bros. Discovery’s studios"
+      },
+      {
+        "title": "U.S.-Iran war sparks market sell-off. When is it time to buy the dip? - CNBC",
+        "url": "https://www.cnbc.com/2026/03/02/us-iran-war-sparks-market-sell-off-when-is-it-time-to-buy-the-dip.html",
+        "source": "CNBC",
+        "published_at": "2026-03-02T14:26:02Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A buying opportunity will emerge after Monday’s sell-off. Just not yet."
       },
       {
         "title": "BlackRock, EQT-Led Consortium to Acquire AES for $10.7 Billion - WSJ",
@@ -323,24 +297,6 @@
         "description": "Wall Street recalibrates expectations after Nvidia's massive quarter."
       },
       {
-        "title": "Iran, Berkshire Hathaway earnings, OpenAI's Pentagon deal and more in Morning Squawk - CNBC",
-        "url": "https://www.cnbc.com/2026/03/02/5-things-to-know-before-the-bell.html",
-        "source": "CNBC",
-        "published_at": "2026-03-02T12:53:30Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Here are five key things investors need to know to start the trading day."
-      },
-      {
-        "title": "Here’s how far oil is away from dragging stocks into a bear market, according to Morgan Stanley - MarketWatch",
-        "url": "https://www.marketwatch.com/story/heres-how-far-oil-is-away-from-dragging-stocks-into-a-bear-market-according-to-morgan-stanley-b8e1932b",
-        "source": "MarketWatch",
-        "published_at": "2026-03-02T11:38:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": null
-      },
-      {
         "title": "How long do electric vehicle batteries actually last? - NPR",
         "url": "https://www.npr.org/2026/03/02/nx-s1-5706658/electric-vehicle-battery-lifespan",
         "source": "NPR",
@@ -348,6 +304,96 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations."
+      },
+      {
+        "title": "AWS UAE suffers AZ outage after \"objects strike data center\" and cause fire, amid Iran attacks - Data Center Dynamics",
+        "url": "https://www.datacenterdynamics.com/en/news/aws-uae-outage-after-objects-struck-the-data-center-cause-fire-amid-iran-attacks/",
+        "source": "DatacenterDynamics",
+        "published_at": "2026-03-02T08:59:42Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Availability Zone in ME-CENTRAL-1 brought offline in possible drone or missile attack"
+      },
+      {
+        "title": "What happens if you mess with a birds nest?",
+        "url": "https://www.lifesciencesworld.com/what-happens-if-you-mess-with-a-birds-nest/",
+        "source": "Lifesciencesworld.com",
+        "published_at": "2026-03-03T01:25:03Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "What Happens If You Mess With A Bird’s Nest? Disturbing a bird’s nest can have dire consequences, ranging from nest abandonment and starvation of chicks to legal repercussions; essentially, messing with a bird’s nest can lead to nest failure, harming the bird…"
+      },
+      {
+        "title": "Cycling in Dublin for commuting rises 50% as most residents back more bike lanes",
+        "url": "https://www.irishtimes.com/ireland/dublin/2026/03/03/cycling-in-dublin-for-commuting-rises-50-as-most-residents-back-more-bike-lanes/",
+        "source": "The Irish Times",
+        "published_at": "2026-03-03T00:01:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Residents of Ireland’s five main cities want more space for cyclists, even at the expense of cars"
+      },
+      {
+        "title": "The Gulag, The Holocaust, And The ‘Great Leap Forward’: Inside The Stories Of History’s Deadliest Dictators",
+        "url": "https://allthatsinteresting.com/deadliest-dictator",
+        "source": "Allthatsinteresting.com",
+        "published_at": "2026-03-03T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Recent scholarship has suggested that Mao Zedong was the deadliest dictator in history, but he was far from the only one responsible for millions of deaths.\nThe post The Gulag, The Holocaust, And The ‘Great Leap Forward’: Inside The Stories Of History’s Deadl…"
+      },
+      {
+        "title": "Evaluation of antimicrobial resistance governance across 193 countries to inform the 2026 Global Action Plan update",
+        "url": "https://www.nature.com/articles/s41591-026-04257-1",
+        "source": "Nature.com",
+        "published_at": "2026-03-03T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "An evaluation across 193 countries for the 2026 Global Action Plan update showed that countries with strong multisectoral governance and early surveillance adoption achieved long-term improvements in reducing antimicrobial resistance."
+      },
+      {
+        "title": "Beijing Doesn’t Think Like Washington—And The Iran Conflict Shows Why",
+        "url": "https://carnegieendowment.org/emissary/2026/03/iran-china-us-intervention-strategy",
+        "source": "Carnegieendowment.org",
+        "published_at": "2026-03-03T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Hoover Institution fellow Nicholas Burns said, \"China is proving to be a feckless friend for its authoritarian allies.\""
+      },
+      {
+        "title": "Amniogenesis in embryos and stem cell models",
+        "url": "https://www.nature.com/articles/s41556-026-01873-4",
+        "source": "Nature.com",
+        "published_at": "2026-03-03T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "This Review discusses the mechanisms underlying both cavitation and folding amniogenesis and provides an overview of the various recent stem cell-based human embryo models that have been developed to elucidate amniotic formation and function."
+      },
+      {
+        "title": "Cleveland Browns hit an ‘exciting milestone’ in stadium project",
+        "url": "https://www.dawgsbynature.com/cleveland-browns-news/118895/browns-hit-an-exciting-milestone-in-brrok-park-stadium-project",
+        "source": "Dawgs By Nature",
+        "published_at": "2026-03-02T23:38:19Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Construction crews started to dig the hole on Monday that will eventually become the sparkling indoor stadium."
+      },
+      {
+        "title": "Cerro de Pasco Resources Enters Project Development Funding Agreement with U.S. International Development Finance Corporation for Quiulacocha",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247933/0/en/Cerro-de-Pasco-Resources-Enters-Project-Development-Funding-Agreement-with-U-S-International-Development-Finance-Corporation-for-Quiulacocha.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T23:24:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "MONTRÉAL, March 02, 2026 (GLOBE NEWSWIRE) -- Cerro de Pasco Resources Inc. (TSXV: CDPR) (OTCQB: GPPRF) (BVL: CDPR) announces that it has entered into a Project Development Funding Agreement (the “Agreement”) with the U.S. International Development Finance Cor…"
+      },
+      {
+        "title": "California’s High-Speed Rail Touts Tiny Savings Amid Epic Cost Explosion",
+        "url": "https://dailycaller.com/2026/03/02/california-high-speed-rail-billions-cost/",
+        "source": "The Daily Caller",
+        "published_at": "2026-03-02T23:21:12Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "CA's high-speed rail released a new budget plan, touting a few billion in savings but failing to emphasize costs have significantly risen since its inception."
       },
       {
         "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
@@ -429,6 +475,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "The tax revenue could result in direct payments to Americans making less than $150,000 a year."
+      },
+      {
+        "title": "Ferries from Olympia to SeaTac? Bellingham to the San Juans? Lawmaker has a plan",
+        "url": "https://www.bellinghamherald.com/news/state/washington/article314893927.html",
+        "source": "Bellingham Herald",
+        "published_at": "2026-03-02T21:42:53Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "House Bill 1923 by Rep. Greg Nance, a Kitsap Democrat, is scheduled for an executive session Monday in the Senate Transportation Committee."
       },
       {
         "title": "PIMCO Closed-End Funds Declare Monthly Common Share Distributions",
@@ -960,110 +1015,33 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "LOS ANGELES, March 02, 2026 (GLOBE NEWSWIRE) -- RadNet, Inc. (NASDAQ: RDNT), a national leader in providing high-quality, cost-effective, fixed-site outpatient diagnostic imaging services through a network of 418 owned and/or operated outpatient imaging cente…"
-      },
-      {
-        "title": "American Catholics launch crowdfunding effort to gift Pope Leo XIV papal tiara",
-        "url": "https://www.ewtnnews.com/world/us/papal-tiara-project-for-pope-leoxiv",
-        "source": "Ewtnnews.com",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "A nonprofit hopes to generate enough small donations to construct a papal tiara for Pope Leo XIV as a gift from American Catholics."
-      },
-      {
-        "title": "Records break down Boston’s $135M White Stadium cost, and reveal City Hall waited to tell taxpayers",
-        "url": "https://www.bostonherald.com/2026/03/02/records-break-down-bostons-135m-white-stadium-cost-and-reveal-city-hall-waited-to-tell-taxpayers/",
-        "source": "Boston Herald",
-        "published_at": "2026-03-02T10:03:37Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Newly released public records break down the taxpayer-funded spending for Boston’s White Stadium rebuild and show the mayor apparently hid the fact that the city’s final cost had nearly tripled to $135 million for at least a month from the public."
-      },
-      {
-        "title": "Weekly Climate and Energy News Roundup #681",
-        "url": "https://wattsupwiththat.com/2026/03/02/weekly-climate-and-energy-news-roundup-681/",
-        "source": "Wattsupwiththat.com",
-        "published_at": "2026-03-02T10:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Quote of the Week: “We have a way of checking whether an idea is correct or not that has nothing to do with where it came from. We simply test it against observation. So, in science we are not interested in where an idea comes from.”— Richard Feynman, “The Un…"
-      },
-      {
-        "title": "VA Rolls Out Risky Consolidation Scheme",
-        "url": "http://prospect.org/2026/03/02/va-veterans-health-administration-consolidation-doug-collins-trump/",
-        "source": "The American Prospect",
-        "published_at": "2026-03-02T10:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The proposal to reorganize the Veterans Health Administration would centralize power at the top and cause a multitude of problems, critics argue.\nThe post VA Rolls Out Risky Consolidation Scheme appeared first on The American Prospect."
-      },
-      {
-        "title": "Orezone to Release 2025 Financial Results on March 25, 2026 and Files ASX Appendix 4E",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247117/0/en/Orezone-to-Release-2025-Financial-Results-on-March-25-2026-and-Files-ASX-Appendix-4E.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T10:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) -- Orezone Gold Corporation (TSX: ORE | ASX: ORE | OTCQX: ORZCF) will announce its fourth quarter and full year 2025 results on Wednesday, March 25, 2026, after TSX market close. The Company will ho…"
-      },
-      {
-        "title": "RIB Unite 2026: Connecting Construction Together",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247102/0/en/RIB-Unite-2026-Connecting-Construction-Together.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T09:33:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "RIB Software Invites AEC Leaders to its Global Thought Leadership EventSTUTTGART, 2 March 2026 — RIB Software today announced the return of RIB Unite, its global virtual thought leadership event taking place on 19 March 2026. Under the theme “Connecting Const…"
-      },
-      {
-        "title": "From Iran to Venezuela to New York, Trump wants to control the world's oil",
-        "url": "https://www.businessinsider.com/trump-energy-dominance-oil-iran-venezuela-2026-2",
-        "source": "Business Insider",
-        "published_at": "2026-03-02T09:17:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Forget Saudi Arabia. Trump is making America the world's most dominant petrostate."
-      },
-      {
-        "title": "FMCSA wants you: 18 truckers needed to 'fine-tune' sleeper, HOS-pause pilot programs",
-        "url": "https://www.overdriveonline.com/hours-of-service/article/15818524/fmcsa-wants-18-drivers-to-help-test-hos-pilot-programs",
-        "source": "Overdriveonline.com",
-        "published_at": "2026-03-02T09:05:45Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The drivers will help FMCSA test its pilot programs on split-sleeper time and split duty periods (pausing the 14-hour clock) before broader rollout. Also: Heating fuel emergency extended in 15 states; rest area reopens along I-80; Saia's NASCAR sponsorship re…"
-      },
-      {
-        "title": "Vacuum Insulation Panels (VIPs) Global Market Overview 2026: A $2.8 Billion Market by 2032, Driven by Appliance Adoption, Pharmaceutical Cold Chain and Expanding Commercial Building Applications",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247087/28124/en/Vacuum-Insulation-Panels-VIPs-Global-Market-Overview-2026-A-2-8-Billion-Market-by-2032-Driven-by-Appliance-Adoption-Pharmaceutical-Cold-Chain-and-Expanding-Commercial-Building-Appl.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T09:02:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "VIPs offer key opportunities in energy-efficient appliances, particularly in refrigeration due to space and performance needs. Growth is driven by appliance and cold chain sectors, especially in Asia-Pacific. They're increasingly used in construction projects…"
-      },
-      {
-        "title": "Deadline day: $20B submarine showdown puts Korean and German bids in spotlight",
-        "url": "https://www.cbc.ca/news/politics/submarines-canada-korea-germany-jobs-9.7108627",
-        "source": "CBC News",
-        "published_at": "2026-03-02T09:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Canada's high-speed push to replace its aging Victoria-class submarines reaches a pivotal moment on Monday as South Korea's Hanwha Ocean and Germany's TKMS submit formal bids in a program worth more than $20 billion. The contest — to supply up to 12 boats — w…"
       }
     ],
     "news_with_impact": [
       {
-        "title": "Mortgage Rates Jump Back Into The 6's - Mortgage News Daily",
-        "url": "https://www.mortgagenewsdaily.com/markets/mortgage-rates-03022026",
-        "source": "Mortgage News Daily",
-        "published_at": "2026-03-02T20:19:26Z",
+        "title": "Stock Market Today: Dow Dips As Trump Says This On Iran; Warren Buffett Stock Flashes Sell Signal (Live Coverage) - Investor's Business Daily",
+        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-us-iran-attacks-nvidia-tesla/",
+        "source": "Investor's Business Daily",
+        "published_at": "2026-03-02T21:37:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
-        "impact_score": 65,
+        "description": "The Dow Jones index fell after President Trump spoke on Iran. A Warren Buffett stock dived but Palantir popped on the stock market today.",
+        "impact_score": 40,
         "themes": [
-          "capital"
+          "other"
+        ]
+      },
+      {
+        "title": "6G Gets an Early Launch Date - Droid Life",
+        "url": "https://www.droid-life.com/2026/03/02/6g-gets-an-early-launch-date/",
+        "source": "Droid Life",
+        "published_at": "2026-03-02T20:16:48Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Did the promises of 5G ever happen? I don’t know. 5G is fine. It seems mostly mature at this stage and our wireless networks in the US are all pretty good. T-Mobile’s network wins awards, Verizon’s does too, and AT&T’s is right there with both of them. I see …",
+        "impact_score": 40,
+        "themes": [
+          "other"
         ]
       },
       {
@@ -1080,13 +1058,28 @@
         ]
       },
       {
-        "title": "Berkshire Stock Slides After 30% Drop in Operating Earnings - WSJ",
-        "url": "https://www.wsj.com/livecoverage/stock-market-today-oil-prices-iran-attack-03-02-2026/card/berkshire-stock-slides-after-30-drop-in-operating-earnings-BfCbWZbTIyKhbT5RcqoH",
-        "source": "The Wall Street Journal",
-        "published_at": "2026-03-02T18:26:37Z",
+        "title": "Mortgage rates jump back above 6% as Iran strikes stoke fresh inflation fears - Yahoo Finance",
+        "url": "https://finance.yahoo.com/personal-finance/mortgages/article/mortgage-rates-jump-back-above-6-as-iran-strikes-stoke-fresh-inflation-fears-110002381.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-02T20:14:29Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
+        "description": "Mortgage rates jumped on Monday as the US-Israeli strikes on Iran sent oil prices surging, and Treasury yields rose amid fresh concerns about inflation.",
+        "impact_score": 65,
+        "themes": [
+          "capital",
+          "trade",
+          "macro"
+        ]
+      },
+      {
+        "title": "Iranian Ayatollah Khamenei’s Death Sparks Revolt Among Kalshi Customers - WIRED",
+        "url": "https://www.wired.com/story/iranian-ayatollah-khameneis-death-sparks-revolt-among-kalshi-customers/",
+        "source": "Wired",
+        "published_at": "2026-03-02T20:08:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "How Kalshi decided to settle a market tied to Iran’s supreme leader prompted anger among traders who felt the rules weren’t clear.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1094,12 +1087,25 @@
       },
       {
         "title": "Paramount Won’t Sell Cable Networks After WBD Merger, Touts “Incredible Footprint” Of Combined Linear Business - Deadline",
-        "url": "https://deadline.com/2026/03/paramount-keeping-cable-networks-after-warner-merger-1236741346/",
+        "url": "http://deadline.com/2026/03/paramount-keeping-cable-networks-after-warner-merger-1236741346/",
         "source": "Deadline",
         "published_at": "2026-03-02T18:10:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
+        "description": "Paramount executives stressed that once merged with Warner Bros. Discovery, the company combined has no plans to unload any legacy cable networks.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Berkshire Hathaway shares drop nearly 5% after poor fourth-quarter results, no bold moves by new CEO Abel - CNBC",
+        "url": "https://www.cnbc.com/2026/03/02/berkshire-hathaway-shares-drop-4percent-after-poor-fourth-quarter-results.html",
+        "source": "CNBC",
+        "published_at": "2026-03-02T17:53:39Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Some had hoped for more aggressive signals on capital deployment given the company's swelling cash balance.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1132,58 +1138,6 @@
         ]
       },
       {
-        "title": "S&P 500 turns positive in dramatic comeback as traders buy the dip after U.S.-Iran attacks: Live updates - CNBC",
-        "url": "https://www.cnbc.com/2026/03/01/stock-market-today-live-update.html",
-        "source": "CNBC",
-        "published_at": "2026-03-02T16:34:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The war between the U.S. and Iran is threatening to widen and jolt global energy supplies.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Iran war prediction market bets draw heat: 'Insane this is legal' - CNBC",
-        "url": "https://www.cnbc.com/2026/03/02/prediction-markets-iran-strikes-khamenei.html",
-        "source": "CNBC",
-        "published_at": "2026-03-02T16:22:16Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Wagers were placed over the weekend about the fate of Iranian leader Ayatollah Ali Khamenei, who was killed in the bombardment of Iran.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "The best mobile tech announced at MWC 2026 so far - The Verge",
-        "url": "https://www.theverge.com/tech/882992/mobile-world-congress-mwc-2026-smartphones-laptops-headphones",
-        "source": "The Verge",
-        "published_at": "2026-03-02T15:52:37Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Robot phones, a folding smartphone you can dunk, and a modular laptop concept that lets you swap in ports as needed.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Iran attacks show US haven status is in peril - Financial Times",
-        "url": "https://www.ft.com/content/a8c8cfbd-b5fa-4c61-b72a-38531b029623",
-        "source": "Financial Times",
-        "published_at": "2026-03-02T15:27:29Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "In moments of extreme uncertainty investors usually rush to the safety of US government bonds, but not this time",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "‘I Like the Discipline,’ Says Investor About Netflix Stock - TipRanks",
         "url": "https://www.tipranks.com/news/i-like-the-discipline-says-investor-about-netflix-stock",
         "source": "Tipranks.com",
@@ -1191,6 +1145,19 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "It’s finally over, the months-long bidding war that had massive implications for the entertainment industry. Netflix (NASDAQ:NFLX) threw in the towel on its proposed acquisition of Warner Bros. Discovery’s studios",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "U.S.-Iran war sparks market sell-off. When is it time to buy the dip? - CNBC",
+        "url": "https://www.cnbc.com/2026/03/02/us-iran-war-sparks-market-sell-off-when-is-it-time-to-buy-the-dip.html",
+        "source": "CNBC",
+        "published_at": "2026-03-02T14:26:02Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A buying opportunity will emerge after Monday’s sell-off. Just not yet.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1223,32 +1190,6 @@
         ]
       },
       {
-        "title": "Iran, Berkshire Hathaway earnings, OpenAI's Pentagon deal and more in Morning Squawk - CNBC",
-        "url": "https://www.cnbc.com/2026/03/02/5-things-to-know-before-the-bell.html",
-        "source": "CNBC",
-        "published_at": "2026-03-02T12:53:30Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Here are five key things investors need to know to start the trading day.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Here’s how far oil is away from dragging stocks into a bear market, according to Morgan Stanley - MarketWatch",
-        "url": "https://www.marketwatch.com/story/heres-how-far-oil-is-away-from-dragging-stocks-into-a-bear-market-according-to-morgan-stanley-b8e1932b",
-        "source": "MarketWatch",
-        "published_at": "2026-03-02T11:38:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": null,
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "How long do electric vehicle batteries actually last? - NPR",
         "url": "https://www.npr.org/2026/03/02/nx-s1-5706658/electric-vehicle-battery-lifespan",
         "source": "NPR",
@@ -1256,6 +1197,137 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "AWS UAE suffers AZ outage after \"objects strike data center\" and cause fire, amid Iran attacks - Data Center Dynamics",
+        "url": "https://www.datacenterdynamics.com/en/news/aws-uae-outage-after-objects-struck-the-data-center-cause-fire-amid-iran-attacks/",
+        "source": "DatacenterDynamics",
+        "published_at": "2026-03-02T08:59:42Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Availability Zone in ME-CENTRAL-1 brought offline in possible drone or missile attack",
+        "impact_score": 40,
+        "themes": [
+          "trade",
+          "commercial"
+        ]
+      },
+      {
+        "title": "What happens if you mess with a birds nest?",
+        "url": "https://www.lifesciencesworld.com/what-happens-if-you-mess-with-a-birds-nest/",
+        "source": "Lifesciencesworld.com",
+        "published_at": "2026-03-03T01:25:03Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "What Happens If You Mess With A Bird’s Nest? Disturbing a bird’s nest can have dire consequences, ranging from nest abandonment and starvation of chicks to legal repercussions; essentially, messing with a bird’s nest can lead to nest failure, harming the bird…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Cycling in Dublin for commuting rises 50% as most residents back more bike lanes",
+        "url": "https://www.irishtimes.com/ireland/dublin/2026/03/03/cycling-in-dublin-for-commuting-rises-50-as-most-residents-back-more-bike-lanes/",
+        "source": "The Irish Times",
+        "published_at": "2026-03-03T00:01:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Residents of Ireland’s five main cities want more space for cyclists, even at the expense of cars",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "The Gulag, The Holocaust, And The ‘Great Leap Forward’: Inside The Stories Of History’s Deadliest Dictators",
+        "url": "https://allthatsinteresting.com/deadliest-dictator",
+        "source": "Allthatsinteresting.com",
+        "published_at": "2026-03-03T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Recent scholarship has suggested that Mao Zedong was the deadliest dictator in history, but he was far from the only one responsible for millions of deaths.\nThe post The Gulag, The Holocaust, And The ‘Great Leap Forward’: Inside The Stories Of History’s Deadl…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Evaluation of antimicrobial resistance governance across 193 countries to inform the 2026 Global Action Plan update",
+        "url": "https://www.nature.com/articles/s41591-026-04257-1",
+        "source": "Nature.com",
+        "published_at": "2026-03-03T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "An evaluation across 193 countries for the 2026 Global Action Plan update showed that countries with strong multisectoral governance and early surveillance adoption achieved long-term improvements in reducing antimicrobial resistance.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Beijing Doesn’t Think Like Washington—And The Iran Conflict Shows Why",
+        "url": "https://carnegieendowment.org/emissary/2026/03/iran-china-us-intervention-strategy",
+        "source": "Carnegieendowment.org",
+        "published_at": "2026-03-03T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Hoover Institution fellow Nicholas Burns said, \"China is proving to be a feckless friend for its authoritarian allies.\"",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Amniogenesis in embryos and stem cell models",
+        "url": "https://www.nature.com/articles/s41556-026-01873-4",
+        "source": "Nature.com",
+        "published_at": "2026-03-03T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "This Review discusses the mechanisms underlying both cavitation and folding amniogenesis and provides an overview of the various recent stem cell-based human embryo models that have been developed to elucidate amniotic formation and function.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Cleveland Browns hit an ‘exciting milestone’ in stadium project",
+        "url": "https://www.dawgsbynature.com/cleveland-browns-news/118895/browns-hit-an-exciting-milestone-in-brrok-park-stadium-project",
+        "source": "Dawgs By Nature",
+        "published_at": "2026-03-02T23:38:19Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Construction crews started to dig the hole on Monday that will eventually become the sparkling indoor stadium.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Cerro de Pasco Resources Enters Project Development Funding Agreement with U.S. International Development Finance Corporation for Quiulacocha",
+        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247933/0/en/Cerro-de-Pasco-Resources-Enters-Project-Development-Funding-Agreement-with-U-S-International-Development-Finance-Corporation-for-Quiulacocha.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-02T23:24:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "MONTRÉAL, March 02, 2026 (GLOBE NEWSWIRE) -- Cerro de Pasco Resources Inc. (TSXV: CDPR) (OTCQB: GPPRF) (BVL: CDPR) announces that it has entered into a Project Development Funding Agreement (the “Agreement”) with the U.S. International Development Finance Cor…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "California’s High-Speed Rail Touts Tiny Savings Amid Epic Cost Explosion",
+        "url": "https://dailycaller.com/2026/03/02/california-high-speed-rail-billions-cost/",
+        "source": "The Daily Caller",
+        "published_at": "2026-03-02T23:21:12Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "CA's high-speed rail released a new budget plan, touting a few billion in savings but failing to emphasize costs have significantly risen since its inception.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1373,6 +1445,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "The tax revenue could result in direct payments to Americans making less than $150,000 a year.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Ferries from Olympia to SeaTac? Bellingham to the San Juans? Lawmaker has a plan",
+        "url": "https://www.bellinghamherald.com/news/state/washington/article314893927.html",
+        "source": "Bellingham Herald",
+        "published_at": "2026-03-02T21:42:53Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "House Bill 1923 by Rep. Greg Nance, a Kitsap Democrat, is scheduled for an executive session Monday in the Senate Transportation Committee.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2145,150 +2230,22 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "American Catholics launch crowdfunding effort to gift Pope Leo XIV papal tiara",
-        "url": "https://www.ewtnnews.com/world/us/papal-tiara-project-for-pope-leoxiv",
-        "source": "Ewtnnews.com",
-        "published_at": "2026-03-02T11:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "A nonprofit hopes to generate enough small donations to construct a papal tiara for Pope Leo XIV as a gift from American Catholics.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Records break down Boston’s $135M White Stadium cost, and reveal City Hall waited to tell taxpayers",
-        "url": "https://www.bostonherald.com/2026/03/02/records-break-down-bostons-135m-white-stadium-cost-and-reveal-city-hall-waited-to-tell-taxpayers/",
-        "source": "Boston Herald",
-        "published_at": "2026-03-02T10:03:37Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Newly released public records break down the taxpayer-funded spending for Boston’s White Stadium rebuild and show the mayor apparently hid the fact that the city’s final cost had nearly tripled to $135 million for at least a month from the public.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Weekly Climate and Energy News Roundup #681",
-        "url": "https://wattsupwiththat.com/2026/03/02/weekly-climate-and-energy-news-roundup-681/",
-        "source": "Wattsupwiththat.com",
-        "published_at": "2026-03-02T10:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Quote of the Week: “We have a way of checking whether an idea is correct or not that has nothing to do with where it came from. We simply test it against observation. So, in science we are not interested in where an idea comes from.”— Richard Feynman, “The Un…",
-        "impact_score": 40,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "VA Rolls Out Risky Consolidation Scheme",
-        "url": "http://prospect.org/2026/03/02/va-veterans-health-administration-consolidation-doug-collins-trump/",
-        "source": "The American Prospect",
-        "published_at": "2026-03-02T10:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The proposal to reorganize the Veterans Health Administration would centralize power at the top and cause a multitude of problems, critics argue.\nThe post VA Rolls Out Risky Consolidation Scheme appeared first on The American Prospect.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Orezone to Release 2025 Financial Results on March 25, 2026 and Files ASX Appendix 4E",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247117/0/en/Orezone-to-Release-2025-Financial-Results-on-March-25-2026-and-Files-ASX-Appendix-4E.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T10:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) -- Orezone Gold Corporation (TSX: ORE | ASX: ORE | OTCQX: ORZCF) will announce its fourth quarter and full year 2025 results on Wednesday, March 25, 2026, after TSX market close. The Company will ho…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "RIB Unite 2026: Connecting Construction Together",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247102/0/en/RIB-Unite-2026-Connecting-Construction-Together.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T09:33:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "RIB Software Invites AEC Leaders to its Global Thought Leadership EventSTUTTGART, 2 March 2026 — RIB Software today announced the return of RIB Unite, its global virtual thought leadership event taking place on 19 March 2026. Under the theme “Connecting Const…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "From Iran to Venezuela to New York, Trump wants to control the world's oil",
-        "url": "https://www.businessinsider.com/trump-energy-dominance-oil-iran-venezuela-2026-2",
-        "source": "Business Insider",
-        "published_at": "2026-03-02T09:17:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Forget Saudi Arabia. Trump is making America the world's most dominant petrostate.",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "FMCSA wants you: 18 truckers needed to 'fine-tune' sleeper, HOS-pause pilot programs",
-        "url": "https://www.overdriveonline.com/hours-of-service/article/15818524/fmcsa-wants-18-drivers-to-help-test-hos-pilot-programs",
-        "source": "Overdriveonline.com",
-        "published_at": "2026-03-02T09:05:45Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The drivers will help FMCSA test its pilot programs on split-sleeper time and split duty periods (pausing the 14-hour clock) before broader rollout. Also: Heating fuel emergency extended in 15 states; rest area reopens along I-80; Saia's NASCAR sponsorship re…",
-        "impact_score": 60,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Vacuum Insulation Panels (VIPs) Global Market Overview 2026: A $2.8 Billion Market by 2032, Driven by Appliance Adoption, Pharmaceutical Cold Chain and Expanding Commercial Building Applications",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247087/28124/en/Vacuum-Insulation-Panels-VIPs-Global-Market-Overview-2026-A-2-8-Billion-Market-by-2032-Driven-by-Appliance-Adoption-Pharmaceutical-Cold-Chain-and-Expanding-Commercial-Building-Appl.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T09:02:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "VIPs offer key opportunities in energy-efficient appliances, particularly in refrigeration due to space and performance needs. Growth is driven by appliance and cold chain sectors, especially in Asia-Pacific. They're increasingly used in construction projects…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Deadline day: $20B submarine showdown puts Korean and German bids in spotlight",
-        "url": "https://www.cbc.ca/news/politics/submarines-canada-korea-germany-jobs-9.7108627",
-        "source": "CBC News",
-        "published_at": "2026-03-02T09:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Canada's high-speed push to replace its aging Victoria-class submarines reaches a pivotal moment on Monday as South Korea's Hanwha Ocean and Germany's TKMS submit formal bids in a program worth more than $20 billion. The contest — to supply up to 12 boats — w…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
       {
-        "title": "Mortgage Rates Jump Back Into The 6's - Mortgage News Daily",
-        "url": "https://www.mortgagenewsdaily.com/markets/mortgage-rates-03022026",
-        "source": "Mortgage News Daily",
-        "published_at": "2026-03-02T20:19:26Z",
+        "title": "Mortgage rates jump back above 6% as Iran strikes stoke fresh inflation fears - Yahoo Finance",
+        "url": "https://finance.yahoo.com/personal-finance/mortgages/article/mortgage-rates-jump-back-above-6-as-iran-strikes-stoke-fresh-inflation-fears-110002381.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-02T20:14:29Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
+        "description": "Mortgage rates jumped on Monday as the US-Israeli strikes on Iran sent oil prices surging, and Treasury yields rose amid fresh concerns about inflation.",
         "impact_score": 65,
         "themes": [
-          "capital"
+          "capital",
+          "trade",
+          "macro"
         ]
       },
       {
@@ -2357,19 +2314,6 @@
         ]
       },
       {
-        "title": "FMCSA wants you: 18 truckers needed to 'fine-tune' sleeper, HOS-pause pilot programs",
-        "url": "https://www.overdriveonline.com/hours-of-service/article/15818524/fmcsa-wants-18-drivers-to-help-test-hos-pilot-programs",
-        "source": "Overdriveonline.com",
-        "published_at": "2026-03-02T09:05:45Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The drivers will help FMCSA test its pilot programs on split-sleeper time and split duty periods (pausing the 14-hour clock) before broader rollout. Also: Heating fuel emergency extended in 15 states; rest area reopens along I-80; Saia's NASCAR sponsorship re…",
-        "impact_score": 60,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Oil prices soar amid worries of sustained war in Iran - The Washington Post",
         "url": "https://www.washingtonpost.com/business/2026/03/02/oil-prices-strait-hormuz/",
         "source": "The Washington Post",
@@ -2377,19 +2321,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "The war in the Mideast has effectively halted shipping through the Strait of Hormuz, threatening to push up gas prices and raise the cost of other goods.",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Here’s how far oil is away from dragging stocks into a bear market, according to Morgan Stanley - MarketWatch",
-        "url": "https://www.marketwatch.com/story/heres-how-far-oil-is-away-from-dragging-stocks-into-a-bear-market-according-to-morgan-stanley-b8e1932b",
-        "source": "MarketWatch",
-        "published_at": "2026-03-02T11:38:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": null,
         "impact_score": 55,
         "themes": [
           "other"
@@ -2407,22 +2338,50 @@
         "themes": [
           "pipeline"
         ]
+      },
+      {
+        "title": "Stock Market Today: Dow Dips As Trump Says This On Iran; Warren Buffett Stock Flashes Sell Signal (Live Coverage) - Investor's Business Daily",
+        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-us-iran-attacks-nvidia-tesla/",
+        "source": "Investor's Business Daily",
+        "published_at": "2026-03-02T21:37:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The Dow Jones index fell after President Trump spoke on Iran. A Warren Buffett stock dived but Palantir popped on the stock market today.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "6G Gets an Early Launch Date - Droid Life",
+        "url": "https://www.droid-life.com/2026/03/02/6g-gets-an-early-launch-date/",
+        "source": "Droid Life",
+        "published_at": "2026-03-02T20:16:48Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Did the promises of 5G ever happen? I don’t know. 5G is fine. It seems mostly mature at this stage and our wireless networks in the US are all pretty good. T-Mobile’s network wins awards, Verizon’s does too, and AT&T’s is right there with both of them. I see …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
       }
     ],
     "news_pressure_overlay": 0,
     "news_clusters": {
       "capital": [
         {
-          "title": "Mortgage Rates Jump Back Into The 6's - Mortgage News Daily",
-          "url": "https://www.mortgagenewsdaily.com/markets/mortgage-rates-03022026",
-          "source": "Mortgage News Daily",
-          "published_at": "2026-03-02T20:19:26Z",
+          "title": "Mortgage rates jump back above 6% as Iran strikes stoke fresh inflation fears - Yahoo Finance",
+          "url": "https://finance.yahoo.com/personal-finance/mortgages/article/mortgage-rates-jump-back-above-6-as-iran-strikes-stoke-fresh-inflation-fears-110002381.html",
+          "source": "Yahoo Entertainment",
+          "published_at": "2026-03-02T20:14:29Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
+          "description": "Mortgage rates jumped on Monday as the US-Israeli strikes on Iran sent oil prices surging, and Treasury yields rose amid fresh concerns about inflation.",
           "impact_score": 65,
           "themes": [
-            "capital"
+            "capital",
+            "trade",
+            "macro"
           ]
         },
         {
@@ -2535,6 +2494,35 @@
       ],
       "trade": [
         {
+          "title": "Mortgage rates jump back above 6% as Iran strikes stoke fresh inflation fears - Yahoo Finance",
+          "url": "https://finance.yahoo.com/personal-finance/mortgages/article/mortgage-rates-jump-back-above-6-as-iran-strikes-stoke-fresh-inflation-fears-110002381.html",
+          "source": "Yahoo Entertainment",
+          "published_at": "2026-03-02T20:14:29Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Mortgage rates jumped on Monday as the US-Israeli strikes on Iran sent oil prices surging, and Treasury yields rose amid fresh concerns about inflation.",
+          "impact_score": 65,
+          "themes": [
+            "capital",
+            "trade",
+            "macro"
+          ]
+        },
+        {
+          "title": "AWS UAE suffers AZ outage after \"objects strike data center\" and cause fire, amid Iran attacks - Data Center Dynamics",
+          "url": "https://www.datacenterdynamics.com/en/news/aws-uae-outage-after-objects-struck-the-data-center-cause-fire-amid-iran-attacks/",
+          "source": "DatacenterDynamics",
+          "published_at": "2026-03-02T08:59:42Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Availability Zone in ME-CENTRAL-1 brought offline in possible drone or missile attack",
+          "impact_score": 40,
+          "themes": [
+            "trade",
+            "commercial"
+          ]
+        },
+        {
           "title": "Air strikes, death of Ayatollah Khamenei, celebrated by many in Chicago Iranian community",
           "url": "https://freerepublic.com/focus/f-news/4368918/posts",
           "source": "Freerepublic.com",
@@ -2575,25 +2563,54 @@
           "themes": [
             "materials"
           ]
-        },
-        {
-          "title": "Weekly Climate and Energy News Roundup #681",
-          "url": "https://wattsupwiththat.com/2026/03/02/weekly-climate-and-energy-news-roundup-681/",
-          "source": "Wattsupwiththat.com",
-          "published_at": "2026-03-02T10:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Quote of the Week: “We have a way of checking whether an idea is correct or not that has nothing to do with where it came from. We simply test it against observation. So, in science we are not interested in where an idea comes from.”— Richard Feynman, “The Un…",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
         }
       ],
       "regulatory": [],
-      "macro": [],
+      "macro": [
+        {
+          "title": "Mortgage rates jump back above 6% as Iran strikes stoke fresh inflation fears - Yahoo Finance",
+          "url": "https://finance.yahoo.com/personal-finance/mortgages/article/mortgage-rates-jump-back-above-6-as-iran-strikes-stoke-fresh-inflation-fears-110002381.html",
+          "source": "Yahoo Entertainment",
+          "published_at": "2026-03-02T20:14:29Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Mortgage rates jumped on Monday as the US-Israeli strikes on Iran sent oil prices surging, and Treasury yields rose amid fresh concerns about inflation.",
+          "impact_score": 65,
+          "themes": [
+            "capital",
+            "trade",
+            "macro"
+          ]
+        }
+      ],
       "land": [],
       "other": [
+        {
+          "title": "Stock Market Today: Dow Dips As Trump Says This On Iran; Warren Buffett Stock Flashes Sell Signal (Live Coverage) - Investor's Business Daily",
+          "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-us-iran-attacks-nvidia-tesla/",
+          "source": "Investor's Business Daily",
+          "published_at": "2026-03-02T21:37:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The Dow Jones index fell after President Trump spoke on Iran. A Warren Buffett stock dived but Palantir popped on the stock market today.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "6G Gets an Early Launch Date - Droid Life",
+          "url": "https://www.droid-life.com/2026/03/02/6g-gets-an-early-launch-date/",
+          "source": "Droid Life",
+          "published_at": "2026-03-02T20:16:48Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Did the promises of 5G ever happen? I don’t know. 5G is fine. It seems mostly mature at this stage and our wireless networks in the US are all pretty good. T-Mobile’s network wins awards, Verizon’s does too, and AT&T’s is right there with both of them. I see …",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
         {
           "title": "Oil prices soar amid worries of sustained war in Iran - The Washington Post",
           "url": "https://www.washingtonpost.com/business/2026/03/02/oil-prices-strait-hormuz/",
@@ -2608,13 +2625,13 @@
           ]
         },
         {
-          "title": "Berkshire Stock Slides After 30% Drop in Operating Earnings - WSJ",
-          "url": "https://www.wsj.com/livecoverage/stock-market-today-oil-prices-iran-attack-03-02-2026/card/berkshire-stock-slides-after-30-drop-in-operating-earnings-BfCbWZbTIyKhbT5RcqoH",
-          "source": "The Wall Street Journal",
-          "published_at": "2026-03-02T18:26:37Z",
+          "title": "Iranian Ayatollah Khamenei’s Death Sparks Revolt Among Kalshi Customers - WIRED",
+          "url": "https://www.wired.com/story/iranian-ayatollah-khameneis-death-sparks-revolt-among-kalshi-customers/",
+          "source": "Wired",
+          "published_at": "2026-03-02T20:08:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
+          "description": "How Kalshi decided to settle a market tied to Iran’s supreme leader prompted anger among traders who felt the rules weren’t clear.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -2622,12 +2639,25 @@
         },
         {
           "title": "Paramount Won’t Sell Cable Networks After WBD Merger, Touts “Incredible Footprint” Of Combined Linear Business - Deadline",
-          "url": "https://deadline.com/2026/03/paramount-keeping-cable-networks-after-warner-merger-1236741346/",
+          "url": "http://deadline.com/2026/03/paramount-keeping-cable-networks-after-warner-merger-1236741346/",
           "source": "Deadline",
           "published_at": "2026-03-02T18:10:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
+          "description": "Paramount executives stressed that once merged with Warner Bros. Discovery, the company combined has no plans to unload any legacy cable networks.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Berkshire Hathaway shares drop nearly 5% after poor fourth-quarter results, no bold moves by new CEO Abel - CNBC",
+          "url": "https://www.cnbc.com/2026/03/02/berkshire-hathaway-shares-drop-4percent-after-poor-fourth-quarter-results.html",
+          "source": "CNBC",
+          "published_at": "2026-03-02T17:53:39Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Some had hoped for more aggressive signals on capital deployment given the company's swelling cash balance.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -2660,58 +2690,6 @@
           ]
         },
         {
-          "title": "S&P 500 turns positive in dramatic comeback as traders buy the dip after U.S.-Iran attacks: Live updates - CNBC",
-          "url": "https://www.cnbc.com/2026/03/01/stock-market-today-live-update.html",
-          "source": "CNBC",
-          "published_at": "2026-03-02T16:34:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The war between the U.S. and Iran is threatening to widen and jolt global energy supplies.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Iran war prediction market bets draw heat: 'Insane this is legal' - CNBC",
-          "url": "https://www.cnbc.com/2026/03/02/prediction-markets-iran-strikes-khamenei.html",
-          "source": "CNBC",
-          "published_at": "2026-03-02T16:22:16Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Wagers were placed over the weekend about the fate of Iranian leader Ayatollah Ali Khamenei, who was killed in the bombardment of Iran.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "The best mobile tech announced at MWC 2026 so far - The Verge",
-          "url": "https://www.theverge.com/tech/882992/mobile-world-congress-mwc-2026-smartphones-laptops-headphones",
-          "source": "The Verge",
-          "published_at": "2026-03-02T15:52:37Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Robot phones, a folding smartphone you can dunk, and a modular laptop concept that lets you swap in ports as needed.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Iran attacks show US haven status is in peril - Financial Times",
-          "url": "https://www.ft.com/content/a8c8cfbd-b5fa-4c61-b72a-38531b029623",
-          "source": "Financial Times",
-          "published_at": "2026-03-02T15:27:29Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "In moments of extreme uncertainty investors usually rush to the safety of US government bonds, but not this time",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
           "title": "‘I Like the Discipline,’ Says Investor About Netflix Stock - TipRanks",
           "url": "https://www.tipranks.com/news/i-like-the-discipline-says-investor-about-netflix-stock",
           "source": "Tipranks.com",
@@ -2719,6 +2697,19 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "It’s finally over, the months-long bidding war that had massive implications for the entertainment industry. Netflix (NASDAQ:NFLX) threw in the towel on its proposed acquisition of Warner Bros. Discovery’s studios",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "U.S.-Iran war sparks market sell-off. When is it time to buy the dip? - CNBC",
+          "url": "https://www.cnbc.com/2026/03/02/us-iran-war-sparks-market-sell-off-when-is-it-time-to-buy-the-dip.html",
+          "source": "CNBC",
+          "published_at": "2026-03-02T14:26:02Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "A buying opportunity will emerge after Monday’s sell-off. Just not yet.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -2752,6 +2743,20 @@
         }
       ],
       "commercial": [
+        {
+          "title": "AWS UAE suffers AZ outage after \"objects strike data center\" and cause fire, amid Iran attacks - Data Center Dynamics",
+          "url": "https://www.datacenterdynamics.com/en/news/aws-uae-outage-after-objects-struck-the-data-center-cause-fire-amid-iran-attacks/",
+          "source": "DatacenterDynamics",
+          "published_at": "2026-03-02T08:59:42Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Availability Zone in ME-CENTRAL-1 brought offline in possible drone or missile attack",
+          "impact_score": 40,
+          "themes": [
+            "trade",
+            "commercial"
+          ]
+        },
         {
           "title": "MYR Group Inc. to Attend Cantor Global Technology & Industrial Growth Conference in March",
           "url": "https://www.globenewswire.com/news-release/2026/03/02/3247860/10748/en/MYR-Group-Inc-to-Attend-Cantor-Global-Technology-Industrial-Growth-Conference-in-March.html",
@@ -2795,10 +2800,10 @@
         "ticker": "DHI",
         "source": "alphavantage",
         "date": "2026-03-03",
-        "close": 152.64,
+        "close": 152.61,
         "prev_close": 154.4,
-        "change": -1.76,
-        "change_pct": -1.1399
+        "change": -1.79,
+        "change_pct": -1.1593
       },
       {
         "ticker": "PHM",
@@ -2820,12 +2825,12 @@
       },
       {
         "ticker": "NVR",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 7272.29,
         "close": 7361.1,
-        "change": 88.8100000000004,
-        "change_pct": 1.2212109253068897
+        "prev_close": 7415.75,
+        "change": -54.65,
+        "change_pct": -0.7369
       },
       {
         "ticker": "TOL",
@@ -2858,10 +2863,10 @@
         "ticker": "VMC",
         "source": "alphavantage",
         "date": "2026-03-03",
-        "close": 299.98,
+        "close": 300,
         "prev_close": 306.2,
-        "change": -6.22,
-        "change_pct": -2.0314
+        "change": -6.2,
+        "change_pct": -2.0248
       },
       {
         "ticker": "MLM",
@@ -2892,12 +2897,12 @@
       },
       {
         "ticker": "OC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-03",
-        "open": 111.2233,
         "close": 114.56,
-        "change": 3.3367000000000075,
-        "change_pct": 3.0000008990921936
+        "prev_close": 116.71,
+        "change": -2.15,
+        "change_pct": -1.8422
       },
       {
         "ticker": "EXP",
@@ -2957,11 +2962,11 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": 0.9962437409730078
+        "avg_change_pct": 0.6007415559116299
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": 0.15736248541906822
+        "avg_change_pct": -0.648570997762964
       },
       "distribution": {
         "count": 1,
@@ -2979,7 +2984,7 @@
     "stock_pressure_overlay": 0,
     "sam_gov": {
       "enabled": true,
-      "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=%5BREDACTED%5D&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-21",
+      "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=%5BREDACTED%5D&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-22",
       "items": []
     },
     "usaspending": {
@@ -3056,9 +3061,9 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-03T23:15:50.480Z",
+    "generated_at_utc": "2026-03-04T01:30:49.881Z",
     "regime_history": {
-      "current_regime_duration_days": 0,
+      "current_regime_duration_days": 1,
       "previous_regime": null,
       "last_flip_date": null,
       "regime_stability": "🟢 Stable"
@@ -3125,1608 +3130,38 @@
         "key": "mortgage_30y",
         "value": 5.98,
         "arrow": "↓",
-        "severity": "NORMAL",
-        "interpretation": "Mortgage rates easing reduces affordability pressure."
+        "severity": "WATCH",
+        "interpretation": "Macro regime is tight and/or mortgage rates are rising, increasing affordability pressure."
       },
       {
         "key": "permits",
         "value": 1448,
         "arrow": "↑",
-        "severity": "NORMAL",
-        "interpretation": "Permits improving supports near-term pipeline."
+        "severity": "WATCH",
+        "interpretation": "Macro regime is tight and/or permits are rolling over, signaling weaker near-term pipeline."
       },
       {
         "key": "starts",
         "value": 1404,
         "arrow": "↑",
-        "severity": "NORMAL",
-        "interpretation": "Starts improving supports construction activity."
+        "severity": "WATCH",
+        "interpretation": "Macro regime is tight and/or starts are declining, signaling softening construction activity."
       },
       {
         "key": "nfci",
         "value": -0.56294,
         "arrow": "↑",
         "severity": "WATCH",
-        "interpretation": "Financial conditions tightening can pressure credit availability."
+        "interpretation": "Macro regime is tight and/or financial conditions are tightening, which can pressure credit availability."
       },
       {
         "key": "hy_oas",
         "value": 3.03,
         "arrow": "↓",
-        "severity": "NORMAL",
-        "interpretation": "High-yield spreads tightening reduces credit stress risk."
+        "severity": "WATCH",
+        "interpretation": "Macro regime is tight and/or high-yield spreads are widening, increasing credit stress risk."
       }
-    ],
-    "market_intel": {
-      "stocks": [
-        {
-          "ticker": "DHI",
-          "source": "alphavantage",
-          "date": "2026-03-03",
-          "close": 152.64,
-          "prev_close": 154.4,
-          "change": -1.76,
-          "change_pct": -1.1399
-        },
-        {
-          "ticker": "PHM",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 130.1,
-          "close": 132.03,
-          "change": 1.9300000000000068,
-          "change_pct": 1.483474250576485
-        },
-        {
-          "ticker": "LEN",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 107.5,
-          "close": 108.41,
-          "change": 0.9099999999999966,
-          "change_pct": 0.8465116279069737
-        },
-        {
-          "ticker": "NVR",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 7272.29,
-          "close": 7361.1,
-          "change": 88.8100000000004,
-          "change_pct": 1.2212109253068897
-        },
-        {
-          "ticker": "TOL",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 149.81,
-          "close": 153.66,
-          "change": 3.8499999999999943,
-          "change_pct": 2.5699219010746908
-        },
-        {
-          "ticker": "HD",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 364.17,
-          "close": 366.92,
-          "change": 2.75,
-          "change_pct": 0.7551418293654063
-        },
-        {
-          "ticker": "LOW",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 253.48,
-          "close": 257.7,
-          "change": 4.219999999999999,
-          "change_pct": 1.6648256272684232
-        },
-        {
-          "ticker": "VMC",
-          "source": "alphavantage",
-          "date": "2026-03-03",
-          "close": 299.98,
-          "prev_close": 306.2,
-          "change": -6.22,
-          "change_pct": -2.0314
-        },
-        {
-          "ticker": "MLM",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 655.37,
-          "close": 656.78,
-          "change": 1.4099999999999682,
-          "change_pct": 0.2151456429192621
-        },
-        {
-          "ticker": "BLDR",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 96.6,
-          "close": 97.45,
-          "change": 0.8500000000000085,
-          "change_pct": 0.8799171842650192
-        },
-        {
-          "ticker": "FBIN",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 51.08,
-          "close": 51.38,
-          "change": 0.30000000000000426,
-          "change_pct": 0.5873140172278862
-        },
-        {
-          "ticker": "OC",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 111.2233,
-          "close": 114.56,
-          "change": 3.3367000000000075,
-          "change_pct": 3.0000008990921936
-        },
-        {
-          "ticker": "EXP",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 215.625,
-          "close": 213.88,
-          "change": -1.7450000000000045,
-          "change_pct": -0.8092753623188428
-        },
-        {
-          "ticker": "CAT",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 728.99,
-          "close": 722.18,
-          "change": -6.810000000000059,
-          "change_pct": -0.9341691929930532
-        },
-        {
-          "ticker": "DE",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 619.91,
-          "close": 619.22,
-          "change": -0.6899999999999409,
-          "change_pct": -0.11130647997288977
-        },
-        {
-          "ticker": "URI",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 801.96,
-          "close": 833.47,
-          "change": 31.50999999999999,
-          "change_pct": 3.9291236470646904
-        },
-        {
-          "ticker": "TPC",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 70.79,
-          "close": 69.95,
-          "change": -0.8400000000000034,
-          "change_pct": -1.1866082780053726
-        },
-        {
-          "ticker": "CRH",
-          "source": "stooq",
-          "date": "2026-03-03",
-          "open": 113.57,
-          "close": 113.55,
-          "change": -0.01999999999999602,
-          "change_pct": -0.017610284406089655
-        }
-      ],
-      "sector_rollups": {
-        "builders": {
-          "count": 5,
-          "avg_change_pct": 0.9962437409730078
-        },
-        "materials": {
-          "count": 6,
-          "avg_change_pct": 0.15736248541906822
-        },
-        "distribution": {
-          "count": 1,
-          "avg_change_pct": 0.8799171842650192
-        },
-        "equipment": {
-          "count": 3,
-          "avg_change_pct": 0.9612159913662491
-        },
-        "retail": {
-          "count": 2,
-          "avg_change_pct": 1.2099837283169148
-        }
-      },
-      "stock_pressure_overlay": 0
-    },
-    "news": {
-      "sources": {
-        "newsapi:top_headlines": 16,
-        "newsapi:everything": 78
-      },
-      "news_pressure_overlay": 0,
-      "top_high_impact": [
-        {
-          "title": "Mortgage Rates Jump Back Into The 6's - Mortgage News Daily",
-          "url": "https://www.mortgagenewsdaily.com/markets/mortgage-rates-03022026",
-          "source": "Mortgage News Daily",
-          "published_at": "2026-03-02T20:19:26Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
-          "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
-          "source": "Raw Story",
-          "published_at": "2026-03-02T23:11:36Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "Forthwith: Federal Circuit Issues Mandates in V.O.S. Selections, Clearing the Way for $175 Billion Refund Reckoning",
-          "url": "https://patentlyo.com/patent/cafc/2026/03/forthwith-federal-circuit-issues-mandates-in-v-o-s-selections-clearing-the-way-for-175-billion-refund-reckoning.html",
-          "source": "Patentlyo.com",
-          "published_at": "2026-03-02T17:50:31Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Federal Circuit issues mandates in V.O.S. Selections tariff case after Supreme Court holds IEEPA does not authorize presidential tariffs. Importers scramble for refunds.\nContinue reading this post on Patently-O.",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "The D Brief: War on Iran; Retaliation throughout the Gulf; Friendly fire downs F-15s; Anthropic ejected from federal service; And a bit more.",
-          "url": "https://www.defenseone.com/threats/2026/03/the-d-brief-march-02-2026/411800/",
-          "source": "Defense One",
-          "published_at": "2026-03-02T16:18:25Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "De Nederlandsche Bank / Mecanoo",
-          "url": "https://www.archdaily.com/1039156/de-nederlandsche-bank-mecanoo",
-          "source": "ArchDaily",
-          "published_at": "2026-03-02T12:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "De Nederlandsche Bank (1968) is located on the historic 'Utrechtse Poort' site close to Amsterdam's canal belt. Until 1929, this was the location of the Paleis voor Volksvlijt (Palace of Industry), designed by Samuel Sarphati, which was destroyed by fire that…",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "American’s Visiting Disneyland Paris Subjected to Mutli-Hour Airport Delays Beginning April 9",
-          "url": "https://insidethemagic.net/?p=817834&preview=true&preview_id=817834",
-          "source": "Inside the Magic",
-          "published_at": "2026-03-02T17:36:59Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Disneyland Paris is having its most exciting year in decades. Disney Adventure World, the ambitious reimagining of Walt Disney Studios Park, opens on March 29, 2026, bringing World of Frozen, a brand new promenade with 14 new dining locations, and a new night…",
-          "impact_score": 60,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "FMCSA wants you: 18 truckers needed to 'fine-tune' sleeper, HOS-pause pilot programs",
-          "url": "https://www.overdriveonline.com/hours-of-service/article/15818524/fmcsa-wants-18-drivers-to-help-test-hos-pilot-programs",
-          "source": "Overdriveonline.com",
-          "published_at": "2026-03-02T09:05:45Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The drivers will help FMCSA test its pilot programs on split-sleeper time and split duty periods (pausing the 14-hour clock) before broader rollout. Also: Heating fuel emergency extended in 15 states; rest area reopens along I-80; Saia's NASCAR sponsorship re…",
-          "impact_score": 60,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Oil prices soar amid worries of sustained war in Iran - The Washington Post",
-          "url": "https://www.washingtonpost.com/business/2026/03/02/oil-prices-strait-hormuz/",
-          "source": "The Washington Post",
-          "published_at": "2026-03-02T20:16:40Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The war in the Mideast has effectively halted shipping through the Strait of Hormuz, threatening to push up gas prices and raise the cost of other goods.",
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Here’s how far oil is away from dragging stocks into a bear market, according to Morgan Stanley - MarketWatch",
-          "url": "https://www.marketwatch.com/story/heres-how-far-oil-is-away-from-dragging-stocks-into-a-bear-market-according-to-morgan-stanley-b8e1932b",
-          "source": "MarketWatch",
-          "published_at": "2026-03-02T11:38:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": null,
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "South Bow plan to revive parts of Keystone XL needs Trump approval, U.S. oil pipeline links",
-          "url": "https://www.cbc.ca/news/canada/calgary/keystone-xl-pipeline-revive-south-bow-trump-9.7111344",
-          "source": "CBC News",
-          "published_at": "2026-03-02T17:40:03Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "A proposal to revive parts of the cancelled Keystone XL pipeline could increase Canada's crude exports to the U.S. by more than 12 per cent, if it gets a green light from U.S. President Donald Trump and additional links to U.S. refining hubs are built.",
-          "impact_score": 55,
-          "themes": [
-            "pipeline"
-          ]
-        }
-      ],
-      "unified": [
-        {
-          "title": "Mortgage Rates Jump Back Into The 6's - Mortgage News Daily",
-          "url": "https://www.mortgagenewsdaily.com/markets/mortgage-rates-03022026",
-          "source": "Mortgage News Daily",
-          "published_at": "2026-03-02T20:19:26Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "Oil prices soar amid worries of sustained war in Iran - The Washington Post",
-          "url": "https://www.washingtonpost.com/business/2026/03/02/oil-prices-strait-hormuz/",
-          "source": "The Washington Post",
-          "published_at": "2026-03-02T20:16:40Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The war in the Mideast has effectively halted shipping through the Strait of Hormuz, threatening to push up gas prices and raise the cost of other goods.",
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Berkshire Stock Slides After 30% Drop in Operating Earnings - WSJ",
-          "url": "https://www.wsj.com/livecoverage/stock-market-today-oil-prices-iran-attack-03-02-2026/card/berkshire-stock-slides-after-30-drop-in-operating-earnings-BfCbWZbTIyKhbT5RcqoH",
-          "source": "The Wall Street Journal",
-          "published_at": "2026-03-02T18:26:37Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": null,
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Paramount Won’t Sell Cable Networks After WBD Merger, Touts “Incredible Footprint” Of Combined Linear Business - Deadline",
-          "url": "https://deadline.com/2026/03/paramount-keeping-cable-networks-after-warner-merger-1236741346/",
-          "source": "Deadline",
-          "published_at": "2026-03-02T18:10:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": null,
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Nvidia Invests In Lumentum, Coherent In Optical Networking Push - Investor's Business Daily",
-          "url": "https://www.investors.com/news/technology/nvidia-stock-investments-lumentum-coherent-optical-networking-push/",
-          "source": "Investor's Business Daily",
-          "published_at": "2026-03-02T16:40:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Shares in Lumentum and Coherent climbed amid Nvidia's announcement that it will invest $2 billion in both optical networking companies. Nvidia stock dipped.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Costco Set to Open New Montgomery County Location - The MoCo Show -",
-          "url": "https://mocoshow.com/2026/03/02/costco-set-to-open-new-montgomery-county-location/",
-          "source": "Mocoshow.com",
-          "published_at": "2026-03-02T16:36:12Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "MCB Real Estate announced today that a new Costco Wholesale store is planned for the VIVA White Oak development. The proposed warehouse will be approximately 162,000 square feet and will […]",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "S&P 500 turns positive in dramatic comeback as traders buy the dip after U.S.-Iran attacks: Live updates - CNBC",
-          "url": "https://www.cnbc.com/2026/03/01/stock-market-today-live-update.html",
-          "source": "CNBC",
-          "published_at": "2026-03-02T16:34:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The war between the U.S. and Iran is threatening to widen and jolt global energy supplies.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Iran war prediction market bets draw heat: 'Insane this is legal' - CNBC",
-          "url": "https://www.cnbc.com/2026/03/02/prediction-markets-iran-strikes-khamenei.html",
-          "source": "CNBC",
-          "published_at": "2026-03-02T16:22:16Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Wagers were placed over the weekend about the fate of Iranian leader Ayatollah Ali Khamenei, who was killed in the bombardment of Iran.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "The best mobile tech announced at MWC 2026 so far - The Verge",
-          "url": "https://www.theverge.com/tech/882992/mobile-world-congress-mwc-2026-smartphones-laptops-headphones",
-          "source": "The Verge",
-          "published_at": "2026-03-02T15:52:37Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Robot phones, a folding smartphone you can dunk, and a modular laptop concept that lets you swap in ports as needed.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Iran attacks show US haven status is in peril - Financial Times",
-          "url": "https://www.ft.com/content/a8c8cfbd-b5fa-4c61-b72a-38531b029623",
-          "source": "Financial Times",
-          "published_at": "2026-03-02T15:27:29Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "In moments of extreme uncertainty investors usually rush to the safety of US government bonds, but not this time",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "‘I Like the Discipline,’ Says Investor About Netflix Stock - TipRanks",
-          "url": "https://www.tipranks.com/news/i-like-the-discipline-says-investor-about-netflix-stock",
-          "source": "Tipranks.com",
-          "published_at": "2026-03-02T14:37:52Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "It’s finally over, the months-long bidding war that had massive implications for the entertainment industry. Netflix (NASDAQ:NFLX) threw in the towel on its proposed acquisition of Warner Bros. Discovery’s studios",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "BlackRock, EQT-Led Consortium to Acquire AES for $10.7 Billion - WSJ",
-          "url": "https://www.wsj.com/finance/investing/blackrock-eqt-led-consortium-to-acquire-aes-for-10-7-billion-5dcd435b",
-          "source": "The Wall Street Journal",
-          "published_at": "2026-03-02T13:14:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "AES said the sale will provide it with necessary capital that it previously lacked to expand its U.S. energy generation.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Goldman Sachs resets Nvidia stock forecast after earnings - thestreet.com",
-          "url": "https://www.thestreet.com/investing/stocks/goldman-sachs-resets-nvidia-stock-forecast-after-earnings",
-          "source": "TheStreet",
-          "published_at": "2026-03-02T13:07:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Wall Street recalibrates expectations after Nvidia's massive quarter.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Iran, Berkshire Hathaway earnings, OpenAI's Pentagon deal and more in Morning Squawk - CNBC",
-          "url": "https://www.cnbc.com/2026/03/02/5-things-to-know-before-the-bell.html",
-          "source": "CNBC",
-          "published_at": "2026-03-02T12:53:30Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Here are five key things investors need to know to start the trading day.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Here’s how far oil is away from dragging stocks into a bear market, according to Morgan Stanley - MarketWatch",
-          "url": "https://www.marketwatch.com/story/heres-how-far-oil-is-away-from-dragging-stocks-into-a-bear-market-according-to-morgan-stanley-b8e1932b",
-          "source": "MarketWatch",
-          "published_at": "2026-03-02T11:38:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": null,
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "How long do electric vehicle batteries actually last? - NPR",
-          "url": "https://www.npr.org/2026/03/02/nx-s1-5706658/electric-vehicle-battery-lifespan",
-          "source": "NPR",
-          "published_at": "2026-03-02T10:00:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "When the modern electric vehicle was still in its infancy, drivers worried that vehicles would need expensive battery replacements within a few years. But battery lifespans are exceeding expectations.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
-          "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
-          "source": "Raw Story",
-          "published_at": "2026-03-02T23:11:36Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "Watch Bill Clinton Testify on Why Trump Really Cut Ties With Epstein",
-          "url": "https://newrepublic.com/post/207249/watch-bill-clinton-testify-why-trump-cut-ties-epstein",
-          "source": "The New Republic",
-          "published_at": "2026-03-02T23:02:34Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Former President Bill Clinton may have just put a massive hole in President Donald Trump’s claims about how he and deceased sexual predator Jeffrey Epstein ended their friendship.In video testimony released by the House Oversight Committee on Monday, Clinton …",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Miners set to begin construction of two new uranium projects in Saskatchewan",
-          "url": "https://www.theglobeandmail.com/business/article-saskatchewan-uranium-mining-projects-denison-nexgen-nuclear-energy/",
-          "source": "The Globe And Mail",
-          "published_at": "2026-03-02T22:58:06Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Denison Mines to start development in March, while NexGen Energy sets sights on getting green light in June",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Monomoy CRE, LLC Announces Martin Emigh as Director of Client Services",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247923/0/en/Monomoy-CRE-LLC-Announces-Martin-Emigh-as-Director-of-Client-Services.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T22:34:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "CHARLESTON, S.C., March 02, 2026 (GLOBE NEWSWIRE) -- Monomoy CRE, LLC (“we,” “us,” “our,” or “Monomoy”)  is pleased to announce that Marty Emigh has joined the company as Director of Client Services, bringing more than 25 years of experience in the constructi…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Mark Zuckerberg, Wife Priscilla Make History with $170 Million Purchase",
-          "url": "https://www.mensjournal.com/news/mark-zuckerberg-wife-priscilla-make-history-with-170-million-purchase",
-          "source": "Men's Journal",
-          "published_at": "2026-03-02T22:18:34Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Meta CEO Mark Zuckerberg and his wife Priscilla Chan have made a massive real estate purchase in Florida, according to multiple reports. Zuckerberg and Chan ...",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Collective Metals Announces Flow-Through Financing",
-          "url": "https://financialpost.com/globe-newswire/collective-metals-announces-flow-through-financing-2",
-          "source": "Financial Post",
-          "published_at": "2026-03-02T22:02:17Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) — COLLECTIVE METALS INC. (CSE: COMT | OTC: CLLMF | FSE: TO1) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up to C$1,…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Collective Metals Announces Flow-Through Financing",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247908/0/en/Collective-Metals-Announces-Flow-Through-Financing.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T22:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "VANCOUVER, British Columbia, March 02, 2026 (GLOBE NEWSWIRE) -- COLLECTIVE METALS INC. (CSE: COMT\r\n | OTC: CLLMF\r\n | FSE: TO1\r\n) (the “Company” or “Collective”) is pleased to announce a non-brokered private placement (the “Offering”) for gross proceeds of up …",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Prime Power Announces “Texas Titan #1,” a 1-Gigawatt Power Initiative Designed to Support the AI Infrastructure Boom",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247912/0/en/Prime-Power-Announces-Texas-Titan-1-a-1-Gigawatt-Power-Initiative-Designed-to-Support-the-AI-Infrastructure-Boom.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T22:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "HOUSTON, March 03, 2026 (GLOBE NEWSWIRE) -- Prime Power\r\n today announced the launch of “Texas Titan #1,” a large-scale power generation and infrastructure project designed to support the rapidly expanding energy demands of next-generation data centers and ar…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "“Pay a fair share”: Sanders, Khanna propose wealth tax on billionaires",
-          "url": "https://www.salon.com/2026/03/02/pay-a-fair-share-sanders-khanna-propose-wealth-tax-on-billionaires/",
-          "source": "Salon",
-          "published_at": "2026-03-02T21:53:24Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The tax revenue could result in direct payments to Americans making less than $150,000 a year.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "PIMCO Closed-End Funds Declare Monthly Common Share Distributions",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247899/220/en/PIMCO-Closed-End-Funds-Declare-Monthly-Common-Share-Distributions.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T21:42:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "NEW YORK, March 02, 2026 (GLOBE NEWSWIRE) -- The Boards of Trustees/Directors of the PIMCO closed-end funds below (each, a “Fund” and, collectively, the “Funds”) have declared a monthly distribution for each Fund’s common shares as summarized below.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "People are baffled this ordinary home in Aspen that’s sandwiched between 2 others asks such a sky-high sum",
-          "url": "https://nypost.com/2026/03/02/real-estate/ordinary-home-in-aspen-thats-sandwiched-between-2-others-asks-19m/",
-          "source": "New York Post",
-          "published_at": "2026-03-02T21:24:56Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "TikTok users recently received a lesson on what it takes to buy in one of the nation's most expensive markets.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "The Republicans Are Messing with Texas",
-          "url": "https://www.newyorker.com/news/the-lede/the-republicans-are-messing-with-texas",
-          "source": "The New Yorker",
-          "published_at": "2026-03-02T21:23:58Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Peter Slevin on a contentious Republican senatorial primary race in Texas between the incumbent, John Cornyn, and the state attorney general, Ken Paxton, amid the controversy over redrawn district maps and growing dissatisfaction with President Donald Trump.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Power Solutions International Announces Fourth Quarter and Record Full Year 2025 Financial Results",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247879/17954/en/Power-Solutions-International-Announces-Fourth-Quarter-and-Record-Full-Year-2025-Financial-Results.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T21:14:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Quarter Sales of $191.2 million, up 33% from a year earlier,  Full Year Sales of $722.4 million, up 52% from a year earlier,  Full Year Net Income of...",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "MYR Group Inc. to Attend Cantor Global Technology & Industrial Growth Conference in March",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247860/10748/en/MYR-Group-Inc-to-Attend-Cantor-Global-Technology-Industrial-Growth-Conference-in-March.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T21:05:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "THORNTON, Colo., March 02, 2026 (GLOBE NEWSWIRE) -- MYR Group Inc. (“MYR Group”) (NASDAQ: MYRG), a holding company of leading specialty contractors serving the electric utility infrastructure, commercial and industrial construction markets in the United State…",
-          "impact_score": 40,
-          "themes": [
-            "commercial"
-          ]
-        },
-        {
-          "title": "Mobile Infrastructure Reports Fourth Quarter and Full Year 2025 Financial Results",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247863/0/en/Mobile-Infrastructure-Reports-Fourth-Quarter-and-Full-Year-2025-Financial-Results.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T21:05:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "--Contract Parking Momentum Continued with 10% Volume Growth in 2025--  --Asset Rotation Strategy Met $30 Million Sales Target in First Year--  --Multiple...",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Applied Digital Announces Proposed Offering of $2.15 Billion of Senior Secured Notes to fund Polaris Forge 2 Campus",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247856/0/en/Applied-Digital-Announces-Proposed-Offering-of-2-15-Billion-of-Senior-Secured-Notes-to-fund-Polaris-Forge-2-Campus.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T21:05:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "DALLAS, March 02, 2026 (GLOBE NEWSWIRE) -- Applied Digital Corporation (NASDAQ: APLD) (“Applied Digital” or the “Company”), a leading designer, builder and operator of high-performance, sustainably engineered data centers and colocation services for Artificia…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "OpenAI’s ‘Red Lines’ Are Written In The NSA’s Dictionary—Where Words Mean What The NSA Wants Them To Mean",
-          "url": "https://www.techdirt.com/2026/03/02/openais-red-lines-are-written-in-the-nsas-dictionary-where-words-mean-what-the-nsa-wants-them-to-mean/",
-          "source": "Techdirt",
-          "published_at": "2026-03-02T20:52:22Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Within hours on Friday, the Pentagon blacklisted one AI company for refusing to drop its safety commitments on surveillance and autonomous weapons, then turned around and praised a competitor for signing a deal that supposedly preserved those exact same commi…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "“Let’s Just Do It”: How Netanyahu Convinced Trump to Bomb Iran",
-          "url": "https://newrepublic.com/post/207228/donald-trump-benjamin-netanyahu-iran",
-          "source": "The New Republic",
-          "published_at": "2026-03-02T20:27:42Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "In contrast to President Donald Trump’s vacillating rationale, it appears the United States did not go to war with Iran to wipe out its nonexistent nuclear program, respond to a nonsensical threat to American elections, or implement a poorly conceived regime …",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Abraham Lincoln's First Ride In This Luxurious Presidential Train Car Was Also His Last",
-          "url": "https://www.jalopnik.com/2111882/abraham-lincoln-presidential-train-car/",
-          "source": "Jalopnik",
-          "published_at": "2026-03-02T20:05:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The 16th President of the United States, Abraham Lincoln, rode a train made specifically for him during his final year of life - after it had already ended.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Trump’s Media Blitz Only Raises More Questions About War in Iran",
-          "url": "http://www.rollingstone.com/politics/politics-news/trump-iran-war-media-blitz-1235523817/",
-          "source": "Rolling Stone",
-          "published_at": "2026-03-02T19:21:39Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Donald Trump has spoken to several media outlets since launching a war against Iran, but hasn't been able to offer much clarity about its status.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Colorado Lawmakers File 2026 Ballot Measure to Raise Marijuana and Alcohol Taxes for New Mental Health Institute",
-          "url": "https://themarijuanaherald.com/2026/03/colorado-lawmakers-file-2026-ballot-measure-to-raise-marijuana-and-alcohol-taxes-for-new-mental-health-institute/",
-          "source": "Themarijuanaherald.com",
-          "published_at": "2026-03-02T18:56:11Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Colorado lawmakers have filed House Bill 26-1301, which would ask voters to approve tax increases on retail marijuana and alcoholic beverages to fund a new state-run mental health facility in Aurora. Filed in the House and sponsored by Representative Bob Mars…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Weeks When Spring Break Crowds Will Be Worst at Disney World in 2026",
-          "url": "https://www.disneytouristblog.com/spring-break-2026-crowd-calendar-disney-world-best-worst-dates/",
-          "source": "Disneytouristblog.com",
-          "published_at": "2026-03-02T18:54:03Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Spring break is right around the corner. This is one of the busiest times of the year at Walt Disney World, with 2 of the busiest weeks of the entire year falling in March 2026. But not all weeks are equally bad, and this crowd calendar covers the best & wors…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "European shares under pressure over Middle East energy supply concerns",
-          "url": "https://www.irishtimes.com/business/2026/03/02/european-shares-under-pressure-over-middle-east-energy-supply-concerns/",
-          "source": "The Irish Times",
-          "published_at": "2026-03-02T18:53:59Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Wall Street’s worries about inflation resurgence sends bonds slumping",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
-        },
-        {
-          "title": "Cut red tape, tax to fix middling investment, business lobbies say",
-          "url": "https://www.abc.net.au/news/2026-03-03/business-lobby-calls-to-cut-red-tape-to-boost-investment/106406024",
-          "source": "ABC News (AU)",
-          "published_at": "2026-03-02T18:52:55Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "A new index compiled by the Business Council of Australia shows Australia in the middle of the pack as an investment destination.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "India's West Asia dilemma: Navigating Iran conflict and Gulf ties",
-          "url": "https://economictimes.indiatimes.com/opinion/et-commentary/indias-west-asia-dilemma-navigating-iran-conflict-and-gulf-ties/articleshow/128953010.cms",
-          "source": "The Times of India",
-          "published_at": "2026-03-02T18:05:16Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "India confronts a critical juncture in West Asia.  A widening conflict threatens its vital economic ties and the safety of millions of Indians living in Gulf states.  New Delhi must navigate delicate relationships with Iran and its Arab partners.  This situat…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "From OpenAI to Nvidia, firms channel billions into AI infrastructure as demand booms",
-          "url": "https://www.channelnewsasia.com/business/openai-nvidia-firms-channel-billions-ai-infrastructure-demand-booms-5399036",
-          "source": "CNA",
-          "published_at": "2026-03-02T18:00:15Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "(Corrects company name to Lumentum from Lumentun in subhead)March 2 : Nvidia will invest $2 billion each in photonic product makers Lumentum and Coherent to support the companies' research and development and manufacturing operations in the United States.Here…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Forthwith: Federal Circuit Issues Mandates in V.O.S. Selections, Clearing the Way for $175 Billion Refund Reckoning",
-          "url": "https://patentlyo.com/patent/cafc/2026/03/forthwith-federal-circuit-issues-mandates-in-v-o-s-selections-clearing-the-way-for-175-billion-refund-reckoning.html",
-          "source": "Patentlyo.com",
-          "published_at": "2026-03-02T17:50:31Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Federal Circuit issues mandates in V.O.S. Selections tariff case after Supreme Court holds IEEPA does not authorize presidential tariffs. Importers scramble for refunds.\nContinue reading this post on Patently-O.",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "South Bow plan to revive parts of Keystone XL needs Trump approval, U.S. oil pipeline links",
-          "url": "https://www.cbc.ca/news/canada/calgary/keystone-xl-pipeline-revive-south-bow-trump-9.7111344",
-          "source": "CBC News",
-          "published_at": "2026-03-02T17:40:03Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "A proposal to revive parts of the cancelled Keystone XL pipeline could increase Canada's crude exports to the U.S. by more than 12 per cent, if it gets a green light from U.S. President Donald Trump and additional links to U.S. refining hubs are built.",
-          "impact_score": 55,
-          "themes": [
-            "pipeline"
-          ]
-        },
-        {
-          "title": "American’s Visiting Disneyland Paris Subjected to Mutli-Hour Airport Delays Beginning April 9",
-          "url": "https://insidethemagic.net/?p=817834&preview=true&preview_id=817834",
-          "source": "Inside the Magic",
-          "published_at": "2026-03-02T17:36:59Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Disneyland Paris is having its most exciting year in decades. Disney Adventure World, the ambitious reimagining of Walt Disney Studios Park, opens on March 29, 2026, bringing World of Frozen, a brand new promenade with 14 new dining locations, and a new night…",
-          "impact_score": 60,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "17k-Mile 2021 Audi RS6 Avant",
-          "url": "https://bringatrailer.com/listing/2021-audi-rs6-18-2/",
-          "source": "Bringatrailer.com",
-          "published_at": "2026-03-02T17:29:56Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "This 2021 Audi RS6 spent time in Florida and California before it was purchased by its current owner on BaT in February 2024. Power is provided by a twin-turbocharged 4.0-liter V8 mated with an eight-speed automatic transaxle and a Quattro all-wheel-drive sys…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "What to know about Iran's Revolutionary Guard, a powerful force that answers only to its supreme leader",
-          "url": "https://www.pbs.org/newshour/world/what-to-know-about-irans-revolutionary-guard-a-powerful-force-that-answers-only-to-its-supreme-leader",
-          "source": "PBS",
-          "published_at": "2026-03-02T17:25:03Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The Guard rose out of Iran's 1979 Islamic Revolution as a force meant to protect the country's Shiite cleric-overseen government and later became enshrined in its constitution.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "The D Brief: War on Iran; Retaliation throughout the Gulf; Friendly fire downs F-15s; Anthropic ejected from federal service; And a bit more.",
-          "url": "https://www.defenseone.com/threats/2026/03/the-d-brief-march-02-2026/411800/",
-          "source": "Defense One",
-          "published_at": "2026-03-02T16:18:25Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "Easing key bottlenecks in cities",
-          "url": "https://www.thehindubusinessline.com/opinion/easing-key-bottlenecks-in-cities/article70696625.ece",
-          "source": "BusinessLine",
-          "published_at": "2026-03-02T16:05:43Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Delegating financial and planning power to locally elected officials can improve urban governance",
-          "impact_score": 30,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Splinter: Trump Has Bet the Economy on War With Iran",
-          "url": "https://www.jezebel.com/trump-has-bet-the-economy-on-war-with-iran",
-          "source": "Jezebel",
-          "published_at": "2026-03-02T15:59:31Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "One day does not make a trend, but it’s clear that Iran is willing to weaponize oil prices against us for now, and if we see a sustained rise in energy prices, Trump may get his ultimate wish to take America back to the early 1980s, Volcker shock and all.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "AWS down and when will it be back up? AWS outage, affected regions, services, error messages, recovery efforts, desktop and mobile users issues explained",
-          "url": "https://economictimes.indiatimes.com/news/international/us/aws-down-and-when-will-it-be-back-up-aws-outage-affected-regions-services-error-messages-recovery-efforts-desktop-and-mobile-users-issues-explained/articleshow/128948277.cms",
-          "source": "The Times of India",
-          "published_at": "2026-03-02T15:42:26Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "AWS down and when will it be back up? Amazon Web Services experienced a major outage in its UAE region after unidentified objects hit a data center, causing fire and power shutdowns. Multiple services are affected while engineers work to restore connectivity.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "War in the Middle East: What implications for the EU and the world?",
-          "url": "https://www.iss.europa.eu/publications/commentary/war-middle-east-what-implications-eu-and-world",
-          "source": "Europa.eu",
-          "published_at": "2026-03-02T15:28:04Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "War in the Middle East: What implications for the EU and the world?\nfanny.pollet@i…\nMon, 03/02/2026 - 16:28\n\n\n 24 minutes\n \n On the morning of 28 February 2026, US and Israeli forces launched a large-scale attack across Iran. The initial strikes killed Ayatol…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Greenpeace Faces $345M Judgment in North Dakota Court",
-          "url": "https://www.insurancejournal.com/news/midwest/2026/03/02/860104.htm",
-          "source": "Insurance Journal",
-          "published_at": "2026-03-02T15:24:48Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Greenpeace is fighting for its life in North Dakota’s court system, where a judge has decided to order the environmental group to pay an expected $345 million to an energy company whose Dakota Access oil pipeline construction drew protests nearly …",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "US manufacturing grows steadily in February, input prices surge",
-          "url": "https://economictimes.indiatimes.com/markets/us-stocks/news/us-manufacturing-grows-steadily-in-february-input-prices-surge/articleshow/128949974.cms",
-          "source": "The Times of India",
-          "published_at": "2026-03-02T15:22:32Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The United States and Israel launched their most ambitious attacks on Iran in decades ​on Saturday, killing Supreme Leader Ayatollah Ali Khamenei. Oil and natural gas prices surged on Monday as the strikes and retaliation ​by Tehran forced shutdowns of oil an…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Smart Adaptive Elevator Algorithm Research Report 2026-2035: A $6.99 Billion Market by 2030 with Hitachi, Thyssenkrupp, Mitsubishi Electric, Toshiba, and Otis Worldwide Leading",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247572/28124/en/Smart-Adaptive-Elevator-Algorithm-Research-Report-2026-2035-A-6-99-Billion-Market-by-2030-with-Hitachi-Thyssenkrupp-Mitsubishi-Electric-Toshiba-and-Otis-Worldwide-Leading.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T15:17:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The smart adaptive elevator algorithm market offers significant opportunities due to rising adoption of AI-driven systems, cloud-based management, and smart building integration. Increased demand is driven by energy efficiency needs, urbanization, and residen…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Nonmetallic Minerals Mining Support Activities Industry Report 2026-2035: Market to Reach $54.18 Billion by 2030 with ABB, DCS Techno Services, EKpass Mining Consultants, Dynatec Leading",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247535/28124/en/Nonmetallic-Minerals-Mining-Support-Activities-Industry-Report-2026-2035-Market-to-Reach-54-18-Billion-by-2030-with-ABB-DCS-Techno-Services-EKpass-Mining-Consultants-Dynatec-Leadin.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T14:45:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Key market opportunities include rising infrastructure development boosting demand for sustainable construction materials, and increased focus on operational efficiency and environmental practices. Growing mechanization and advanced extraction technologies al…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Cerro de Pasco Resources Enters Project Development Funding Agreement with U.S. International Development Finance Corporation for Quiulacocha",
-          "url": "https://financialpost.com/globe-newswire/cerro-de-pasco-resources-enters-project-development-funding-agreement-with-u-s-international-development-finance-corporation-for-quiulacocha",
-          "source": "Financial Post",
-          "published_at": "2026-03-02T14:43:37Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "MONTRÉAL, March 02, 2026 (GLOBE NEWSWIRE) — Cerro de Pasco Resources Inc. (TSXV: CDPR) (OTCQB: GPPRF) (BVL: CDPR) announces that it has entered into a Project Development Funding Agreement (the “Agreement”) with the U.S. International Development Finance Corp…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Zillow’s CEO on growing the company during a housing crisis",
-          "url": "https://www.theverge.com/podcast/887414/zillow-jeremy-wacksman-interview-ai-slop-housing-crisis",
-          "source": "The Verge",
-          "published_at": "2026-03-02T14:43:12Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Today, I’m talking with Zillow CEO Jeremy Wacksman. Zillow is one of those apps that really exemplifies what you might call the smartphone era of software: the company built a great mobile app for looking at real estate listings, and it turned into not just e…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Cerro de Pasco Resources Enters Project Development Funding Agreement with U.S. International Development Finance Corporation for Quiulacocha",
-          "url": "https://www.globenewswire.com/news-release/2026/03/02/3247534/0/en/Cerro-de-Pasco-Resources-Enters-Project-Development-Funding-Agreement-with-U-S-International-Development-Finance-Corporation-for-Quiulacocha.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-02T14:42:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Cerro de Pasco Resources announces that it has entered into a Project Development Funding Agreement with the U.S. International Development Finance Corp...",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "California is Reconsidering Nuclear Energy After 50-Year Ban",
-          "url": "https://www.insurancejournal.com/news/west/2026/03/02/860079.htm",
-          "source": "Insurance Journal",
-          "published_at": "2026-03-02T14:31:57Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Amid a worldwide resurgence of interest in nuclear energy, cracks are showing in California’s 50-year-old moratorium on the technology as artificial intelligence spikes electricity demand and the state struggles to meet its climate goals. New state legislatio…",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
-        }
-      ],
-      "clusters": {
-        "capital": [
-          {
-            "title": "Mortgage Rates Jump Back Into The 6's - Mortgage News Daily",
-            "url": "https://www.mortgagenewsdaily.com/markets/mortgage-rates-03022026",
-            "source": "Mortgage News Daily",
-            "published_at": "2026-03-02T20:19:26Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "Mortgage rates began the new week with a fairly quick jump back into the low 6% range (top tier 30yr fixed rate for the average lender). With the news cycle very focused on developments in Iran, most coverage attempts to correlate geopolitical events with mar…",
-            "impact_score": 65,
-            "themes": [
-              "capital"
-            ]
-          },
-          {
-            "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
-            "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
-            "source": "Raw Story",
-            "published_at": "2026-03-02T23:11:36Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
-            "impact_score": 65,
-            "themes": [
-              "capital"
-            ]
-          },
-          {
-            "title": "Forthwith: Federal Circuit Issues Mandates in V.O.S. Selections, Clearing the Way for $175 Billion Refund Reckoning",
-            "url": "https://patentlyo.com/patent/cafc/2026/03/forthwith-federal-circuit-issues-mandates-in-v-o-s-selections-clearing-the-way-for-175-billion-refund-reckoning.html",
-            "source": "Patentlyo.com",
-            "published_at": "2026-03-02T17:50:31Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "Federal Circuit issues mandates in V.O.S. Selections tariff case after Supreme Court holds IEEPA does not authorize presidential tariffs. Importers scramble for refunds.\nContinue reading this post on Patently-O.",
-            "impact_score": 65,
-            "themes": [
-              "capital"
-            ]
-          },
-          {
-            "title": "The D Brief: War on Iran; Retaliation throughout the Gulf; Friendly fire downs F-15s; Anthropic ejected from federal service; And a bit more.",
-            "url": "https://www.defenseone.com/threats/2026/03/the-d-brief-march-02-2026/411800/",
-            "source": "Defense One",
-            "published_at": "2026-03-02T16:18:25Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "",
-            "impact_score": 65,
-            "themes": [
-              "capital"
-            ]
-          },
-          {
-            "title": "A modular nanoparticle display strategy for varicella-zoster virus gE based on a licensed protein scaffold",
-            "url": "https://journals.plos.org/plospathogens/article?id=10.1371%2Fjournal.ppat.1013983",
-            "source": "Plos.org",
-            "published_at": "2026-03-02T14:00:00Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "Author summary Shingles, caused by reactivation of the VZV, remains a major health concern in older adults, for whom vaccination is the most effective preventive measure. In this study, we designed a nanoparticle-based gE vaccine (Nano-gEVZV) using a hepatiti…",
-            "impact_score": 40,
-            "themes": [
-              "capital"
-            ]
-          },
-          {
-            "title": "De Nederlandsche Bank / Mecanoo",
-            "url": "https://www.archdaily.com/1039156/de-nederlandsche-bank-mecanoo",
-            "source": "ArchDaily",
-            "published_at": "2026-03-02T12:00:00Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "De Nederlandsche Bank (1968) is located on the historic 'Utrechtse Poort' site close to Amsterdam's canal belt. Until 1929, this was the location of the Paleis voor Volksvlijt (Palace of Industry), designed by Samuel Sarphati, which was destroyed by fire that…",
-            "impact_score": 65,
-            "themes": [
-              "capital"
-            ]
-          },
-          {
-            "title": "Air strikes, death of Ayatollah Khamenei, celebrated by many in Chicago Iranian community",
-            "url": "https://freerepublic.com/focus/f-news/4368918/posts",
-            "source": "Freerepublic.com",
-            "published_at": "2026-03-02T11:29:27Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "Many in Chicago’s Iranian community are in high spirits after Iran’s Supreme Leader Ayatollah Ali Khamenei was reported dead following a major attack Saturday by the United States and Israel. Saba Niaki, an Iranian living in Chicago, was getting ready for ano…",
-            "impact_score": 40,
-            "themes": [
-              "capital",
-              "trade"
-            ]
-          }
-        ],
-        "pipeline": [
-          {
-            "title": "South Bow plan to revive parts of Keystone XL needs Trump approval, U.S. oil pipeline links",
-            "url": "https://www.cbc.ca/news/canada/calgary/keystone-xl-pipeline-revive-south-bow-trump-9.7111344",
-            "source": "CBC News",
-            "published_at": "2026-03-02T17:40:03Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "A proposal to revive parts of the cancelled Keystone XL pipeline could increase Canada's crude exports to the U.S. by more than 12 per cent, if it gets a green light from U.S. President Donald Trump and additional links to U.S. refining hubs are built.",
-            "impact_score": 55,
-            "themes": [
-              "pipeline"
-            ]
-          },
-          {
-            "title": "Westwater Resources Files Key Environmental Permit for Coosa Graphite Project",
-            "url": "https://financialpost.com/pmn/business-wire-news-releases-pmn/westwater-resources-files-key-environmental-permit-for-coosa-graphite-project",
-            "source": "Financial Post",
-            "published_at": "2026-03-02T11:02:41Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "NPDES Application Submitted to ADEM as Part of Mine Development Process CENTENNIAL, Colo. — Westwater Resources, Inc. (NYSE American: WWR), an energy technology and battery-grade natural graphite company (“Westwater” or the “Company”), today announced that it…",
-            "impact_score": 40,
-            "themes": [
-              "pipeline"
-            ]
-          }
-        ],
-        "trade": [
-          {
-            "title": "Air strikes, death of Ayatollah Khamenei, celebrated by many in Chicago Iranian community",
-            "url": "https://freerepublic.com/focus/f-news/4368918/posts",
-            "source": "Freerepublic.com",
-            "published_at": "2026-03-02T11:29:27Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "Many in Chicago’s Iranian community are in high spirits after Iran’s Supreme Leader Ayatollah Ali Khamenei was reported dead following a major attack Saturday by the United States and Israel. Saba Niaki, an Iranian living in Chicago, was getting ready for ano…",
-            "impact_score": 40,
-            "themes": [
-              "capital",
-              "trade"
-            ]
-          }
-        ],
-        "materials": [
-          {
-            "title": "European shares under pressure over Middle East energy supply concerns",
-            "url": "https://www.irishtimes.com/business/2026/03/02/european-shares-under-pressure-over-middle-east-energy-supply-concerns/",
-            "source": "The Irish Times",
-            "published_at": "2026-03-02T18:53:59Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "Wall Street’s worries about inflation resurgence sends bonds slumping",
-            "impact_score": 40,
-            "themes": [
-              "materials"
-            ]
-          },
-          {
-            "title": "California is Reconsidering Nuclear Energy After 50-Year Ban",
-            "url": "https://www.insurancejournal.com/news/west/2026/03/02/860079.htm",
-            "source": "Insurance Journal",
-            "published_at": "2026-03-02T14:31:57Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "Amid a worldwide resurgence of interest in nuclear energy, cracks are showing in California’s 50-year-old moratorium on the technology as artificial intelligence spikes electricity demand and the state struggles to meet its climate goals. New state legislatio…",
-            "impact_score": 40,
-            "themes": [
-              "materials"
-            ]
-          },
-          {
-            "title": "Weekly Climate and Energy News Roundup #681",
-            "url": "https://wattsupwiththat.com/2026/03/02/weekly-climate-and-energy-news-roundup-681/",
-            "source": "Wattsupwiththat.com",
-            "published_at": "2026-03-02T10:00:00Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "Quote of the Week: “We have a way of checking whether an idea is correct or not that has nothing to do with where it came from. We simply test it against observation. So, in science we are not interested in where an idea comes from.”— Richard Feynman, “The Un…",
-            "impact_score": 40,
-            "themes": [
-              "materials"
-            ]
-          }
-        ],
-        "regulatory": [],
-        "macro": [],
-        "land": [],
-        "other": [
-          {
-            "title": "Oil prices soar amid worries of sustained war in Iran - The Washington Post",
-            "url": "https://www.washingtonpost.com/business/2026/03/02/oil-prices-strait-hormuz/",
-            "source": "The Washington Post",
-            "published_at": "2026-03-02T20:16:40Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "The war in the Mideast has effectively halted shipping through the Strait of Hormuz, threatening to push up gas prices and raise the cost of other goods.",
-            "impact_score": 55,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "Berkshire Stock Slides After 30% Drop in Operating Earnings - WSJ",
-            "url": "https://www.wsj.com/livecoverage/stock-market-today-oil-prices-iran-attack-03-02-2026/card/berkshire-stock-slides-after-30-drop-in-operating-earnings-BfCbWZbTIyKhbT5RcqoH",
-            "source": "The Wall Street Journal",
-            "published_at": "2026-03-02T18:26:37Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": null,
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "Paramount Won’t Sell Cable Networks After WBD Merger, Touts “Incredible Footprint” Of Combined Linear Business - Deadline",
-            "url": "https://deadline.com/2026/03/paramount-keeping-cable-networks-after-warner-merger-1236741346/",
-            "source": "Deadline",
-            "published_at": "2026-03-02T18:10:00Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": null,
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "Nvidia Invests In Lumentum, Coherent In Optical Networking Push - Investor's Business Daily",
-            "url": "https://www.investors.com/news/technology/nvidia-stock-investments-lumentum-coherent-optical-networking-push/",
-            "source": "Investor's Business Daily",
-            "published_at": "2026-03-02T16:40:00Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "Shares in Lumentum and Coherent climbed amid Nvidia's announcement that it will invest $2 billion in both optical networking companies. Nvidia stock dipped.",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "Costco Set to Open New Montgomery County Location - The MoCo Show -",
-            "url": "https://mocoshow.com/2026/03/02/costco-set-to-open-new-montgomery-county-location/",
-            "source": "Mocoshow.com",
-            "published_at": "2026-03-02T16:36:12Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "MCB Real Estate announced today that a new Costco Wholesale store is planned for the VIVA White Oak development. The proposed warehouse will be approximately 162,000 square feet and will […]",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "S&P 500 turns positive in dramatic comeback as traders buy the dip after U.S.-Iran attacks: Live updates - CNBC",
-            "url": "https://www.cnbc.com/2026/03/01/stock-market-today-live-update.html",
-            "source": "CNBC",
-            "published_at": "2026-03-02T16:34:00Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "The war between the U.S. and Iran is threatening to widen and jolt global energy supplies.",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "Iran war prediction market bets draw heat: 'Insane this is legal' - CNBC",
-            "url": "https://www.cnbc.com/2026/03/02/prediction-markets-iran-strikes-khamenei.html",
-            "source": "CNBC",
-            "published_at": "2026-03-02T16:22:16Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "Wagers were placed over the weekend about the fate of Iranian leader Ayatollah Ali Khamenei, who was killed in the bombardment of Iran.",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "The best mobile tech announced at MWC 2026 so far - The Verge",
-            "url": "https://www.theverge.com/tech/882992/mobile-world-congress-mwc-2026-smartphones-laptops-headphones",
-            "source": "The Verge",
-            "published_at": "2026-03-02T15:52:37Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "Robot phones, a folding smartphone you can dunk, and a modular laptop concept that lets you swap in ports as needed.",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "Iran attacks show US haven status is in peril - Financial Times",
-            "url": "https://www.ft.com/content/a8c8cfbd-b5fa-4c61-b72a-38531b029623",
-            "source": "Financial Times",
-            "published_at": "2026-03-02T15:27:29Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "In moments of extreme uncertainty investors usually rush to the safety of US government bonds, but not this time",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "‘I Like the Discipline,’ Says Investor About Netflix Stock - TipRanks",
-            "url": "https://www.tipranks.com/news/i-like-the-discipline-says-investor-about-netflix-stock",
-            "source": "Tipranks.com",
-            "published_at": "2026-03-02T14:37:52Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "It’s finally over, the months-long bidding war that had massive implications for the entertainment industry. Netflix (NASDAQ:NFLX) threw in the towel on its proposed acquisition of Warner Bros. Discovery’s studios",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "BlackRock, EQT-Led Consortium to Acquire AES for $10.7 Billion - WSJ",
-            "url": "https://www.wsj.com/finance/investing/blackrock-eqt-led-consortium-to-acquire-aes-for-10-7-billion-5dcd435b",
-            "source": "The Wall Street Journal",
-            "published_at": "2026-03-02T13:14:00Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "AES said the sale will provide it with necessary capital that it previously lacked to expand its U.S. energy generation.",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          },
-          {
-            "title": "Goldman Sachs resets Nvidia stock forecast after earnings - thestreet.com",
-            "url": "https://www.thestreet.com/investing/stocks/goldman-sachs-resets-nvidia-stock-forecast-after-earnings",
-            "source": "TheStreet",
-            "published_at": "2026-03-02T13:07:00Z",
-            "provider": "newsapi",
-            "feed": "top_headlines",
-            "description": "Wall Street recalibrates expectations after Nvidia's massive quarter.",
-            "impact_score": 40,
-            "themes": [
-              "other"
-            ]
-          }
-        ],
-        "commercial": [
-          {
-            "title": "MYR Group Inc. to Attend Cantor Global Technology & Industrial Growth Conference in March",
-            "url": "https://www.globenewswire.com/news-release/2026/03/02/3247860/10748/en/MYR-Group-Inc-to-Attend-Cantor-Global-Technology-Industrial-Growth-Conference-in-March.html",
-            "source": "GlobeNewswire",
-            "published_at": "2026-03-02T21:05:00Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "THORNTON, Colo., March 02, 2026 (GLOBE NEWSWIRE) -- MYR Group Inc. (“MYR Group”) (NASDAQ: MYRG), a holding company of leading specialty contractors serving the electric utility infrastructure, commercial and industrial construction markets in the United State…",
-            "impact_score": 40,
-            "themes": [
-              "commercial"
-            ]
-          },
-          {
-            "title": "Amazon’s AWS Reports Outage After UAE Data Center Struck by ‘Objects’",
-            "url": "https://www.insurancejournal.com/news/international/2026/03/02/860068.htm",
-            "source": "Insurance Journal",
-            "published_at": "2026-03-02T13:15:00Z",
-            "provider": "newsapi",
-            "feed": "everything",
-            "description": "Amazon’s cloud-computing facilities in the Middle East faced power and connectivity issues on Monday after unidentified “objects” struck its data center in the United Arab Emirates. The objects had triggered a fire on Sunday that forced authorities to eventua…",
-            "impact_score": 40,
-            "themes": [
-              "commercial"
-            ]
-          }
-        ]
-      },
-      "land_tracker": {
-        "total_mentions": 0,
-        "purpose_breakdown": {
-          "residential": 0,
-          "commercial": 0,
-          "mixed": 0,
-          "unknown": 0
-        },
-        "items": []
-      },
-      "premium_status": "active",
-      "premium_error": null
-    },
-    "project_pipeline": {
-      "sam_gov": {
-        "enabled": true,
-        "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=%5BREDACTED%5D&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-21",
-        "items": []
-      },
-      "usaspending": {
-        "windows": {
-          "d7": {
-            "meta": {
-              "enabled": true,
-              "error": "Fetch failed 404 for https://api.usaspending.gov/api/v2/award/search/",
-              "total_results": null
-            },
-            "rollups": {
-              "count": 0,
-              "total_amount": 0,
-              "by_state": [],
-              "by_awarding_agency": [],
-              "by_funding_agency": [],
-              "by_recipient": [],
-              "by_award_type": []
-            },
-            "top_awards": []
-          },
-          "d30": {
-            "meta": {
-              "enabled": true,
-              "error": "Fetch failed 404 for https://api.usaspending.gov/api/v2/award/search/",
-              "total_results": null
-            },
-            "rollups": {
-              "count": 0,
-              "total_amount": 0,
-              "by_state": [],
-              "by_awarding_agency": [],
-              "by_funding_agency": [],
-              "by_recipient": [],
-              "by_award_type": []
-            },
-            "top_awards": []
-          },
-          "d90": {
-            "meta": {
-              "enabled": true,
-              "error": "Fetch failed 404 for https://api.usaspending.gov/api/v2/award/search/",
-              "total_results": null
-            },
-            "rollups": {
-              "count": 0,
-              "total_amount": 0,
-              "by_state": [],
-              "by_awarding_agency": [],
-              "by_funding_agency": [],
-              "by_recipient": [],
-              "by_award_type": []
-            },
-            "top_awards": []
-          }
-        }
-      }
-    },
-    "energy": {
-      "enabled": true,
-      "energy_overlay": 0,
-      "series": [
-        {
-          "ok": false,
-          "endpoint": null,
-          "series_id": "PET.RWTC.D",
-          "error": "Fetch failed 404 for https://api.eia.gov/series/?api_key=%5BREDACTED%5D&series_id=PET.RWTC.D",
-          "tried": [
-            "https://api.eia.gov/v2/seriesid/?api_key=JYQG9Jk9QwJAkhXFkUrbtLkNa7Qaw578DybKAu2a&series_id=PET.RWTC.D",
-            "https://api.eia.gov/series/?api_key=JYQG9Jk9QwJAkhXFkUrbtLkNa7Qaw578DybKAu2a&series_id=PET.RWTC.D"
-          ]
-        }
-      ]
-    }
+    ]
   },
   "observed": {
     "sources": {
