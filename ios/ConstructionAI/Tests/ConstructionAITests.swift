@@ -41,6 +41,32 @@ final class ConstructionAITests: XCTestCase {
         let data = try Data(contentsOf: url)
         let snapshot = try JSONDecoder().decode(MarketSignalSnapshot.self, from: data)
         XCTAssertEqual(snapshot.regionName, "National")
+        XCTAssertEqual(snapshot.asOf, "2026-01-01")
+    }
+
+    func testSignalSnapshotPrefersHeatmapAsOf() throws {
+        let json = """
+        {
+          "meta": {
+            "run_date": "2026-01-01",
+            "region": { "name": "National" }
+          },
+          "heatmap": {
+            "as_of": "2026-02-02"
+          },
+          "indices": {
+            "pressure_index": {
+              "value": 61.2,
+              "direction": "↗",
+              "risk_state": "Watch"
+            }
+          }
+        }
+        """
+
+        let data = Data(json.utf8)
+        let snapshot = try JSONDecoder().decode(MarketSignalSnapshot.self, from: data)
+        XCTAssertEqual(snapshot.asOf, "2026-02-02")
     }
 
     func testPaletteScoringPrefersPrefix() {

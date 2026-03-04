@@ -1,6 +1,6 @@
 import Foundation
 
-struct MarketSignalSnapshot: Decodable {
+struct MarketSignalSnapshot: Decodable, Hashable {
     let regionName: String
     let pressureValue: Double?
     let pressureTrend: String?
@@ -39,13 +39,19 @@ struct MarketSignalSnapshot: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        if let meta = try? container.nestedContainer(keyedBy: MetaKeys.self, forKey: .meta),
+        let meta = try? container.nestedContainer(keyedBy: MetaKeys.self, forKey: .meta)
+        if let meta,
            let region = try? meta.nestedContainer(keyedBy: RegionKeys.self, forKey: .region) {
             regionName = region.decodeConstructionAIString(forKey: .name) ?? "Unknown"
-            asOf = meta.decodeConstructionAIString(forKey: .runDate)
         } else {
             regionName = "Unknown"
-            asOf = nil
+        }
+
+        let runDate = meta?.decodeConstructionAIString(forKey: .runDate)
+        if let heatmap = try? container.nestedContainer(keyedBy: HeatmapKeys.self, forKey: .heatmap) {
+            asOf = heatmap.decodeConstructionAIString(forKey: .asOf) ?? runDate
+        } else {
+            asOf = runDate
         }
 
         if let indices = try? container.nestedContainer(keyedBy: IndicesKeys.self, forKey: .indices),
