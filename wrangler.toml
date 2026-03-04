@@ -1,24 +1,10 @@
-name = "construction-ai"
-main = "src/worker.js"
-compatibility_date = "2024-12-01"
+name = "construction-ai-terminal"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
 
-[vars]
-NOTION_DATABASE_ID = "312f63a1aa6f80af91d7c019f1f2b53d"
-MARKET_REGISTRY_NOTION_DATABASE_ID = ""
-CACHE_TTL_SECONDS = "300"
-SNAPSHOT_CONCURRENCY = "10"
-NEWS_FEEDS = ""
-MARKET_REGISTRY_JSON = "[]"
-USASPENDING_QUERY_TEMPLATES_JSON = "{}"
-OVERLAY_STOCK_SYMBOL = ""
-
-[[kv_namespaces]]
-binding = "CPI_SNAPSHOTS"
-id = "REPLACE_WITH_PROD_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_PREVIEW_KV_NAMESPACE_ID"
+kv_namespaces = [
+  { binding = "CPI_SNAPSHOTS", id = "REPLACE_WITH_ENV", preview_id = "REPLACE_WITH_ENV" }
+]
 
 [triggers]
-crons = ["0 * * * *", "15 12 * * *"]
-
-[observability]
-enabled = true
+crons = ["0 * * * *"]
