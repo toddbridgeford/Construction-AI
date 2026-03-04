@@ -13,13 +13,15 @@ final class DashboardStore: ObservableObject {
     @Published var selectedAlert: AlertItem?
 
     private let service = GitHubDashboardService()
+    private var refreshTask: Task<Void, Never>?
 
     func bootstrap() {
         payload = DiskCache.load()
         if payload != nil {
             statusText = "Offline (cached)"
         }
-        Task {
+        refreshTask?.cancel()
+        refreshTask = Task {
             await refreshFromGitHub()
         }
     }
@@ -31,6 +33,8 @@ final class DashboardStore: ObservableObject {
 
         do {
             let (latest, fetchedAt) = try await service.fetchDashboard()
+            selectedSignal = selectionMatch(for: selectedSignal, in: latest.signals)
+            selectedAlert = selectionMatch(for: selectedAlert, in: latest.alerts)
             payload = latest
             lastRefresh = fetchedAt
             statusText = "Loaded ✅ from GitHub"
@@ -38,10 +42,10 @@ final class DashboardStore: ObservableObject {
         } catch {
             if payload != nil {
                 statusText = "Offline (cached)"
-                errorMessage = "Could not refresh from GitHub. Showing last-good snapshot."
+                errorMessage = "Could not refresh from GitHub. Showing last-good snapshot. \(error.localizedDescription)"
             } else {
                 statusText = "Offline (cached)"
-                errorMessage = "Unable to load dashboard. Check connection and retry."
+                errorMessage = "Unable to load dashboard. Check connection and retry. \(error.localizedDescription)"
             }
         }
 
@@ -62,7 +66,9 @@ final class DashboardStore: ObservableObject {
 
     var filteredAlerts: [AlertItem] {
         guard let alerts = payload?.alerts else { return [] }
-        guard !searchText.isEmpty else { return alerts.sorted { $0.severity.rawValue > $1.severity.rawValue } }
+        guard !searchText.isEmpty else {
+            return alerts.sorted { $0.severity.rawValue > $1.severity.rawValue }
+        }
         return alerts.filter {
             $0.title.localizedCaseInsensitiveContains(searchText) ||
             $0.message.localizedCaseInsensitiveContains(searchText)
@@ -71,9 +77,15 @@ final class DashboardStore: ObservableObject {
 
     var filteredSignals: [SignalItem] {
         guard let signals = payload?.signals else { return [] }
-        guard !searchText.isEmpty else { return topSignals }
+        guard !searchText.isEmpty else { return signals }
         return signals.filter { $0.key.localizedCaseInsensitiveContains(searchText) }
     }
 
     var filteredRegions: [RegionItem] { [] }
+
+    private func selectionMatch<T: Hashable & Identifiable>(for current: T?, in candidates: [T]) -> T?
+    where T.ID: Hashable {
+        guard let current else { return nil }
+        return candidates.first(where: { $0.id == current.id })
+    }
 }
