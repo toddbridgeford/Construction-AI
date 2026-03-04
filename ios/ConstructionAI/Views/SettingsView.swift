@@ -13,14 +13,21 @@ struct SettingsView: View {
                 Button("Retry Fetch") { Task { await store.refreshFromGitHub() } }
             }
 
-            if !(store.payload?.sources.isEmpty ?? true) {
+            Section("Market API Feeds") {
+                ForEach(Config.marketSignalFeeds, id: \.name) { feed in
+                    LabeledContent(feed.name, value: feed.url.absoluteString)
+                        .font(.caption2)
+                }
+            }
+
+            if !store.sourceHealth.isEmpty {
                 Section("Source Health") {
-                    ForEach(store.payload?.sources ?? []) { source in
+                    ForEach(store.sourceHealth) { source in
                         VStack(alignment: .leading) {
                             Text(source.source)
                             Text(source.detail ?? source.status)
                                 .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(source.status == "error" ? .red : .secondary)
                         }
                     }
                 }
