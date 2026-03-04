@@ -28,9 +28,9 @@ struct AlertItem: Codable, Identifiable, Hashable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        severityRaw = container.decodeLossyString(forKey: .severityRaw)
-        symbol = container.decodeLossyString(forKey: .symbol)
-        title = container.decodeLossyString(forKey: .title) ?? "Untitled Alert"
-        message = container.decodeLossyString(forKey: .message) ?? "No alert details provided."
+        severityRaw = container.decodeConstructionAIString(forKey: .severityRaw)
+        symbol = container.decodeConstructionAIString(forKey: .symbol)
+        title = container.decodeConstructionAIString(forKey: .title) ?? "Untitled Alert"
+        message = container.decodeConstructionAIString(forKey: .message) ?? "No alert details provided."
     }
 }

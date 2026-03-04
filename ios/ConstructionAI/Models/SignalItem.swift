@@ -17,10 +17,10 @@ struct SignalItem: Codable, Identifiable, Hashable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        key = container.decodeLossyString(forKey: .key) ?? "Unknown Signal"
-        value = container.decodeLossyDouble(forKey: .value)
-        arrow = container.decodeLossyString(forKey: .arrow)
-        severityRaw = container.decodeLossyString(forKey: .severityRaw)
-        interpretation = container.decodeLossyString(forKey: .interpretation)
+        key = container.decodeConstructionAIString(forKey: .key) ?? "Unknown Signal"
+        value = container.decodeConstructionAIDouble(forKey: .value)
+        arrow = container.decodeConstructionAIString(forKey: .arrow)
+        severityRaw = container.decodeConstructionAIString(forKey: .severityRaw)
+        interpretation = container.decodeConstructionAIString(forKey: .interpretation)
     }
 }

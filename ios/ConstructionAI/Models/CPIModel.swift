@@ -15,8 +15,8 @@ struct CPIHistoryPoint: Codable, Hashable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        date = container.decodeLossyString(forKey: .date) ?? "unknown"
-        value = container.decodeLossyDouble(forKey: .value) ?? 0
+        date = container.decodeConstructionAIString(forKey: .date) ?? "unknown"
+        value = container.decodeConstructionAIDouble(forKey: .value) ?? 0
     }
 }
 
@@ -38,11 +38,11 @@ struct CPIModel: Codable, Hashable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        value = container.decodeLossyDouble(forKey: .value)
-            ?? container.decodeLossyDouble(forKey: .headline)
-        zone = container.decodeLossyString(forKey: .zone)
-        delta3M = container.decodeLossyDouble(forKey: .delta3M)
-        momentum = container.decodeLossyString(forKey: .momentum)
+        value = container.decodeConstructionAIDouble(forKey: .value)
+            ?? container.decodeConstructionAIDouble(forKey: .headline)
+        zone = container.decodeConstructionAIString(forKey: .zone)
+        delta3M = container.decodeConstructionAIDouble(forKey: .delta3M)
+        momentum = container.decodeConstructionAIString(forKey: .momentum)
 
         if let objectHistory = try? container.decode([CPIHistoryPoint].self, forKey: .history) {
             history = objectHistory

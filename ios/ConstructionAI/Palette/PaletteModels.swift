@@ -88,13 +88,13 @@ enum PaletteScorer {
 struct PaletteSelectionState {
     var selectedIndex: Int = 0
 
-    mutating func moveUp(max: Int) {
-        guard max > 0 else { return }
-        selectedIndex = max(selectedIndex - 1, 0)
+    mutating func moveUp(maxCount: Int) {
+        guard maxCount > 0 else { return }
+        selectedIndex = Swift.max(selectedIndex - 1, 0)
     }
 
-    mutating func moveDown(max: Int) {
-        guard max > 0 else { return }
-        selectedIndex = min(selectedIndex + 1, max - 1)
+    mutating func moveDown(maxCount: Int) {
+        guard maxCount > 0 else { return }
+        selectedIndex = Swift.min(selectedIndex + 1, maxCount - 1)
     }
 }

@@ -28,12 +28,12 @@ struct DashboardPayload: Codable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        schemaVersion = container.decodeLossyString(forKey: .schemaVersion)
-        generatedAt = container.decodeLossyString(forKey: .generatedAt)
+        schemaVersion = container.decodeConstructionAIString(forKey: .schemaVersion)
+        generatedAt = container.decodeConstructionAIString(forKey: .generatedAt)
 
         if let executive = try? container.nestedContainer(keyedBy: ExecutiveKeys.self, forKey: .executive) {
-            executiveHeadline = executive.decodeLossyString(forKey: .headline)
-            executiveSummary = executive.decodeLossyString(forKey: .summary)
+            executiveHeadline = executive.decodeConstructionAIString(forKey: .headline)
+            executiveSummary = executive.decodeConstructionAIString(forKey: .summary)
         } else {
             executiveHeadline = nil
             executiveSummary = nil
@@ -119,13 +119,13 @@ struct CardItem: Codable, Identifiable, Hashable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        title = container.decodeLossyString(forKey: .title) ?? "Untitled Card"
-        id = container.decodeLossyString(forKey: .id) ?? title
-        subtitle = container.decodeLossyString(forKey: .subtitle)
-        value = container.decodeLossyDouble(forKey: .value)
-        trend = container.decodeLossyString(forKey: .trend)
-        symbol = container.decodeLossyString(forKey: .symbol)
-        severityRaw = container.decodeLossyString(forKey: .severityRaw)
+        title = container.decodeConstructionAIString(forKey: .title) ?? "Untitled Card"
+        id = container.decodeConstructionAIString(forKey: .id) ?? title
+        subtitle = container.decodeConstructionAIString(forKey: .subtitle)
+        value = container.decodeConstructionAIDouble(forKey: .value)
+        trend = container.decodeConstructionAIString(forKey: .trend)
+        symbol = container.decodeConstructionAIString(forKey: .symbol)
+        severityRaw = container.decodeConstructionAIString(forKey: .severityRaw)
     }
 }
 

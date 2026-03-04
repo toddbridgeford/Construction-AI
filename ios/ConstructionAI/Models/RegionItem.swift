@@ -17,9 +17,9 @@ struct RegionItem: Codable, Identifiable, Hashable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        name = container.decodeLossyString(forKey: .name) ?? "Unknown Region"
-        id = container.decodeLossyString(forKey: .id) ?? name
-        summary = container.decodeLossyString(forKey: .summary)
-        value = container.decodeLossyDouble(forKey: .value)
+        name = container.decodeConstructionAIString(forKey: .name) ?? "Unknown Region"
+        id = container.decodeConstructionAIString(forKey: .id) ?? name
+        summary = container.decodeConstructionAIString(forKey: .summary)
+        value = container.decodeConstructionAIDouble(forKey: .value)
     }
 }
