@@ -1,7 +1,7 @@
 import Foundation
 
 extension KeyedDecodingContainer {
-    func decodeLossyString(forKey key: Key) -> String? {
+    func decodeConstructionAIString(forKey key: Key) -> String? {
         if let value = try? decodeIfPresent(String.self, forKey: key) {
             return value
         }
@@ -20,7 +20,7 @@ extension KeyedDecodingContainer {
         return nil
     }
 
-    func decodeLossyDouble(forKey key: Key) -> Double? {
+    func decodeConstructionAIDouble(forKey key: Key) -> Double? {
         if let value = try? decodeIfPresent(Double.self, forKey: key) {
             return value
         }

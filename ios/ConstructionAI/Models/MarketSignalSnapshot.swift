@@ -41,8 +41,8 @@ struct MarketSignalSnapshot: Decodable {
 
         if let meta = try? container.nestedContainer(keyedBy: MetaKeys.self, forKey: .meta),
            let region = try? meta.nestedContainer(keyedBy: RegionKeys.self, forKey: .region) {
-            regionName = region.decodeLossyString(forKey: .name) ?? "Unknown"
-            asOf = meta.decodeLossyString(forKey: .runDate)
+            regionName = region.decodeConstructionAIString(forKey: .name) ?? "Unknown"
+            asOf = meta.decodeConstructionAIString(forKey: .runDate)
         } else {
             regionName = "Unknown"
             asOf = nil
@@ -50,9 +50,9 @@ struct MarketSignalSnapshot: Decodable {
 
         if let indices = try? container.nestedContainer(keyedBy: IndicesKeys.self, forKey: .indices),
            let pressure = try? indices.nestedContainer(keyedBy: PressureKeys.self, forKey: .pressureIndex) {
-            pressureValue = pressure.decodeLossyDouble(forKey: .value)
-            pressureTrend = pressure.decodeLossyString(forKey: .direction)
-            pressureState = pressure.decodeLossyString(forKey: .riskState)
+            pressureValue = pressure.decodeConstructionAIDouble(forKey: .value)
+            pressureTrend = pressure.decodeConstructionAIString(forKey: .direction)
+            pressureState = pressure.decodeConstructionAIString(forKey: .riskState)
         } else {
             pressureValue = nil
             pressureTrend = nil

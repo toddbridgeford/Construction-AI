@@ -93,9 +93,9 @@ struct TerminalShellView: View {
         case .dismiss:
             isPalettePresented = false
         case .up:
-            paletteSelection.moveUp(max: paletteResults.flat.count)
+            paletteSelection.moveUp(maxCount: paletteResults.flat.count)
         case .down:
-            paletteSelection.moveDown(max: paletteResults.flat.count)
+            paletteSelection.moveDown(maxCount: paletteResults.flat.count)
         case .execute:
             guard isPalettePresented, paletteResults.flat.indices.contains(paletteSelection.selectedIndex) else { return }
             executePaletteAction(action: paletteResults.flat[paletteSelection.selectedIndex].action)
@@ -128,6 +128,7 @@ struct TerminalShellView: View {
     }
 }
 
+@MainActor
 func buildPaletteItems(store: DashboardStore, prefs: TerminalPreferencesStore) -> [PaletteItem] {
     var items: [PaletteItem] = [
         PaletteItem(id: "nav:overview", category: .navigate, title: "Go to Overview", subtitle: "Dashboard grid", symbol: "square.grid.3x3", hint: "⌘1", hintStyle: .jump, keywords: ["home", "dashboard"], priority: 900, action: .navigate("overview")),
