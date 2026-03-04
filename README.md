@@ -1,66 +1,82 @@
 # Construction AI Terminal API (Cloudflare Worker)
 
-Unified API gateway for FRED, Notion, Stooq, BLS, USAspending, Alpha Vantage, and RSS/Atom feed tape.
+Unified API gateway + precomputed CPI engine for FRED, Notion, BLS, USAspending, Alpha Vantage, and RSS feeds.
 
 Base URL:
-
 - `https://toddbridgeford.workers.dev`
 
-## iPad-Friendly Setup
+## Terminal Core Architecture
 
-1. **Cloudflare: add Worker secrets**
-   - `FRED_API_KEY`
-   - `NOTION_TOKEN`
-   - `ALPHAVANTAGE_API_KEY`
+The Worker now supports:
+- **Precompute on schedule** via `scheduled()` cron trigger.
+- **Serve snapshots** instantly from KV:
+  - `GET /cpi?location={market}`
+  - `GET /market?location={market}`
+  - `GET /rank/metros`
+  - `GET /refresh?location={market}` (admin token required)
+
+Snapshot KV keys:
+- `cpi:{market}`
+- `market:{market}`
+- `leaderboard:metros`
+
+All generated timestamps are UTC (`generated_at_utc`).
+
+## Setup
+
+1. **Create KV namespace and bind it**
+   - Bind as `CPI_SNAPSHOTS` in `wrangler.toml`.
+
+2. **Configure cron triggers**
+   - Example included in `wrangler.toml`:
+     - `0 * * * *` (hourly)
+     - `15 12 * * *` (daily refresh)
+
+3. **Set required secrets**
+   - `NOTION_TOKEN` (for Notion routes and preferred market registry source)
+   - `FRED_API_KEY` (if using FRED rows)
+   - `ALPHAVANTAGE_API_KEY` (if using AlphaVantage rows)
+   - `ADMIN_TOKEN` (required for `/refresh`)
    - Optional: `BLS_API_KEY`
 
-2. **Cloudflare: add Worker vars**
-   - `NOTION_DATABASE_ID` (default `312f63a1aa6f80af91d7c019f1f2b53d`)
-   - `CACHE_TTL_SECONDS` (default `300`)
-   - `NEWS_FEEDS` (comma-separated RSS/Atom URLs)
-   - Optional: `STOOQ_DEFAULT_TICKERS`
+4. **Set vars**
+   - `NOTION_DATABASE_ID`
+   - `MARKET_REGISTRY_NOTION_DATABASE_ID` (preferred registry db; falls back to `NOTION_DATABASE_ID`)
+   - `MARKET_REGISTRY_JSON` (fallback JSON registry when Notion is unavailable)
+   - `USASPENDING_QUERY_TEMPLATES_JSON` (query template map for USAspending registry keys)
+   - `CACHE_TTL_SECONDS`
+   - `SNAPSHOT_CONCURRENCY` (1-12)
+   - `NEWS_FEEDS`
+   - `OVERLAY_STOCK_SYMBOL` (optional temporary overlay)
 
-3. **Notion integration setup**
-   1) Create an internal Notion integration.
-   2) Share the **Construction AI** database with the integration with edit/insert permissions.
-   3) Put the integration token into Cloudflare Worker secret `NOTION_TOKEN`.
-   4) Ensure `Series ID` property is a **Select** property.
+## Market Registry Schema
 
-4. **Test URLs with curl**
+Notion database should include:
+- `Market` (select or text)
+- `Provider` (select): `FRED | BLS | USAspending | AlphaVantage | RSS`
+- `Key` (text)
+- `Metric` (text)
+- `Component` (select): `Capital | Pipeline | Trade | Materials | Regulatory | Macro`
+- `Transform` (select): `level | pct_change | yoy`
+- `Weight` (number)
+- `Active` (checkbox)
+
+If Notion fails/unavailable, Worker falls back to `MARKET_REGISTRY_JSON` with equivalent fields.
+
+## Test URLs
 
 ```bash
-curl "https://toddbridgeford.workers.dev/notion/series"
-
-curl "https://toddbridgeford.workers.dev/bundle?limit=60"
-
-curl "https://toddbridgeford.workers.dev/alphavantage/quote?symbol=IBM"
-
-curl -X POST "https://toddbridgeford.workers.dev/usaspending/awards" \
-  -H "content-type: application/json" \
-  -d '{
-    "filters": {
-      "time_period": [{"start_date": "2025-01-01", "end_date": "2026-12-31"}],
-      "naics_codes": ["236220"]
-    },
-    "fields": ["Award ID", "Recipient Name", "Award Amount", "Start Date"],
-    "page": 1,
-    "limit": 10,
-    "sort": "Award Amount",
-    "order": "desc"
-  }'
+curl "https://toddbridgeford.workers.dev/cpi?location=austin-tx"
+curl "https://toddbridgeford.workers.dev/market?location=austin-tx"
+curl "https://toddbridgeford.workers.dev/rank/metros"
+curl "https://toddbridgeford.workers.dev/refresh?location=austin-tx&token=$ADMIN_TOKEN"
 ```
 
-5. **Custom GPT Actions**
-   - Paste `docs/construction_ai_terminal_openapi.yaml` into your Custom GPT Actions schema.
-
-## Routes
-
-- `GET /health`
+Legacy endpoints are preserved:
 - `GET /notion/series`
 - `POST /notion/add`
 - `GET /bundle`
 - `GET /fred/observations`
-- `GET /stooq/quote`
 - `POST /bls/timeseries`
 - `POST /usaspending/awards`
 - `POST /usaspending/awards/count`
@@ -69,10 +85,11 @@ curl -X POST "https://toddbridgeford.workers.dev/usaspending/awards" \
 - `GET /alphavantage/intraday`
 - `GET /alphavantage/news`
 - `GET /news/feeds`
+- `GET /stooq/quote`
 
 ## Notes
 
-- Secrets are validated per route and return JSON `500` if missing.
-- Worker never logs secrets.
-- Caching uses Cloudflare `caches.default`, including stable POST cache keys via body hashing.
-- Alpha Vantage rate-limit responses (`Note`/`Error Message`) are normalized to HTTP `429` and are not cached.
+- CPI engine applies transforms, z-scores, score mapping (`50 + 50*tanh(z/2)`), component weighting, headline CPI, zone mapping, and `delta_3m`.
+- Upstream failures degrade gracefully per datapoint (`provider_unavailable`) and pipeline continues.
+- CORS remains permissive for Actions.
+- Secrets are never returned in payloads.
