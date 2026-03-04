@@ -3,11 +3,9 @@ name: Deploy Cloudflare Worker
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
-      - Predictive-Model
+    branches: [main]
     paths:
-      - 'src/worker.js'
+      - 'src/index.js'
       - 'wrangler.toml'
       - '.github/workflows/deploy_cloudflare_worker.yml'
 
@@ -17,60 +15,59 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate required Cloudflare files
-        run: |
-          set -euo pipefail
-          test -f src/worker.js
-          test -f wrangler.toml
-
       - name: Validate Worker syntax
-        run: node --check src/worker.js
-
-      - name: Prepare wrangler config for CI deploy
-        env:
-          CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID || vars.CLOUDFLARE_KV_NAMESPACE_ID }}
-          CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID || vars.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN || vars.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
+          test -f src/index.js
+          test -f wrangler.toml
+          node --check src/index.js
 
-          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
-            echo "Missing required secret: CLOUDFLARE_API_TOKEN"
+      - name: Preflight required Cloudflare configuration
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}
+          CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}
+        run: |
+          set -euo pipefail
+          missing=0
+          for key in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_KV_NAMESPACE_ID CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID; do
+            if [ -z "${!key:-}" ]; then
+              echo "ERROR: Missing required secret ${key}."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "Deployment stopped. Configure all required Cloudflare secrets in GitHub Actions."
             exit 1
           fi
 
-          if [ -z "${CLOUDFLARE_ACCOUNT_ID:-}" ]; then
-            echo "Missing required secret: CLOUDFLARE_ACCOUNT_ID"
-            exit 1
-          fi
+      - name: Build wrangler.ci.toml
+        env:
+          CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}
+          CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}
+        run: |
+          set -euo pipefail
+          cat > wrangler.ci.toml <<CI
+          name = "construction-ai-terminal"
+          main = "src/index.js"
+          compatibility_date = "2026-01-01"
 
-          if [ -z "${CLOUDFLARE_KV_NAMESPACE_ID:-}" ]; then
-            echo "Missing required value: CLOUDFLARE_KV_NAMESPACE_ID"
-            echo "Create a Cloudflare KV namespace (recommended name: CPI_SNAPSHOTS),"
-            echo "then add its ID as a GitHub Actions secret or variable named CLOUDFLARE_KV_NAMESPACE_ID."
-            exit 1
-          fi
+          kv_namespaces = [
+            { binding = "CPI_SNAPSHOTS", id = "${CLOUDFLARE_KV_NAMESPACE_ID}", preview_id = "${CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID}" }
+          ]
 
-          preview_id="${CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID:-$CLOUDFLARE_KV_NAMESPACE_ID}"
-
-          cp wrangler.toml wrangler.ci.toml
-          sed -i "s/REPLACE_WITH_PROD_KV_NAMESPACE_ID/${CLOUDFLARE_KV_NAMESPACE_ID}/g" wrangler.ci.toml
-          sed -i "s/REPLACE_WITH_PREVIEW_KV_NAMESPACE_ID/${preview_id}/g" wrangler.ci.toml
-
-          if grep -Eq "REPLACE_WITH_(PROD|PREVIEW)_KV_NAMESPACE_ID" wrangler.ci.toml; then
-            echo "wrangler.ci.toml still contains unresolved KV placeholders"
-            exit 1
-          fi
+          [triggers]
+          crons = ["0 * * * *"]
+          CI
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN || vars.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy --config wrangler.ci.toml
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: wrangler deploy --config wrangler.ci.toml
