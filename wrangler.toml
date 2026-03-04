@@ -4,9 +4,21 @@ compatibility_date = "2024-12-01"
 
 [vars]
 NOTION_DATABASE_ID = "312f63a1aa6f80af91d7c019f1f2b53d"
+MARKET_REGISTRY_NOTION_DATABASE_ID = ""
 CACHE_TTL_SECONDS = "300"
+SNAPSHOT_CONCURRENCY = "10"
 NEWS_FEEDS = ""
-STOOQ_DEFAULT_TICKERS = ""
+MARKET_REGISTRY_JSON = "[]"
+USASPENDING_QUERY_TEMPLATES_JSON = "{}"
+OVERLAY_STOCK_SYMBOL = ""
+
+[[kv_namespaces]]
+binding = "CPI_SNAPSHOTS"
+id = "REPLACE_WITH_PROD_KV_NAMESPACE_ID"
+preview_id = "REPLACE_WITH_PREVIEW_KV_NAMESPACE_ID"
+
+[triggers]
+crons = ["0 * * * *", "15 12 * * *"]
 
 [observability]
 enabled = true

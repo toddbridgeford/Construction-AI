@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Construction AI Terminal API
-  version: 1.0.0
+  version: 1.1.0
 servers:
   - url: https://toddbridgeford.workers.dev
 paths:
@@ -15,6 +15,79 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  ok: { type: boolean }
+                  service: { type: string }
+                additionalProperties: true
+  /cpi:
+    get:
+      operationId: getCpiSnapshot
+      parameters:
+        - in: query
+          name: location
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Latest CPI snapshot for market
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CpiSnapshot'
+  /market:
+    get:
+      operationId: getMarketSnapshot
+      parameters:
+        - in: query
+          name: location
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Latest market datapoint snapshot
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketSnapshot'
+  /rank/metros:
+    get:
+      operationId: rankMetros
+      responses:
+        '200':
+          description: Leaderboard across markets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeaderboardSnapshot'
+  /refresh:
+    get:
+      operationId: refreshMarket
+      parameters:
+        - in: query
+          name: location
+          required: false
+          schema: { type: string }
+        - in: query
+          name: token
+          required: false
+          schema: { type: string }
+        - in: header
+          name: x-admin-token
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: Triggered recompute for one or all markets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  generated_at_utc: { type: string }
+                  market_count: { type: integer }
+                  leaderboard_count: { type: integer }
+                additionalProperties: true
   /notion/series:
     get:
       operationId: notionSeries
@@ -25,6 +98,12 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  count: { type: integer }
+                  series:
+                    type: array
+                    items: { type: string }
+                additionalProperties: true
   /notion/add:
     post:
       operationId: notionAdd
@@ -34,6 +113,8 @@ paths:
           application/json:
             schema:
               type: object
+              properties: {}
+              additionalProperties: true
       responses:
         '200':
           description: Created Notion page
@@ -41,6 +122,8 @@ paths:
             application/json:
               schema:
                 type: object
+                properties: {}
+                additionalProperties: true
   /bundle:
     get:
       operationId: bundle
@@ -58,6 +141,18 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      used_override: { type: boolean }
+                      series_count: { type: integer }
+                    additionalProperties: true
+                  fred:
+                    type: object
+                    properties: {}
+                    additionalProperties: true
+                additionalProperties: true
   /fred/observations:
     get:
       operationId: fredObservations
@@ -85,21 +180,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FredObservations'
-  /stooq/quote:
-    get:
-      operationId: stooqQuote
-      parameters:
-        - in: query
-          name: s
-          required: true
-          schema: { type: string }
-      responses:
-        '200':
-          description: Stooq quote
-          content:
-            application/json:
-              schema:
-                type: object
   /bls/timeseries:
     post:
       operationId: blsTimeseries
@@ -109,6 +189,8 @@ paths:
           application/json:
             schema:
               type: object
+              properties: {}
+              additionalProperties: true
       responses:
         '200':
           description: BLS response
@@ -116,6 +198,8 @@ paths:
             application/json:
               schema:
                 type: object
+                properties: {}
+                additionalProperties: true
   /usaspending/awards:
     post:
       operationId: usaspendingAwards
@@ -125,6 +209,8 @@ paths:
           application/json:
             schema:
               type: object
+              properties: {}
+              additionalProperties: true
       responses:
         '200':
           description: USAspending awards
@@ -132,6 +218,28 @@ paths:
             application/json:
               schema:
                 type: object
+                properties: {}
+                additionalProperties: true
+  /usaspending/awards/count:
+    post:
+      operationId: usaspendingAwardCount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+              additionalProperties: true
+      responses:
+        '200':
+          description: USAspending awards count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+                additionalProperties: true
   /alphavantage/quote:
     get:
       operationId: alphaQuote
@@ -147,6 +255,8 @@ paths:
             application/json:
               schema:
                 type: object
+                properties: {}
+                additionalProperties: true
   /alphavantage/daily:
     get:
       operationId: alphaDaily
@@ -168,6 +278,8 @@ paths:
             application/json:
               schema:
                 type: object
+                properties: {}
+                additionalProperties: true
             text/csv:
               schema:
                 type: string
@@ -195,6 +307,8 @@ paths:
             application/json:
               schema:
                 type: object
+                properties: {}
+                additionalProperties: true
             text/csv:
               schema:
                 type: string
@@ -218,6 +332,8 @@ paths:
             application/json:
               schema:
                 type: object
+                properties: {}
+                additionalProperties: true
   /news/feeds:
     get:
       operationId: newsFeeds
@@ -232,8 +348,92 @@ paths:
             application/json:
               schema:
                 type: object
+                properties:
+                  count: { type: integer }
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        url: { type: string }
+                        ok: { type: boolean }
+                        status: { type: integer }
+                        content_type: { type: [string, 'null'] }
+                        text_truncated: { type: string }
+                      additionalProperties: true
+                additionalProperties: true
 components:
   schemas:
+    CpiSnapshot:
+      type: object
+      properties:
+        market: { type: string }
+        generated_at_utc: { type: string }
+        headline_cpi: { type: number }
+        zone: { type: string }
+        delta_3m: { type: number }
+        components:
+          type: object
+          properties: {}
+          additionalProperties: true
+        overlays:
+          type: object
+          properties: {}
+          additionalProperties: true
+        top_contributors:
+          type: array
+          items:
+            type: object
+            properties:
+              metric: { type: string }
+              component: { type: string }
+              contribution: { type: number }
+              delta_3m: { type: number }
+            additionalProperties: true
+        timestamp: { type: string }
+      additionalProperties: true
+    MarketSnapshot:
+      type: object
+      properties:
+        market: { type: string }
+        market_key: { type: string }
+        generated_at_utc: { type: string }
+        cpi:
+          $ref: '#/components/schemas/CpiSnapshot'
+        datapoints:
+          type: array
+          items:
+            type: object
+            properties: {}
+            additionalProperties: true
+        meta:
+          type: object
+          properties:
+            total_datapoints: { type: integer }
+            successful_datapoints: { type: integer }
+            failed_datapoints: { type: integer }
+          additionalProperties: true
+      additionalProperties: true
+    LeaderboardSnapshot:
+      type: object
+      properties:
+        generated_at_utc: { type: string }
+        source: { type: string }
+        cron: { type: [string, 'null'] }
+        markets:
+          type: array
+          items:
+            type: object
+            properties:
+              rank: { type: integer }
+              market: { type: string }
+              market_key: { type: string }
+              headline_cpi: { type: number }
+              delta_3m: { type: number }
+              zone: { type: string }
+              datapoints: { type: integer }
+            additionalProperties: true
+      additionalProperties: true
     FredObservations:
       type: object
       properties:
@@ -253,3 +453,8 @@ components:
           type: array
           items:
             type: object
+            properties:
+              date: { type: string }
+              value: { type: string }
+            additionalProperties: true
+      additionalProperties: true
