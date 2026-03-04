@@ -1,9 +1,35 @@
+#if canImport(XCTest)
+import Foundation
 import XCTest
 @testable import ConstructionAI
 
 final class ConstructionAITests: XCTestCase {
+    private func fixtureURL(named fileName: String) throws -> URL {
+        #if SWIFT_PACKAGE
+        if let packageURL = Bundle.module.url(forResource: fileName, withExtension: "json", subdirectory: "Fixtures") {
+            return packageURL
+        }
+        #endif
+
+        let searchBundles: [Bundle] = [Bundle.main, Bundle(for: ConstructionAITests.self)]
+        for bundle in searchBundles {
+            if let url = bundle.url(forResource: fileName, withExtension: "json") {
+                return url
+            }
+            if let url = bundle.url(forResource: fileName, withExtension: "json", subdirectory: "Fixtures") {
+                return url
+            }
+        }
+
+        throw NSError(
+            domain: "ConstructionAITests",
+            code: 1,
+            userInfo: [NSLocalizedDescriptionKey: "Missing fixture: \(fileName).json"]
+        )
+    }
+
     func testDashboardFixtureDecodes() throws {
-        let url = Bundle.module.url(forResource: "dashboard_fixture", withExtension: "json", subdirectory: "Fixtures")!
+        let url = try fixtureURL(named: "dashboard_fixture")
         let data = try Data(contentsOf: url)
         let payload = try JSONDecoder().decode(DashboardPayload.self, from: data)
         XCTAssertEqual(payload.alerts.count, 1)
@@ -11,7 +37,7 @@ final class ConstructionAITests: XCTestCase {
     }
 
     func testSignalFixtureDecodes() throws {
-        let url = Bundle.module.url(forResource: "signal_api_fixture", withExtension: "json", subdirectory: "Fixtures")!
+        let url = try fixtureURL(named: "signal_api_fixture")
         let data = try Data(contentsOf: url)
         let snapshot = try JSONDecoder().decode(MarketSignalSnapshot.self, from: data)
         XCTAssertEqual(snapshot.regionName, "National")
@@ -22,3 +48,4 @@ final class ConstructionAITests: XCTestCase {
         XCTAssertGreaterThan(PaletteScorer.score(item: item, query: "ref"), PaletteScorer.score(item: item, query: "dash"))
     }
 }
+#endif
