@@ -1,10 +1,11 @@
-name = "construction-ai-dashboard-api"
+name = "construction-ai-dashboard"
 main = "src/index.ts"
-compatibility_date = "2026-03-01"
-
-kv_namespaces = [
-  { binding = "DASHBOARD_KV", id = "REPLACE_WITH_KV_NAMESPACE_ID", preview_id = "REPLACE_WITH_KV_PREVIEW_ID" }
-]
+compatibility_date = "2025-01-01"
 
 [triggers]
-crons = ["*/15 * * * *"]
+crons = ["*/15 * * * *"] # every 15 minutes (UTC)
+
+[[kv_namespaces]]
+binding = "DASHBOARD_KV"
+id = "REPLACE_WITH_KV_ID"
+preview_id = "REPLACE_WITH_PREVIEW_KV_ID"
