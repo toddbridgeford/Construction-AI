@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-04T21:00:50.840Z",
+  "generated_at": "2026-03-05T07:10:47.785Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -29,10 +29,6 @@
         "value": 46
       },
       {
-        "date": "2026-03-03",
-        "value": 46
-      },
-      {
         "date": "2026-03-04",
         "value": 46
       },
@@ -58,6 +54,10 @@
       },
       {
         "date": "2026-03-04",
+        "value": 46
+      },
+      {
+        "date": "2026-03-05",
         "value": 46
       }
     ],
@@ -100,12 +100,12 @@
       "capital_score": 39,
       "pipeline_score": 47,
       "flip_trigger": null,
-      "duration_days": 1,
+      "duration_days": 2,
       "status": "Active"
     }
   ],
   "regime_history_display": {
-    "current_regime_duration_days": 1,
+    "current_regime_duration_days": 2,
     "previous_regime": null,
     "last_flip_date": null,
     "regime_stability": "🟢 Stable"
@@ -195,36 +195,180 @@
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 24,
-      "newsapi:everything": 78
+      "newsapi:top_headlines": 27,
+      "newsapi:everything": 79
     },
     "news_unified": [
       {
-        "title": "Stocks dramatically pare losses after Trump offers Gulf shipping safety; oil retreats from highs: Live updates - CNBC",
-        "url": "https://www.cnbc.com/2026/03/02/stock-market-today-live-updates.html",
+        "title": "Stock futures fall as traders monitor latest developments in U.S.-Iran war: Live updates - CNBC",
+        "url": "https://www.cnbc.com/2026/03/03/stock-market-today-live-updates.html",
         "source": "CNBC",
-        "published_at": "2026-03-03T20:45:00Z",
+        "published_at": "2026-03-04T05:09:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Traders watched rising geopolitical tensions and worried the U.S.-Iran conflict could go on longer than anticipated."
+        "description": "The Dow Industrials ended Tuesday's session down just over 400 points. The 30-stock index curtailed its losses after falling more than 1,200 points at the low."
       },
       {
-        "title": "Iranian strikes on Amazon data centers highlights industry's vulnerability to physical disasters - AP News",
-        "url": "https://apnews.com/article/amazon-aws-data-center-uae-iran-bahrain-71066b0a822c4cfd88b61e3fe79af917",
+        "title": "Goldman’s Solomon Says Market Reaction to War Is ‘Benign’ So Far - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-04/goldman-s-solomon-says-market-reaction-to-war-is-benign-so-far",
+        "source": "Bloomberg",
+        "published_at": "2026-03-04T04:22:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Goldman Sachs Group Inc. Chairman David Solomon said he’s been surprised by the “benign” reaction in financial markets to the Middle East conflict, adding that it will take weeks to understand more about the situation."
+      },
+      {
+        "title": "Trump met with Coinbase CEO before bashing banks over crypto bill - Politico",
+        "url": "https://www.politico.com/live-updates/2026/03/03/congress/trump-met-with-coinbase-ceo-before-bashing-banks-over-crypto-bill-00811277",
+        "source": "Politico",
+        "published_at": "2026-03-04T04:05:11Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The legislation is mired in a fight between crypto companies and the banking industry."
+      },
+      {
+        "title": "Korean Stock Gauge Poised for Correction on Iran War Selloff - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-04/korean-stock-gauge-poised-for-correction-on-iran-war-selloff",
+        "source": "Bloomberg",
+        "published_at": "2026-03-04T03:07:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Panic swept across trading desks in South Korea as local stocks, by far the hottest in the world over the past year, extended their freefall into Wednesday."
+      },
+      {
+        "title": "China's factory activity expands at quickest pace in over 5 years, private PMI shows - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/chinas-factory-activity-expands-quickest-015522109.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-04T01:55:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "BEIJING, March 4 (Reuters) - China's factory activity in February expanded at the fastest pace since December 2020, driven by robust demand that helped lift ..."
+      },
+      {
+        "title": "Pentagon dispute bolsters Anthropic reputation but raises questions about AI readiness in military - AP News",
+        "url": "https://apnews.com/article/anthropic-pentagon-openai-claude-chatgpt-military-ai-b2bbcf5fda3f27353eae1e0eb7ab07b6",
         "source": "Associated Press",
-        "published_at": "2026-03-03T17:39:00Z",
+        "published_at": "2026-03-04T01:48:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Iranian drone strikes damaged three Amazon Web Services sites in the Middle East, exposing how vulnerable cloud data centers are in conflict. AWS said late Monday that drones directly hit two data centers in the United Arab Emirates and another site in Bahrai…"
+        "description": "Anthropic’s moral stand on U.S. military use of artificial intelligence is reshaping the competition between leading AI companies but also exposing a growing awareness that maybe chatbots just aren’t capable enough for acts of war. Anthropic’s chatbot, Claude…"
       },
       {
-        "title": "The Live Nation trial could reshape the music industry. Here's what you need to know - NPR",
-        "url": "https://www.npr.org/2026/03/03/nx-s1-5728962/live-nation-ticketmaster-trial-explainer",
-        "source": "NPR",
-        "published_at": "2026-03-03T16:49:11Z",
+        "title": "Prediction: Nvidia (NVDA) Will Be Worth More Than Alphabet, Apple, Amazon, Tesla, Meta, and Microsoft Combined by 2030 - The Motley Fool",
+        "url": "https://www.fool.com/investing/2026/03/03/prediction-nvidia-nvda-will-be-worth-more-than-alp/",
+        "source": "Motley Fool",
+        "published_at": "2026-03-04T01:45:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "On Tuesday opening statements will begin for the federal antitrust trial against Live Nation, one of the largest entertainment companies in the world."
+        "description": "Nvidia is expected to deliver unreal growth over the next few years."
+      },
+      {
+        "title": "Feds Warn Savannah Chrisley Over Alleged False, Misleading Weight Loss Statements - TMZ",
+        "url": "https://www.tmz.com/2026/03/03/feds-warn-savannah-chrisley-over-alleged-misleading-website/",
+        "source": "TMZ",
+        "published_at": "2026-03-04T01:32:58Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Savannah Chrisley's prescription weight loss website is under a federal microscope ... 'cause the FDA warned her about making false and misleading claims about GLP-1s."
+      },
+      {
+        "title": "Target tackles groceries as first swing to revive sales growth - Star Tribune",
+        "url": "https://www.startribune.com/target-turnaround-plan-reinventing-home-category-expansion-food-grocery/601589208",
+        "source": "Minneapolis Star Tribune",
+        "published_at": "2026-03-04T00:34:07Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "After another sales slide in the holiday quarter, executives laid out a turnaround plan that will spend billions to update both merchandise and stores."
+      },
+      {
+        "title": "Ajinomoto Foods North America, Inc. Expands Recall for Chicken and Pork Fried Rice, Ramen, and Shu Mai Products Due to Possible Foreign Matter Contamination | Food Safety and Inspection Service - fsis.usda.gov",
+        "url": "http://www.fsis.usda.gov/recalls-alerts/ajinomoto-foods-north-america-inc--expands-recall-chicken-and-pork-fried-rice-ramen",
+        "source": "Usda.gov",
+        "published_at": "2026-03-03T23:44:17Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
+      {
+        "title": "Starbucks opening corporate office in Tennessee, moving some Seattle jobs - KING5.com",
+        "url": "https://www.king5.com/article/money/business/starbucks-opening-corporate-office-nashville-tennessee/281-c73f3c97-9565-4cb8-83d8-62bc8697341e",
+        "source": "KING5.com",
+        "published_at": "2026-03-03T23:29:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Jobs impacted are within the company's supply chain department."
+      },
+      {
+        "title": "Downdetector, Speedtest sold to IT service provider Accenture in $1.2B deal - Ars Technica",
+        "url": "https://arstechnica.com/information-technology/2026/03/downdetector-speedtest-sold-to-it-service-provider-accenture-in-1-2b-deal/",
+        "source": "Ars Technica",
+        "published_at": "2026-03-03T22:20:06Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Accenture plans to buy Ookla, which also includes RootMetrics and Ekahau."
+      },
+      {
+        "title": "FCC chair calls Paramount/WBD merger \"a lot cleaner\" than defunct Netflix deal - Ars Technica",
+        "url": "https://arstechnica.com/tech-policy/2026/03/trump-fcc-chair-paramount-warner-bros-merger-likely-to-get-quick-approval/",
+        "source": "Ars Technica",
+        "published_at": "2026-03-03T22:05:36Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "FCC to review foreign debt, but Carr indicates it will be a formality."
+      },
+      {
+        "title": "I tried McDonald’s massive new Big Arch burger and stopped after three bites - Cleveland.com",
+        "url": "https://www.cleveland.com/entertainment/2026/03/i-tried-mcdonalds-massive-new-big-arch-burger-and-stopped-after-three-bites.html",
+        "source": "cleveland.com",
+        "published_at": "2026-03-03T21:30:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The new Big Arch Burger at McDonald's packs a half-pound of beef and 1020 calories into one sandwich."
+      },
+      {
+        "title": "Archer Aviation Stock Falls After Earnings. Why the Drone Maker Is Tumbling Despite the Iran War. - Barron's",
+        "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNbC1laXgtM1FwWVdGbDIwNmRXZVgxUFZHSU5VZF9NQkxTZHBaNW9kYkpzMkxObTZYZ3hjaUVxY3cweElPbjRXTXkyX1A0TDRwLUg0c1ZDd0R3MjV6UXdEdFM5QVBWMVpQeHZxMGNUZUxmUVRWTlc1b3R4OHdIaVZLOV9RUl8?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-03T21:29:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
+      {
+        "title": "5 ways the Iran conflict is upending Europe’s energy plans - politico.eu",
+        "url": "https://www.politico.eu/article/5-ways-iran-conflict-is-upending-europe-energy-plans/",
+        "source": "POLITICO.eu",
+        "published_at": "2026-03-03T20:39:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The EU already had energy problems. The chaos in the Gulf just made them a whole lot worse."
+      },
+      {
+        "title": "ChatGPT Health 'under-triaged' half of medical emergencies in a new study - NBC News",
+        "url": "https://www.nbcnews.com/health/health-news/chatgpt-health-under-triaged-half-medical-emergencies-rcna261409",
+        "source": "NBC News",
+        "published_at": "2026-03-03T17:02:23Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "ChatGPT Health — OpenAI’s new health-focused chatbot — frequently underestimated the severity of medical emergencies, according to a study published last week in the journal Nature Medicine"
+      },
+      {
+        "title": "Blue Owl slides below listing price as private credit worries mount - Financial Times",
+        "url": "https://www.ft.com/content/5e1404da-af6c-4f8a-a095-3e16827cadc9",
+        "source": "Financial Times",
+        "published_at": "2026-03-03T15:54:51Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Investor redemptions and fears of AI disruption to software companies have prompted worries across the industry"
+      },
+      {
+        "title": "Quantum firms set up across Chicago ahead of South Works campus - Crain's Chicago Business",
+        "url": "https://www.chicagobusiness.com/technology/illinois-quantum-pritzker-uchicago-university-of-illinois-mhub/",
+        "source": "Crain's Chicago Business",
+        "published_at": "2026-03-03T15:37:53Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Companies slated for the Illinois Quantum & Microelectronics Park are opening labs at mHUB, Hyde Park Labs and downtown while the South Works campus is built."
       },
       {
         "title": "The best mobile tech announced at MWC 2026 so far - The Verge",
@@ -236,13 +380,13 @@
         "description": "Robot phones, a folding smartphone you can dunk, and a modular laptop concept that lets you swap in ports as needed."
       },
       {
-        "title": "20 Most Hilarious Reactions After Video Of McDonald's CEO Tasting Burger Went Viral In Worst Way - Bored Panda",
-        "url": "https://www.boredpanda.com/mcdonalds-ceo-eating-burger-goes-viral/",
-        "source": "Boredpanda.com",
-        "published_at": "2026-03-03T15:16:42Z",
+        "title": "Amazon says drones hit 3 of its Middle East data centers amid Iran conflict - CBS News",
+        "url": "https://www.cbsnews.com/news/amazon-drone-strike-aws-data-center-uae-bahrain-iran/",
+        "source": "CBS News",
+        "published_at": "2026-03-03T15:03:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "In the wake of McDonald’s CEO Chris Kempczinski becoming a “laughing stock” online following a viral promotional video for the new Big Arch burger, social media has been flooded with hilarious and pointed memes as users react to the situation."
+        "description": "Drones struck two facilities in the United Arab Emirates directly, and damaged a data center in Bahrain, Amazon said."
       },
       {
         "title": "Gold Price Slides Down as Middle East War Ratchets Up - Barron's",
@@ -254,58 +398,31 @@
         "description": ""
       },
       {
-        "title": "Goldman finds no relationship between AI and productivity but a 30% boost for 2 specific use cases - Fortune",
-        "url": "https://fortune.com/2026/03/03/goldman-earnings-ai-anxiety-no-meaningful-impact-productivity-economy-30-percent-in-2-areas/",
-        "source": "Fortune",
-        "published_at": "2026-03-03T14:35:00Z",
+        "title": "Salty Otter owner says AI logo uproar has ‘crushed’ her lifelong dream - Lookout Santa Cruz",
+        "url": "http://lookout.co/salty-otter-owner-says-ai-logo-uproar-has-crushed-her-lifelong-dream/story",
+        "source": "Lookout.co",
+        "published_at": "2026-03-03T13:08:45Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Have you got \"AI-nxiety?\" Goldman took a close look at the last earnings season and found a mismatch between hype and reality."
+        "description": "Following a wave of online criticism and one-star reviews from locals, The Salty Otter Sports Grill replaced its colorful, AI-assisted otter logo with a stark black-and-white design. Owner Rachael Smith, who said she refined the image herself and invested eve…"
       },
       {
-        "title": "Average price for a gallon of gas rises 11 cents overnight to about $3.11 in US, AAA says - AP News",
-        "url": "https://apnews.com/article/iran-oil-gas-gallon-aaa-e2daee318b8e3e6a1124713909a410e4",
-        "source": "Associated Press",
-        "published_at": "2026-03-03T14:24:00Z",
+        "title": "JPMorgan revamps Nvidia stock price target for rest of 2026 - thestreet.com",
+        "url": "https://www.thestreet.com/investing/jpmorgan-revamps-nvidia-stock-price-target-for-rest-of-2026",
+        "source": "TheStreet",
+        "published_at": "2026-03-03T12:37:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The average price for a gallon of gasoline jumped 11 cents overnight to about $3.11 in the U.S., according to motor club AAA. Gas prices are on the rise as oil prices are soaring to levels not seen in more than a year as Iran launched a series of retaliatory …"
+        "description": "One of Wall Street's major banks sees a new target price for Nvidia."
       },
       {
-        "title": "Blackstone’s Flagship Private Credit Fund Hit by Record Redemptions - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-02/blackstone-allows-investors-to-pull-record-7-9-from-bcred-fund",
+        "title": "Global Bonds on Knife-Edge as Iran War Revives Inflation Threat - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-03/global-bonds-on-knife-edge-as-iran-war-revives-inflation-threat",
         "source": "Bloomberg",
-        "published_at": "2026-03-03T14:23:40Z",
+        "published_at": "2026-03-03T12:27:42Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Blackstone Inc. is allowing investors to redeem a record 7.9% of shares from its flagship private credit fund, the latest sign of unease in an industry that’s faced a wave of withdrawals."
-      },
-      {
-        "title": "Paramount’s $110 Billion Warner Bros. Deal Backed by Arab Sovereign Funds Raises Soft Power Concerns - Variety",
-        "url": "https://variety.com/2026/film/global/middle-east-paramount-warner-bros-discovery-1236675832/",
-        "source": "Variety",
-        "published_at": "2026-03-03T14:05:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Paramount's $110 billion Warner Bros. deal is backed by $24 billion from Arab Sovereign funds, raising concerns over influence and media independence."
-      },
-      {
-        "title": "Target’s new CEO unveils his turnaround plan - CNN",
-        "url": "https://www.cnn.com/2026/03/03/business/target-earnings-stock-ceo",
-        "source": "CNN",
-        "published_at": "2026-03-03T12:23:12Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The new Target CEO believes adding new, buzzy brands can win back shoppers after a brutal few years."
-      },
-      {
-        "title": "FDA is ‘not convinced’ UniQure’s Huntington’s therapy has benefit, senior official says - statnews.com",
-        "url": "https://www.statnews.com/2026/03/03/uniqure-huntingtons-treatment-fda-official-comments/",
-        "source": "STAT",
-        "published_at": "2026-03-03T12:12:02Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The FDA believes that an experimental therapy for Huntington’s disease from UniQure wasn't providing benefit for patients, a senior official told STAT."
+        "description": "The US-Israeli war on Iran is rekindling inflation concerns across financial markets, sapping the outlook for global bonds that had just posted their best start to a year since the pandemic."
       },
       {
         "title": "The candy heir vs. chocolate skimpflation : Planet Money - NPR",
@@ -317,103 +434,274 @@
         "description": "The grandson of the Reese's Peanut Butter Cups creator has launched a campaign against The Hershey Company, which owns the Reese's brand. He wants them to stop skimping on ingredients."
       },
       {
-        "title": "JPMorgan’s Jamie Dimon warns there’s too much complacency in markets - MarketWatch",
-        "url": "https://www.marketwatch.com/story/jpmorgans-jamie-dimon-warns-theres-too-much-complacency-in-markets-98739bad",
-        "source": "MarketWatch",
-        "published_at": "2026-03-03T10:04:00Z",
+        "title": "We Tested 49 More Baby Formulas for Lead and Arsenic - Consumer Reports",
+        "url": "https://www.consumerreports.org/babies-kids/baby-formula/liquid-baby-formula-contaminants-test-results-a8639602154/",
+        "source": "ConsumerReports.org",
+        "published_at": "2026-03-03T11:16:51Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": ""
+        "description": "Our most recent round of baby formula tests detected contaminants at potentially concerning levels in 26 of the 49 baby formulas we evaluated."
       },
       {
-        "title": "Laid off by Block, reunited on Slack: Inside the 3,800-person 'Square Mafia' - Business Insider",
-        "url": "https://www.businessinsider.com/block-layoffs-former-jack-dorsey-employees-square-mafia-slack-group-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-03T09:30:00Z",
+        "title": "Latin America and Caribbean Solidarity in the Trump Era",
+        "url": "https://www.counterpunch.org/2026/03/04/latin-america-and-caribbean-solidarity-in-the-trump-era/",
+        "source": "CounterPunch",
+        "published_at": "2026-03-04T06:56:17Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Former Block employees congregate in an unaffiliated Slack group to share support, find new jobs, and trade memes. It's grown since recent layoffs."
+        "feed": "everything",
+        "description": "Donald Trump has his sights set on Latin America and the Caribbean and is prepared to use a heavy hand to bring them under his exclusive control. He called a presidential summit in Miami with heads of state he considers his ideological and strategic allies in…"
       },
       {
-        "title": "GW sold Virginia campus for $427 million to Amazon for data center development - The GW Hatchet",
-        "url": "https://gwhatchet.com/2026/03/02/gw-sold-virginia-campus-for-427-million-to-amazon-for-data-center-development/",
-        "source": "Gwhatchet.com",
-        "published_at": "2026-03-03T00:14:43Z",
+        "title": "Suzlon Energy shares drop 30% in six months, but Motilal Oswal sees 61% upside; here’s why",
+        "url": "https://economictimes.indiatimes.com/markets/stocks/news/suzlon-energy-shares-drop-30-in-six-months-but-motilal-oswal-sees-61-upside-heres-why/articleshow/129010671.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-04T06:33:52Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The deal transfers all of GW’s roughly 122 acres of property in Loudoun County, Virginia, to ADS for $427,299,350 — roughly $3.5 million an acre — according to real estate records."
+        "feed": "everything",
+        "description": "Suzlon Energy shares have seen a significant decline, but Motilal Oswal remains bullish, projecting a 61% upside. The brokerage cites the company's 'Suzlon 2.0' vision, including leadership restructuring and the launch of a dedicated project development verti…"
       },
       {
-        "title": "US LNG producers rush to seize on surging gas prices triggered by Iran conflict - Financial Times",
-        "url": "https://www.ft.com/content/fb837a9d-6334-43da-a58d-cb9830dc68fe",
-        "source": "Financial Times",
-        "published_at": "2026-03-03T00:06:25Z",
+        "title": "Why South Asia Must Prepare for a Harder Geopolitical Decade",
+        "url": "https://english.khabarhub.com/2026/04/537377/",
+        "source": "Khabarhub.com",
+        "published_at": "2026-03-04T06:15:41Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Venture Global and Cheniere Energy look to bring on extra capacity as prices surge in Europe and Asia"
+        "feed": "everything",
+        "description": "Strategic Assessment 2022-2026: The past four years have marked a decisive rupture in the post-Cold War security order. The era once defined by managed competition and economic globalization is giving way to systemic fragmentation. Between 2022 and early 2026…"
       },
       {
-        "title": "Chevron, Exxon Mobil, ConocoPhillips Stocks Hit New Highs: Here Are Congress Members Who Own Shares - Benzinga",
-        "url": "https://www.benzinga.com/news/politics/26/03/50989394/chevron-exxon-mobil-conocophillips-stocks-hit-new-highs-here-are-congress-members-who-own-shares",
-        "source": "Benzinga",
-        "published_at": "2026-03-02T23:55:47Z",
+        "title": "60 Companies Are Already Committed to the 6G Network",
+        "url": "https://the-gadgeteer.com/2026/03/04/60-companies-are-already-committed-to-the-6g-network/",
+        "source": "The Gadgeteer",
+        "published_at": "2026-03-04T06:01:42Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Oil stocks traded higher Monday on the heels of the attacks on Iran. Here's a look at the members of Congress who own some of the top oil stocks in 2026."
+        "feed": "everything",
+        "description": "If you thought 5G was still settling in, Qualcomm, Google, and Samsung made it clear at Mobile World Congress 2026 that the wireless industry has already moved on. For Qualcomm, CEO Cristiano Amon took the stage in Barcelona and laid out a vision for the 6G n…"
       },
       {
-        "title": "Anthropic Adds Free Memory Feature and Import Tool to Lure ChatGPT Users to Claude - MacRumors",
-        "url": "https://www.macrumors.com/2026/03/02/anthropic-memory-import-tool/",
-        "source": "MacRumors",
-        "published_at": "2026-03-02T23:33:54Z",
+        "title": "We Must Now Prepare for the Possibility of Nuclear War and Total Supply Chain Collapse",
+        "url": "https://www.naturalnews.com/2026-03-04-possibility-of-nuclear-war-supply-chain-collapse.html",
+        "source": "Naturalnews.com",
+        "published_at": "2026-03-04T06:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Anthropic is aiming to lure customers from ChatGPT and Gemini with a new memory import tool that's available to free users as of today...."
+        "feed": "everything",
+        "description": "We Are on the Precipice, and There’s No Off-Ramp in Sight As I write this in early March 2026, the world is no longer teetering on the brink; it has plunged over the edge. The United States, under President Donald Trump, and Israel have launched a massive joi…"
       },
       {
-        "title": "United flight to New Jersey returns to LAX due to engine issue; plane evacuated - ABC7 Los Angeles",
-        "url": "https://abc7.com/post/united-airlines-flight-lands-lax-reported-engine-fire/18668387/",
-        "source": "KABC-TV",
-        "published_at": "2026-03-02T22:07:55Z",
+        "title": "Bunker Hill Announces Effective Date of Reverse Stock Split and Update to C$30 Million LIFE Offering",
+        "url": "https://www.globenewswire.com/news-release/2026/03/04/3249038/0/en/Bunker-Hill-Announces-Effective-Date-of-Reverse-Stock-Split-and-Update-to-C-30-Million-LIFE-Offering.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-04T05:15:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "A United Airlines flight was forced to evacuate at LAX over reports of an engine fire, the LAFD said."
+        "feed": "everything",
+        "description": "KELLOGG, Idaho and VANCOUVER, British Columbia, March 04, 2026 (GLOBE NEWSWIRE) -- Bunker Hill Mining Corp. (“Bunker Hill” or the “Company”) (TSX-V: BNKR | OTCQB: BHLL), announces further to its news release dated February 9, 2026, the effective date of its o…"
       },
       {
-        "title": "Prediction markets draw scrutiny over Iran bets: \"Insider trading in broad daylight,\" senator says - CBS News",
-        "url": "https://www.cbsnews.com/news/iran-khamenei-prediction-markets-insider-trading/",
-        "source": "CBS News",
-        "published_at": "2026-03-02T21:26:00Z",
+        "title": "Mimecast Study: 42% of Organizations Report Rise in Malicious Insider Threats Over Past Year",
+        "url": "https://www.globenewswire.com/news-release/2026/03/04/3249036/0/en/Mimecast-Study-42-of-Organizations-Report-Rise-in-Malicious-Insider-Threats-Over-Past-Year.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-04T05:01:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Lawmakers are raising concerns that prediction market users are engaging in insider trading to wager on U.S. military actions."
+        "feed": "everything",
+        "description": "Global study reveals disconnect between security awareness and technical controls — as AI-powered attacks accelerate and collaboration tools expand the attack surface Global study reveals disconnect between security awareness and technical controls — as AI-po…"
       },
       {
-        "title": "Lumentum, Coherent Surge On Nvidia's Optical Networking Investments - Investor's Business Daily",
-        "url": "https://www.investors.com/news/technology/nvidia-stock-investments-lumentum-coherent-optical-networking-push/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-02T21:02:00Z",
+        "title": "Bunker Hill Announces Effective Date of Reverse Stock Split and Update to C$30 Million LIFE Offering",
+        "url": "https://financialpost.com/globe-newswire/bunker-hill-announces-effective-date-of-reverse-stock-split-and-update-to-c30-million-life-offering",
+        "source": "Financial Post",
+        "published_at": "2026-03-04T03:44:50Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Shares in Lumentum and Coherent climbed amid Nvidia's announcement that it will invest $2 billion in both optical networking companies. Nvidia stock dipped."
+        "feed": "everything",
+        "description": "NOT FOR DISTRIBUTION TO UNITED STATES NEWS WIRE SERVICES OR FOR DISSEMINATION IN THE UNITED STATES. KELLOGG, Idaho and VANCOUVER, British Columbia, March 03, 2026 (GLOBE NEWSWIRE) — Bunker Hill Mining Corp. (“Bunker Hill” or the “Company”) (TSX-V: BNKR | OTCQ…"
       },
       {
-        "title": "RFK Jr. Tells Joe Rogan He’s About to Unleash 14 Banned Peptides - Gizmodo",
-        "url": "https://gizmodo.com/rfk-jr-tells-joe-rogan-hes-about-to-unleash-14-banned-peptides-2000728355",
-        "source": "Gizmodo.com",
-        "published_at": "2026-03-02T20:30:39Z",
+        "title": "Bunker Hill Announces Effective Date of Reverse Stock Split and Update to C$30 Million LIFE Offering",
+        "url": "https://www.globenewswire.com/news-release/2026/03/04/3249032/0/en/Bunker-Hill-Announces-Effective-Date-of-Reverse-Stock-Split-and-Update-to-C-30-Million-LIFE-Offering.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-04T03:44:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "RFK Jr. plans to reverse a sweeping compounding ban of certain peptides issued by the FDA in late 2023."
+        "feed": "everything",
+        "description": "NOT FOR DISTRIBUTION TO UNITED STATES NEWS WIRE SERVICES OR FOR DISSEMINATION IN THE UNITED STATES.  KELLOGG, Idaho and VANCOUVER, British Columbia, March ..."
       },
       {
-        "title": "Goldman Sachs resets Nvidia stock forecast after earnings - thestreet.com",
-        "url": "https://www.thestreet.com/investing/stocks/goldman-sachs-resets-nvidia-stock-forecast-after-earnings",
-        "source": "TheStreet",
-        "published_at": "2026-03-02T13:07:00Z",
+        "title": "War for Ukraine Day 1,468: (Some of) You Have Questions, I (May) Have Answers",
+        "url": "https://balloon-juice.com/2026/03/03/war-for-ukraine-day-1468-some-of-you-have-questions-i-may-have-answers/",
+        "source": "Balloon-juice.com",
+        "published_at": "2026-03-04T03:17:32Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Wall Street recalibrates expectations after Nvidia's massive quarter."
+        "feed": "everything",
+        "description": "Well this is ungood: Iran destroyed AN/TPY-2 THAAD radars at Al-Ruwais Air Base in the UAE and Muwaffaq Salti Air Base in Jordan, while satellite imagery confirms the AN/FPS-132 phased array radar in Qatar was also damaged, complicating missile defense across…"
+      },
+      {
+        "title": "Fuel price spike triggers fresh naira-for-crude supply calls",
+        "url": "https://punchng.com/fuel-price-spike-triggers-fresh-naira-for-crude-supply-calls/",
+        "source": "The Punch",
+        "published_at": "2026-03-04T02:35:36Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Nigeria fuel prices surge past N937/litre due to Middle East conflict. Marketers demand a naira-for-crude supply to stabilize domestic costs.\n\nRead More: https://punchng.com/fuel-price-spike-triggers-fresh-naira-for-crude-supply-calls/"
+      },
+      {
+        "title": "LUCARA ANNOUNCES YEAR END 2025 RESULTS",
+        "url": "https://www.prnewswire.co.uk/news-releases/lucara-announces-year-end-2025-results-302703289.html",
+        "source": "PR Newswire UK",
+        "published_at": "2026-03-04T02:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "VANCOUVER, BC, March 4, 2026 /PRNewswire/ -- (TSX: LUC) (BSE: LUC) (Nasdaq FNGM: LUC) PDF Version Lucara Diamond Corp. (\"Lucara\" or the \"Company\") today reports its results for the quarter ended December 31, 2025. All amounts are in U.S. dollars unless otherw…"
+      },
+      {
+        "title": "Abuja-Kaduna highway nears completion, 80% delivered – FG",
+        "url": "https://punchng.com/abuja-kaduna-highway-nears-completion-80-delivered-fg/",
+        "source": "The Punch",
+        "published_at": "2026-03-04T02:24:44Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Federal Government announces the Abuja-Kaduna highway is 80% complete, with a redesigned concrete pavement scheduled for delivery by the end of April.\n\nRead More: https://punchng.com/abuja-kaduna-highway-nears-completion-80-delivered-fg/"
+      },
+      {
+        "title": "Bragar Eagel & Squire, P.C. Urges CoreWeave, Inc. (NASDAQ:CRWV) Stockholders with Large Losses to Contact the Firm Before March 13th",
+        "url": "https://www.globenewswire.com/news-release/2026/03/04/3249018/0/en/Bragar-Eagel-Squire-P-C-Urges-CoreWeave-Inc-NASDAQ-CRWV-Stockholders-with-Large-Losses-to-Contact-the-Firm-Before-March-13th.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-04T02:11:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Bragar Eagel & Squire, P.C. Litigation Partner Brandon Walker Encourages Investors Who Suffered Losses In CoreWeave (CRWV) To Contact Him Directly To Discuss Their Options"
+      },
+      {
+        "title": "DTLA federal building fortified with barricades following violent anti-ICE clashes — and they could be permanent",
+        "url": "https://nypost.com/2026/03/03/us-news/barricades-around-dtla-federal-building-could-be-permanent/",
+        "source": "New York Post",
+        "published_at": "2026-03-04T01:32:03Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "\"We’re exploring permanent barriers. You might see some potential construction in the future,\" said Bill Essayli, LA's top federal prosecutor."
+      },
+      {
+        "title": "Real estate market a warning sign: We need change, now",
+        "url": "https://nypost.com/2026/03/03/opinion/real-estate-market-a-warning-sign/",
+        "source": "New York Post",
+        "published_at": "2026-03-04T01:12:13Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Real estate is fundamentally about optimism. Two terms of Gavin Newsom have provided the opposite — and his replacement could be worse."
+      },
+      {
+        "title": "Global economy is facing the prospect of another profound shock",
+        "url": "https://economictimes.indiatimes.com/news/international/global-trends/global-economy-is-facing-the-prospect-of-another-profound-shock/articleshow/128998958.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-04T00:47:41Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "A potential Middle East conflict escalation threatens global economic stability, with fears of disrupted oil and gas supplies leading to inflation and interest rate hikes. Experts warn against premature reassurance, citing historical parallels and the signifi…"
+      },
+      {
+        "title": "Legislators Temporarily Cut Data Centers From Oregon Tax Break Bill",
+        "url": "https://www.portlandmercury.com/news/2026/03/03/48357689/legislators-temporarily-cut-data-centers-from-oregon-tax-break-bill",
+        "source": "The Portland Mercury",
+        "published_at": "2026-03-04T00:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "An attempt to spur economic growth has budget and environmental watchdogs worried about unintended consequences. \n \n by Abe Asher\n \n \n \n Companies building data centers in Oregon already have a pretty good deal—and new economic development legislation pushed …"
+      },
+      {
+        "title": "Has anything changed for Disney's plans in Abu Dhabi?",
+        "url": "https://www.themeparkinsider.com/flume/202603/12329/",
+        "source": "Theme Park Insider",
+        "published_at": "2026-03-04T00:08:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "By Robert Niles: How has this week's war in the Middle East changed plans for a new Disney theme park and other attractions in the region?It is way too early to answer that question. The United States has ordered its citizens to evacuate the region, in what m…"
+      },
+      {
+        "title": "Hoover Bio-Strategies and Leadership Hosts Second “Bio Boot Camp” for US Congressional Staff",
+        "url": "https://www.hoover.org/news/hoover-bio-strategies-and-leadership-hosts-second-bio-boot-camp-us-congressional-staff",
+        "source": "Hoover.org",
+        "published_at": "2026-03-04T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Twenty mid- to senior-level congressional staff from both parties, both chambers of Congress, and relevant committees attended two days of intensive biotechnology discussions at Stanford University."
+      },
+      {
+        "title": "Study on the strength properties of coir fiber reinforced concrete containing waste brick powder dust as sand replacement",
+        "url": "https://www.nature.com/articles/s41598-026-42480-5",
+        "source": "Nature.com",
+        "published_at": "2026-03-04T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Scientific Reports - Study on the strength properties of coir fiber reinforced concrete containing waste brick powder dust as sand replacement"
+      },
+      {
+        "title": "A Tale of American Lawyers and Chinese Engineers",
+        "url": "https://www.theglobalist.com/a-tale-of-american-lawyers-and-chinese-engineers/",
+        "source": "The Globalist",
+        "published_at": "2026-03-04T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Hoover Institution fellow Dan Wang puts it in his recent book, Breakneck, that “No two peoples are more alike than Americans and Chinese… masses and elites are united in the faith that theirs is a uniquely powerful nation that ought to throw its weight around…"
+      },
+      {
+        "title": "Stop market fires",
+        "url": "https://punchng.com/stop-market-fires/",
+        "source": "The Punch",
+        "published_at": "2026-03-03T23:20:06Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Learn about the causes of persistent market fires in Nigeria and discover actionable solutions for governments and traders to prevent these costly disaster\n\nRead More: https://punchng.com/stop-market-fires/"
+      },
+      {
+        "title": "TikTok down for some in U.S., thanks to second Oracle outage since sale | TechCrunch",
+        "url": "https://techcrunch.com/2026/03/03/tiktok-down-for-some-in-u-s-thanks-to-second-oracle-outage-since-sale/",
+        "source": "TechCrunch",
+        "published_at": "2026-03-03T22:36:06Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "TikTok down for some in U.S., thanks to second Oracle outage since sale | TechCrunchtechcrunch.com"
+      },
+      {
+        "title": "Kwara recruits 150 nurses, acquires MRI to boost healthcare",
+        "url": "https://punchng.com/kwara-recruits-150-nurses-acquires-mri-to-boost-healthcare/",
+        "source": "The Punch",
+        "published_at": "2026-03-03T22:35:05Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Kwara State government advances its healthcare reform by recruiting 150 nurses and acquiring a modern MRI machine to improve diagnostic services.\n\nRead More: https://punchng.com/kwara-recruits-150-nurses-acquires-mri-to-boost-healthcare/"
+      },
+      {
+        "title": "U.S. turns up heat on Venezuela with threat to indict new leader Delcy Rodriguez",
+        "url": "https://japantoday.com/category/world/exclusive-us-turns-up-heat-on-venezuela-with-threat-to-indict-new-leader-delcy-rodriguez",
+        "source": "Japan Today",
+        "published_at": "2026-03-03T21:45:39Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Trump administration is quietly building a legal case against Venezuelan interim president Delcy Rodriguez including readying a draft criminal indictment, one of several tools it is using to strengthen its leverage with Caracas, according to four people f…"
+      },
+      {
+        "title": "The price of a gallon of gas spiked overnight in U.S., and drivers overseas are filling up tanks",
+        "url": "https://japantoday.com/category/business/average-price-for-a-gallon-of-gas-rises-11-cents-overnight-to-about-3.11-in-us-aaa-says",
+        "source": "Japan Today",
+        "published_at": "2026-03-03T21:34:18Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The average price for a gallon of gasoline jumped 11 cents overnight in the U.S., and some drivers in Europe waited in line to fill their tanks with fuel, as war engulfed the Middle East and shipments of oil and gas were stranded in the Persian Gulf. A gallon…"
+      },
+      {
+        "title": "US TikTok service disrupted by second Oracle outage in a month",
+        "url": "https://9to5mac.com/2026/03/03/us-tiktok-service-disrupted-by-second-oracle-outage-in-a-month/",
+        "source": "9to5Mac",
+        "published_at": "2026-03-03T21:32:29Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "As spotted by The Verge, US TikTok is experiencing renewed service issues after a second Oracle outage in just over a month, with users facing delays and lag while posting content. Here are the details.\n\n\n\n more…"
+      },
+      {
+        "title": "Fuel Tech Reports 2025 Fourth Quarter and Full Year Financial Results",
+        "url": "https://www.globenewswire.com/news-release/2026/03/03/3248940/0/en/Fuel-Tech-Reports-2025-Fourth-Quarter-and-Full-Year-Financial-Results.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-03T21:15:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "WARRENVILLE, Ill., March 03, 2026 (GLOBE NEWSWIRE) -- Fuel Tech, Inc. (NASDAQ: FTEK), a technology company using advanced engineering processes to provide emissions control systems and water treatment technologies in utility and industrial applications, today…"
       },
       {
         "title": "Our Critics Are Split on the Weirdest Whitney Biennial in Recent Memory",
@@ -864,296 +1152,252 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Walt Disney World employs a sophisticated environmental engineering strategy to combat mosquitoes, focusing on preventing breeding by managing standing water through extensive drainage systems and aerated water features. This integrated pest management approa…"
-      },
-      {
-        "title": "Green Building Initiative Launches Ascent Building Certification™ for Global Markets",
-        "url": "https://financialpost.com/globe-newswire/green-building-initiative-launches-ascent-building-certification-for-global-markets",
-        "source": "Financial Post",
-        "published_at": "2026-03-03T09:04:36Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "New portfolio-ready building certification delivers proven tools to achieve credible sustainability and performance outcomes worldwide PORTLAND, Ore., March 03, 2026 (GLOBE NEWSWIRE) — The Green Building Initiative (GBI) announces the global launch of Ascent …"
-      },
-      {
-        "title": "Why Satellites Fail — and How to Protect Them",
-        "url": "https://warontherocks.com/2026/03/why-satellites-fail-and-how-to-protect-them/",
-        "source": "War on the Rocks",
-        "published_at": "2026-03-03T09:00:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "This exclusive Cogs of War interview is with Jean-François Morizur, the CEO and founder of Cailabs, a French company focused on ground-to-satellite laser optical communications. As satellites play a more critical and contested role than ever in global and def…"
-      },
-      {
-        "title": "Green Building Initiative Launches Ascent Building Certification™ for Global Markets",
-        "url": "https://www.globenewswire.com/news-release/2026/03/03/3248054/0/en/Green-Building-Initiative-Launches-Ascent-Building-Certification-for-Global-Markets.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-03T09:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "GBI announces the global launch of Ascent Building Certification™, a science-based whole building sustainability certification for commercial real estate...."
-      },
-      {
-        "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-solidifies-after-tariff-ruling-usedtrucks-deals-and-steals-price-indices-offer-mixed-bags",
-        "source": "Overdriveonline.com",
-        "published_at": "2026-03-03T07:24:18Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Rates and volumes didn't see a huge boost from the Supreme Court's tariff ruling, good news in spot markets continued last week. Also: Used-truck prices for January remained in line with recent performance despite an uptick; free cervical cancer screenings fo…"
-      },
-      {
-        "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
-        "source": "Overdriveonline.com",
-        "published_at": "2026-03-03T07:24:18Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Rates and volumes didn't see a huge boost from the Supreme Court's tariff ruling, good news in spot markets continued last week. Also: Used-truck prices for January remained in line with recent performance despite an uptick; free cervical cancer screenings fo…"
-      },
-      {
-        "title": "UWSA Linked to Quartz Mining Operation in Northern Shan State",
-        "url": "https://english.shannews.org/archives/29385",
-        "source": "Shannews.org",
-        "published_at": "2026-03-03T06:59:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Residents in Tangyan Township, northern Shan State, allege that the United Wa State Army (UWSA) is collaborating with Chinese mining investors to extract quartz from Loi Lao Mountain in the Pan Nyawng village tract, raising concerns over land seizures, enviro…"
-      },
-      {
-        "title": "Show HN: Neural Siege – A Multi-Agent RL Combat Simulation",
-        "url": "https://github.com/ayushdnb/Neural-Siege",
-        "source": "Github.com",
-        "published_at": "2026-03-03T06:56:55Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "This is a multi-agent reinforcement learning simulation I’ve been building as a personal project.\nIt’s a grid-based combat environment with per-agent PPO training runtime.\nSome of the things I’ve been experimenting with:\n– Per-agent PPO (isolated optimizers p…"
-      },
-      {
-        "title": "GOP Governor Kevin Stitt Says States Should Import Migrants for Boeing, Construction Jobs",
-        "url": "https://www.breitbart.com/immigration/2026/03/02/gop-gov-wants-state-import-migrants-boeing-jobs/",
-        "source": "Breitbart News",
-        "published_at": "2026-03-03T06:55:04Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Oklahoma's Republican governor says states should be allowed to provide work permits to migrants -- whatever the inevitable damage to citizens and workplace investment.\nThe post GOP Governor Kevin Stitt Says States Should Import Migrants for Boeing, Construct…"
-      },
-      {
-        "title": "Jon Stewart Stunned Into 14 Seconds Of Silence After Trump's Bizarre Babble",
-        "url": "https://www.huffpost.com/entry/jon-stewart-trump-iran_n_69a65db7e4b076ac5d6362fb",
-        "source": "HuffPost",
-        "published_at": "2026-03-03T06:41:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The \"Daily Show\" host tore into the president for dragging the nation into a war that he has failed to justify."
-      },
-      {
-        "title": "Global economy is facing the prospect of another profound shock",
-        "url": "https://economictimes.indiatimes.com/news/international/world-news/iran-war-global-economy-is-facing-the-prospect-of-another-profound-shock/articleshow/128960387.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-03T06:23:17Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Iran war: The American and Israeli bombing of Iran, and Iranian reprisals throughout the region, set dangers in motion that pose a substantial threat to global economic fortunes."
-      },
-      {
-        "title": "Surety Industry Advances Critical Federal Policy",
-        "url": "https://www.globenewswire.com/news-release/2026/03/03/3247990/0/en/Surety-Industry-Advances-Critical-Federal-Policy.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-03T06:13:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Washington, D.C., United States, March  03, 2026  (GLOBE NEWSWIRE) -- Largest Legislative Fly-In Brings Industry Message to Congress  The Surety &..."
-      },
-      {
-        "title": "Nasdaq-listed AI chipmaker Blaize bets on India for sovereign edge inference growth",
-        "url": "https://www.digitimes.com/news/a20260303VL207/india-ai-inference-training-processor-semiconductor-industry-infrastructure.html",
-        "source": "Digitimes",
-        "published_at": "2026-03-03T06:11:48Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "As much of the global semiconductor industry remains fixated on AI training accelerators and hyperscale GPUs, US-based AI processor company Blaize is making a different wager in India: large-scale inference embedded in sovereign public infrastructure."
-      },
-      {
-        "title": "U.S. intelligence warns new Chinese submarines can target America from coastal waters",
-        "url": "https://www.naturalnews.com/2026-03-03-chinese-submarines-target-america-coastal-waters.html",
-        "source": "Naturalnews.com",
-        "published_at": "2026-03-03T06:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "China is rapidly building advanced nuclear submarines. This new fleet can target the U.S. from Chinese coastal waters. China’s submarine force is set to grow significantly by 2035. Massive shipyard investments are driving this naval expansion. China also seek…"
-      },
-      {
-        "title": "Iran attack could buoy Trump in talks with China's Xi",
-        "url": "https://economictimes.indiatimes.com/news/international/world-news/iran-attack-could-buoy-trump-in-talks-with-chinas-xi/articleshow/128959637.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-03T05:32:37Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Trump is set to arrive in Beijing at the end of March following the U.S. capture of Venezuelan President Nicolas Maduro in ​a risky Caracas raid in January and the U.S.-Israeli air war that on Saturday killed Iran's Supreme Leader Ayatollah Ali Khamenei, the …"
-      },
-      {
-        "title": "Why it’s not easy for car makers in the US to ditch electric cars",
-        "url": "https://www.autocar.co.uk/car-news/business/why-it%E2%80%99s-not-easy-car-makers-us-ditch-electric-cars",
-        "source": "Autocar",
-        "published_at": "2026-03-03T05:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Regulatory changes have led to car makers writing off the equivalent of almost $40 billion in EV investments\n\nCar makers in the US have written off the equivalent of almost $40 billion in EV investments following regulatory changes that ended mandatory sales …"
-      },
-      {
-        "title": "World Baseball Classic 2026: Mark DeRosa confident in Team USA's Dream Team",
-        "url": "https://www.marca.com/en/mlb/2026/03/03/69a665a846163fac7d8b45f9.html",
-        "source": "Marca",
-        "published_at": "2026-03-03T04:47:25Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The World Baseball Classic (WBC) will take place from March 5-17 at venues around the globe. For this edition, the United States will field one of its strongest teams in years. The"
-      },
-      {
-        "title": "FERMI DEADLINE FRIDAY: Bragar Eagel & Squire, P.C. Urgently Reminds Fermi, Inc. (NASDAQ:FRMI) Stockholders to Contact the Firm Before the Upcoming March 6th Class Action Deadline",
-        "url": "https://www.globenewswire.com/news-release/2026/03/03/3247961/0/en/FERMI-DEADLINE-FRIDAY-Bragar-Eagel-Squire-P-C-Urgently-Reminds-Fermi-Inc-NASDAQ-FRMI-Stockholders-to-Contact-the-Firm-Before-the-Upcoming-March-6th-Class-Action-Deadline.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-03T02:10:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "If you purchased or acquired Fermi: (a) common stock pursuant and/or traceable to the registration statement and prospectus (collectively, the “Registration Statement”) issued in connection with the Company’s October 2025 initial public offering (“IPO” or the…"
-      },
-      {
-        "title": "What happens if you mess with a birds nest?",
-        "url": "https://www.lifesciencesworld.com/what-happens-if-you-mess-with-a-birds-nest/",
-        "source": "Lifesciencesworld.com",
-        "published_at": "2026-03-03T01:25:03Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "What Happens If You Mess With A Bird’s Nest? Disturbing a bird’s nest can have dire consequences, ranging from nest abandonment and starvation of chicks to legal repercussions; essentially, messing with a bird’s nest can lead to nest failure, harming the bird…"
-      },
-      {
-        "title": "Cycling in Dublin for commuting rises 50% as most residents back more bike lanes",
-        "url": "https://www.irishtimes.com/ireland/dublin/2026/03/03/cycling-in-dublin-for-commuting-rises-50-as-most-residents-back-more-bike-lanes/",
-        "source": "The Irish Times",
-        "published_at": "2026-03-03T00:01:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Residents of Ireland’s five main cities want more space for cyclists, even at the expense of cars"
-      },
-      {
-        "title": "The Gulag, The Holocaust, And The ‘Great Leap Forward’: Inside The Stories Of History’s Deadliest Dictators",
-        "url": "https://allthatsinteresting.com/deadliest-dictator",
-        "source": "Allthatsinteresting.com",
-        "published_at": "2026-03-03T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Recent scholarship has suggested that Mao Zedong was the deadliest dictator in history, but he was far from the only one responsible for millions of deaths.\nThe post The Gulag, The Holocaust, And The ‘Great Leap Forward’: Inside The Stories Of History’s Deadl…"
-      },
-      {
-        "title": "Evaluation of antimicrobial resistance governance across 193 countries to inform the 2026 Global Action Plan update",
-        "url": "https://www.nature.com/articles/s41591-026-04257-1",
-        "source": "Nature.com",
-        "published_at": "2026-03-03T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "An evaluation across 193 countries for the 2026 Global Action Plan update showed that countries with strong multisectoral governance and early surveillance adoption achieved long-term improvements in reducing antimicrobial resistance."
-      },
-      {
-        "title": "Beijing Doesn’t Think Like Washington—And The Iran Conflict Shows Why",
-        "url": "https://carnegieendowment.org/emissary/2026/03/iran-china-us-intervention-strategy",
-        "source": "Carnegieendowment.org",
-        "published_at": "2026-03-03T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Hoover Institution fellow Nicholas Burns said, \"China is proving to be a feckless friend for its authoritarian allies.\""
-      },
-      {
-        "title": "Amniogenesis in embryos and stem cell models",
-        "url": "https://www.nature.com/articles/s41556-026-01873-4",
-        "source": "Nature.com",
-        "published_at": "2026-03-03T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "This Review discusses the mechanisms underlying both cavitation and folding amniogenesis and provides an overview of the various recent stem cell-based human embryo models that have been developed to elucidate amniotic formation and function."
-      },
-      {
-        "title": "Cleveland Browns hit an ‘exciting milestone’ in stadium project",
-        "url": "https://www.dawgsbynature.com/cleveland-browns-news/118895/browns-hit-an-exciting-milestone-in-brrok-park-stadium-project",
-        "source": "Dawgs By Nature",
-        "published_at": "2026-03-02T23:38:19Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Construction crews started to dig the hole on Monday that will eventually become the sparkling indoor stadium."
-      },
-      {
-        "title": "Cerro de Pasco Resources Enters Project Development Funding Agreement with U.S. International Development Finance Corporation for Quiulacocha",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247933/0/en/Cerro-de-Pasco-Resources-Enters-Project-Development-Funding-Agreement-with-U-S-International-Development-Finance-Corporation-for-Quiulacocha.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T23:24:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "MONTRÉAL, March 02, 2026 (GLOBE NEWSWIRE) -- Cerro de Pasco Resources Inc. (TSXV: CDPR) (OTCQB: GPPRF) (BVL: CDPR) announces that it has entered into a Project Development Funding Agreement (the “Agreement”) with the U.S. International Development Finance Cor…"
-      },
-      {
-        "title": "California’s High-Speed Rail Touts Tiny Savings Amid Epic Cost Explosion",
-        "url": "https://dailycaller.com/2026/03/02/california-high-speed-rail-billions-cost/",
-        "source": "The Daily Caller",
-        "published_at": "2026-03-02T23:21:12Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "CA's high-speed rail released a new budget plan, touting a few billion in savings but failing to emphasize costs have significantly risen since its inception."
-      },
-      {
-        "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
-        "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
-        "source": "Raw Story",
-        "published_at": "2026-03-02T23:11:36Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…"
-      },
-      {
-        "title": "Watch Bill Clinton Testify on Why Trump Really Cut Ties With Epstein",
-        "url": "https://newrepublic.com/post/207249/watch-bill-clinton-testify-why-trump-cut-ties-epstein",
-        "source": "The New Republic",
-        "published_at": "2026-03-02T23:02:34Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Former President Bill Clinton may have just put a massive hole in President Donald Trump’s claims about how he and deceased sexual predator Jeffrey Epstein ended their friendship.In video testimony released by the House Oversight Committee on Monday, Clinton …"
       }
     ],
     "news_with_impact": [
       {
-        "title": "Stocks dramatically pare losses after Trump offers Gulf shipping safety; oil retreats from highs: Live updates - CNBC",
-        "url": "https://www.cnbc.com/2026/03/02/stock-market-today-live-updates.html",
+        "title": "Stock futures fall as traders monitor latest developments in U.S.-Iran war: Live updates - CNBC",
+        "url": "https://www.cnbc.com/2026/03/03/stock-market-today-live-updates.html",
         "source": "CNBC",
-        "published_at": "2026-03-03T20:45:00Z",
+        "published_at": "2026-03-04T05:09:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Traders watched rising geopolitical tensions and worried the U.S.-Iran conflict could go on longer than anticipated.",
-        "impact_score": 55,
+        "description": "The Dow Industrials ended Tuesday's session down just over 400 points. The 30-stock index curtailed its losses after falling more than 1,200 points at the low.",
+        "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Iranian strikes on Amazon data centers highlights industry's vulnerability to physical disasters - AP News",
-        "url": "https://apnews.com/article/amazon-aws-data-center-uae-iran-bahrain-71066b0a822c4cfd88b61e3fe79af917",
-        "source": "Associated Press",
-        "published_at": "2026-03-03T17:39:00Z",
+        "title": "Goldman’s Solomon Says Market Reaction to War Is ‘Benign’ So Far - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-04/goldman-s-solomon-says-market-reaction-to-war-is-benign-so-far",
+        "source": "Bloomberg",
+        "published_at": "2026-03-04T04:22:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Iranian drone strikes damaged three Amazon Web Services sites in the Middle East, exposing how vulnerable cloud data centers are in conflict. AWS said late Monday that drones directly hit two data centers in the United Arab Emirates and another site in Bahrai…",
+        "description": "Goldman Sachs Group Inc. Chairman David Solomon said he’s been surprised by the “benign” reaction in financial markets to the Middle East conflict, adding that it will take weeks to understand more about the situation.",
         "impact_score": 40,
         "themes": [
-          "trade",
+          "other"
+        ]
+      },
+      {
+        "title": "Trump met with Coinbase CEO before bashing banks over crypto bill - Politico",
+        "url": "https://www.politico.com/live-updates/2026/03/03/congress/trump-met-with-coinbase-ceo-before-bashing-banks-over-crypto-bill-00811277",
+        "source": "Politico",
+        "published_at": "2026-03-04T04:05:11Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The legislation is mired in a fight between crypto companies and the banking industry.",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Korean Stock Gauge Poised for Correction on Iran War Selloff - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-04/korean-stock-gauge-poised-for-correction-on-iran-war-selloff",
+        "source": "Bloomberg",
+        "published_at": "2026-03-04T03:07:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Panic swept across trading desks in South Korea as local stocks, by far the hottest in the world over the past year, extended their freefall into Wednesday.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "China's factory activity expands at quickest pace in over 5 years, private PMI shows - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/chinas-factory-activity-expands-quickest-015522109.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-04T01:55:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "BEIJING, March 4 (Reuters) - China's factory activity in February expanded at the fastest pace since December 2020, driven by robust demand that helped lift ...",
+        "impact_score": 40,
+        "themes": [
+          "macro"
+        ]
+      },
+      {
+        "title": "Pentagon dispute bolsters Anthropic reputation but raises questions about AI readiness in military - AP News",
+        "url": "https://apnews.com/article/anthropic-pentagon-openai-claude-chatgpt-military-ai-b2bbcf5fda3f27353eae1e0eb7ab07b6",
+        "source": "Associated Press",
+        "published_at": "2026-03-04T01:48:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Anthropic’s moral stand on U.S. military use of artificial intelligence is reshaping the competition between leading AI companies but also exposing a growing awareness that maybe chatbots just aren’t capable enough for acts of war. Anthropic’s chatbot, Claude…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Prediction: Nvidia (NVDA) Will Be Worth More Than Alphabet, Apple, Amazon, Tesla, Meta, and Microsoft Combined by 2030 - The Motley Fool",
+        "url": "https://www.fool.com/investing/2026/03/03/prediction-nvidia-nvda-will-be-worth-more-than-alp/",
+        "source": "Motley Fool",
+        "published_at": "2026-03-04T01:45:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Nvidia is expected to deliver unreal growth over the next few years.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Feds Warn Savannah Chrisley Over Alleged False, Misleading Weight Loss Statements - TMZ",
+        "url": "https://www.tmz.com/2026/03/03/feds-warn-savannah-chrisley-over-alleged-misleading-website/",
+        "source": "TMZ",
+        "published_at": "2026-03-04T01:32:58Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Savannah Chrisley's prescription weight loss website is under a federal microscope ... 'cause the FDA warned her about making false and misleading claims about GLP-1s.",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Target tackles groceries as first swing to revive sales growth - Star Tribune",
+        "url": "https://www.startribune.com/target-turnaround-plan-reinventing-home-category-expansion-food-grocery/601589208",
+        "source": "Minneapolis Star Tribune",
+        "published_at": "2026-03-04T00:34:07Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "After another sales slide in the holiday quarter, executives laid out a turnaround plan that will spend billions to update both merchandise and stores.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Ajinomoto Foods North America, Inc. Expands Recall for Chicken and Pork Fried Rice, Ramen, and Shu Mai Products Due to Possible Foreign Matter Contamination | Food Safety and Inspection Service - fsis.usda.gov",
+        "url": "http://www.fsis.usda.gov/recalls-alerts/ajinomoto-foods-north-america-inc--expands-recall-chicken-and-pork-fried-rice-ramen",
+        "source": "Usda.gov",
+        "published_at": "2026-03-03T23:44:17Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Starbucks opening corporate office in Tennessee, moving some Seattle jobs - KING5.com",
+        "url": "https://www.king5.com/article/money/business/starbucks-opening-corporate-office-nashville-tennessee/281-c73f3c97-9565-4cb8-83d8-62bc8697341e",
+        "source": "KING5.com",
+        "published_at": "2026-03-03T23:29:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Jobs impacted are within the company's supply chain department.",
+        "impact_score": 40,
+        "themes": [
+          "capital",
           "commercial"
         ]
       },
       {
-        "title": "The Live Nation trial could reshape the music industry. Here's what you need to know - NPR",
-        "url": "https://www.npr.org/2026/03/03/nx-s1-5728962/live-nation-ticketmaster-trial-explainer",
-        "source": "NPR",
-        "published_at": "2026-03-03T16:49:11Z",
+        "title": "Downdetector, Speedtest sold to IT service provider Accenture in $1.2B deal - Ars Technica",
+        "url": "https://arstechnica.com/information-technology/2026/03/downdetector-speedtest-sold-to-it-service-provider-accenture-in-1-2b-deal/",
+        "source": "Ars Technica",
+        "published_at": "2026-03-03T22:20:06Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "On Tuesday opening statements will begin for the federal antitrust trial against Live Nation, one of the largest entertainment companies in the world.",
+        "description": "Accenture plans to buy Ookla, which also includes RootMetrics and Ekahau.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "FCC chair calls Paramount/WBD merger \"a lot cleaner\" than defunct Netflix deal - Ars Technica",
+        "url": "https://arstechnica.com/tech-policy/2026/03/trump-fcc-chair-paramount-warner-bros-merger-likely-to-get-quick-approval/",
+        "source": "Ars Technica",
+        "published_at": "2026-03-03T22:05:36Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "FCC to review foreign debt, but Carr indicates it will be a formality.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "I tried McDonald’s massive new Big Arch burger and stopped after three bites - Cleveland.com",
+        "url": "https://www.cleveland.com/entertainment/2026/03/i-tried-mcdonalds-massive-new-big-arch-burger-and-stopped-after-three-bites.html",
+        "source": "cleveland.com",
+        "published_at": "2026-03-03T21:30:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The new Big Arch Burger at McDonald's packs a half-pound of beef and 1020 calories into one sandwich.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Archer Aviation Stock Falls After Earnings. Why the Drone Maker Is Tumbling Despite the Iran War. - Barron's",
+        "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNbC1laXgtM1FwWVdGbDIwNmRXZVgxUFZHSU5VZF9NQkxTZHBaNW9kYkpzMkxObTZYZ3hjaUVxY3cweElPbjRXTXkyX1A0TDRwLUg0c1ZDd0R3MjV6UXdEdFM5QVBWMVpQeHZxMGNUZUxmUVRWTlc1b3R4OHdIaVZLOV9RUl8?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-03T21:29:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "5 ways the Iran conflict is upending Europe’s energy plans - politico.eu",
+        "url": "https://www.politico.eu/article/5-ways-iran-conflict-is-upending-europe-energy-plans/",
+        "source": "POLITICO.eu",
+        "published_at": "2026-03-03T20:39:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The EU already had energy problems. The chaos in the Gulf just made them a whole lot worse.",
+        "impact_score": 40,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "ChatGPT Health 'under-triaged' half of medical emergencies in a new study - NBC News",
+        "url": "https://www.nbcnews.com/health/health-news/chatgpt-health-under-triaged-half-medical-emergencies-rcna261409",
+        "source": "NBC News",
+        "published_at": "2026-03-03T17:02:23Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "ChatGPT Health — OpenAI’s new health-focused chatbot — frequently underestimated the severity of medical emergencies, according to a study published last week in the journal Nature Medicine",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Blue Owl slides below listing price as private credit worries mount - Financial Times",
+        "url": "https://www.ft.com/content/5e1404da-af6c-4f8a-a095-3e16827cadc9",
+        "source": "Financial Times",
+        "published_at": "2026-03-03T15:54:51Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Investor redemptions and fears of AI disruption to software companies have prompted worries across the industry",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Quantum firms set up across Chicago ahead of South Works campus - Crain's Chicago Business",
+        "url": "https://www.chicagobusiness.com/technology/illinois-quantum-pritzker-uchicago-university-of-illinois-mhub/",
+        "source": "Crain's Chicago Business",
+        "published_at": "2026-03-03T15:37:53Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Companies slated for the Illinois Quantum & Microelectronics Park are opening labs at mHUB, Hyde Park Labs and downtown while the South Works campus is built.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1173,16 +1417,16 @@
         ]
       },
       {
-        "title": "20 Most Hilarious Reactions After Video Of McDonald's CEO Tasting Burger Went Viral In Worst Way - Bored Panda",
-        "url": "https://www.boredpanda.com/mcdonalds-ceo-eating-burger-goes-viral/",
-        "source": "Boredpanda.com",
-        "published_at": "2026-03-03T15:16:42Z",
+        "title": "Amazon says drones hit 3 of its Middle East data centers amid Iran conflict - CBS News",
+        "url": "https://www.cbsnews.com/news/amazon-drone-strike-aws-data-center-uae-bahrain-iran/",
+        "source": "CBS News",
+        "published_at": "2026-03-03T15:03:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "In the wake of McDonald’s CEO Chris Kempczinski becoming a “laughing stock” online following a viral promotional video for the new Big Arch burger, social media has been flooded with hilarious and pointed memes as users react to the situation.",
+        "description": "Drones struck two facilities in the United Arab Emirates directly, and damaged a data center in Bahrain, Amazon said.",
         "impact_score": 40,
         "themes": [
-          "other"
+          "commercial"
         ]
       },
       {
@@ -1199,81 +1443,42 @@
         ]
       },
       {
-        "title": "Goldman finds no relationship between AI and productivity but a 30% boost for 2 specific use cases - Fortune",
-        "url": "https://fortune.com/2026/03/03/goldman-earnings-ai-anxiety-no-meaningful-impact-productivity-economy-30-percent-in-2-areas/",
-        "source": "Fortune",
-        "published_at": "2026-03-03T14:35:00Z",
+        "title": "Salty Otter owner says AI logo uproar has ‘crushed’ her lifelong dream - Lookout Santa Cruz",
+        "url": "http://lookout.co/salty-otter-owner-says-ai-logo-uproar-has-crushed-her-lifelong-dream/story",
+        "source": "Lookout.co",
+        "published_at": "2026-03-03T13:08:45Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Have you got \"AI-nxiety?\" Goldman took a close look at the last earnings season and found a mismatch between hype and reality.",
+        "description": "Following a wave of online criticism and one-star reviews from locals, The Salty Otter Sports Grill replaced its colorful, AI-assisted otter logo with a stark black-and-white design. Owner Rachael Smith, who said she refined the image herself and invested eve…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Average price for a gallon of gas rises 11 cents overnight to about $3.11 in US, AAA says - AP News",
-        "url": "https://apnews.com/article/iran-oil-gas-gallon-aaa-e2daee318b8e3e6a1124713909a410e4",
-        "source": "Associated Press",
-        "published_at": "2026-03-03T14:24:00Z",
+        "title": "JPMorgan revamps Nvidia stock price target for rest of 2026 - thestreet.com",
+        "url": "https://www.thestreet.com/investing/jpmorgan-revamps-nvidia-stock-price-target-for-rest-of-2026",
+        "source": "TheStreet",
+        "published_at": "2026-03-03T12:37:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The average price for a gallon of gasoline jumped 11 cents overnight to about $3.11 in the U.S., according to motor club AAA. Gas prices are on the rise as oil prices are soaring to levels not seen in more than a year as Iran launched a series of retaliatory …",
+        "description": "One of Wall Street's major banks sees a new target price for Nvidia.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Blackstone’s Flagship Private Credit Fund Hit by Record Redemptions - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-02/blackstone-allows-investors-to-pull-record-7-9-from-bcred-fund",
+        "title": "Global Bonds on Knife-Edge as Iran War Revives Inflation Threat - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-03/global-bonds-on-knife-edge-as-iran-war-revives-inflation-threat",
         "source": "Bloomberg",
-        "published_at": "2026-03-03T14:23:40Z",
+        "published_at": "2026-03-03T12:27:42Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Blackstone Inc. is allowing investors to redeem a record 7.9% of shares from its flagship private credit fund, the latest sign of unease in an industry that’s faced a wave of withdrawals.",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "Paramount’s $110 Billion Warner Bros. Deal Backed by Arab Sovereign Funds Raises Soft Power Concerns - Variety",
-        "url": "https://variety.com/2026/film/global/middle-east-paramount-warner-bros-discovery-1236675832/",
-        "source": "Variety",
-        "published_at": "2026-03-03T14:05:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Paramount's $110 billion Warner Bros. deal is backed by $24 billion from Arab Sovereign funds, raising concerns over influence and media independence.",
+        "description": "The US-Israeli war on Iran is rekindling inflation concerns across financial markets, sapping the outlook for global bonds that had just posted their best start to a year since the pandemic.",
         "impact_score": 40,
         "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Target’s new CEO unveils his turnaround plan - CNN",
-        "url": "https://www.cnn.com/2026/03/03/business/target-earnings-stock-ceo",
-        "source": "CNN",
-        "published_at": "2026-03-03T12:23:12Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The new Target CEO believes adding new, buzzy brands can win back shoppers after a brutal few years.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "FDA is ‘not convinced’ UniQure’s Huntington’s therapy has benefit, senior official says - statnews.com",
-        "url": "https://www.statnews.com/2026/03/03/uniqure-huntingtons-treatment-fda-official-comments/",
-        "source": "STAT",
-        "published_at": "2026-03-03T12:12:02Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The FDA believes that an experimental therapy for Huntington’s disease from UniQure wasn't providing benefit for patients, a senior official told STAT.",
-        "impact_score": 40,
-        "themes": [
-          "other"
+          "macro"
         ]
       },
       {
@@ -1290,146 +1495,393 @@
         ]
       },
       {
-        "title": "JPMorgan’s Jamie Dimon warns there’s too much complacency in markets - MarketWatch",
-        "url": "https://www.marketwatch.com/story/jpmorgans-jamie-dimon-warns-theres-too-much-complacency-in-markets-98739bad",
-        "source": "MarketWatch",
-        "published_at": "2026-03-03T10:04:00Z",
+        "title": "We Tested 49 More Baby Formulas for Lead and Arsenic - Consumer Reports",
+        "url": "https://www.consumerreports.org/babies-kids/baby-formula/liquid-baby-formula-contaminants-test-results-a8639602154/",
+        "source": "ConsumerReports.org",
+        "published_at": "2026-03-03T11:16:51Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "",
+        "description": "Our most recent round of baby formula tests detected contaminants at potentially concerning levels in 26 of the 49 baby formulas we evaluated.",
+        "impact_score": 40,
+        "themes": [
+          "macro"
+        ]
+      },
+      {
+        "title": "Latin America and Caribbean Solidarity in the Trump Era",
+        "url": "https://www.counterpunch.org/2026/03/04/latin-america-and-caribbean-solidarity-in-the-trump-era/",
+        "source": "CounterPunch",
+        "published_at": "2026-03-04T06:56:17Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Donald Trump has his sights set on Latin America and the Caribbean and is prepared to use a heavy hand to bring them under his exclusive control. He called a presidential summit in Miami with heads of state he considers his ideological and strategic allies in…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Laid off by Block, reunited on Slack: Inside the 3,800-person 'Square Mafia' - Business Insider",
-        "url": "https://www.businessinsider.com/block-layoffs-former-jack-dorsey-employees-square-mafia-slack-group-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-03T09:30:00Z",
+        "title": "Suzlon Energy shares drop 30% in six months, but Motilal Oswal sees 61% upside; here’s why",
+        "url": "https://economictimes.indiatimes.com/markets/stocks/news/suzlon-energy-shares-drop-30-in-six-months-but-motilal-oswal-sees-61-upside-heres-why/articleshow/129010671.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-04T06:33:52Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Former Block employees congregate in an unaffiliated Slack group to share support, find new jobs, and trade memes. It's grown since recent layoffs.",
+        "feed": "everything",
+        "description": "Suzlon Energy shares have seen a significant decline, but Motilal Oswal remains bullish, projecting a 61% upside. The brokerage cites the company's 'Suzlon 2.0' vision, including leadership restructuring and the launch of a dedicated project development verti…",
+        "impact_score": 40,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "Why South Asia Must Prepare for a Harder Geopolitical Decade",
+        "url": "https://english.khabarhub.com/2026/04/537377/",
+        "source": "Khabarhub.com",
+        "published_at": "2026-03-04T06:15:41Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Strategic Assessment 2022-2026: The past four years have marked a decisive rupture in the post-Cold War security order. The era once defined by managed competition and economic globalization is giving way to systemic fragmentation. Between 2022 and early 2026…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "GW sold Virginia campus for $427 million to Amazon for data center development - The GW Hatchet",
-        "url": "https://gwhatchet.com/2026/03/02/gw-sold-virginia-campus-for-427-million-to-amazon-for-data-center-development/",
-        "source": "Gwhatchet.com",
-        "published_at": "2026-03-03T00:14:43Z",
+        "title": "60 Companies Are Already Committed to the 6G Network",
+        "url": "https://the-gadgeteer.com/2026/03/04/60-companies-are-already-committed-to-the-6g-network/",
+        "source": "The Gadgeteer",
+        "published_at": "2026-03-04T06:01:42Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The deal transfers all of GW’s roughly 122 acres of property in Loudoun County, Virginia, to ADS for $427,299,350 — roughly $3.5 million an acre — according to real estate records.",
+        "feed": "everything",
+        "description": "If you thought 5G was still settling in, Qualcomm, Google, and Samsung made it clear at Mobile World Congress 2026 that the wireless industry has already moved on. For Qualcomm, CEO Cristiano Amon took the stage in Barcelona and laid out a vision for the 6G n…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "We Must Now Prepare for the Possibility of Nuclear War and Total Supply Chain Collapse",
+        "url": "https://www.naturalnews.com/2026-03-04-possibility-of-nuclear-war-supply-chain-collapse.html",
+        "source": "Naturalnews.com",
+        "published_at": "2026-03-04T06:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "We Are on the Precipice, and There’s No Off-Ramp in Sight As I write this in early March 2026, the world is no longer teetering on the brink; it has plunged over the edge. The United States, under President Donald Trump, and Israel have launched a massive joi…",
+        "impact_score": 75,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Bunker Hill Announces Effective Date of Reverse Stock Split and Update to C$30 Million LIFE Offering",
+        "url": "https://www.globenewswire.com/news-release/2026/03/04/3249038/0/en/Bunker-Hill-Announces-Effective-Date-of-Reverse-Stock-Split-and-Update-to-C-30-Million-LIFE-Offering.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-04T05:15:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "KELLOGG, Idaho and VANCOUVER, British Columbia, March 04, 2026 (GLOBE NEWSWIRE) -- Bunker Hill Mining Corp. (“Bunker Hill” or the “Company”) (TSX-V: BNKR | OTCQB: BHLL), announces further to its news release dated February 9, 2026, the effective date of its o…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Mimecast Study: 42% of Organizations Report Rise in Malicious Insider Threats Over Past Year",
+        "url": "https://www.globenewswire.com/news-release/2026/03/04/3249036/0/en/Mimecast-Study-42-of-Organizations-Report-Rise-in-Malicious-Insider-Threats-Over-Past-Year.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-04T05:01:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Global study reveals disconnect between security awareness and technical controls — as AI-powered attacks accelerate and collaboration tools expand the attack surface Global study reveals disconnect between security awareness and technical controls — as AI-po…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Bunker Hill Announces Effective Date of Reverse Stock Split and Update to C$30 Million LIFE Offering",
+        "url": "https://financialpost.com/globe-newswire/bunker-hill-announces-effective-date-of-reverse-stock-split-and-update-to-c30-million-life-offering",
+        "source": "Financial Post",
+        "published_at": "2026-03-04T03:44:50Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "NOT FOR DISTRIBUTION TO UNITED STATES NEWS WIRE SERVICES OR FOR DISSEMINATION IN THE UNITED STATES. KELLOGG, Idaho and VANCOUVER, British Columbia, March 03, 2026 (GLOBE NEWSWIRE) — Bunker Hill Mining Corp. (“Bunker Hill” or the “Company”) (TSX-V: BNKR | OTCQ…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Bunker Hill Announces Effective Date of Reverse Stock Split and Update to C$30 Million LIFE Offering",
+        "url": "https://www.globenewswire.com/news-release/2026/03/04/3249032/0/en/Bunker-Hill-Announces-Effective-Date-of-Reverse-Stock-Split-and-Update-to-C-30-Million-LIFE-Offering.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-04T03:44:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "NOT FOR DISTRIBUTION TO UNITED STATES NEWS WIRE SERVICES OR FOR DISSEMINATION IN THE UNITED STATES.  KELLOGG, Idaho and VANCOUVER, British Columbia, March ...",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "War for Ukraine Day 1,468: (Some of) You Have Questions, I (May) Have Answers",
+        "url": "https://balloon-juice.com/2026/03/03/war-for-ukraine-day-1468-some-of-you-have-questions-i-may-have-answers/",
+        "source": "Balloon-juice.com",
+        "published_at": "2026-03-04T03:17:32Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Well this is ungood: Iran destroyed AN/TPY-2 THAAD radars at Al-Ruwais Air Base in the UAE and Muwaffaq Salti Air Base in Jordan, while satellite imagery confirms the AN/FPS-132 phased array radar in Qatar was also damaged, complicating missile defense across…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Fuel price spike triggers fresh naira-for-crude supply calls",
+        "url": "https://punchng.com/fuel-price-spike-triggers-fresh-naira-for-crude-supply-calls/",
+        "source": "The Punch",
+        "published_at": "2026-03-04T02:35:36Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Nigeria fuel prices surge past N937/litre due to Middle East conflict. Marketers demand a naira-for-crude supply to stabilize domestic costs.\n\nRead More: https://punchng.com/fuel-price-spike-triggers-fresh-naira-for-crude-supply-calls/",
+        "impact_score": 40,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "LUCARA ANNOUNCES YEAR END 2025 RESULTS",
+        "url": "https://www.prnewswire.co.uk/news-releases/lucara-announces-year-end-2025-results-302703289.html",
+        "source": "PR Newswire UK",
+        "published_at": "2026-03-04T02:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "VANCOUVER, BC, March 4, 2026 /PRNewswire/ -- (TSX: LUC) (BSE: LUC) (Nasdaq FNGM: LUC) PDF Version Lucara Diamond Corp. (\"Lucara\" or the \"Company\") today reports its results for the quarter ended December 31, 2025. All amounts are in U.S. dollars unless otherw…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Abuja-Kaduna highway nears completion, 80% delivered – FG",
+        "url": "https://punchng.com/abuja-kaduna-highway-nears-completion-80-delivered-fg/",
+        "source": "The Punch",
+        "published_at": "2026-03-04T02:24:44Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Federal Government announces the Abuja-Kaduna highway is 80% complete, with a redesigned concrete pavement scheduled for delivery by the end of April.\n\nRead More: https://punchng.com/abuja-kaduna-highway-nears-completion-80-delivered-fg/",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Bragar Eagel & Squire, P.C. Urges CoreWeave, Inc. (NASDAQ:CRWV) Stockholders with Large Losses to Contact the Firm Before March 13th",
+        "url": "https://www.globenewswire.com/news-release/2026/03/04/3249018/0/en/Bragar-Eagel-Squire-P-C-Urges-CoreWeave-Inc-NASDAQ-CRWV-Stockholders-with-Large-Losses-to-Contact-the-Firm-Before-March-13th.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-04T02:11:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Bragar Eagel & Squire, P.C. Litigation Partner Brandon Walker Encourages Investors Who Suffered Losses In CoreWeave (CRWV) To Contact Him Directly To Discuss Their Options",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "DTLA federal building fortified with barricades following violent anti-ICE clashes — and they could be permanent",
+        "url": "https://nypost.com/2026/03/03/us-news/barricades-around-dtla-federal-building-could-be-permanent/",
+        "source": "New York Post",
+        "published_at": "2026-03-04T01:32:03Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "\"We’re exploring permanent barriers. You might see some potential construction in the future,\" said Bill Essayli, LA's top federal prosecutor.",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Real estate market a warning sign: We need change, now",
+        "url": "https://nypost.com/2026/03/03/opinion/real-estate-market-a-warning-sign/",
+        "source": "New York Post",
+        "published_at": "2026-03-04T01:12:13Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Real estate is fundamentally about optimism. Two terms of Gavin Newsom have provided the opposite — and his replacement could be worse.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Global economy is facing the prospect of another profound shock",
+        "url": "https://economictimes.indiatimes.com/news/international/global-trends/global-economy-is-facing-the-prospect-of-another-profound-shock/articleshow/128998958.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-04T00:47:41Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "A potential Middle East conflict escalation threatens global economic stability, with fears of disrupted oil and gas supplies leading to inflation and interest rate hikes. Experts warn against premature reassurance, citing historical parallels and the signifi…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Legislators Temporarily Cut Data Centers From Oregon Tax Break Bill",
+        "url": "https://www.portlandmercury.com/news/2026/03/03/48357689/legislators-temporarily-cut-data-centers-from-oregon-tax-break-bill",
+        "source": "The Portland Mercury",
+        "published_at": "2026-03-04T00:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "An attempt to spur economic growth has budget and environmental watchdogs worried about unintended consequences. \n \n by Abe Asher\n \n \n \n Companies building data centers in Oregon already have a pretty good deal—and new economic development legislation pushed …",
         "impact_score": 40,
         "themes": [
           "commercial"
         ]
       },
       {
-        "title": "US LNG producers rush to seize on surging gas prices triggered by Iran conflict - Financial Times",
-        "url": "https://www.ft.com/content/fb837a9d-6334-43da-a58d-cb9830dc68fe",
-        "source": "Financial Times",
-        "published_at": "2026-03-03T00:06:25Z",
+        "title": "Has anything changed for Disney's plans in Abu Dhabi?",
+        "url": "https://www.themeparkinsider.com/flume/202603/12329/",
+        "source": "Theme Park Insider",
+        "published_at": "2026-03-04T00:08:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Venture Global and Cheniere Energy look to bring on extra capacity as prices surge in Europe and Asia",
+        "feed": "everything",
+        "description": "By Robert Niles: How has this week's war in the Middle East changed plans for a new Disney theme park and other attractions in the region?It is way too early to answer that question. The United States has ordered its citizens to evacuate the region, in what m…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Chevron, Exxon Mobil, ConocoPhillips Stocks Hit New Highs: Here Are Congress Members Who Own Shares - Benzinga",
-        "url": "https://www.benzinga.com/news/politics/26/03/50989394/chevron-exxon-mobil-conocophillips-stocks-hit-new-highs-here-are-congress-members-who-own-shares",
-        "source": "Benzinga",
-        "published_at": "2026-03-02T23:55:47Z",
+        "title": "Hoover Bio-Strategies and Leadership Hosts Second “Bio Boot Camp” for US Congressional Staff",
+        "url": "https://www.hoover.org/news/hoover-bio-strategies-and-leadership-hosts-second-bio-boot-camp-us-congressional-staff",
+        "source": "Hoover.org",
+        "published_at": "2026-03-04T00:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Oil stocks traded higher Monday on the heels of the attacks on Iran. Here's a look at the members of Congress who own some of the top oil stocks in 2026.",
+        "feed": "everything",
+        "description": "Twenty mid- to senior-level congressional staff from both parties, both chambers of Congress, and relevant committees attended two days of intensive biotechnology discussions at Stanford University.",
+        "impact_score": 40,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Study on the strength properties of coir fiber reinforced concrete containing waste brick powder dust as sand replacement",
+        "url": "https://www.nature.com/articles/s41598-026-42480-5",
+        "source": "Nature.com",
+        "published_at": "2026-03-04T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Scientific Reports - Study on the strength properties of coir fiber reinforced concrete containing waste brick powder dust as sand replacement",
+        "impact_score": 55,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "A Tale of American Lawyers and Chinese Engineers",
+        "url": "https://www.theglobalist.com/a-tale-of-american-lawyers-and-chinese-engineers/",
+        "source": "The Globalist",
+        "published_at": "2026-03-04T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Hoover Institution fellow Dan Wang puts it in his recent book, Breakneck, that “No two peoples are more alike than Americans and Chinese… masses and elites are united in the faith that theirs is a uniquely powerful nation that ought to throw its weight around…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Anthropic Adds Free Memory Feature and Import Tool to Lure ChatGPT Users to Claude - MacRumors",
-        "url": "https://www.macrumors.com/2026/03/02/anthropic-memory-import-tool/",
-        "source": "MacRumors",
-        "published_at": "2026-03-02T23:33:54Z",
+        "title": "Stop market fires",
+        "url": "https://punchng.com/stop-market-fires/",
+        "source": "The Punch",
+        "published_at": "2026-03-03T23:20:06Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Anthropic is aiming to lure customers from ChatGPT and Gemini with a new memory import tool that's available to free users as of today....",
+        "feed": "everything",
+        "description": "Learn about the causes of persistent market fires in Nigeria and discover actionable solutions for governments and traders to prevent these costly disaster\n\nRead More: https://punchng.com/stop-market-fires/",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "United flight to New Jersey returns to LAX due to engine issue; plane evacuated - ABC7 Los Angeles",
-        "url": "https://abc7.com/post/united-airlines-flight-lands-lax-reported-engine-fire/18668387/",
-        "source": "KABC-TV",
-        "published_at": "2026-03-02T22:07:55Z",
+        "title": "TikTok down for some in U.S., thanks to second Oracle outage since sale | TechCrunch",
+        "url": "https://techcrunch.com/2026/03/03/tiktok-down-for-some-in-u-s-thanks-to-second-oracle-outage-since-sale/",
+        "source": "TechCrunch",
+        "published_at": "2026-03-03T22:36:06Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "A United Airlines flight was forced to evacuate at LAX over reports of an engine fire, the LAFD said.",
+        "feed": "everything",
+        "description": "TikTok down for some in U.S., thanks to second Oracle outage since sale | TechCrunchtechcrunch.com",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Prediction markets draw scrutiny over Iran bets: \"Insider trading in broad daylight,\" senator says - CBS News",
-        "url": "https://www.cbsnews.com/news/iran-khamenei-prediction-markets-insider-trading/",
-        "source": "CBS News",
-        "published_at": "2026-03-02T21:26:00Z",
+        "title": "Kwara recruits 150 nurses, acquires MRI to boost healthcare",
+        "url": "https://punchng.com/kwara-recruits-150-nurses-acquires-mri-to-boost-healthcare/",
+        "source": "The Punch",
+        "published_at": "2026-03-03T22:35:05Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Lawmakers are raising concerns that prediction market users are engaging in insider trading to wager on U.S. military actions.",
+        "feed": "everything",
+        "description": "The Kwara State government advances its healthcare reform by recruiting 150 nurses and acquiring a modern MRI machine to improve diagnostic services.\n\nRead More: https://punchng.com/kwara-recruits-150-nurses-acquires-mri-to-boost-healthcare/",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Lumentum, Coherent Surge On Nvidia's Optical Networking Investments - Investor's Business Daily",
-        "url": "https://www.investors.com/news/technology/nvidia-stock-investments-lumentum-coherent-optical-networking-push/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-02T21:02:00Z",
+        "title": "U.S. turns up heat on Venezuela with threat to indict new leader Delcy Rodriguez",
+        "url": "https://japantoday.com/category/world/exclusive-us-turns-up-heat-on-venezuela-with-threat-to-indict-new-leader-delcy-rodriguez",
+        "source": "Japan Today",
+        "published_at": "2026-03-03T21:45:39Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Shares in Lumentum and Coherent climbed amid Nvidia's announcement that it will invest $2 billion in both optical networking companies. Nvidia stock dipped.",
+        "feed": "everything",
+        "description": "The Trump administration is quietly building a legal case against Venezuelan interim president Delcy Rodriguez including readying a draft criminal indictment, one of several tools it is using to strengthen its leverage with Caracas, according to four people f…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "RFK Jr. Tells Joe Rogan He’s About to Unleash 14 Banned Peptides - Gizmodo",
-        "url": "https://gizmodo.com/rfk-jr-tells-joe-rogan-hes-about-to-unleash-14-banned-peptides-2000728355",
-        "source": "Gizmodo.com",
-        "published_at": "2026-03-02T20:30:39Z",
+        "title": "The price of a gallon of gas spiked overnight in U.S., and drivers overseas are filling up tanks",
+        "url": "https://japantoday.com/category/business/average-price-for-a-gallon-of-gas-rises-11-cents-overnight-to-about-3.11-in-us-aaa-says",
+        "source": "Japan Today",
+        "published_at": "2026-03-03T21:34:18Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "RFK Jr. plans to reverse a sweeping compounding ban of certain peptides issued by the FDA in late 2023.",
+        "feed": "everything",
+        "description": "The average price for a gallon of gasoline jumped 11 cents overnight in the U.S., and some drivers in Europe waited in line to fill their tanks with fuel, as war engulfed the Middle East and shipments of oil and gas were stranded in the Persian Gulf. A gallon…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Goldman Sachs resets Nvidia stock forecast after earnings - thestreet.com",
-        "url": "https://www.thestreet.com/investing/stocks/goldman-sachs-resets-nvidia-stock-forecast-after-earnings",
-        "source": "TheStreet",
-        "published_at": "2026-03-02T13:07:00Z",
+        "title": "US TikTok service disrupted by second Oracle outage in a month",
+        "url": "https://9to5mac.com/2026/03/03/us-tiktok-service-disrupted-by-second-oracle-outage-in-a-month/",
+        "source": "9to5Mac",
+        "published_at": "2026-03-03T21:32:29Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Wall Street recalibrates expectations after Nvidia's massive quarter.",
+        "feed": "everything",
+        "description": "As spotted by The Verge, US TikTok is experiencing renewed service issues after a second Oracle outage in just over a month, with users facing delays and lag while posting content. Here are the details.\n\n\n\n more…",
         "impact_score": 40,
         "themes": [
           "other"
+        ]
+      },
+      {
+        "title": "Fuel Tech Reports 2025 Fourth Quarter and Full Year Financial Results",
+        "url": "https://www.globenewswire.com/news-release/2026/03/03/3248940/0/en/Fuel-Tech-Reports-2025-Fourth-Quarter-and-Full-Year-Financial-Results.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-03T21:15:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "WARRENVILLE, Ill., March 03, 2026 (GLOBE NEWSWIRE) -- Fuel Tech, Inc. (NASDAQ: FTEK), a technology company using advanced engineering processes to provide emissions control systems and water treatment technologies in utility and industrial applications, today…",
+        "impact_score": 40,
+        "themes": [
+          "materials"
         ]
       },
       {
@@ -2083,370 +2535,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "Green Building Initiative Launches Ascent Building Certification™ for Global Markets",
-        "url": "https://financialpost.com/globe-newswire/green-building-initiative-launches-ascent-building-certification-for-global-markets",
-        "source": "Financial Post",
-        "published_at": "2026-03-03T09:04:36Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "New portfolio-ready building certification delivers proven tools to achieve credible sustainability and performance outcomes worldwide PORTLAND, Ore., March 03, 2026 (GLOBE NEWSWIRE) — The Green Building Initiative (GBI) announces the global launch of Ascent …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Why Satellites Fail — and How to Protect Them",
-        "url": "https://warontherocks.com/2026/03/why-satellites-fail-and-how-to-protect-them/",
-        "source": "War on the Rocks",
-        "published_at": "2026-03-03T09:00:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "This exclusive Cogs of War interview is with Jean-François Morizur, the CEO and founder of Cailabs, a French company focused on ground-to-satellite laser optical communications. As satellites play a more critical and contested role than ever in global and def…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Green Building Initiative Launches Ascent Building Certification™ for Global Markets",
-        "url": "https://www.globenewswire.com/news-release/2026/03/03/3248054/0/en/Green-Building-Initiative-Launches-Ascent-Building-Certification-for-Global-Markets.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-03T09:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "GBI announces the global launch of Ascent Building Certification™, a science-based whole building sustainability certification for commercial real estate....",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-solidifies-after-tariff-ruling-usedtrucks-deals-and-steals-price-indices-offer-mixed-bags",
-        "source": "Overdriveonline.com",
-        "published_at": "2026-03-03T07:24:18Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Rates and volumes didn't see a huge boost from the Supreme Court's tariff ruling, good news in spot markets continued last week. Also: Used-truck prices for January remained in line with recent performance despite an uptick; free cervical cancer screenings fo…",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-        "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
-        "source": "Overdriveonline.com",
-        "published_at": "2026-03-03T07:24:18Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Rates and volumes didn't see a huge boost from the Supreme Court's tariff ruling, good news in spot markets continued last week. Also: Used-truck prices for January remained in line with recent performance despite an uptick; free cervical cancer screenings fo…",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "UWSA Linked to Quartz Mining Operation in Northern Shan State",
-        "url": "https://english.shannews.org/archives/29385",
-        "source": "Shannews.org",
-        "published_at": "2026-03-03T06:59:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Residents in Tangyan Township, northern Shan State, allege that the United Wa State Army (UWSA) is collaborating with Chinese mining investors to extract quartz from Loi Lao Mountain in the Pan Nyawng village tract, raising concerns over land seizures, enviro…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Show HN: Neural Siege – A Multi-Agent RL Combat Simulation",
-        "url": "https://github.com/ayushdnb/Neural-Siege",
-        "source": "Github.com",
-        "published_at": "2026-03-03T06:56:55Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "This is a multi-agent reinforcement learning simulation I’ve been building as a personal project.\nIt’s a grid-based combat environment with per-agent PPO training runtime.\nSome of the things I’ve been experimenting with:\n– Per-agent PPO (isolated optimizers p…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "GOP Governor Kevin Stitt Says States Should Import Migrants for Boeing, Construction Jobs",
-        "url": "https://www.breitbart.com/immigration/2026/03/02/gop-gov-wants-state-import-migrants-boeing-jobs/",
-        "source": "Breitbart News",
-        "published_at": "2026-03-03T06:55:04Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Oklahoma's Republican governor says states should be allowed to provide work permits to migrants -- whatever the inevitable damage to citizens and workplace investment.\nThe post GOP Governor Kevin Stitt Says States Should Import Migrants for Boeing, Construct…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Jon Stewart Stunned Into 14 Seconds Of Silence After Trump's Bizarre Babble",
-        "url": "https://www.huffpost.com/entry/jon-stewart-trump-iran_n_69a65db7e4b076ac5d6362fb",
-        "source": "HuffPost",
-        "published_at": "2026-03-03T06:41:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The \"Daily Show\" host tore into the president for dragging the nation into a war that he has failed to justify.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Global economy is facing the prospect of another profound shock",
-        "url": "https://economictimes.indiatimes.com/news/international/world-news/iran-war-global-economy-is-facing-the-prospect-of-another-profound-shock/articleshow/128960387.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-03T06:23:17Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Iran war: The American and Israeli bombing of Iran, and Iranian reprisals throughout the region, set dangers in motion that pose a substantial threat to global economic fortunes.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Surety Industry Advances Critical Federal Policy",
-        "url": "https://www.globenewswire.com/news-release/2026/03/03/3247990/0/en/Surety-Industry-Advances-Critical-Federal-Policy.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-03T06:13:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Washington, D.C., United States, March  03, 2026  (GLOBE NEWSWIRE) -- Largest Legislative Fly-In Brings Industry Message to Congress  The Surety &...",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "Nasdaq-listed AI chipmaker Blaize bets on India for sovereign edge inference growth",
-        "url": "https://www.digitimes.com/news/a20260303VL207/india-ai-inference-training-processor-semiconductor-industry-infrastructure.html",
-        "source": "Digitimes",
-        "published_at": "2026-03-03T06:11:48Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "As much of the global semiconductor industry remains fixated on AI training accelerators and hyperscale GPUs, US-based AI processor company Blaize is making a different wager in India: large-scale inference embedded in sovereign public infrastructure.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "U.S. intelligence warns new Chinese submarines can target America from coastal waters",
-        "url": "https://www.naturalnews.com/2026-03-03-chinese-submarines-target-america-coastal-waters.html",
-        "source": "Naturalnews.com",
-        "published_at": "2026-03-03T06:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "China is rapidly building advanced nuclear submarines. This new fleet can target the U.S. from Chinese coastal waters. China’s submarine force is set to grow significantly by 2035. Massive shipyard investments are driving this naval expansion. China also seek…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Iran attack could buoy Trump in talks with China's Xi",
-        "url": "https://economictimes.indiatimes.com/news/international/world-news/iran-attack-could-buoy-trump-in-talks-with-chinas-xi/articleshow/128959637.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-03T05:32:37Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Trump is set to arrive in Beijing at the end of March following the U.S. capture of Venezuelan President Nicolas Maduro in ​a risky Caracas raid in January and the U.S.-Israeli air war that on Saturday killed Iran's Supreme Leader Ayatollah Ali Khamenei, the …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Why it’s not easy for car makers in the US to ditch electric cars",
-        "url": "https://www.autocar.co.uk/car-news/business/why-it%E2%80%99s-not-easy-car-makers-us-ditch-electric-cars",
-        "source": "Autocar",
-        "published_at": "2026-03-03T05:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Regulatory changes have led to car makers writing off the equivalent of almost $40 billion in EV investments\n\nCar makers in the US have written off the equivalent of almost $40 billion in EV investments following regulatory changes that ended mandatory sales …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "World Baseball Classic 2026: Mark DeRosa confident in Team USA's Dream Team",
-        "url": "https://www.marca.com/en/mlb/2026/03/03/69a665a846163fac7d8b45f9.html",
-        "source": "Marca",
-        "published_at": "2026-03-03T04:47:25Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The World Baseball Classic (WBC) will take place from March 5-17 at venues around the globe. For this edition, the United States will field one of its strongest teams in years. The",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "FERMI DEADLINE FRIDAY: Bragar Eagel & Squire, P.C. Urgently Reminds Fermi, Inc. (NASDAQ:FRMI) Stockholders to Contact the Firm Before the Upcoming March 6th Class Action Deadline",
-        "url": "https://www.globenewswire.com/news-release/2026/03/03/3247961/0/en/FERMI-DEADLINE-FRIDAY-Bragar-Eagel-Squire-P-C-Urgently-Reminds-Fermi-Inc-NASDAQ-FRMI-Stockholders-to-Contact-the-Firm-Before-the-Upcoming-March-6th-Class-Action-Deadline.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-03T02:10:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "If you purchased or acquired Fermi: (a) common stock pursuant and/or traceable to the registration statement and prospectus (collectively, the “Registration Statement”) issued in connection with the Company’s October 2025 initial public offering (“IPO” or the…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "What happens if you mess with a birds nest?",
-        "url": "https://www.lifesciencesworld.com/what-happens-if-you-mess-with-a-birds-nest/",
-        "source": "Lifesciencesworld.com",
-        "published_at": "2026-03-03T01:25:03Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "What Happens If You Mess With A Bird’s Nest? Disturbing a bird’s nest can have dire consequences, ranging from nest abandonment and starvation of chicks to legal repercussions; essentially, messing with a bird’s nest can lead to nest failure, harming the bird…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Cycling in Dublin for commuting rises 50% as most residents back more bike lanes",
-        "url": "https://www.irishtimes.com/ireland/dublin/2026/03/03/cycling-in-dublin-for-commuting-rises-50-as-most-residents-back-more-bike-lanes/",
-        "source": "The Irish Times",
-        "published_at": "2026-03-03T00:01:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Residents of Ireland’s five main cities want more space for cyclists, even at the expense of cars",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "The Gulag, The Holocaust, And The ‘Great Leap Forward’: Inside The Stories Of History’s Deadliest Dictators",
-        "url": "https://allthatsinteresting.com/deadliest-dictator",
-        "source": "Allthatsinteresting.com",
-        "published_at": "2026-03-03T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Recent scholarship has suggested that Mao Zedong was the deadliest dictator in history, but he was far from the only one responsible for millions of deaths.\nThe post The Gulag, The Holocaust, And The ‘Great Leap Forward’: Inside The Stories Of History’s Deadl…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Evaluation of antimicrobial resistance governance across 193 countries to inform the 2026 Global Action Plan update",
-        "url": "https://www.nature.com/articles/s41591-026-04257-1",
-        "source": "Nature.com",
-        "published_at": "2026-03-03T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "An evaluation across 193 countries for the 2026 Global Action Plan update showed that countries with strong multisectoral governance and early surveillance adoption achieved long-term improvements in reducing antimicrobial resistance.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Beijing Doesn’t Think Like Washington—And The Iran Conflict Shows Why",
-        "url": "https://carnegieendowment.org/emissary/2026/03/iran-china-us-intervention-strategy",
-        "source": "Carnegieendowment.org",
-        "published_at": "2026-03-03T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Hoover Institution fellow Nicholas Burns said, \"China is proving to be a feckless friend for its authoritarian allies.\"",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Amniogenesis in embryos and stem cell models",
-        "url": "https://www.nature.com/articles/s41556-026-01873-4",
-        "source": "Nature.com",
-        "published_at": "2026-03-03T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "This Review discusses the mechanisms underlying both cavitation and folding amniogenesis and provides an overview of the various recent stem cell-based human embryo models that have been developed to elucidate amniotic formation and function.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Cleveland Browns hit an ‘exciting milestone’ in stadium project",
-        "url": "https://www.dawgsbynature.com/cleveland-browns-news/118895/browns-hit-an-exciting-milestone-in-brrok-park-stadium-project",
-        "source": "Dawgs By Nature",
-        "published_at": "2026-03-02T23:38:19Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Construction crews started to dig the hole on Monday that will eventually become the sparkling indoor stadium.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Cerro de Pasco Resources Enters Project Development Funding Agreement with U.S. International Development Finance Corporation for Quiulacocha",
-        "url": "https://www.globenewswire.com/news-release/2026/03/02/3247933/0/en/Cerro-de-Pasco-Resources-Enters-Project-Development-Funding-Agreement-with-U-S-International-Development-Finance-Corporation-for-Quiulacocha.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-02T23:24:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "MONTRÉAL, March 02, 2026 (GLOBE NEWSWIRE) -- Cerro de Pasco Resources Inc. (TSXV: CDPR) (OTCQB: GPPRF) (BVL: CDPR) announces that it has entered into a Project Development Funding Agreement (the “Agreement”) with the U.S. International Development Finance Cor…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "California’s High-Speed Rail Touts Tiny Savings Amid Epic Cost Explosion",
-        "url": "https://dailycaller.com/2026/03/02/california-high-speed-rail-billions-cost/",
-        "source": "The Daily Caller",
-        "published_at": "2026-03-02T23:21:12Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "CA's high-speed rail released a new budget plan, touting a few billion in savings but failing to emphasize costs have significantly risen since its inception.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
-        "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
-        "source": "Raw Story",
-        "published_at": "2026-03-02T23:11:36Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "Watch Bill Clinton Testify on Why Trump Really Cut Ties With Epstein",
-        "url": "https://newrepublic.com/post/207249/watch-bill-clinton-testify-why-trump-cut-ties-epstein",
-        "source": "The New Republic",
-        "published_at": "2026-03-02T23:02:34Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Former President Bill Clinton may have just put a massive hole in President Donald Trump’s claims about how he and deceased sexual predator Jeffrey Epstein ended their friendship.In video testimony released by the House Oversight Committee on Monday, Clinton …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2465,13 +2553,65 @@
         ]
       },
       {
-        "title": "Blackstone’s Flagship Private Credit Fund Hit by Record Redemptions - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-02/blackstone-allows-investors-to-pull-record-7-9-from-bcred-fund",
-        "source": "Bloomberg",
-        "published_at": "2026-03-03T14:23:40Z",
+        "title": "We Must Now Prepare for the Possibility of Nuclear War and Total Supply Chain Collapse",
+        "url": "https://www.naturalnews.com/2026-03-04-possibility-of-nuclear-war-supply-chain-collapse.html",
+        "source": "Naturalnews.com",
+        "published_at": "2026-03-04T06:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "We Are on the Precipice, and There’s No Off-Ramp in Sight As I write this in early March 2026, the world is no longer teetering on the brink; it has plunged over the edge. The United States, under President Donald Trump, and Israel have launched a massive joi…",
+        "impact_score": 75,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Trump met with Coinbase CEO before bashing banks over crypto bill - Politico",
+        "url": "https://www.politico.com/live-updates/2026/03/03/congress/trump-met-with-coinbase-ceo-before-bashing-banks-over-crypto-bill-00811277",
+        "source": "Politico",
+        "published_at": "2026-03-04T04:05:11Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Blackstone Inc. is allowing investors to redeem a record 7.9% of shares from its flagship private credit fund, the latest sign of unease in an industry that’s faced a wave of withdrawals.",
+        "description": "The legislation is mired in a fight between crypto companies and the banking industry.",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Feds Warn Savannah Chrisley Over Alleged False, Misleading Weight Loss Statements - TMZ",
+        "url": "https://www.tmz.com/2026/03/03/feds-warn-savannah-chrisley-over-alleged-misleading-website/",
+        "source": "TMZ",
+        "published_at": "2026-03-04T01:32:58Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Savannah Chrisley's prescription weight loss website is under a federal microscope ... 'cause the FDA warned her about making false and misleading claims about GLP-1s.",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Blue Owl slides below listing price as private credit worries mount - Financial Times",
+        "url": "https://www.ft.com/content/5e1404da-af6c-4f8a-a095-3e16827cadc9",
+        "source": "Financial Times",
+        "published_at": "2026-03-03T15:54:51Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Investor redemptions and fears of AI disruption to software companies have prompted worries across the industry",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "DTLA federal building fortified with barricades following violent anti-ICE clashes — and they could be permanent",
+        "url": "https://nypost.com/2026/03/03/us-news/barricades-around-dtla-federal-building-could-be-permanent/",
+        "source": "New York Post",
+        "published_at": "2026-03-04T01:32:03Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "\"We’re exploring permanent barriers. You might see some potential construction in the future,\" said Bill Essayli, LA's top federal prosecutor.",
         "impact_score": 65,
         "themes": [
           "capital"
@@ -2504,32 +2644,6 @@
         ]
       },
       {
-        "title": "Surety Industry Advances Critical Federal Policy",
-        "url": "https://www.globenewswire.com/news-release/2026/03/03/3247990/0/en/Surety-Industry-Advances-Critical-Federal-Policy.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-03T06:13:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Washington, D.C., United States, March  03, 2026  (GLOBE NEWSWIRE) -- Largest Legislative Fly-In Brings Industry Message to Congress  The Surety &...",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
-        "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
-        "source": "Raw Story",
-        "published_at": "2026-03-02T23:11:36Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
         "title": "Govt terminates PMGSY road contracts worth Rs 2,543.05 lakh over delay, blacklists contractor",
         "url": "https://statetimes.in/govt-terminates-pmgsy-road-contracts-worth-rs-2543-05-lakh-over-delay-blacklists-contractor/",
         "source": "Statetimes.in",
@@ -2543,39 +2657,13 @@
         ]
       },
       {
-        "title": "Stocks dramatically pare losses after Trump offers Gulf shipping safety; oil retreats from highs: Live updates - CNBC",
-        "url": "https://www.cnbc.com/2026/03/02/stock-market-today-live-updates.html",
-        "source": "CNBC",
-        "published_at": "2026-03-03T20:45:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Traders watched rising geopolitical tensions and worried the U.S.-Iran conflict could go on longer than anticipated.",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Senate Democrats’ new bill aims to slash home prices by cutting building materials tariffs",
-        "url": "https://www.realtor.com/news/real-estate-news/senate-bill-cut-building-material-tariffs-home-prices/?cid=eml__1946%3A66e221571a4446d4e6969d41%3Arm202603031130_Marketing_Consumer_Daily_EditorialRSSDynamic",
-        "source": "Realtor.com News",
-        "published_at": "2026-03-03T17:55:52Z",
+        "title": "Study on the strength properties of coir fiber reinforced concrete containing waste brick powder dust as sand replacement",
+        "url": "https://www.nature.com/articles/s41598-026-42480-5",
+        "source": "Nature.com",
+        "published_at": "2026-03-04T00:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "A group of Senate Democrats' bill would automatically exempt a list of building materials from current and future tariffs.",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "Here Comes the Sun... to Light Our Way Out of the Age of Fuel Blockades and Oil Wars",
-        "url": "https://billmckibben.substack.com/p/surviving-on-trumps-dangerous-planet",
-        "source": "Substack.com",
-        "published_at": "2026-03-03T14:22:03Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "For what seems like the 50th time in my long life, the US, with Israel, has attacked another nation, as per usual without an honest debate in Congress and so far with the reported deaths of both Iran’s leader and 80 or so of its schoolgirls. I’m not going to …",
+        "description": "Scientific Reports - Study on the strength properties of coir fiber reinforced concrete containing waste brick powder dust as sand replacement",
         "impact_score": 55,
         "themes": [
           "materials"
@@ -2586,14 +2674,80 @@
     "news_clusters": {
       "capital": [
         {
-          "title": "Blackstone’s Flagship Private Credit Fund Hit by Record Redemptions - Bloomberg",
-          "url": "https://www.bloomberg.com/news/articles/2026-03-02/blackstone-allows-investors-to-pull-record-7-9-from-bcred-fund",
-          "source": "Bloomberg",
-          "published_at": "2026-03-03T14:23:40Z",
+          "title": "Trump met with Coinbase CEO before bashing banks over crypto bill - Politico",
+          "url": "https://www.politico.com/live-updates/2026/03/03/congress/trump-met-with-coinbase-ceo-before-bashing-banks-over-crypto-bill-00811277",
+          "source": "Politico",
+          "published_at": "2026-03-04T04:05:11Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Blackstone Inc. is allowing investors to redeem a record 7.9% of shares from its flagship private credit fund, the latest sign of unease in an industry that’s faced a wave of withdrawals.",
+          "description": "The legislation is mired in a fight between crypto companies and the banking industry.",
           "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "Feds Warn Savannah Chrisley Over Alleged False, Misleading Weight Loss Statements - TMZ",
+          "url": "https://www.tmz.com/2026/03/03/feds-warn-savannah-chrisley-over-alleged-misleading-website/",
+          "source": "TMZ",
+          "published_at": "2026-03-04T01:32:58Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Savannah Chrisley's prescription weight loss website is under a federal microscope ... 'cause the FDA warned her about making false and misleading claims about GLP-1s.",
+          "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "Starbucks opening corporate office in Tennessee, moving some Seattle jobs - KING5.com",
+          "url": "https://www.king5.com/article/money/business/starbucks-opening-corporate-office-nashville-tennessee/281-c73f3c97-9565-4cb8-83d8-62bc8697341e",
+          "source": "KING5.com",
+          "published_at": "2026-03-03T23:29:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Jobs impacted are within the company's supply chain department.",
+          "impact_score": 40,
+          "themes": [
+            "capital",
+            "commercial"
+          ]
+        },
+        {
+          "title": "Blue Owl slides below listing price as private credit worries mount - Financial Times",
+          "url": "https://www.ft.com/content/5e1404da-af6c-4f8a-a095-3e16827cadc9",
+          "source": "Financial Times",
+          "published_at": "2026-03-03T15:54:51Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Investor redemptions and fears of AI disruption to software companies have prompted worries across the industry",
+          "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "DTLA federal building fortified with barricades following violent anti-ICE clashes — and they could be permanent",
+          "url": "https://nypost.com/2026/03/03/us-news/barricades-around-dtla-federal-building-could-be-permanent/",
+          "source": "New York Post",
+          "published_at": "2026-03-04T01:32:03Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "\"We’re exploring permanent barriers. You might see some potential construction in the future,\" said Bill Essayli, LA's top federal prosecutor.",
+          "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "Hoover Bio-Strategies and Leadership Hosts Second “Bio Boot Camp” for US Congressional Staff",
+          "url": "https://www.hoover.org/news/hoover-bio-strategies-and-leadership-hosts-second-bio-boot-camp-us-congressional-staff",
+          "source": "Hoover.org",
+          "published_at": "2026-03-04T00:00:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Twenty mid- to senior-level congressional staff from both parties, both chambers of Congress, and relevant committees attended two days of intensive biotechnology discussions at Stanford University.",
+          "impact_score": 40,
           "themes": [
             "capital"
           ]
@@ -2676,32 +2830,6 @@
           "themes": [
             "capital"
           ]
-        },
-        {
-          "title": "Surety Industry Advances Critical Federal Policy",
-          "url": "https://www.globenewswire.com/news-release/2026/03/03/3247990/0/en/Surety-Industry-Advances-Critical-Federal-Policy.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-03T06:13:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Washington, D.C., United States, March  03, 2026  (GLOBE NEWSWIRE) -- Largest Legislative Fly-In Brings Industry Message to Congress  The Surety &...",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "'Alligator Alcatraz' loses federal funding as environmental lawsuit looms",
-          "url": "https://www.rawstory.com/feds-block-millions-for-alligator-alcatraz-deportation-depot-over-pending-environmental-review/",
-          "source": "Raw Story",
-          "published_at": "2026-03-02T23:11:36Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The federal government is withholding a $608 million grant to help pay for Florida’s migrant lockups because a required environmental review still hasn’t been completed, newly released records show.The so-called “Alligator Alcatraz” and “Deportation Depot” ce…",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
         }
       ],
       "pipeline": [
@@ -2720,20 +2848,6 @@
         }
       ],
       "trade": [
-        {
-          "title": "Iranian strikes on Amazon data centers highlights industry's vulnerability to physical disasters - AP News",
-          "url": "https://apnews.com/article/amazon-aws-data-center-uae-iran-bahrain-71066b0a822c4cfd88b61e3fe79af917",
-          "source": "Associated Press",
-          "published_at": "2026-03-03T17:39:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Iranian drone strikes damaged three Amazon Web Services sites in the Middle East, exposing how vulnerable cloud data centers are in conflict. AWS said late Monday that drones directly hit two data centers in the United Arab Emirates and another site in Bahrai…",
-          "impact_score": 40,
-          "themes": [
-            "trade",
-            "commercial"
-          ]
-        },
         {
           "title": "Questions over Minab girls’ school strike as Israel, US deny involvement",
           "url": "https://www.aljazeera.com/news/2026/3/3/questions-over-minab-girls-school-strike-as-israel-us-deny-involvement",
@@ -2777,6 +2891,71 @@
       ],
       "materials": [
         {
+          "title": "5 ways the Iran conflict is upending Europe’s energy plans - politico.eu",
+          "url": "https://www.politico.eu/article/5-ways-iran-conflict-is-upending-europe-energy-plans/",
+          "source": "POLITICO.eu",
+          "published_at": "2026-03-03T20:39:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The EU already had energy problems. The chaos in the Gulf just made them a whole lot worse.",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
+          "title": "Suzlon Energy shares drop 30% in six months, but Motilal Oswal sees 61% upside; here’s why",
+          "url": "https://economictimes.indiatimes.com/markets/stocks/news/suzlon-energy-shares-drop-30-in-six-months-but-motilal-oswal-sees-61-upside-heres-why/articleshow/129010671.cms",
+          "source": "The Times of India",
+          "published_at": "2026-03-04T06:33:52Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Suzlon Energy shares have seen a significant decline, but Motilal Oswal remains bullish, projecting a 61% upside. The brokerage cites the company's 'Suzlon 2.0' vision, including leadership restructuring and the launch of a dedicated project development verti…",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
+          "title": "Fuel price spike triggers fresh naira-for-crude supply calls",
+          "url": "https://punchng.com/fuel-price-spike-triggers-fresh-naira-for-crude-supply-calls/",
+          "source": "The Punch",
+          "published_at": "2026-03-04T02:35:36Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Nigeria fuel prices surge past N937/litre due to Middle East conflict. Marketers demand a naira-for-crude supply to stabilize domestic costs.\n\nRead More: https://punchng.com/fuel-price-spike-triggers-fresh-naira-for-crude-supply-calls/",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
+          "title": "Study on the strength properties of coir fiber reinforced concrete containing waste brick powder dust as sand replacement",
+          "url": "https://www.nature.com/articles/s41598-026-42480-5",
+          "source": "Nature.com",
+          "published_at": "2026-03-04T00:00:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Scientific Reports - Study on the strength properties of coir fiber reinforced concrete containing waste brick powder dust as sand replacement",
+          "impact_score": 55,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
+          "title": "Fuel Tech Reports 2025 Fourth Quarter and Full Year Financial Results",
+          "url": "https://www.globenewswire.com/news-release/2026/03/03/3248940/0/en/Fuel-Tech-Reports-2025-Fourth-Quarter-and-Full-Year-Financial-Results.html",
+          "source": "GlobeNewswire",
+          "published_at": "2026-03-03T21:15:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "WARRENVILLE, Ill., March 03, 2026 (GLOBE NEWSWIRE) -- Fuel Tech, Inc. (NASDAQ: FTEK), a technology company using advanced engineering processes to provide emissions control systems and water treatment technologies in utility and industrial applications, today…",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
           "title": "Senate Democrats’ new bill aims to slash home prices by cutting building materials tariffs",
           "url": "https://www.realtor.com/news/real-estate-news/senate-bill-cut-building-material-tariffs-home-prices/?cid=eml__1946%3A66e221571a4446d4e6969d41%3Arm202603031130_Marketing_Consumer_Daily_EditorialRSSDynamic",
           "source": "Realtor.com News",
@@ -2814,189 +2993,203 @@
           "themes": [
             "materials"
           ]
-        },
-        {
-          "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-          "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-solidifies-after-tariff-ruling-usedtrucks-deals-and-steals-price-indices-offer-mixed-bags",
-          "source": "Overdriveonline.com",
-          "published_at": "2026-03-03T07:24:18Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Rates and volumes didn't see a huge boost from the Supreme Court's tariff ruling, good news in spot markets continued last week. Also: Used-truck prices for January remained in line with recent performance despite an uptick; free cervical cancer screenings fo…",
-          "impact_score": 55,
-          "themes": [
-            "materials"
-          ]
-        },
-        {
-          "title": "Spot market's recent strength solidifies after tariff ruling | Used-trucks: Deals and steals, price indices offer mixed bags",
-          "url": "https://www.overdriveonline.com/business/article/15818588/spot-markets-recent-strength-continues-usedtruck-prices-ticked-up-in-january",
-          "source": "Overdriveonline.com",
-          "published_at": "2026-03-03T07:24:18Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Rates and volumes didn't see a huge boost from the Supreme Court's tariff ruling, good news in spot markets continued last week. Also: Used-truck prices for January remained in line with recent performance despite an uptick; free cervical cancer screenings fo…",
-          "impact_score": 55,
-          "themes": [
-            "materials"
-          ]
         }
       ],
       "regulatory": [],
-      "macro": [],
+      "macro": [
+        {
+          "title": "China's factory activity expands at quickest pace in over 5 years, private PMI shows - Yahoo Finance",
+          "url": "https://finance.yahoo.com/news/chinas-factory-activity-expands-quickest-015522109.html",
+          "source": "Yahoo Entertainment",
+          "published_at": "2026-03-04T01:55:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "BEIJING, March 4 (Reuters) - China's factory activity in February expanded at the fastest pace since December 2020, driven by robust demand that helped lift ...",
+          "impact_score": 40,
+          "themes": [
+            "macro"
+          ]
+        },
+        {
+          "title": "Global Bonds on Knife-Edge as Iran War Revives Inflation Threat - Bloomberg.com",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-03/global-bonds-on-knife-edge-as-iran-war-revives-inflation-threat",
+          "source": "Bloomberg",
+          "published_at": "2026-03-03T12:27:42Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The US-Israeli war on Iran is rekindling inflation concerns across financial markets, sapping the outlook for global bonds that had just posted their best start to a year since the pandemic.",
+          "impact_score": 40,
+          "themes": [
+            "macro"
+          ]
+        },
+        {
+          "title": "We Tested 49 More Baby Formulas for Lead and Arsenic - Consumer Reports",
+          "url": "https://www.consumerreports.org/babies-kids/baby-formula/liquid-baby-formula-contaminants-test-results-a8639602154/",
+          "source": "ConsumerReports.org",
+          "published_at": "2026-03-03T11:16:51Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Our most recent round of baby formula tests detected contaminants at potentially concerning levels in 26 of the 49 baby formulas we evaluated.",
+          "impact_score": 40,
+          "themes": [
+            "macro"
+          ]
+        }
+      ],
       "land": [],
       "other": [
         {
-          "title": "Stocks dramatically pare losses after Trump offers Gulf shipping safety; oil retreats from highs: Live updates - CNBC",
-          "url": "https://www.cnbc.com/2026/03/02/stock-market-today-live-updates.html",
+          "title": "Stock futures fall as traders monitor latest developments in U.S.-Iran war: Live updates - CNBC",
+          "url": "https://www.cnbc.com/2026/03/03/stock-market-today-live-updates.html",
           "source": "CNBC",
-          "published_at": "2026-03-03T20:45:00Z",
+          "published_at": "2026-03-04T05:09:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Traders watched rising geopolitical tensions and worried the U.S.-Iran conflict could go on longer than anticipated.",
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "The Live Nation trial could reshape the music industry. Here's what you need to know - NPR",
-          "url": "https://www.npr.org/2026/03/03/nx-s1-5728962/live-nation-ticketmaster-trial-explainer",
-          "source": "NPR",
-          "published_at": "2026-03-03T16:49:11Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "On Tuesday opening statements will begin for the federal antitrust trial against Live Nation, one of the largest entertainment companies in the world.",
+          "description": "The Dow Industrials ended Tuesday's session down just over 400 points. The 30-stock index curtailed its losses after falling more than 1,200 points at the low.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "The best mobile tech announced at MWC 2026 so far - The Verge",
-          "url": "https://www.theverge.com/tech/882992/mobile-world-congress-mwc-2026-smartphones-laptops-headphones",
-          "source": "The Verge",
-          "published_at": "2026-03-03T15:34:33Z",
+          "title": "Goldman’s Solomon Says Market Reaction to War Is ‘Benign’ So Far - Bloomberg.com",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-04/goldman-s-solomon-says-market-reaction-to-war-is-benign-so-far",
+          "source": "Bloomberg",
+          "published_at": "2026-03-04T04:22:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Robot phones, a folding smartphone you can dunk, and a modular laptop concept that lets you swap in ports as needed.",
+          "description": "Goldman Sachs Group Inc. Chairman David Solomon said he’s been surprised by the “benign” reaction in financial markets to the Middle East conflict, adding that it will take weeks to understand more about the situation.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "20 Most Hilarious Reactions After Video Of McDonald's CEO Tasting Burger Went Viral In Worst Way - Bored Panda",
-          "url": "https://www.boredpanda.com/mcdonalds-ceo-eating-burger-goes-viral/",
-          "source": "Boredpanda.com",
-          "published_at": "2026-03-03T15:16:42Z",
+          "title": "Korean Stock Gauge Poised for Correction on Iran War Selloff - Bloomberg",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-04/korean-stock-gauge-poised-for-correction-on-iran-war-selloff",
+          "source": "Bloomberg",
+          "published_at": "2026-03-04T03:07:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "In the wake of McDonald’s CEO Chris Kempczinski becoming a “laughing stock” online following a viral promotional video for the new Big Arch burger, social media has been flooded with hilarious and pointed memes as users react to the situation.",
+          "description": "Panic swept across trading desks in South Korea as local stocks, by far the hottest in the world over the past year, extended their freefall into Wednesday.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Gold Price Slides Down as Middle East War Ratchets Up - Barron's",
-          "url": "https://www.barrons.com/articles/gold-price-miner-stocks-iran-war-barrick-newmont-3f67c0b4",
-          "source": "Barron's",
-          "published_at": "2026-03-03T14:51:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Goldman finds no relationship between AI and productivity but a 30% boost for 2 specific use cases - Fortune",
-          "url": "https://fortune.com/2026/03/03/goldman-earnings-ai-anxiety-no-meaningful-impact-productivity-economy-30-percent-in-2-areas/",
-          "source": "Fortune",
-          "published_at": "2026-03-03T14:35:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Have you got \"AI-nxiety?\" Goldman took a close look at the last earnings season and found a mismatch between hype and reality.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Average price for a gallon of gas rises 11 cents overnight to about $3.11 in US, AAA says - AP News",
-          "url": "https://apnews.com/article/iran-oil-gas-gallon-aaa-e2daee318b8e3e6a1124713909a410e4",
+          "title": "Pentagon dispute bolsters Anthropic reputation but raises questions about AI readiness in military - AP News",
+          "url": "https://apnews.com/article/anthropic-pentagon-openai-claude-chatgpt-military-ai-b2bbcf5fda3f27353eae1e0eb7ab07b6",
           "source": "Associated Press",
-          "published_at": "2026-03-03T14:24:00Z",
+          "published_at": "2026-03-04T01:48:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "The average price for a gallon of gasoline jumped 11 cents overnight to about $3.11 in the U.S., according to motor club AAA. Gas prices are on the rise as oil prices are soaring to levels not seen in more than a year as Iran launched a series of retaliatory …",
+          "description": "Anthropic’s moral stand on U.S. military use of artificial intelligence is reshaping the competition between leading AI companies but also exposing a growing awareness that maybe chatbots just aren’t capable enough for acts of war. Anthropic’s chatbot, Claude…",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Paramount’s $110 Billion Warner Bros. Deal Backed by Arab Sovereign Funds Raises Soft Power Concerns - Variety",
-          "url": "https://variety.com/2026/film/global/middle-east-paramount-warner-bros-discovery-1236675832/",
-          "source": "Variety",
-          "published_at": "2026-03-03T14:05:00Z",
+          "title": "Prediction: Nvidia (NVDA) Will Be Worth More Than Alphabet, Apple, Amazon, Tesla, Meta, and Microsoft Combined by 2030 - The Motley Fool",
+          "url": "https://www.fool.com/investing/2026/03/03/prediction-nvidia-nvda-will-be-worth-more-than-alp/",
+          "source": "Motley Fool",
+          "published_at": "2026-03-04T01:45:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Paramount's $110 billion Warner Bros. deal is backed by $24 billion from Arab Sovereign funds, raising concerns over influence and media independence.",
+          "description": "Nvidia is expected to deliver unreal growth over the next few years.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Target’s new CEO unveils his turnaround plan - CNN",
-          "url": "https://www.cnn.com/2026/03/03/business/target-earnings-stock-ceo",
-          "source": "CNN",
-          "published_at": "2026-03-03T12:23:12Z",
+          "title": "Target tackles groceries as first swing to revive sales growth - Star Tribune",
+          "url": "https://www.startribune.com/target-turnaround-plan-reinventing-home-category-expansion-food-grocery/601589208",
+          "source": "Minneapolis Star Tribune",
+          "published_at": "2026-03-04T00:34:07Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "The new Target CEO believes adding new, buzzy brands can win back shoppers after a brutal few years.",
+          "description": "After another sales slide in the holiday quarter, executives laid out a turnaround plan that will spend billions to update both merchandise and stores.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "FDA is ‘not convinced’ UniQure’s Huntington’s therapy has benefit, senior official says - statnews.com",
-          "url": "https://www.statnews.com/2026/03/03/uniqure-huntingtons-treatment-fda-official-comments/",
-          "source": "STAT",
-          "published_at": "2026-03-03T12:12:02Z",
+          "title": "Ajinomoto Foods North America, Inc. Expands Recall for Chicken and Pork Fried Rice, Ramen, and Shu Mai Products Due to Possible Foreign Matter Contamination | Food Safety and Inspection Service - fsis.usda.gov",
+          "url": "http://www.fsis.usda.gov/recalls-alerts/ajinomoto-foods-north-america-inc--expands-recall-chicken-and-pork-fried-rice-ramen",
+          "source": "Usda.gov",
+          "published_at": "2026-03-03T23:44:17Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "The FDA believes that an experimental therapy for Huntington’s disease from UniQure wasn't providing benefit for patients, a senior official told STAT.",
+          "description": null,
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "The candy heir vs. chocolate skimpflation : Planet Money - NPR",
-          "url": "https://www.npr.org/sections/planet-money/2026/03/03/g-s1-111940/the-candy-heir-vs-chocolate-skimpflation",
-          "source": "NPR",
-          "published_at": "2026-03-03T11:30:00Z",
+          "title": "Downdetector, Speedtest sold to IT service provider Accenture in $1.2B deal - Ars Technica",
+          "url": "https://arstechnica.com/information-technology/2026/03/downdetector-speedtest-sold-to-it-service-provider-accenture-in-1-2b-deal/",
+          "source": "Ars Technica",
+          "published_at": "2026-03-03T22:20:06Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "The grandson of the Reese's Peanut Butter Cups creator has launched a campaign against The Hershey Company, which owns the Reese's brand. He wants them to stop skimping on ingredients.",
+          "description": "Accenture plans to buy Ookla, which also includes RootMetrics and Ekahau.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "JPMorgan’s Jamie Dimon warns there’s too much complacency in markets - MarketWatch",
-          "url": "https://www.marketwatch.com/story/jpmorgans-jamie-dimon-warns-theres-too-much-complacency-in-markets-98739bad",
-          "source": "MarketWatch",
-          "published_at": "2026-03-03T10:04:00Z",
+          "title": "FCC chair calls Paramount/WBD merger \"a lot cleaner\" than defunct Netflix deal - Ars Technica",
+          "url": "https://arstechnica.com/tech-policy/2026/03/trump-fcc-chair-paramount-warner-bros-merger-likely-to-get-quick-approval/",
+          "source": "Ars Technica",
+          "published_at": "2026-03-03T22:05:36Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "",
+          "description": "FCC to review foreign debt, but Carr indicates it will be a formality.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "I tried McDonald’s massive new Big Arch burger and stopped after three bites - Cleveland.com",
+          "url": "https://www.cleveland.com/entertainment/2026/03/i-tried-mcdonalds-massive-new-big-arch-burger-and-stopped-after-three-bites.html",
+          "source": "cleveland.com",
+          "published_at": "2026-03-03T21:30:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The new Big Arch Burger at McDonald's packs a half-pound of beef and 1020 calories into one sandwich.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Archer Aviation Stock Falls After Earnings. Why the Drone Maker Is Tumbling Despite the Iran War. - Barron's",
+          "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNbC1laXgtM1FwWVdGbDIwNmRXZVgxUFZHSU5VZF9NQkxTZHBaNW9kYkpzMkxObTZYZ3hjaUVxY3cweElPbjRXTXkyX1A0TDRwLUg0c1ZDd0R3MjV6UXdEdFM5QVBWMVpQeHZxMGNUZUxmUVRWTlc1b3R4OHdIaVZLOV9RUl8?oc=5",
+          "source": "Google News",
+          "published_at": "2026-03-03T21:29:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "ChatGPT Health 'under-triaged' half of medical emergencies in a new study - NBC News",
+          "url": "https://www.nbcnews.com/health/health-news/chatgpt-health-under-triaged-half-medical-emergencies-rcna261409",
+          "source": "NBC News",
+          "published_at": "2026-03-03T17:02:23Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "ChatGPT Health — OpenAI’s new health-focused chatbot — frequently underestimated the severity of medical emergencies, according to a study published last week in the journal Nature Medicine",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3005,27 +3198,40 @@
       ],
       "commercial": [
         {
-          "title": "Iranian strikes on Amazon data centers highlights industry's vulnerability to physical disasters - AP News",
-          "url": "https://apnews.com/article/amazon-aws-data-center-uae-iran-bahrain-71066b0a822c4cfd88b61e3fe79af917",
-          "source": "Associated Press",
-          "published_at": "2026-03-03T17:39:00Z",
+          "title": "Starbucks opening corporate office in Tennessee, moving some Seattle jobs - KING5.com",
+          "url": "https://www.king5.com/article/money/business/starbucks-opening-corporate-office-nashville-tennessee/281-c73f3c97-9565-4cb8-83d8-62bc8697341e",
+          "source": "KING5.com",
+          "published_at": "2026-03-03T23:29:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Iranian drone strikes damaged three Amazon Web Services sites in the Middle East, exposing how vulnerable cloud data centers are in conflict. AWS said late Monday that drones directly hit two data centers in the United Arab Emirates and another site in Bahrai…",
+          "description": "Jobs impacted are within the company's supply chain department.",
           "impact_score": 40,
           "themes": [
-            "trade",
+            "capital",
             "commercial"
           ]
         },
         {
-          "title": "GW sold Virginia campus for $427 million to Amazon for data center development - The GW Hatchet",
-          "url": "https://gwhatchet.com/2026/03/02/gw-sold-virginia-campus-for-427-million-to-amazon-for-data-center-development/",
-          "source": "Gwhatchet.com",
-          "published_at": "2026-03-03T00:14:43Z",
+          "title": "Amazon says drones hit 3 of its Middle East data centers amid Iran conflict - CBS News",
+          "url": "https://www.cbsnews.com/news/amazon-drone-strike-aws-data-center-uae-bahrain-iran/",
+          "source": "CBS News",
+          "published_at": "2026-03-03T15:03:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "The deal transfers all of GW’s roughly 122 acres of property in Loudoun County, Virginia, to ADS for $427,299,350 — roughly $3.5 million an acre — according to real estate records.",
+          "description": "Drones struck two facilities in the United Arab Emirates directly, and damaged a data center in Bahrain, Amazon said.",
+          "impact_score": 40,
+          "themes": [
+            "commercial"
+          ]
+        },
+        {
+          "title": "Legislators Temporarily Cut Data Centers From Oregon Tax Break Bill",
+          "url": "https://www.portlandmercury.com/news/2026/03/03/48357689/legislators-temporarily-cut-data-centers-from-oregon-tax-break-bill",
+          "source": "The Portland Mercury",
+          "published_at": "2026-03-04T00:30:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "An attempt to spur economic growth has budget and environmental watchdogs worried about unintended consequences. \n \n by Abe Asher\n \n \n \n Companies building data centers in Oregon already have a pretty good deal—and new economic development legislation pushed …",
           "impact_score": 40,
           "themes": [
             "commercial"
@@ -3116,192 +3322,192 @@
       {
         "ticker": "DHI",
         "source": "alphavantage",
-        "date": "2026-03-03",
-        "close": 152.61,
-        "prev_close": 154.4,
-        "change": -1.79,
-        "change_pct": -1.1593
+        "date": "2026-03-04",
+        "close": 152.7,
+        "prev_close": 152.61,
+        "change": 0.09,
+        "change_pct": 0.059
       },
       {
         "ticker": "PHM",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 132.685,
-        "close": 131.6831,
-        "change": -1.0019000000000062,
-        "change_pct": -0.7550966574970843
+        "close": 132.18,
+        "change": -0.5049999999999955,
+        "change_pct": -0.3806006707615747
       },
       {
         "ticker": "LEN",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 107.01,
-        "close": 107.06,
-        "change": 0.04999999999999716,
-        "change_pct": 0.04672460517708359
+        "close": 106.53,
+        "change": -0.480000000000004,
+        "change_pct": -0.4485562097000318
       },
       {
         "ticker": "NVR",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 7310,
-        "close": 7250.96,
-        "change": -59.039999999999964,
-        "change_pct": -0.8076607387140898
+        "close": 7251.27,
+        "change": -58.72999999999956,
+        "change_pct": -0.8034199726402128
       },
       {
         "ticker": "TOL",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 154.865,
-        "close": 152.975,
-        "change": -1.8900000000000148,
-        "change_pct": -1.2204177832305652
+        "close": 153.56,
+        "change": -1.3050000000000068,
+        "change_pct": -0.8426694217544356
       },
       {
         "ticker": "HD",
         "source": "stooq",
         "date": "2026-03-04",
-        "open": 366.13,
-        "close": 368.57,
-        "change": 2.4399999999999977,
-        "change_pct": 0.6664299565728015
+        "open": 366.255,
+        "close": 369.11,
+        "change": 2.855000000000018,
+        "change_pct": 0.7795115425045441
       },
       {
         "ticker": "LOW",
         "source": "stooq",
         "date": "2026-03-04",
-        "open": 258.01,
-        "close": 258.385,
-        "change": 0.375,
-        "change_pct": 0.14534320375179258
+        "open": 258,
+        "close": 258.62,
+        "change": 0.6200000000000045,
+        "change_pct": 0.24031007751938163
       },
       {
         "ticker": "VMC",
         "source": "stooq",
         "date": "2026-03-04",
-        "open": 296.56,
-        "close": 295.96,
-        "change": -0.6000000000000227,
-        "change_pct": -0.2023199352576284
+        "open": 296.58,
+        "close": 295.98,
+        "change": -0.5999999999999659,
+        "change_pct": -0.20230629172566117
       },
       {
         "ticker": "MLM",
-        "source": "alphavantage",
-        "date": "2026-03-03",
-        "close": 656.78,
-        "prev_close": 665.35,
-        "change": -8.57,
-        "change_pct": -1.288
+        "source": "stooq",
+        "date": "2026-03-04",
+        "open": 657.935,
+        "close": 660.6,
+        "change": 2.6650000000000773,
+        "change_pct": 0.40505521062112176
       },
       {
         "ticker": "BLDR",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-04",
-        "open": 98.16,
-        "close": 96.02,
-        "change": -2.1400000000000006,
-        "change_pct": -2.1801140994295034
+        "close": 95.99,
+        "prev_close": 97.45,
+        "change": -1.46,
+        "change_pct": -1.4982
       },
       {
         "ticker": "FBIN",
         "source": "stooq",
         "date": "2026-03-04",
-        "open": 51.88,
-        "close": 50.975,
-        "change": -0.9050000000000011,
-        "change_pct": -1.7444101773323075
+        "open": 52.05,
+        "close": 50.84,
+        "change": -1.2099999999999937,
+        "change_pct": -2.324687800192111
       },
       {
         "ticker": "OC",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 115.655,
-        "close": 116.67,
-        "change": 1.0150000000000006,
-        "change_pct": 0.8776101335869616
+        "close": 116.85,
+        "change": 1.1949999999999932,
+        "change_pct": 1.0332454282132144
       },
       {
         "ticker": "EXP",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 213.18,
-        "close": 212.01,
-        "change": -1.170000000000016,
-        "change_pct": -0.5488319729805872
+        "close": 211.45,
+        "change": -1.7300000000000182,
+        "change_pct": -0.8115207805610367
       },
       {
         "ticker": "CAT",
         "source": "stooq",
         "date": "2026-03-04",
-        "open": 736.58,
-        "close": 732.57,
-        "change": -4.009999999999991,
-        "change_pct": -0.5444079393955837
+        "open": 735.27,
+        "close": 731.97,
+        "change": -3.2999999999999545,
+        "change_pct": -0.44881472112284665
       },
       {
         "ticker": "DE",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 619.22,
-        "close": 615.745,
-        "change": -3.4750000000000227,
-        "change_pct": -0.5611898840476766
+        "close": 614.04,
+        "change": -5.180000000000064,
+        "change_pct": -0.8365362875876204
       },
       {
         "ticker": "URI",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 841.05,
-        "close": 850.46,
-        "change": 9.410000000000082,
-        "change_pct": 1.1188395458058478
+        "close": 851.88,
+        "change": 10.830000000000041,
+        "change_pct": 1.2876761191367982
       },
       {
         "ticker": "TPC",
         "source": "stooq",
         "date": "2026-03-04",
         "open": 71.36,
-        "close": 73.67,
-        "change": 2.3100000000000023,
-        "change_pct": 3.237107623318389
+        "close": 73.71,
+        "change": 2.3499999999999943,
+        "change_pct": 3.293161434977571
       },
       {
         "ticker": "CRH",
         "source": "stooq",
         "date": "2026-03-04",
-        "open": 114.27,
-        "close": 113.1,
-        "change": -1.1700000000000017,
-        "change_pct": -1.0238907849829366
+        "open": 114.35,
+        "close": 113.26,
+        "change": -1.0899999999999892,
+        "change_pct": -0.9532138172278
       }
     ],
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": -0.7791501148529312
+        "avg_change_pct": -0.48324925497125104
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -0.6549737894944163
+        "avg_change_pct": -0.47557134181204547
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": -2.1801140994295034
+        "avg_change_pct": -1.4982
       },
       "equipment": {
         "count": 3,
-        "avg_change_pct": 0.0044139074541958605
+        "avg_change_pct": 0.0007750368087770335
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 0.405886580162297
+        "avg_change_pct": 0.5099108100119629
       }
     },
     "stock_pressure_overlay": 0,
     "sam_gov": {
       "enabled": true,
-      "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=%5BREDACTED%5D&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-22",
+      "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=%5BREDACTED%5D&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-23",
       "items": []
     },
     "usaspending": {
@@ -3378,9 +3584,9 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-04T21:00:50.840Z",
+    "generated_at_utc": "2026-03-05T07:10:47.785Z",
     "regime_history": {
-      "current_regime_duration_days": 1,
+      "current_regime_duration_days": 2,
       "previous_regime": null,
       "last_flip_date": null,
       "regime_stability": "🟢 Stable"
@@ -4746,14 +4952,10 @@
         "series_id": "DGS2",
         "ok": true,
         "latest": {
-          "date": "2026-03-02",
-          "value": 3.47
+          "date": "2026-03-03",
+          "value": 3.51
         },
         "history": [
-          {
-            "date": "2025-12-25",
-            "value": null
-          },
           {
             "date": "2025-12-26",
             "value": 3.46
@@ -4941,6 +5143,10 @@
           {
             "date": "2026-03-02",
             "value": 3.47
+          },
+          {
+            "date": "2026-03-03",
+            "value": 3.51
           }
         ]
       },
@@ -4948,14 +5154,10 @@
         "series_id": "DGS10",
         "ok": true,
         "latest": {
-          "date": "2026-03-02",
-          "value": 4.05
+          "date": "2026-03-03",
+          "value": 4.06
         },
         "history": [
-          {
-            "date": "2025-12-25",
-            "value": null
-          },
           {
             "date": "2025-12-26",
             "value": 4.14
@@ -5143,6 +5345,10 @@
           {
             "date": "2026-03-02",
             "value": 4.05
+          },
+          {
+            "date": "2026-03-03",
+            "value": 4.06
           }
         ]
       },
