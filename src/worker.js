@@ -4,18 +4,20 @@
  *   GET /health
  *   GET /notion/series
  *   GET /fred/observations?series_id=CPIAUCSL&limit=24
- *   GET /cpi
+ *   GET /cpi?force=1
  *   GET /bundle
  *
- * Required env vars (set in Cloudflare Dashboard > Worker > Settings > Variables & Secrets):
+ * Required env vars:
  *   FRED_API_KEY            (for /fred/* and /cpi fallback)
  * Optional env vars:
  *   NOTION_TOKEN            (for /notion/series)
  *   NOTION_DATABASE_ID      (for /notion/series)
  *
  * KV binding:
- *   CPI_SNAPSHOTS           (from wrangler.toml)
+ *   CPI_SNAPSHOTS           (KV Namespace binding name)
  */
+
+const SERVICE_NAME = "construction-ai-terminal";
 
 const JSON_HEADERS = {
   "content-type": "application/json; charset=utf-8",
@@ -26,69 +28,114 @@ const CORS_HEADERS = {
   "access-control-allow-methods": "GET,OPTIONS",
   "access-control-allow-headers": "content-type,authorization",
   "access-control-max-age": "86400",
+  "vary": "Origin",
 };
 
-function json(data, status = 200, extraHeaders = {}) {
-  return new Response(JSON.stringify(data, null, 2), {
+function nowIso() {
+  return new Date().toISOString();
+}
+
+function envelope(env, overrides = {}) {
+  return {
+    ok: true,
+    service: SERVICE_NAME,
+    ts: nowIso(),
+    ...(env?.GIT_SHA ? { git_sha: env.GIT_SHA } : {}),
+    ...overrides,
+  };
+}
+
+function jsonResponse(body, status = 200, extraHeaders = {}) {
+  return new Response(JSON.stringify(body, null, 2), {
     status,
     headers: { ...JSON_HEADERS, ...CORS_HEADERS, ...extraHeaders },
   });
 }
 
-function badRequest(message, details) {
-  return json({ ok: false, error: message, details }, 400);
+function errorResponse(env, status, message, code, details) {
+  return jsonResponse(
+    {
+      ok: false,
+      service: SERVICE_NAME,
+      ts: nowIso(),
+      ...(env?.GIT_SHA ? { git_sha: env.GIT_SHA } : {}),
+      error: {
+        message,
+        ...(code ? { code } : {}),
+        ...(details ? { details } : {}),
+      },
+    },
+    status
+  );
 }
 
-function serverError(message, details) {
-  return json({ ok: false, error: message, details }, 500);
+function badRequest(env, message, code, details) {
+  return errorResponse(env, 400, message, code, details);
+}
+
+function methodNotAllowed(env) {
+  return errorResponse(env, 405, "Method not allowed", "METHOD_NOT_ALLOWED");
+}
+
+function notFound(env, path) {
+  return errorResponse(env, 404, "Not found", "NOT_FOUND", { path });
 }
 
 function isString(x) {
   return typeof x === "string" && x.length > 0;
 }
 
-function nowIso() {
-  return new Date().toISOString();
+function requireEnv(env, keys) {
+  const missing = [];
+  for (const k of keys) if (!isString(env?.[k])) missing.push(k);
+  return missing;
 }
 
 async function fetchJson(url, init = {}, timeoutMs = 15000) {
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), timeoutMs);
+
   try {
-    const res = await fetch(url, { ...init, signal: controller.signal });
+    const res = await fetch(url, {
+      ...init,
+      headers: {
+        "accept": "application/json",
+        ...(init.headers || {}),
+      },
+      signal: controller.signal,
+    });
+
     const text = await res.text();
-    let parsed;
+    let parsed = null;
     try {
       parsed = text ? JSON.parse(text) : null;
     } catch {
       parsed = { raw: text };
     }
+
     if (!res.ok) {
-      const err = new Error(`Upstream ${res.status}`);
+      const err = new Error(`Upstream request failed (${res.status})`);
       err.status = res.status;
       err.body = parsed;
       throw err;
     }
+
     return parsed;
   } finally {
     clearTimeout(t);
   }
 }
 
-/** ---------- Route handlers ---------- **/
+/** ---------- Handlers ---------- **/
 
-async function handleHealth(env) {
-  return json({
-    ok: true,
-    service: "construction-ai-terminal",
-    ts: nowIso(),
-    git_sha: env.GIT_SHA || null,
-  });
+async function handleHealth(request, env) {
+  return jsonResponse(envelope(env));
 }
 
 async function handleFredObservations(request, env) {
-  if (!isString(env.FRED_API_KEY)) {
-    return badRequest("Missing env var FRED_API_KEY");
+  const missing = requireEnv(env, ["FRED_API_KEY"]);
+  if (missing.length) {
+    return badRequest(env, "Missing required env vars", "MISSING_ENV", { missing });
   }
 
   const url = new URL(request.url);
@@ -104,11 +151,14 @@ async function handleFredObservations(request, env) {
     `&limit=${encodeURIComponent(limit)}`;
 
   try {
-    const data = await fetchJson(upstream, { headers: { "accept": "application/json" } });
-    return json({ ok: true, source: "fred", series_id: seriesId, limit: Number(limit), data });
+    const data = await fetchJson(upstream, {}, 20000);
+    return jsonResponse(
+      envelope(env, {
+        data: { source: "fred", series_id: seriesId, limit: Number(limit), upstream: data },
+      })
+    );
   } catch (e) {
-    return serverError("FRED request failed", {
-      message: e.message,
+    return errorResponse(env, 502, "FRED request failed", "UPSTREAM_ERROR", {
       status: e.status || 0,
       body: e.body || null,
     });
@@ -116,28 +166,33 @@ async function handleFredObservations(request, env) {
 }
 
 /**
- * /cpi
- * Strategy:
- * 1) Try KV key "cpi:latest"
- * 2) If missing, pull latest CPI from FRED series CPIAUCSL and cache into KV
+ * GET /cpi
+ * - Reads from KV key "cpi:latest" unless force=1
+ * - Falls back to FRED CPIAUCSL if KV missing
+ * - TTL default 12h (43200s)
  */
-async function handleCpi(env) {
+async function handleCpi(request, env) {
   const kv = env.CPI_SNAPSHOTS;
-  if (!kv) return serverError("KV binding CPI_SNAPSHOTS is not configured");
+  if (!kv) return errorResponse(env, 500, "KV binding CPI_SNAPSHOTS is not configured", "KV_MISSING");
 
-  // 1) KV
-  try {
-    const cached = await kv.get("cpi:latest", { type: "json" });
-    if (cached) {
-      return json({ ok: true, source: "kv", ts: nowIso(), cpi: cached });
+  const url = new URL(request.url);
+  const force = url.searchParams.get("force") === "1";
+  const ttlSeconds = 12 * 60 * 60; // 12h
+
+  if (!force) {
+    try {
+      const cached = await kv.get("cpi:latest", { type: "json" });
+      if (cached) {
+        return jsonResponse(envelope(env, { data: { source: "kv", cpi: cached } }));
+      }
+    } catch {
+      // KV read failure shouldn't brick the endpoint
     }
-  } catch (e) {
-    // keep going; KV read failure shouldn't brick endpoint
   }
 
-  // 2) FRED fallback
-  if (!isString(env.FRED_API_KEY)) {
-    return badRequest("Missing env var FRED_API_KEY (required if KV is empty)");
+  const missing = requireEnv(env, ["FRED_API_KEY"]);
+  if (missing.length) {
+    return badRequest(env, "Missing required env vars (needed to refresh CPI)", "MISSING_ENV", { missing });
   }
 
   const upstream =
@@ -146,9 +201,11 @@ async function handleCpi(env) {
     `&file_type=json&sort_order=desc&limit=1`;
 
   try {
-    const data = await fetchJson(upstream);
+    const data = await fetchJson(upstream, {}, 20000);
     const obs = data?.observations?.[0];
-    if (!obs) return serverError("FRED returned no CPI observations", data);
+    if (!obs) {
+      return errorResponse(env, 502, "FRED returned no CPI observations", "UPSTREAM_EMPTY", { upstream: data });
+    }
 
     const payload = {
       series_id: "CPIAUCSL",
@@ -157,37 +214,47 @@ async function handleCpi(env) {
       fetched_at: nowIso(),
     };
 
-    // cache for 6 hours
-    await kv.put("cpi:latest", JSON.stringify(payload), { expirationTtl: 6 * 60 * 60 });
+    try {
+      await kv.put("cpi:latest", JSON.stringify(payload), { expirationTtl: ttlSeconds });
+    } catch {
+      // KV write failure is non-fatal; still return the fresh value
+    }
 
-    return json({ ok: true, source: "fred", ts: nowIso(), cpi: payload });
+    return jsonResponse(envelope(env, { data: { source: "fred", cpi: payload } }));
   } catch (e) {
-    return serverError("CPI fetch/cache failed", {
-      message: e.message,
+    return errorResponse(env, 502, "CPI fetch failed", "UPSTREAM_ERROR", {
       status: e.status || 0,
       body: e.body || null,
     });
   }
 }
 
-async function handleNotionSeries(env) {
-  if (!isString(env.NOTION_TOKEN) || !isString(env.NOTION_DATABASE_ID)) {
-    return json(
-      {
-        ok: false,
-        error: "Notion not configured",
-        how_to_fix: [
-          "Set NOTION_TOKEN (secret) in Cloudflare Worker settings",
-          "Set NOTION_DATABASE_ID (variable) in Cloudflare Worker settings",
-        ],
-      },
-      501
-    );
+function pickNotionTitle(properties) {
+  // Try to locate a Notion "title" type property and return the plain text
+  if (!properties || typeof properties !== "object") return null;
+  for (const key of Object.keys(properties)) {
+    const prop = properties[key];
+    if (prop?.type === "title" && Array.isArray(prop.title)) {
+      const text = prop.title.map((t) => t?.plain_text || "").join("").trim();
+      if (text) return text;
+    }
+  }
+  return null;
+}
+
+async function handleNotionSeries(request, env) {
+  const missing = requireEnv(env, ["NOTION_TOKEN", "NOTION_DATABASE_ID"]);
+  if (missing.length) {
+    return errorResponse(env, 501, "Notion not configured", "NOT_CONFIGURED", {
+      missing,
+      how_to_fix: [
+        "Set NOTION_TOKEN (secret) in Cloudflare Worker settings",
+        "Set NOTION_DATABASE_ID (variable) in Cloudflare Worker settings",
+      ],
+    });
   }
 
-  const upstream = `https://api.notion.com/v1/databases/${encodeURIComponent(
-    env.NOTION_DATABASE_ID
-  )}/query`;
+  const upstream = `https://api.notion.com/v1/databases/${encodeURIComponent(env.NOTION_DATABASE_ID)}/query`;
 
   try {
     const data = await fetchJson(
@@ -207,19 +274,17 @@ async function handleNotionSeries(env) {
       20000
     );
 
-    // Minimal “series” extraction (safe default)
     const results = (data?.results || []).map((p) => ({
       id: p.id,
+      title: pickNotionTitle(p.properties) || null,
       url: p.url,
       last_edited_time: p.last_edited_time,
       created_time: p.created_time,
-      properties: p.properties || {},
     }));
 
-    return json({ ok: true, source: "notion", count: results.length, results });
+    return jsonResponse(envelope(env, { data: { source: "notion", count: results.length, results } }));
   } catch (e) {
-    return serverError("Notion request failed", {
-      message: e.message,
+    return errorResponse(env, 502, "Notion request failed", "UPSTREAM_ERROR", {
       status: e.status || 0,
       body: e.body || null,
     });
@@ -227,34 +292,32 @@ async function handleNotionSeries(env) {
 }
 
 async function handleBundle(request, env) {
-  // bundle = health + cpi + optional fred sample
   const url = new URL(request.url);
   const seriesId = url.searchParams.get("series_id") || "CPIAUCSL";
 
-  const [healthRes, cpiRes] = await Promise.all([
-    handleHealth(env),
-    handleCpi(env),
-  ]);
-
-  const health = await healthRes.json();
+  // Call internals without re-parsing Responses repeatedly
+  const health = envelope(env);
+  const cpiRes = await handleCpi(new Request(new URL("/cpi", request.url).toString()), env);
   const cpi = await cpiRes.json();
 
   let fred = null;
   try {
-    const fakeReq = new Request(`https://local/fred/observations?series_id=${encodeURIComponent(seriesId)}&limit=5`);
-    const fredRes = await handleFredObservations(fakeReq, env);
+    const fredReq = new Request(new URL(`/fred/observations?series_id=${encodeURIComponent(seriesId)}&limit=5`, request.url).toString());
+    const fredRes = await handleFredObservations(fredReq, env);
     fred = await fredRes.json();
   } catch {
-    fred = { ok: false, error: "fred bundle failed" };
+    fred = errorResponse(env, 502, "Bundle FRED failed", "BUNDLE_ERROR");
   }
 
-  return json({
-    ok: true,
-    ts: nowIso(),
-    health,
-    cpi,
-    fred,
-  });
+  return jsonResponse(
+    envelope(env, {
+      data: {
+        health,
+        cpi,
+        fred,
+      },
+    })
+  );
 }
 
 /** ---------- Router ---------- **/
@@ -262,25 +325,25 @@ async function handleBundle(request, env) {
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") {
-      return new Response(null, { status: 204, headers: CORS_HEADERS });
+      return new Response(null, { status: 204, headers: { ...CORS_HEADERS } });
+    }
+
+    if (request.method !== "GET") {
+      return methodNotAllowed(env);
     }
 
     const { pathname } = new URL(request.url);
 
     try {
-      if (request.method !== "GET") {
-        return json({ ok: false, error: "Method not allowed" }, 405);
-      }
-
-      if (pathname === "/" || pathname === "/health") return handleHealth(env);
+      if (pathname === "/" || pathname === "/health") return handleHealth(request, env);
       if (pathname === "/fred/observations") return handleFredObservations(request, env);
-      if (pathname === "/cpi") return handleCpi(env);
-      if (pathname === "/notion/series") return handleNotionSeries(env);
+      if (pathname === "/cpi") return handleCpi(request, env);
+      if (pathname === "/notion/series") return handleNotionSeries(request, env);
       if (pathname === "/bundle") return handleBundle(request, env);
 
-      return json({ ok: false, error: "Not found", path: pathname }, 404);
+      return notFound(env, pathname);
     } catch (e) {
-      return serverError("Unhandled exception", { message: e?.message || String(e) });
+      return errorResponse(env, 500, "Unhandled exception", "UNHANDLED", { message: e?.message || String(e) });
     }
   },
 };
