@@ -33,18 +33,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthResponse"
 
-  /terminal:
-    get:
-      operationId: terminal
-      summary: Unified terminal payload (macro + CPI + optional Notion)
-      responses:
-        "200":
-          description: Terminal response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/TerminalResponse"
-
   /fred/observations:
     get:
       operationId: getFred
@@ -76,7 +64,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GenericOkObject"
+                $ref: "#/components/schemas/CpiResponse"
 
   /notion/series:
     get:
@@ -181,6 +169,16 @@ components:
         ok: { type: boolean }
         ts: { type: string }
         service: { type: string }
+        source: { type: string }
+        error:
+          type: object
+          properties:
+            message: { type: string }
+            code: { type: string }
+            details:
+              type: object
+              additionalProperties: true
+          additionalProperties: true
       required: [ok]
       additionalProperties: true
 
@@ -198,6 +196,26 @@ components:
         has_kv: { type: boolean }
         has_fred_key: { type: boolean }
       required: [ok, service, ts]
+      additionalProperties: true
+
+    CpiResponse:
+      type: object
+      description: Latest CPI response (from KV or FRED fallback).
+      properties:
+        ok: { type: boolean }
+        source: { type: string }
+        ts: { type: string }
+        cpi:
+          type: object
+          properties:
+            series_id: { type: string }
+            date: { type: string }
+            value: { type: string }
+            fetched_at: { type: string }
+            computed_at: { type: string }
+            note: { type: string }
+          additionalProperties: true
+      required: [ok]
       additionalProperties: true
 
     FredObservation:
@@ -235,26 +253,4 @@ components:
         data:
           $ref: "#/components/schemas/FredObservationsResponse"
       required: [ok, data]
-      additionalProperties: true
-
-    TerminalResponse:
-      type: object
-      description: Unified terminal payload for a single-call dashboard.
-      properties:
-        ok: { type: boolean }
-        ts: { type: string }
-        service: { type: string }
-        terminal:
-          type: object
-          properties:
-            cpi: { $ref: "#/components/schemas/GenericOkObject" }
-            signal: { $ref: "#/components/schemas/GenericOkObject" }
-            regime: { $ref: "#/components/schemas/GenericOkObject" }
-            liquidity: { $ref: "#/components/schemas/GenericOkObject" }
-            construction: { $ref: "#/components/schemas/GenericOkObject" }
-            risk: { $ref: "#/components/schemas/GenericOkObject" }
-            bundle: { $ref: "#/components/schemas/GenericOkObject" }
-            notion: { $ref: "#/components/schemas/GenericOkObject" }
-          additionalProperties: true
-      required: [ok, terminal]
       additionalProperties: true
