@@ -19,6 +19,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Validate Worker syntax
         run: |
           set -euo pipefail
@@ -44,9 +49,43 @@ jobs:
             exit 1
           fi
 
-      - name: Deploy to Cloudflare
+      - name: Install Wrangler
+        run: npm i -g wrangler@4.70.0
+
+      - name: Deploy to Cloudflare with retries
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           GIT_SHA: ${{ github.sha }}
-        run: npx wrangler deploy --name construction-ai-terminal --var GIT_SHA:$GIT_SHA
+        run: |
+          set -euo pipefail
+
+          attempts=6
+          delay=5
+          for attempt in $(seq 1 "$attempts"); do
+            echo "Deploy attempt ${attempt}/${attempts}..."
+            if wrangler deploy \
+              --name construction-ai-terminal \
+              --var GIT_SHA:"${GIT_SHA}" \
+              --log-level debug; then
+              echo "Deployment succeeded on attempt ${attempt}."
+              exit 0
+            fi
+
+            if [ "$attempt" -lt "$attempts" ]; then
+              echo "Deployment failed on attempt ${attempt}; retrying in ${delay}s..."
+              sleep "$delay"
+              delay=$((delay * 2))
+            fi
+          done
+
+          echo "Deployment failed after ${attempts} attempts."
+          latest_log="$(ls -t ~/.config/.wrangler/logs/wrangler-*.log 2>/dev/null | head -n 1 || true)"
+          if [ -n "$latest_log" ]; then
+            echo "---- Tail of latest Wrangler log: ${latest_log} ----"
+            tail -n 200 "$latest_log"
+          else
+            echo "No Wrangler log file found in ~/.config/.wrangler/logs/."
+          fi
+
+          exit 1
