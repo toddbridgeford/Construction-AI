@@ -33,3 +33,40 @@
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericOkObject"
+
+               paths:
+  /:
+    get:
+      operationId: root
+      summary: Root (alias of health)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /cpi:
+    get:
+      operationId: getCpi
+      summary: Latest CPI (KV snapshot with FRED fallback)
+      responses:
+        "200":
+          description: CPI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericOkObject"
+
+  /notion/series:
+    get:
+      operationId: listNotionSeries
+      summary: Query Notion database and return pages/properties (if configured)
+      responses:
+        "200":
+          description: Notion series response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericOkObject" 
