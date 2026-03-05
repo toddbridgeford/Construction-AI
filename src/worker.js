@@ -1,19 +1,26 @@
 /**
- * Construction AI Terminal — Cloudflare Worker
+ * Production-ready Cloudflare Worker API
  *
  * Routes:
  *   GET  /health
+ *   GET  /notion/series
  *   GET  /fred/observations?series_id=CPIAUCSL&limit=24
  *   GET  /cpi
  *   GET  /bundle
  *
  * Cron:
- *   Every hour compute "bundle:latest" + "cpi:latest" into KV CPI_SNAPSHOTS.
+ *   hourly -> refresh CPI snapshot into KV key "cpi:latest"
  *
- * Required Secrets (Cloudflare -> Worker -> Settings -> Variables & Secrets):
+ * Required env vars:
  *   FRED_API_KEY
  *
- * KV Binding (wrangler.toml):
+ * Optional env vars:
+ *   NOTION_TOKEN
+ *   NOTION_DATABASE_ID
+ *   SERVICE_NAME
+ *   GIT_SHA
+ *
+ * KV binding:
  *   CPI_SNAPSHOTS
  */
 
@@ -31,6 +38,14 @@ function json(data, status = 200, extraHeaders = {}) {
     status,
     headers: { ...JSON_HEADERS, ...CORS_HEADERS, ...extraHeaders },
   });
+}
+
+function badRequest(message, details) {
+  return json({ ok: false, error: message, details }, 400);
+}
+
+function serverError(message, details) {
+  return json({ ok: false, error: message, details }, 500);
 }
 
 function isString(x) {
@@ -65,37 +80,53 @@ async function fetchJson(url, init = {}, timeoutMs = 15000) {
   }
 }
 
-/** ---------- FRED helpers ---------- **/
-
-function requireFredKey(env) {
-  // IMPORTANT: match your Cloudflare secret name exactly
-  if (!isString(env.FRED_API_KEY)) {
-    return {
-      ok: false,
-      error: "Missing env var FRED_API_KEY",
-      how_to_fix: [
-        "Cloudflare Dashboard -> Worker -> Settings -> Variables & Secrets",
-        "Add Secret named FRED_API_KEY (exact spelling)",
-        "Redeploy (or trigger a new deployment)",
-      ],
-      code: "MISSING_ENV",
-      missing: "FRED_API_KEY",
-      ts: nowIso(),
-    };
-  }
-  return null;
+function requireEnv(env, keys) {
+  const missing = [];
+  for (const k of keys) if (!isString(env[k])) missing.push(k);
+  return missing;
 }
 
-async function fredObservations(env, seriesId, limit = 24) {
+/** ---------- Core helpers ---------- **/
+
+async function fetchLatestCpiFromFred(env) {
+  const missing = requireEnv(env, ["FRED_API_KEY"]);
+  if (missing.length) {
+    const e = new Error("Missing required env vars");
+    e.code = "MISSING_ENV";
+    e.details = { missing };
+    throw e;
+  }
+
   const upstream =
     "https://api.stlouisfed.org/fred/series/observations" +
-    `?series_id=${encodeURIComponent(seriesId)}` +
-    `&api_key=${encodeURIComponent(env.FRED_API_KEY)}` +
-    `&file_type=json` +
-    `&sort_order=desc` +
-    `&limit=${encodeURIComponent(String(limit))}`;
+    `?series_id=CPIAUCSL&api_key=${encodeURIComponent(env.FRED_API_KEY)}` +
+    `&file_type=json&sort_order=desc&limit=1`;
 
-  return fetchJson(upstream, { headers: { accept: "application/json" } }, 20000);
+  const data = await fetchJson(upstream);
+  const obs = data?.observations?.[0];
+  if (!obs) {
+    const e = new Error("FRED returned no CPI observations");
+    e.code = "NO_OBSERVATIONS";
+    e.details = data;
+    throw e;
+  }
+
+  return {
+    series_id: "CPIAUCSL",
+    date: obs.date,
+    value: obs.value,
+    fetched_at: nowIso(),
+  };
+}
+
+async function putCpiSnapshot(env, payload) {
+  const kv = env.CPI_SNAPSHOTS;
+  if (!kv) {
+    const e = new Error("KV binding CPI_SNAPSHOTS is not configured");
+    e.code = "MISSING_KV";
+    throw e;
+  }
+  await kv.put("cpi:latest", JSON.stringify(payload), { expirationTtl: 6 * 60 * 60 });
 }
 
 /** ---------- Route handlers ---------- **/
@@ -103,196 +134,165 @@ async function fredObservations(env, seriesId, limit = 24) {
 async function handleHealth(env) {
   return json({
     ok: true,
-    service: "construction-ai-terminal",
+    service: env.SERVICE_NAME || "construction-ai-terminal",
     ts: nowIso(),
     git_sha: env.GIT_SHA || null,
-    has_kv: Boolean(env.CPI_SNAPSHOTS),
-    has_fred_key: Boolean(env.FRED_API_KEY),
+    has_kv: !!env.CPI_SNAPSHOTS,
+    has_fred_key: isString(env.FRED_API_KEY),
   });
 }
 
 async function handleFredObservations(request, env) {
-  const missing = requireFredKey(env);
-  if (missing) return json(missing, 500);
-
-  const url = new URL(request.url);
-  const seriesId = url.searchParams.get("series_id") || "CPIAUCSL";
-  const limit = Number(url.searchParams.get("limit") || "24");
-
-  try {
-    const data = await fredObservations(env, seriesId, limit);
-    return json({ ok: true, source: "fred", series_id: seriesId, limit, data });
-  } catch (e) {
+  const missing = requireEnv(env, ["FRED_API_KEY"]);
+  if (missing.length) {
     return json(
       {
         ok: false,
-        error: "FRED request failed",
-        message: e.message,
-        status: e.status || 0,
-        body: e.body || null,
+        service: env.SERVICE_NAME || "construction-ai-terminal",
         ts: nowIso(),
+        git_sha: env.GIT_SHA || null,
+        error: { message: "Missing required env vars", code: "MISSING_ENV", details: { missing } },
       },
-      502
+      500
     );
+  }
+
+  const url = new URL(request.url);
+  const seriesId = url.searchParams.get("series_id") || "CPIAUCSL";
+  const limit = url.searchParams.get("limit") || "24";
+
+  const upstream =
+    "https://api.stlouisfed.org/fred/series/observations" +
+    `?series_id=${encodeURIComponent(seriesId)}` +
+    `&api_key=${encodeURIComponent(env.FRED_API_KEY)}` +
+    `&file_type=json` +
+    `&sort_order=desc` +
+    `&limit=${encodeURIComponent(limit)}`;
+
+  try {
+    const data = await fetchJson(upstream, { headers: { accept: "application/json" } });
+    return json({ ok: true, source: "fred", series_id: seriesId, limit: Number(limit), data });
+  } catch (e) {
+    return serverError("FRED request failed", {
+      message: e.message,
+      status: e.status || 0,
+      body: e.body || null,
+    });
   }
 }
 
 async function handleCpi(env) {
   const kv = env.CPI_SNAPSHOTS;
-  if (!kv) {
-    return json(
-      {
-        ok: false,
-        error: "KV binding CPI_SNAPSHOTS is not configured",
-        how_to_fix: ["Create KV namespace", "Add kv_namespaces binding in wrangler.toml", "Redeploy"],
-        ts: nowIso(),
-      },
-      500
-    );
-  }
+  if (!kv) return serverError("KV binding CPI_SNAPSHOTS is not configured");
 
-  // 1) Prefer KV snapshot computed by cron
+  // 1) KV
   try {
     const cached = await kv.get("cpi:latest", { type: "json" });
     if (cached) return json({ ok: true, source: "kv", ts: nowIso(), cpi: cached });
   } catch {
-    // ignore and fall back
+    // continue
   }
 
-  // 2) Fall back to live FRED
-  const missing = requireFredKey(env);
-  if (missing) return json(missing, 500);
-
+  // 2) FRED fallback
   try {
-    const data = await fredObservations(env, "CPIAUCSL", 1);
-    const obs = data?.observations?.[0];
-    if (!obs) {
-      return json({ ok: false, error: "FRED returned no CPI observations", ts: nowIso(), data }, 502);
-    }
-
-    const payload = {
-      series_id: "CPIAUCSL",
-      date: obs.date,
-      value: obs.value,
-      fetched_at: nowIso(),
-      note: "live-fallback (cron snapshot not present yet)",
-    };
-
-    // cache for 6 hours (optional)
-    await kv.put("cpi:latest", JSON.stringify(payload), { expirationTtl: 6 * 60 * 60 });
-
-    return json({ ok: true, source: "fred", ts: nowIso(), cpi: payload });
+    const payload = await fetchLatestCpiFromFred(env);
+    await putCpiSnapshot(env, payload);
+    return json({
+      ok: true,
+      source: "fred",
+      ts: nowIso(),
+      cpi: { ...payload, note: "live-fallback (cron snapshot not present yet)" },
+    });
   } catch (e) {
     return json(
       {
         ok: false,
-        error: "CPI fetch failed",
-        message: e.message,
-        status: e.status || 0,
-        body: e.body || null,
+        service: env.SERVICE_NAME || "construction-ai-terminal",
         ts: nowIso(),
-      },
-      502
-    );
-  }
-}
-
-async function handleBundle(env) {
-  const kv = env.CPI_SNAPSHOTS;
-  if (!kv) {
-    return json(
-      {
-        ok: false,
-        error: "KV binding CPI_SNAPSHOTS is not configured",
-        ts: nowIso(),
+        git_sha: env.GIT_SHA || null,
+        error: { message: e.message, code: e.code || "ERROR", details: e.details || null },
       },
       500
     );
   }
+}
 
-  const bundle = await kv.get("bundle:latest", { type: "json" });
-  if (!bundle) {
+async function handleNotionSeries(env) {
+  if (!isString(env.NOTION_TOKEN) || !isString(env.NOTION_DATABASE_ID)) {
     return json(
       {
         ok: false,
-        status: "bundle not ready yet",
+        error: "Notion not configured",
         how_to_fix: [
-          "Wait until the next cron tick (top of hour UTC), or",
-          "Trigger redeploy (it may run cron shortly after), or",
-          "Manually call /cpi (it will populate cpi:latest even before cron)",
+          "Set NOTION_TOKEN (secret) in Cloudflare Worker settings",
+          "Set NOTION_DATABASE_ID (variable) in Cloudflare Worker settings",
         ],
-        ts: nowIso(),
       },
-      202
+      501
     );
   }
 
-  return json({ ok: true, source: "kv", ts: nowIso(), bundle });
+  const upstream = `https://api.notion.com/v1/databases/${encodeURIComponent(env.NOTION_DATABASE_ID)}/query`;
+
+  try {
+    const data = await fetchJson(
+      upstream,
+      {
+        method: "POST",
+        headers: {
+          authorization: `Bearer ${env.NOTION_TOKEN}`,
+          "content-type": "application/json",
+          "notion-version": "2022-06-28",
+        },
+        body: JSON.stringify({
+          page_size: 50,
+          sorts: [{ timestamp: "last_edited_time", direction: "descending" }],
+        }),
+      },
+      20000
+    );
+
+    const results = (data?.results || []).map((p) => ({
+      id: p.id,
+      url: p.url,
+      last_edited_time: p.last_edited_time,
+      created_time: p.created_time,
+      properties: p.properties || {},
+    }));
+
+    return json({ ok: true, source: "notion", count: results.length, results });
+  } catch (e) {
+    return serverError("Notion request failed", {
+      message: e.message,
+      status: e.status || 0,
+      body: e.body || null,
+    });
+  }
 }
 
-/** ---------- Cron: compute bundle ---------- **/
+async function handleBundle(request, env) {
+  const url = new URL(request.url);
+  const seriesId = url.searchParams.get("series_id") || "CPIAUCSL";
 
-async function computeAndStoreBundle(env) {
-  const kv = env.CPI_SNAPSHOTS;
-  if (!kv) throw new Error("Missing KV binding CPI_SNAPSHOTS");
+  const [healthRes, cpiRes] = await Promise.all([handleHealth(env), handleCpi(env)]);
+  const health = await healthRes.json();
+  const cpi = await cpiRes.json();
 
-  const missing = requireFredKey(env);
-  if (missing) throw new Error("Missing FRED_API_KEY secret");
-
-  // Keep this “bundle” small and reliable. Add more series later.
-  const SERIES = [
-    { id: "CPIAUCSL", label: "CPI (headline)" },
-    { id: "HOUST", label: "Housing Starts" },
-    { id: "PERMIT", label: "Building Permits" },
-  ];
-
-  const limit = 24;
-
-  const results = {};
-  for (const s of SERIES) {
-    try {
-      const data = await fredObservations(env, s.id, limit);
-      // make it compact
-      const obs = (data?.observations || []).map((o) => ({ date: o.date, value: o.value }));
-      results[s.id] = { label: s.label, observations: obs };
-    } catch (e) {
-      results[s.id] = { label: s.label, error: true, message: e.message, status: e.status || 0 };
-    }
+  let fred;
+  try {
+    const fakeReq = new Request(
+      `https://local/fred/observations?series_id=${encodeURIComponent(seriesId)}&limit=5`
+    );
+    const fredRes = await handleFredObservations(fakeReq, env);
+    fred = await fredRes.json();
+  } catch {
+    fred = { ok: false, error: "fred bundle failed" };
   }
 
-  // Derive CPI snapshot from CPIAUCSL last obs if present
-  let cpiLatest = null;
-  const cpiObs = results?.CPIAUCSL?.observations?.[0];
-  if (cpiObs && cpiObs.date && cpiObs.value) {
-    cpiLatest = {
-      series_id: "CPIAUCSL",
-      date: cpiObs.date,
-      value: cpiObs.value,
-      computed_at: nowIso(),
-      source: "cron",
-    };
-    await kv.put("cpi:latest", JSON.stringify(cpiLatest), { expirationTtl: 24 * 60 * 60 });
-  }
-
-  const bundle = {
-    meta: {
-      computed_at: nowIso(),
-      service: "construction-ai-terminal",
-      git_sha: env.GIT_SHA || null,
-      limit,
-      series: SERIES.map((s) => s.id),
-    },
-    fred: results,
-    cpi_latest: cpiLatest,
-  };
-
-  // Store hourly bundle for 24 hours
-  await kv.put("bundle:latest", JSON.stringify(bundle), { expirationTtl: 24 * 60 * 60 });
-
-  return bundle;
+  return json({ ok: true, ts: nowIso(), health, cpi, fred });
 }
 
-/** ---------- Router + Worker export ---------- **/
+/** ---------- Router + Cron ---------- **/
 
 export default {
   async fetch(request, env) {
@@ -302,41 +302,28 @@ export default {
 
     const { pathname } = new URL(request.url);
 
-    if (request.method !== "GET") {
-      return json({ ok: false, error: "Method not allowed" }, 405);
-    }
-
     try {
+      if (request.method !== "GET") return json({ ok: false, error: "Method not allowed" }, 405);
+
       if (pathname === "/" || pathname === "/health") return handleHealth(env);
       if (pathname === "/fred/observations") return handleFredObservations(request, env);
       if (pathname === "/cpi") return handleCpi(env);
-      if (pathname === "/bundle") return handleBundle(env);
+      if (pathname === "/notion/series") return handleNotionSeries(env);
+      if (pathname === "/bundle") return handleBundle(request, env);
 
       return json({ ok: false, error: "Not found", path: pathname }, 404);
     } catch (e) {
-      return json({ ok: false, error: "Unhandled exception", message: e?.message || String(e), ts: nowIso() }, 500);
+      return serverError("Unhandled exception", { message: e?.message || String(e) });
     }
   },
 
-  async scheduled(event, env, ctx) {
-    // Run bundle compute async; Cloudflare wants you to use waitUntil
-    ctx.waitUntil(
-      (async () => {
-        try {
-          await computeAndStoreBundle(env);
-        } catch (e) {
-          // last resort: write a failure marker into KV (helps debugging)
-          try {
-            if (env.CPI_SNAPSHOTS) {
-              await env.CPI_SNAPSHOTS.put(
-                "bundle:last_error",
-                JSON.stringify({ ts: nowIso(), message: e?.message || String(e) }),
-                { expirationTtl: 24 * 60 * 60 }
-              );
-            }
-          } catch {}
-        }
-      })()
-    );
+  async scheduled(_event, env) {
+    // Hourly warm cache: populate KV with latest CPI
+    try {
+      const payload = await fetchLatestCpiFromFred(env);
+      await putCpiSnapshot(env, payload);
+    } catch {
+      // swallow: cron should never hard-fail
+    }
   },
 };
