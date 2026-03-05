@@ -136,7 +136,7 @@ This sanity-checks normalized payload shape expectations.
 
 ## Construction AI Terminal Worker (Production)
 
-Live URL: `https://construction-ai-terminal.toddbridgeford.workers.dev`
+Base URL: `https://construction-ai-terminal.toddbridgeford.workers.dev`
 
 Implemented endpoints:
 
@@ -159,7 +159,7 @@ Optional Worker variable:
 
 ### Setup checklist
 
-1. Confirm `wrangler.toml` name is `construction-ai-terminal` and `main` points to `src/index.js`.
+1. Confirm `wrangler.toml` name is `construction-ai-terminal` and `main` points to `src/worker.js`.
 2. Set required Cloudflare Worker variables and secrets.
 3. Deploy the `Predictive-Model` branch to production in Cloudflare.
 4. Validate endpoints using the commands below.
