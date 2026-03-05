@@ -1,7 +1,8 @@
 name = "construction-ai-terminal"
-main = "src/index.js"
+main = "src/worker.js"
 compatibility_date = "2026-01-01"
 
+# KV binding used by /cpi and /bundle
 [[kv_namespaces]]
 binding = "CPI_SNAPSHOTS"
 id = "3ed4ce29b3c94758b531684cb927795a"
