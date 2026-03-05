@@ -37,14 +37,14 @@
   },
   "indices": {
     "pressure_index": {
-      "value": 46,
-      "direction": "→",
+      "value": 47,
+      "direction": "↑",
       "zone": "Compression Phase",
-      "delta_3m": 0,
+      "delta_3m": 1,
       "momentum_band": "Stable",
       "risk_state": "🟢",
       "drivers": {
-        "capital": 40,
+        "capital": 45,
         "pipeline": 47,
         "trade": 50,
         "materials": 50,
@@ -60,17 +60,19 @@
         "cpi_i": null
       },
       "divergences": {
-        "r_minus_i": -2,
+        "r_minus_i": -1,
         "sf_minus_mf": 0,
         "inst_minus_infra": 0
       }
     },
     "capital_stress_index": {
-      "value": 40,
+      "value": 45,
       "risk_state": "🟢",
       "overlays": {
-        "active_triggers": [],
-        "overlay_points": 0
+        "active_triggers": [
+          "stock_overlay_5"
+        ],
+        "overlay_points": 5
       }
     },
     "residential_index": {
@@ -122,10 +124,11 @@
     "manufacturers": "🟡"
   },
   "ecosystem_power": {
-    "index": 56,
-    "risk_state": "🟢",
+    "index": 61,
+    "risk_state": "🟡",
     "drivers": [
-      "slowdown_band"
+      "slowdown_band",
+      "overlay_points_5"
     ],
     "actors": [
       {
@@ -156,9 +159,9 @@
     "active": false,
     "trigger_reason": [],
     "display": {
-      "cpi_value": 46,
+      "cpi_value": 47,
       "zone": "Compression Phase",
-      "delta_3m": 0,
+      "delta_3m": 1,
       "risk_state": "🟢"
     }
   },
@@ -167,7 +170,7 @@
     "regions": [
       {
         "name": "National",
-        "velocity": "→",
+        "velocity": "↑",
         "pressure": "🟢",
         "capital": "🟢",
         "residential": "🟡",
