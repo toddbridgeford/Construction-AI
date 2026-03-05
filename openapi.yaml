@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
   title: Construction AI Terminal
-  version: "1.0.2"
-  description: Canonical API for the construction-ai Cloudflare Worker.
+  version: "1.0.3"
+  description: Canonical API for the construction-ai Cloudflare Worker (no /terminal; Action matches live routes).
 
 servers:
   - url: https://construction-ai.toddbridgeford.workers.dev
@@ -33,6 +33,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthResponse"
 
+  /cpi:
+    get:
+      operationId: getCpi
+      summary: Latest CPI (KV snapshot with FRED fallback)
+      responses:
+        "200":
+          description: CPI response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericOkObject"
+
   /fred/observations:
     get:
       operationId: getFred
@@ -53,18 +65,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FredObservationsEnvelope"
-
-  /cpi:
-    get:
-      operationId: getCpi
-      summary: Latest CPI (KV snapshot with FRED fallback)
-      responses:
-        "200":
-          description: CPI response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CpiResponse"
 
   /notion/series:
     get:
@@ -169,16 +169,6 @@ components:
         ok: { type: boolean }
         ts: { type: string }
         service: { type: string }
-        source: { type: string }
-        error:
-          type: object
-          properties:
-            message: { type: string }
-            code: { type: string }
-            details:
-              type: object
-              additionalProperties: true
-          additionalProperties: true
       required: [ok]
       additionalProperties: true
 
@@ -196,26 +186,6 @@ components:
         has_kv: { type: boolean }
         has_fred_key: { type: boolean }
       required: [ok, service, ts]
-      additionalProperties: true
-
-    CpiResponse:
-      type: object
-      description: Latest CPI response (from KV or FRED fallback).
-      properties:
-        ok: { type: boolean }
-        source: { type: string }
-        ts: { type: string }
-        cpi:
-          type: object
-          properties:
-            series_id: { type: string }
-            date: { type: string }
-            value: { type: string }
-            fetched_at: { type: string }
-            computed_at: { type: string }
-            note: { type: string }
-          additionalProperties: true
-      required: [ok]
       additionalProperties: true
 
     FredObservation:
