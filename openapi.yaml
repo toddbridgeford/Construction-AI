@@ -4,7 +4,8 @@ info:
   version: 1.0.0
 
 servers:
-  - url: https://construction-ai-terminal.toddbridgeford.workers.dev
+  - url: https://construction-ai.toddbridgeford.workers.dev
+    description: Cloudflare Worker (canonical)
 
 paths:
   /health:
