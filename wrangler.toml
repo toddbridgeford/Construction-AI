@@ -1,7 +1,13 @@
 name = "construction-ai-terminal"
 main = "src/worker.js"
-compatibility_date = "2026-01-01"
-workers_dev = true
+compatibility_date = "2026-03-01"
 
-[vars]
-SERVICE_NAME = "construction-ai-terminal"
+# OPTIONAL: If you use a custom domain later
+# routes = [{ pattern = "api.yourdomain.com/*", zone_name = "yourdomain.com" }]
+
+kv_namespaces = [
+  { binding = "CPI_SNAPSHOTS", id = "PASTE_KV_NAMESPACE_ID_HERE" }
+]
+
+[triggers]
+crons = ["0 * * * *"] # every hour on the hour (UTC)
