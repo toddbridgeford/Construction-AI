@@ -15,6 +15,15 @@ export default {
         return json({ ok: true, service: "construction-ai-terminal" });
       }
 
+      if (path === "/version" && request.method === "GET") {
+        return json({
+          ok: true,
+          worker: "construction-ai-terminal",
+          git_sha: String(env.GIT_SHA || "unknown"),
+          generated_at: new Date().toISOString(),
+        });
+      }
+
       if (path === "/cpi" && request.method === "GET") {
         ensureKv(env);
         const market = mustParam(url, "location");
