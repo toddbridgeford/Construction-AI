@@ -41,3 +41,24 @@ paths:
     get:
       operationId: macroSignal
       summary: Construction macro signal
+
+/regime:
+  get:
+    operationId: macroRegime
+    summary: Determine macro regime
+
+/liquidity:
+  get:
+    operationId: macroLiquidity
+    summary: Credit liquidity state
+
+/construction-index:
+  get:
+    operationId: constructionIndex
+    summary: Construction cycle strength
+
+/risk-score:
+  get:
+    operationId: macroRiskScore
+    summary: Combined macro risk score
+      
