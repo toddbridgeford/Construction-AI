@@ -5,9 +5,9 @@ on:
   push:
     branches: [main]
     paths:
-      - 'src/worker.js'
-      - 'wrangler.toml'
-      - '.github/workflows/deploy_cloudflare_worker.yml'
+      - "src/worker.js"
+      - "wrangler.toml"
+      - ".github/workflows/deploy_cloudflare_worker.yml"
 
 permissions:
   contents: read
@@ -18,6 +18,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
       - name: Validate Worker syntax
         run: |
@@ -44,9 +49,54 @@ jobs:
             exit 1
           fi
 
-      - name: Deploy to Cloudflare
+      - name: Install Wrangler (pinned)
+        run: |
+          set -euo pipefail
+          npm i -g wrangler@4.70.0
+          wrangler --version
+          node --version
+          npm --version
+
+      - name: Deploy to Cloudflare (retry on transient API errors)
+        shell: bash
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           GIT_SHA: ${{ github.sha }}
-        run: npx wrangler deploy --name construction-ai-terminal --var GIT_SHA:$GIT_SHA
+        run: |
+          set -euo pipefail
+
+          max=6
+          for i in $(seq 1 $max); do
+            echo "Deploy attempt $i/$max..."
+
+            set +e
+            wrangler deploy \
+              --name construction-ai-terminal \
+              --var GIT_SHA:${GIT_SHA} \
+              --log-level debug
+            rc=$?
+            set -e
+
+            if [ "$rc" -eq 0 ]; then
+              echo "✅ Deploy succeeded"
+              exit 0
+            fi
+
+            echo "❌ Deploy failed (exit $rc). Dumping latest Wrangler log (tail 200):"
+            latest_log="$(ls -t ~/.config/.wrangler/logs/wrangler-*.log 2>/dev/null | head -n 1 || true)"
+            if [ -n "${latest_log}" ]; then
+              echo "---- ${latest_log} ----"
+              tail -n 200 "${latest_log}" || true
+              echo "---- end ----"
+            else
+              echo "(No wrangler log found)"
+            fi
+
+            sleep_seconds=$((i*i*5))
+            echo "Sleeping ${sleep_seconds}s before retry..."
+            sleep "${sleep_seconds}"
+          done
+
+          echo "❌ Deploy failed after ${max} attempts"
+          exit 1
