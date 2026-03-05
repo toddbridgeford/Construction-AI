@@ -1,10 +1,13 @@
-name = "construction-ai-terminal"
+name = "construction-ai"
 main = "src/worker.js"
 compatibility_date = "2026-03-01"
 
 kv_namespaces = [
-  { binding = "CPI_SNAPSHOTS", id = "3ed4ce29b3c94758b531684cb927795a" }
+  { binding = "CPI_SNAPSHOTS", id = "3ed4ce29b3c94758b531684cb927795a", preview_id = "288647bc63444114808bf6e5b8c2e56e" }
 ]
+
+[vars]
+SERVICE_NAME = "construction-ai-terminal"
 
 [triggers]
 crons = ["0 * * * *"]
