@@ -1,145 +1,43 @@
 openapi: 3.1.0
 info:
-  title: Construction AI Terminal API
-  version: 3.0.0
+  title: Construction AI Terminal
+  version: 1.0.0
+
 servers:
   - url: https://construction-ai-terminal.toddbridgeford.workers.dev
+
 paths:
-  /:
-    get:
-      operationId: root
-      responses:
-        '200':
-          description: Service metadata
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  ok: { type: boolean }
-                  service: { type: string }
-                  endpoints:
-                    type: array
-                    items: { type: string }
-                  generated_at_utc: { type: string, format: date-time }
-                additionalProperties: true
   /health:
     get:
       operationId: health
+      summary: Health check
       responses:
-        '200':
-          description: Health check
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  ok: { type: boolean }
-                  service: { type: string }
-                additionalProperties: true
-  /notion/series:
-    get:
-      operationId: notionSeries
-      responses:
-        '200':
-          description: FRED series IDs from Notion
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  count: { type: integer }
-                  series:
-                    type: array
-                    items: { type: string }
-                  generated_at_utc: { type: string, format: date-time }
-                additionalProperties: true
+        "200":
+          description: OK
+
   /fred/observations:
     get:
-      operationId: fredObservations
+      operationId: getFred
       parameters:
-        - in: query
-          name: series_id
+        - name: series_id
+          in: query
           required: true
-          schema: { type: string }
-        - in: query
-          name: limit
-          required: false
-          schema: { type: integer, minimum: 1, maximum: 5000 }
-        - in: query
-          name: sort_order
-          required: false
-          schema: { type: string, enum: [asc, desc] }
-        - in: query
-          name: observation_start
-          required: false
-          schema: { type: string, format: date }
-        - in: query
-          name: observation_end
-          required: false
-          schema: { type: string, format: date }
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
       responses:
-        '200':
-          description: Raw FRED observations response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-                additionalProperties: true
+        "200":
+          description: FRED observations
+
   /bundle:
     get:
-      operationId: bundle
-      parameters:
-        - in: query
-          name: limit
-          required: false
-          schema: { type: integer, minimum: 1, maximum: 5000 }
-      responses:
-        '200':
-          description: Notion series list with FRED payload per series
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  meta:
-                    type: object
-                    properties:
-                      series_count: { type: integer }
-                      limit: { type: integer }
-                      generated_at_utc: { type: string, format: date-time }
-                    additionalProperties: true
-                  fred:
-                    type: object
-                    properties: {}
-                    additionalProperties: true
-                additionalProperties: true
-  /cpi:
+      operationId: macroBundle
+      summary: Macro bundle
+
+  /signal:
     get:
-      operationId: cpi
-      parameters:
-        - in: query
-          name: limit
-          required: false
-          schema: { type: integer, minimum: 1, maximum: 5000 }
-      responses:
-        '200':
-          description: Computed CPI score from FRED series
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  headline_cpi:
-                    oneOf:
-                      - type: number
-                      - type: 'null'
-                  zone: { type: string }
-                  delta_3m:
-                    oneOf:
-                      - type: number
-                      - type: 'null'
-                  series_used: { type: integer }
-                  generated_at_utc: { type: string, format: date-time }
-                additionalProperties: true
+      operationId: macroSignal
+      summary: Construction macro signal
