@@ -15,54 +15,15 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate Worker syntax
-        run: |
-          set -euo pipefail
-          test -f src/worker.js
-          test -f wrangler.toml
-          node --check src/worker.js
-
-      - name: Install Wrangler (pinned)
-        run: npm i -g wrangler@4.70.0
-
-      - name: Preflight required Cloudflare configuration
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          set -euo pipefail
-          for key in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
-            if [ -z "${!key:-}" ]; then
-              echo "ERROR: Missing required secret ${key}."
-              exit 1
-            fi
-          done
-
-      - name: Deploy to Cloudflare (retry on transient API errors)
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           GIT_SHA: ${{ github.sha }}
-        run: |
-          set -euo pipefail
-
-          # IMPORTANT:
-          # - No --name here. wrangler.toml controls the script name.
-          # - We pass GIT_SHA as a var to the Worker runtime.
-          for attempt in 1 2 3 4 5; do
-            echo "Deploy attempt ${attempt}/5..."
-            if wrangler deploy --var GIT_SHA:${GIT_SHA}; then
-              echo "Deploy succeeded."
-              exit 0
-            fi
-            echo "Deploy failed. Sleeping before retry..."
-            sleep $((attempt * 5))
-          done
-
-          echo "Deploy failed after retries."
-          exit 1
