@@ -28,8 +28,12 @@ const MARKETS_PATH = path.join(ROOT, "config", "markets.json");
 const PLANE_CFG_PATH = path.join(ROOT, "config", "projects_plane_v1.json");
 const GEOCODE_OVERRIDES_PATH = path.join(ROOT, "config", "geocode_overrides.json");
 
-const SIGNAL_PATH = path.join(ROOT, "signal_api_latest.json");
-const DASHBOARD_PATH = path.join(ROOT, "dashboard_latest.json");
+const SIGNAL_PATH = fs.existsSync(path.join(ROOT, "artifacts", "signal_api_latest.json"))
+  ? path.join(ROOT, "artifacts", "signal_api_latest.json")
+  : path.join(ROOT, "signal_api_latest.json");
+const DASHBOARD_PATH = fs.existsSync(path.join(ROOT, "artifacts", "dashboard_latest.json"))
+  ? path.join(ROOT, "artifacts", "dashboard_latest.json")
+  : path.join(ROOT, "dashboard_latest.json");
 
 const OUT_DIR = path.join(ROOT, "dist", "projects");
 const INDEX_PATH = path.join(OUT_DIR, "index.json");

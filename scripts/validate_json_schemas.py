@@ -45,7 +45,9 @@ def gather_targets() -> list[tuple[pathlib.Path, pathlib.Path]]:
         if project_file.exists():
             targets.append((project_file, SCHEMA_DIR / "projects_schema.json"))
 
-    signal_root_file = REPO_ROOT / "signal_api_latest.json"
+    signal_root_file = REPO_ROOT / "artifacts" / "signal_api_latest.json"
+    if not signal_root_file.exists():
+        signal_root_file = REPO_ROOT / "signal_api_latest.json"
     if signal_root_file.exists():
         targets.append((signal_root_file, SCHEMA_DIR / "signal_api_schema.json"))
 

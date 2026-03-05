@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev"
+    "dev": "wrangler dev",
+    "test:openapi": "ruby scripts/validate_openapi.rb"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

@@ -9,7 +9,7 @@ const MODEL_PATH = path.join(ROOT, process.env.MODEL_PATH || "framework/deal_sco
 const DEALS_PATH = path.join(ROOT, process.env.DEALS_PATH || "config/deal_opportunities_sample.json");
 const CONTRACTORS_PATH = path.join(ROOT, process.env.CONTRACTORS_PATH || "config/contractors_registry.json");
 const BIDS_PATH = path.join(ROOT, process.env.BIDS_PATH || "config/historical_bids.json");
-const OUT_PATH = path.join(ROOT, process.env.OUT_PATH || "deal_scoring_latest.json");
+const OUT_PATH = path.join(ROOT, process.env.OUT_PATH || "artifacts/deal_scoring_latest.json");
 
 function readJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));

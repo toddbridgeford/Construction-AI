@@ -72,7 +72,9 @@ jobs:
       - name: Ensure output directories exist
         run: |
           set -euo pipefail
-          mkdir -p dist/markets
+          mkdir -p dist/markets artifacts
+          if [ ! -f artifacts/dashboard_latest.json ]; then echo '{}' > artifacts/dashboard_latest.json; fi
+          if [ ! -f artifacts/signal_api_latest.json ]; then echo '{}' > artifacts/signal_api_latest.json; fi
           if [ ! -f dashboard_latest.json ]; then echo '{}' > dashboard_latest.json; fi
           if [ ! -f signal_api_latest.json ]; then echo '{}' > signal_api_latest.json; fi
           if [ ! -f dist/markets/index.json ]; then echo '{}' > dist/markets/index.json; fi
@@ -119,7 +121,7 @@ jobs:
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
 
           FRED_OBSERVATION_START: "2020-01-01"
-          OUT_PATH: "dashboard_latest.json"
+          OUT_PATH: "artifacts/dashboard_latest.json"
 
           NEWS_LOOKBACK_DAYS: "5"
           NEWS_MAX: "60"
@@ -152,10 +154,10 @@ jobs:
       - name: Validate dashboard_latest.json (parse + required fields + non-empty)
         run: |
           set -euo pipefail
-          test -s dashboard_latest.json
+          test -s artifacts/dashboard_latest.json
           node - <<'NODE'
           const fs = require('fs');
-          const j = JSON.parse(fs.readFileSync('dashboard_latest.json','utf8'));
+          const j = JSON.parse(fs.readFileSync('artifacts/dashboard_latest.json','utf8'));
 
           if (typeof j?.cpi?.headline !== 'number') {
             console.error("Missing cpi.headline in dashboard_latest.json");
@@ -172,8 +174,8 @@ jobs:
 
       - name: Build signal_api_latest.json (Signal API v1)
         env:
-          IN_PATH: "dashboard_latest.json"
-          OUT_PATH: "signal_api_latest.json"
+          IN_PATH: "artifacts/dashboard_latest.json"
+          OUT_PATH: "artifacts/signal_api_latest.json"
           REGION_LABEL: "United States"
           REGION_NAME: "National"
         run: |
@@ -184,10 +186,10 @@ jobs:
       - name: Validate signal_api_latest.json (parse + version + non-empty)
         run: |
           set -euo pipefail
-          test -s signal_api_latest.json
+          test -s artifacts/signal_api_latest.json
           node - <<'NODE'
           const fs = require('fs');
-          const j = JSON.parse(fs.readFileSync('signal_api_latest.json','utf8'));
+          const j = JSON.parse(fs.readFileSync('artifacts/signal_api_latest.json','utf8'));
           if (j?.meta?.version !== 'signal_api_v1') {
             console.error("signal_api_latest.json invalid: meta.version != signal_api_v1");
             process.exit(1);
@@ -213,6 +215,12 @@ jobs:
             echo "Warning: No market outputs were produced (non-fatal). Check config/markets.json."
           fi
 
+
+      - name: Sync root artifact mirrors
+        run: |
+          set -euo pipefail
+          cp artifacts/dashboard_latest.json dashboard_latest.json
+          cp artifacts/signal_api_latest.json signal_api_latest.json
       - name: Commit changes (only if changed)
         run: |
           set -euo pipefail
@@ -220,8 +228,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add dashboard_latest.json
-          git add signal_api_latest.json
+          git add artifacts/dashboard_latest.json
+          git add artifacts/signal_api_latest.json
+          cp artifacts/dashboard_latest.json dashboard_latest.json
+          cp artifacts/signal_api_latest.json signal_api_latest.json
+          git add dashboard_latest.json signal_api_latest.json
           git add dist/markets/index.json
           find dist/markets -mindepth 2 -maxdepth 2 -type f -name signal_api_latest.json -print0 | xargs -0 -r git add
 
@@ -239,6 +250,8 @@ jobs:
         with:
           name: dashboard-run
           path: |
+            artifacts/dashboard_latest.json
+            artifacts/signal_api_latest.json
             dashboard_latest.json
             signal_api_latest.json
             dist/markets/index.json

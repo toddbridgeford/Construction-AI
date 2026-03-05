@@ -1,176 +1,55 @@
-# Construction AI Dashboard Pipeline
+# Construction AI
 
-This repo now includes a **Bloomberg-terminal-style dashboard pipeline** designed for Cloudflare free-tier hosting and iPad-friendly viewing.
+Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 
-## Project Structure
+## Canonical architecture
 
-- `cloudflare/worker/` → TypeScript Worker API + scheduled data refresh + KV persistence.
-- `dashboard/` → static dashboard site for Cloudflare Pages.
-- Existing repo workflows and historical scripts remain intact.
+- **Production Worker name:** `construction-ai`
+- **Canonical base URL:** `https://construction-ai.toddbridgeford.workers.dev`
+- **Canonical Wrangler config:** `wrangler.toml` at repository root.
+- **Canonical Worker entrypoint:** `src/worker.js`
+- **Canonical OpenAPI:** `openapi.yaml` at repository root.
+- **Generated data outputs:** `artifacts/`
 
-## Normalized API Schema
+## Repository structure
 
-`GET /api/dashboard` returns:
+- `src/` — canonical Worker source.
+- `artifacts/` — generated JSON outputs (`dashboard_latest.json`, `signal_api_latest.json`, `deal_scoring_latest.json`, snapshots).
+- `dashboard/` — static dashboard assets.
+- `contracts/`, `schemas/` — schemas and contracts.
+- `scripts/` — build and validation scripts.
+- `docs/` — operations and deployment docs.
 
-```json
-{
-  "generated_at": "2026-03-04T12:00:00.000Z",
-  "tickers": [{ "symbol": "SPY", "price": 0, "change": 0, "changePct": 0 }],
-  "news": [{ "title": "", "source": "", "url": "", "publishedAt": "" }],
-  "construction": [{ "title": "", "value": "", "source": "" }],
-  "signals": [{ "name": "", "value": "", "direction": "up" }]
-}
-```
+`cloudflare/worker/` is legacy context only. Do not deploy from that folder.
 
-## Worker Endpoints
+## Worker routes (live + documented)
 
-- `GET /api/health`
-- `GET /api/dashboard`
-
-Worker behavior:
-
-- Uses providers to fetch ticker/news data.
-- Merges into normalized schema.
-- Persists latest snapshot + history ring in KV.
-- Runs scheduled refresh every 15 minutes (cron).
-- Returns CORS-enabled JSON responses.
-
-## Cloudflare Setup
-
-### 1) Create KV namespace
-
-```bash
-wrangler kv namespace create DASHBOARD_KV
-wrangler kv namespace create DASHBOARD_KV --preview
-```
-
-Copy IDs into `cloudflare/worker/wrangler.toml`.
-
-### 2) Install dependencies
-
-```bash
-cd cloudflare/worker
-npm install
-```
-
-### 3) Set secrets/vars (never commit real keys)
-
-```bash
-wrangler secret put NEWSAPI_KEY
-wrangler secret put ALPHAVANTAGE_API_KEY
-```
-
-Optional vars:
-
-```bash
-wrangler secret put SYMBOLS
-wrangler secret put HISTORY_LIMIT
-wrangler secret put ALLOWED_ORIGIN
-```
-
-For local development only, start from `cloudflare/worker/.env.example`.
-
-### 4) Deploy Worker
-
-```bash
-wrangler deploy
-```
-
-### 5) Create Cloudflare Pages project from `/dashboard`
-
-- Framework preset: **None**
-- Build command: *(none)*
-- Output directory: `/`
-- Root directory: `dashboard`
-
-### 6) Set Worker route
-
-Use either:
-
-- Dedicated API domain, e.g. `https://api.example.com/api/*`
-- Same-site route via Cloudflare custom domains.
-
-Dashboard fetch target is `GET /api/dashboard` (or `window.DASHBOARD_API_BASE + /api/dashboard`).
-
-### 7) Enable cron triggers
-
-`cloudflare/worker/wrangler.toml` includes:
-
-```toml
-[triggers]
-crons = ["*/15 * * * *"]
-```
-
-## Dashboard Runtime
-
-The dashboard automatically:
-
-- refreshes every 60 seconds
-- supports manual refresh button
-- renders graceful empty states if any panel is missing data
-
-## Local Development
-
-Run Worker locally:
-
-```bash
-cd cloudflare/worker
-npm run dev
-```
-
-Run static dashboard locally:
-
-```bash
-cd dashboard
-npm run dev
-```
-
-## Minimal Validation
-
-```bash
-cd cloudflare/worker
-npm test
-```
-
-This sanity-checks normalized payload shape expectations.
-
-## Construction AI Terminal Worker (Production)
-
-Base URL: `https://construction-ai-terminal.toddbridgeford.workers.dev`
-
-Implemented endpoints:
-
-- `GET /`
+- `GET /` (alias of `/health`)
 - `GET /health`
-- `GET /notion/series`
-- `GET /fred/observations`
-- `GET /bundle`
 - `GET /cpi`
+- `GET /fred/observations`
+- `GET /notion/series`
+- `GET /bundle`
+- `GET /signal`
+- `GET /regime`
+- `GET /liquidity`
+- `GET /construction-index`
+- `GET /risk-score`
 
-Required Worker environment variables:
+## Actions Integration (Custom GPT)
 
-- `NOTION_TOKEN` (secret)
-- `NOTION_DATABASE_ID` (plaintext)
-- `FRED_API_KEY` (secret)
+1. Open `openapi.yaml` in this repo.
+2. Paste its contents into Custom GPT **Actions** schema.
+3. Set the server URL to:
+   `https://construction-ai.toddbridgeford.workers.dev`
+4. Save and test `/health` and `/cpi` from the Actions tester.
 
-Optional Worker variable:
+> `/terminal` is intentionally excluded from the canonical API contract.
 
-- `CACHE_TTL_SECONDS`
+## Validation
 
-### Setup checklist
-
-1. Confirm `wrangler.toml` name is `construction-ai-terminal` and `main` points to `src/worker.js`.
-2. Set required Cloudflare Worker variables and secrets.
-3. Deploy the `Predictive-Model` branch to production in Cloudflare.
-4. Validate endpoints using the commands below.
-
-### Validation commands
+Run local OpenAPI checks:
 
 ```bash
-curl -s https://construction-ai-terminal.toddbridgeford.workers.dev/ | jq
-curl -s https://construction-ai-terminal.toddbridgeford.workers.dev/health | jq
-curl -s https://construction-ai-terminal.toddbridgeford.workers.dev/notion/series | jq
-curl -s "https://construction-ai-terminal.toddbridgeford.workers.dev/fred/observations?series_id=PERMIT&limit=10" | jq
-curl -s "https://construction-ai-terminal.toddbridgeford.workers.dev/bundle?limit=10" | jq
-curl -s https://construction-ai-terminal.toddbridgeford.workers.dev/cpi | jq
+ruby scripts/validate_openapi.rb
 ```
