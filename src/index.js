@@ -1,4 +1,5 @@
 const SERVICE = "construction-ai-terminal";
+const DEFAULT_GIT_SHA = "unknown";
 const NOTION_VERSION = "2022-06-28";
 const FRED_OBSERVATIONS_URL = "https://api.stlouisfed.org/fred/series/observations";
 
@@ -33,6 +34,15 @@ export default {
 
       if (path === "/health") {
         return json({ ok: true, service: SERVICE });
+      }
+
+      if (path === "/version") {
+        return json({
+          ok: true,
+          worker: SERVICE,
+          git_sha: String(env.GIT_SHA || DEFAULT_GIT_SHA),
+          generated_at: new Date().toISOString(),
+        });
       }
 
       if (path === "/notion/series") {
