@@ -12,8 +12,8 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
-const IN_PATH = path.join(ROOT, process.env.IN_PATH || "dashboard_latest.json");
-const OUT_PATH = path.join(ROOT, process.env.OUT_PATH || "signal_api_latest.json");
+const IN_PATH = path.join(ROOT, process.env.IN_PATH || "artifacts/dashboard_latest.json");
+const OUT_PATH = path.join(ROOT, process.env.OUT_PATH || "artifacts/signal_api_latest.json");
 
 function mustReadJson(p) {
   if (!fs.existsSync(p)) throw new Error(`Missing input file: ${p}`);

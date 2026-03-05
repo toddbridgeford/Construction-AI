@@ -10,7 +10,7 @@ const ROOT = path.resolve(__dirname, "..");
 const MARKETS_PATH = path.join(ROOT, "config", "markets.json");
 const DIST_DIR = path.join(ROOT, "dist", "markets");
 const INDEX_PATH = path.join(DIST_DIR, "index.json");
-const NATIONAL_SIGNAL_PATH = path.join(ROOT, "signal_api_latest.json");
+const NATIONAL_SIGNAL_PATH = path.join(ROOT, "artifacts", "signal_api_latest.json");
 
 // --------------------------------------------------
 // Helpers

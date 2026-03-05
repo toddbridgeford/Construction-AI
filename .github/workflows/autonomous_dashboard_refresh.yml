@@ -39,6 +39,13 @@ jobs:
           ALPHAVANTAGE_API_KEY: ${{ secrets.ALPHAVANTAGE_API_KEY }}
         run: node scripts/run_orchestrator.mjs
 
+      - name: Sync artifacts directory
+        run: |
+          mkdir -p artifacts
+          [ -f dashboard_latest.json ] && cp dashboard_latest.json artifacts/dashboard_latest.json || true
+          [ -f signal_api_latest.json ] && cp signal_api_latest.json artifacts/signal_api_latest.json || true
+          [ -f deal_scoring_latest.json ] && cp deal_scoring_latest.json artifacts/deal_scoring_latest.json || true
+
       - name: Create pull request for data refresh
         uses: peter-evans/create-pull-request@v6
         with:
@@ -48,7 +55,7 @@ jobs:
             Automated dashboard refresh produced by GitHub Actions.
 
             - Ran `framework/national_autonomous_run_orchestrator_v1.json`
-            - Regenerated `dashboard_latest.json`
+            - Regenerated `artifacts/dashboard_latest.json` (and root mirror where applicable)
             - Opened this PR only when file content changed
           branch: automation/dashboard-refresh
           delete-branch: true

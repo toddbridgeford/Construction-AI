@@ -53,7 +53,7 @@ function sanitizeUrlForLogs(url) {
 }
 
 loadEnvFiles();
-const OUTFILE = path.join(ROOT, process.env.OUT_PATH || "dashboard_latest.json");
+const OUTFILE = path.join(ROOT, process.env.OUT_PATH || "artifacts/dashboard_latest.json");
 
 // ---------------------------
 // Helpers

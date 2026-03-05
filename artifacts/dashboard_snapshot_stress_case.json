@@ -1,0 +1,84 @@
+{
+  "schema_version": "4.4.0",
+  "generated_at": "2026-02-20T12:00:00Z",
+  "executive": {
+    "headline": "Construction Intelligence",
+    "confidence": "high",
+    "summary": "Freeze risk activated: broad stress regime with accelerated negative momentum."
+  },
+  "cpi": {
+    "headline": 62,
+    "zone": "Contraction",
+    "delta_3m": 8,
+    "momentum": "Heating",
+    "cpi_r": 64,
+    "cpi_i": 60,
+    "cpi_sf": 65,
+    "cpi_mf": 62,
+    "cpi_inst": 60,
+    "cpi_infra": 59,
+    "history": [
+      {
+        "date": "2026-02-20",
+        "value": 62
+      }
+    ],
+    "components": {
+      "capital": 30,
+      "pipeline": 40,
+      "trade": 57,
+      "materials": 63,
+      "regulatory": 56,
+      "macro_sentiment": 66
+    }
+  },
+  "risk_mode": true,
+  "risk_thermometer_mode": true,
+  "volatility_regime": "CRITICAL",
+  "regime_history": [
+    {
+      "date": "2026-02-20",
+      "primary_regime": "Contraction",
+      "secondary_modifier": "Freeze Risk",
+      "confidence": "high",
+      "cpi_level": 62,
+      "capital_score": 30,
+      "pipeline_score": 40,
+      "flip_trigger": "Capital and pipeline both under stress thresholds.",
+      "duration_days": 1,
+      "status": "Active"
+    }
+  ],
+  "regime_history_display": {
+    "current_regime_duration_days": 1,
+    "previous_regime": "Stress",
+    "last_flip_date": "2026-02-20",
+    "regime_stability": "Fragile"
+  },
+  "ui": {
+    "alerts": [
+      {
+        "severity": "high",
+        "title": "Freeze risk active",
+        "detail": "Capital and pipeline are simultaneously weak under a critical volatility regime."
+      }
+    ],
+    "trends": {
+      "cpi": "up",
+      "momentum": "heating"
+    },
+    "cards": [
+      {
+        "id": "cpi",
+        "title": "Composite Pressure Index",
+        "value": 62,
+        "status": "Contraction"
+      }
+    ],
+    "heat_strip": {
+      "cpi": 62,
+      "momentum": "Heating",
+      "freeze_risk": true
+    }
+  }
+}
