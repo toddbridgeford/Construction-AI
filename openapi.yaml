@@ -1,18 +1,7 @@
-openapi: 3.1.0
-info:
-  title: Construction AI Terminal
-  version: "1.0.1"
-  description: Canonical API for the construction-ai Cloudflare Worker.
-
-servers:
-  - url: https://construction-ai.toddbridgeford.workers.dev
-    description: Cloudflare Worker (canonical)
-
-paths:
-  /health:
+  /:
     get:
-      operationId: health
-      summary: Health check
+      operationId: root
+      summary: Root (alias of health)
       responses:
         "200":
           description: OK
@@ -21,158 +10,26 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthResponse"
 
-  /fred/observations:
+  /cpi:
     get:
-      operationId: getFred
-      summary: Fetch FRED observations for a single series
-      parameters:
-        - name: series_id
-          in: query
-          required: true
-          schema: { type: string }
-        - name: limit
-          in: query
-          required: false
-          schema: { type: integer, minimum: 1, maximum: 5000 }
+      operationId: getCpi
+      summary: Latest CPI (KV snapshot with FRED fallback)
       responses:
         "200":
-          description: FRED observations
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/FredObservationsEnvelope"
-
-  /bundle:
-    get:
-      operationId: macroBundle
-      summary: Macro bundle
-      responses:
-        "200":
-          description: Macro bundle response
+          description: CPI response
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericOkObject"
 
-  /signal:
+  /notion/series:
     get:
-      operationId: macroSignal
-      summary: Construction macro signal
+      operationId: listNotionSeries
+      summary: Query Notion database and return pages/properties (if configured)
       responses:
         "200":
-          description: Macro signal response
+          description: Notion series response
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/GenericOkObject"
-
-  /regime:
-    get:
-      operationId: macroRegime
-      summary: Determine macro regime
-      responses:
-        "200":
-          description: Regime response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /liquidity:
-    get:
-      operationId: macroLiquidity
-      summary: Credit liquidity state
-      responses:
-        "200":
-          description: Liquidity response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /construction-index:
-    get:
-      operationId: constructionIndex
-      summary: Construction cycle strength
-      responses:
-        "200":
-          description: Construction index response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /risk-score:
-    get:
-      operationId: macroRiskScore
-      summary: Combined macro risk score
-      responses:
-        "200":
-          description: Risk score response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-components:
-  schemas:
-    GenericOkObject:
-      type: object
-      description: Generic JSON response (allows arbitrary fields).
-      properties:
-        ok: { type: boolean }
-        ts: { type: string }
-        service: { type: string }
-      additionalProperties: true
-
-    HealthResponse:
-      type: object
-      properties:
-        ok: { type: boolean }
-        service: { type: string }
-        ts: { type: string }
-        git_sha:
-          anyOf:
-            - type: string
-            - type: "null"
-        has_kv: { type: boolean }
-        has_fred_key: { type: boolean }
-      required: [ok, service, ts]
-      additionalProperties: true
-
-    FredObservation:
-      type: object
-      properties:
-        date: { type: string }
-        value: { type: string }
-      required: [date, value]
-      additionalProperties: true
-
-    FredObservationsResponse:
-      type: object
-      properties:
-        realtime_start: { type: string }
-        realtime_end: { type: string }
-        observation_start: { type: string }
-        observation_end: { type: string }
-        sort_order: { type: string }
-        count: { type: integer }
-        limit: { type: integer }
-        observations:
-          type: array
-          items:
-            $ref: "#/components/schemas/FredObservation"
-      required: [observations]
-      additionalProperties: true
-
-    FredObservationsEnvelope:
-      type: object
-      properties:
-        ok: { type: boolean }
-        source: { type: string }
-        series_id: { type: string }
-        limit: { type: integer }
-        data:
-          $ref: "#/components/schemas/FredObservationsResponse"
-      required: [ok, data]
-      additionalProperties: true
