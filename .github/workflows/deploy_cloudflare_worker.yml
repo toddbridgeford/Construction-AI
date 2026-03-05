@@ -15,14 +15,10 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
 
       - name: Validate Worker syntax
         run: |
@@ -31,34 +27,23 @@ jobs:
           test -f wrangler.toml
           node --check src/worker.js
 
+      - name: Install Wrangler (pinned)
+        run: npm i -g wrangler@4.70.0
+
       - name: Preflight required Cloudflare configuration
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           set -euo pipefail
-          missing=0
           for key in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
             if [ -z "${!key:-}" ]; then
               echo "ERROR: Missing required secret ${key}."
-              missing=1
+              exit 1
             fi
           done
-          if [ "$missing" -ne 0 ]; then
-            echo "Deployment stopped. Configure required Cloudflare secrets in GitHub Actions."
-            exit 1
-          fi
-
-      - name: Install Wrangler (pinned)
-        run: |
-          set -euo pipefail
-          npm i -g wrangler@4.70.0
-          wrangler --version
-          node --version
-          npm --version
 
       - name: Deploy to Cloudflare (retry on transient API errors)
-        shell: bash
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -66,37 +51,18 @@ jobs:
         run: |
           set -euo pipefail
 
-          max=6
-          for i in $(seq 1 $max); do
-            echo "Deploy attempt $i/$max..."
-
-            set +e
-            wrangler deploy \
-              --name construction-ai-terminal \
-              --var GIT_SHA:${GIT_SHA} \
-              --log-level debug
-            rc=$?
-            set -e
-
-            if [ "$rc" -eq 0 ]; then
-              echo "✅ Deploy succeeded"
+          # IMPORTANT:
+          # - No --name here. wrangler.toml controls the script name.
+          # - We pass GIT_SHA as a var to the Worker runtime.
+          for attempt in 1 2 3 4 5; do
+            echo "Deploy attempt ${attempt}/5..."
+            if wrangler deploy --var GIT_SHA:${GIT_SHA}; then
+              echo "Deploy succeeded."
               exit 0
             fi
-
-            echo "❌ Deploy failed (exit $rc). Dumping latest Wrangler log (tail 200):"
-            latest_log="$(ls -t ~/.config/.wrangler/logs/wrangler-*.log 2>/dev/null | head -n 1 || true)"
-            if [ -n "${latest_log}" ]; then
-              echo "---- ${latest_log} ----"
-              tail -n 200 "${latest_log}" || true
-              echo "---- end ----"
-            else
-              echo "(No wrangler log found)"
-            fi
-
-            sleep_seconds=$((i*i*5))
-            echo "Sleeping ${sleep_seconds}s before retry..."
-            sleep "${sleep_seconds}"
+            echo "Deploy failed. Sleeping before retry..."
+            sleep $((attempt * 5))
           done
 
-          echo "❌ Deploy failed after ${max} attempts"
+          echo "Deploy failed after retries."
           exit 1
