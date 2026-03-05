@@ -30,44 +30,23 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}
-          CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}
         run: |
           set -euo pipefail
           missing=0
-          for key in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_KV_NAMESPACE_ID CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID; do
+          for key in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID; do
             if [ -z "${!key:-}" ]; then
               echo "ERROR: Missing required secret ${key}."
               missing=1
             fi
           done
           if [ "$missing" -ne 0 ]; then
-            echo "Deployment stopped. Configure all required Cloudflare secrets in GitHub Actions."
+            echo "Deployment stopped. Configure required Cloudflare secrets in GitHub Actions."
             exit 1
           fi
-
-      - name: Build wrangler.ci.toml
-        env:
-          CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}
-          CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID }}
-        run: |
-          set -euo pipefail
-          cat > wrangler.ci.toml <<CI
-          name = "construction-ai-terminal"
-          main = "src/index.js"
-          compatibility_date = "2026-01-01"
-
-          kv_namespaces = [
-            { binding = "CPI_SNAPSHOTS", id = "${CLOUDFLARE_KV_NAMESPACE_ID}", preview_id = "${CLOUDFLARE_KV_PREVIEW_NAMESPACE_ID}" }
-          ]
-
-          [triggers]
-          crons = ["0 * * * *"]
-          CI
 
       - name: Deploy to Cloudflare
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: wrangler deploy --config wrangler.ci.toml
+          command: wrangler deploy --config wrangler.toml
