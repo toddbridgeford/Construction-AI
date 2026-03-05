@@ -11,3 +11,15 @@ SERVICE_NAME = "construction-ai"
 
 [triggers]
 crons = ["0 * * * *"]
+
+[env.production]
+name = "construction-ai"
+main = "src/worker.js"
+compatibility_date = "2026-03-01"
+
+kv_namespaces = [
+  { binding = "CPI_SNAPSHOTS", id = "3ed4ce29b3c94758b531684cb927795a" }
+]
+
+[env.production.vars]
+SERVICE_NAME = "construction-ai"
