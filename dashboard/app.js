@@ -14,6 +14,9 @@ const ENDPOINTS = {
   earlyWarning: `${API_BASE}/construction/early-warning`,
   capitalFlows: `${API_BASE}/construction/capital-flows`,
   migrationIndex: `${API_BASE}/construction/migration-index`,
+  materialsShock: `${API_BASE}/construction/materials-shock`,
+  laborShock: `${API_BASE}/construction/labor-shock`,
+  marginPressure: `${API_BASE}/construction/margin-pressure`,
   spendingSummary: `${API_BASE}/spending/ytd/summary`,
 };
 
@@ -83,6 +86,9 @@ function modelFromSettled(results) {
   const stressIndex = settledValue(results.stressIndex, "stress_index") || terminal.stress_index || null;
   const capitalFlows = settledValue(results.capitalFlows, "capital_flows") || terminal.capital_flows || null;
   const migrationIndex = settledValue(results.migrationIndex, "migration_index") || terminal.migration_index || null;
+  const materialsShock = settledValue(results.materialsShock, "materials_shock") || terminal.materials_shock || null;
+  const laborShock = settledValue(results.laborShock, "labor_shock") || terminal.labor_shock || null;
+  const marginPressure = settledValue(results.marginPressure, "margin_pressure") || terminal.margin_pressure || null;
   const powerIndex = power?.power_index || terminal.power_index || null;
   const subcontractors = powerIndex?.subcontractors || null;
 
@@ -130,6 +136,9 @@ function modelFromSettled(results) {
     recessionProbability: settledValue(results.recessionProbability, "recession_probability") || terminal.recession_probability || null,
     earlyWarning: settledValue(results.earlyWarning, "early_warning") || terminal.early_warning || null,
     capitalFlows,
+    materialsShock,
+    laborShock,
+    marginPressure,
     migrationIndex,
     projectPipeline,
     bidEnvironment,
@@ -227,14 +236,15 @@ function renderPanels(vm) {
   const subCapacity = vm.subcontractorCapacity?.state || "unknown";
   const topAlerts = Array.from(new Map((vm.alerts || []).map((a) => [a.headline, a])).values());
   const operatorActions = vm.operatorActions
-    ? `GC: ${vm.operatorActions.gc} Sub: ${vm.operatorActions.subcontractor} Dev: ${vm.operatorActions.developer} Lender: ${vm.operatorActions.lender}`
-    : "GC: Protect backlog quality. Sub: Maintain pricing discipline. Dev: Stage starts by financing certainty. Lender: Monitor commercial exposures.";
+    ? `GC: ${vm.operatorActions.gc} Sub: ${vm.operatorActions.subcontractor} Dev: ${vm.operatorActions.developer} Lender: ${vm.operatorActions.lender} Supplier: ${vm.operatorActions.supplier || "Maintain delivery reliability and margin discipline."}`
+    : "GC: Protect backlog quality. Sub: Maintain pricing discipline. Dev: Stage starts by financing certainty. Lender: Monitor commercial exposures. Supplier: Maintain delivery reliability and margin discipline.";
 
   panelsEl.innerHTML = `
     <section class="row row-top">${card("Cycle Dial", vm.cycleInterpretation)}${card("Signal", vm.signal)}${card("Regime", vm.regime)}${card("Liquidity", vm.liquidity)}${card("Risk", vm.risk)}${card("Construction Index", vm.formattedConstructionIndex)}${card("Stress Index", stressValue, vm.stressIndex?.explanation || "")}</section>
     <section class="row">${card("Commercial vs Housing", `${commercial ?? "n/a"} / ${housing ?? "n/a"}`, commercialHousingTakeaway)}${card("Power Index", vm.power?.power_summary?.margin_leader || "unknown", powerHeadline)}${card("Forward Outlook", vm.nowcast?.next_6_months || "unknown", `Recession: ${vm.nowcast?.next_12_months_recession_probability ?? "n/a"}%`)}${card("Project Pipeline", projectPipeline, vm.nowcast?.drivers?.[0] || "No driver available")}</section>
     <section class="row">${card("Alerts", topAlerts?.[0]?.headline || "No active alerts", topAlerts?.[0]?.explanation || "")}${card("Heatmap", heatmapSummary, asText(vm.terminal?.heatmap_summary?.top_weakness_theme, ""))}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.subcontractorCapacity?.explanation || "")}</section>
     <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", vm.migrationSummary, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", asText(vm.terminal?.forecast_summary?.strongest_market, marketFromList(vm.forecast?.strongest_next_12_months)), forecastHeadline)}</section>
+    <section class="row">${card("Materials Shock", formatOneDecimal(vm.materialsShock?.score), vm.materialsShock?.explanation || vm.terminal?.materials_shock_summary || "")}${card("Labor Shock", formatOneDecimal(vm.laborShock?.score), vm.laborShock?.explanation || vm.terminal?.labor_shock_summary || "")}${card("Margin Pressure", formatOneDecimal(vm.marginPressure?.score), vm.marginPressure?.explanation || vm.terminal?.margin_pressure_summary || "")}</section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
 }
