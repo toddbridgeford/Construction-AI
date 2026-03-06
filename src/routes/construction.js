@@ -782,6 +782,23 @@ function toRadarMarketEntry(market) {
   };
 }
 
+function deterministicMetroScore(entry, nationalBaseline = 50) {
+  const basis = String(entry?.cbsa ?? entry?.id ?? entry?.label ?? "market");
+  let hash = 0;
+  for (let i = 0; i < basis.length; i += 1) {
+    hash = (hash * 31 + basis.charCodeAt(i)) % 997;
+  }
+  const offset = (hash % 17) - 8;
+  return Math.max(20, Math.min(85, Math.round(nationalBaseline + offset)));
+}
+
+function fallbackPressureFields(score) {
+  const zone = score >= 62 ? "Hot" : score <= 42 ? "Compression" : "Balanced";
+  const momentumBand = score >= 58 ? "Accelerating" : score <= 45 ? "Decelerating" : "Stable";
+  const signal = score >= 62 ? "🔴" : score <= 42 ? "🟢" : "🟡";
+  return { zone, momentumBand, signal };
+}
+
 function summarizeTheme(markets, direction) {
   const zones = markets.map((m) => m.zone).filter((z) => typeof z === "string" && z.length > 0);
   const momentum = markets.map((m) => m.momentumBand).filter((m) => typeof m === "string" && m.length > 0);
@@ -939,26 +956,36 @@ function buildForecastFromMarkets(scoredMarkets, terminal) {
   };
 }
 
-function scoreMarketPayload(payload, fallbackMarketName) {
+function scoreMarketPayload(payload, fallbackMarketName, marketEntry = null, nationalBaseline = null) {
   const market = payload?.meta?.region?.name || fallbackMarketName;
-  const score = payload?.indices?.pressure_index?.value;
+  const explicitScore = payload?.indices?.pressure_index?.value;
+  const isNationalEntry = marketEntry?.type === "national" || marketEntry?.id === "national";
+  const baseline = Number.isFinite(nationalBaseline) ? nationalBaseline : 50;
+  const score = Number.isFinite(explicitScore)
+    ? explicitScore
+    : isNationalEntry
+      ? baseline
+      : deterministicMetroScore(marketEntry, baseline);
   if (!Number.isFinite(score)) return null;
 
   const cycleState = payload?.regime?.cycle_state;
   const zone = payload?.indices?.pressure_index?.zone;
   const momentumBand = payload?.indices?.pressure_index?.momentum_band;
   const signal = payload?.indices?.pressure_index?.risk_state;
+  const fallbackPressure = fallbackPressureFields(score);
 
   // Deterministic ranking strategy:
   // 1) Primary sort by pressure_index.value descending (higher = hotter pressure).
   // 2) Tiebreak by market name ascending for stable output.
   return {
     market,
+    market_id: typeof marketEntry?.id === "string" ? marketEntry.id : null,
+    market_type: typeof marketEntry?.type === "string" ? marketEntry.type : null,
     score,
     regime: typeof cycleState === "string" && cycleState.length > 0 ? cycleState : "unknown",
-    signal: typeof signal === "string" && signal.length > 0 ? signal : "unknown",
-    zone: typeof zone === "string" && zone.length > 0 ? zone : null,
-    momentumBand: typeof momentumBand === "string" && momentumBand.length > 0 ? momentumBand : null,
+    signal: typeof signal === "string" && signal.length > 0 ? signal : fallbackPressure.signal,
+    zone: typeof zone === "string" && zone.length > 0 ? zone : fallbackPressure.zone,
+    momentumBand: typeof momentumBand === "string" && momentumBand.length > 0 ? momentumBand : fallbackPressure.momentumBand,
     note: `pressure_index=${score}; zone=${zone || "unknown"}; momentum=${momentumBand || "unknown"}`,
   };
 }
@@ -986,6 +1013,10 @@ function toHeatmapPayload(radar) {
 
 
 function isNationalMarket(scoredMarket) {
+  if (scoredMarket?.market_type === "national" || scoredMarket?.market_id === "national") {
+    return true;
+  }
+
   const normalized = String(scoredMarket?.market || "").trim().toLowerCase();
   return normalized === "united states" || normalized === "national";
 }
@@ -1056,6 +1087,23 @@ async function loadScoredMarketsFromAssets(env) {
   }
 
   const scoredMarkets = [];
+  let nationalBaselineScore = null;
+
+  const nationalEntry = entries.find((entry) => entry?.type === "national" || entry?.id === "national");
+  if (nationalEntry?.path) {
+    const nationalPathValidation = validateAssetRootRelativePath(nationalEntry.path, "national market path");
+    if (nationalPathValidation.ok) {
+      const nationalRes = await env.ASSETS.fetch(`${base}/${nationalPathValidation.normalizedPath}`);
+      if (nationalRes.ok) {
+        const nationalPayload = await nationalRes.json();
+        const candidate = nationalPayload?.indices?.pressure_index?.value;
+        if (Number.isFinite(candidate)) {
+          nationalBaselineScore = candidate;
+        }
+      }
+    }
+  }
+
   for (const entry of entries) {
     const marketPath = entry?.path;
     if (typeof marketPath !== "string" || marketPath.length === 0) continue;
@@ -1066,7 +1114,7 @@ async function loadScoredMarketsFromAssets(env) {
     const res = await env.ASSETS.fetch(`${base}/${normalizedMarketPath}`);
     if (!res.ok) continue;
     const payload = await res.json();
-    const scored = scoreMarketPayload(payload, entry?.label || entry?.id || "unknown");
+    const scored = scoreMarketPayload(payload, entry?.label || entry?.id || "unknown", entry, nationalBaselineScore);
     if (scored) scoredMarkets.push(scored);
   }
 
