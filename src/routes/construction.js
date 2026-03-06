@@ -33,9 +33,172 @@ function cycleInterpretation(constructionIndex, liquidityState, riskScore) {
 function operatorActions() {
   return {
     gc: "Protect backlog quality and tighten buyout terms.",
-    subcontractor: "Maintain pricing discipline while capacity remains tight.",
-    developer: "Slow speculative starts until financing spreads stabilize.",
+    subcontractor: "Prioritize escalation clauses and shorter quote validity where input volatility is rising.",
+    developer: "Stress-test GMP assumptions against labor and material volatility before locking starts.",
     lender: "Monitor commercial exposure and tightening credit conditions.",
+    supplier: "Protect lead-time reliability and tighten terms where contractor margin stress is climbing.",
+  };
+}
+
+function toPressureState(score) {
+  if (score >= 75) return "severe";
+  if (score >= 60) return "elevated";
+  if (score >= 40) return "moderate";
+  return "low";
+}
+
+function buildMaterialsShockModel(terminal) {
+  const metrics = extractTerminalInputs(terminal);
+  const inflationTrend = Number.isFinite(terminal?.risk?.inflation_trend_pct) ? terminal.risk.inflation_trend_pct : null;
+  const manufacturers = Number.isFinite(terminal?.power_index?.manufacturers?.score) ? terminal.power_index.manufacturers.score : null;
+  const distributors = Number.isFinite(terminal?.power_index?.distributors?.score) ? terminal.power_index.distributors.score : null;
+  const startsTrend = Number.isFinite(metrics.starts_trend_pct) ? metrics.starts_trend_pct : null;
+
+  let score = 30;
+  const drivers = [];
+
+  if (inflationTrend !== null) {
+    if (inflationTrend >= 3.5) {
+      score += 22;
+      drivers.push(`inflation trend is elevated (${inflationTrend.toFixed(2)}%)`);
+    } else if (inflationTrend >= 2.5) {
+      score += 12;
+      drivers.push(`inflation trend is above target (${inflationTrend.toFixed(2)}%)`);
+    } else {
+      score -= 6;
+      drivers.push(`inflation trend is comparatively contained (${inflationTrend.toFixed(2)}%)`);
+    }
+  } else {
+    drivers.push("inflation trend proxy unavailable; neutral baseline applied");
+  }
+
+  if (manufacturers !== null && distributors !== null) {
+    const supplyPower = (manufacturers + distributors) / 2;
+    if (supplyPower >= 60) {
+      score += 14;
+      drivers.push(`upstream pricing power is strong (${supplyPower.toFixed(1)})`);
+    } else if (supplyPower < 45) {
+      score -= 8;
+      drivers.push(`upstream pricing power is weak (${supplyPower.toFixed(1)})`);
+    }
+  }
+
+  if (metrics.liquidity_state === "tight") {
+    score += 10;
+    drivers.push("tight liquidity raises working-capital and inventory carrying pressure");
+  }
+
+  if (startsTrend !== null && startsTrend > 1.5) {
+    score += 8;
+    drivers.push(`starts trend is positive (${startsTrend.toFixed(2)}%), supporting input demand`);
+  } else if (startsTrend !== null && startsTrend < -1.5) {
+    score -= 6;
+    drivers.push(`starts trend is soft (${startsTrend.toFixed(2)}%), easing near-term materials pull`);
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 5),
+    explanation: `Materials inflation pressure is ${state} due to ${drivers.slice(0, 3).join("; ")}.`,
+  };
+}
+
+function buildLaborShockModel(terminal) {
+  const metrics = extractTerminalInputs(terminal);
+  const subcontractors = Number.isFinite(terminal?.power_index?.subcontractors?.score) ? terminal.power_index.subcontractors.score : null;
+  const constructionIndex = Number.isFinite(metrics.construction_index) ? metrics.construction_index : null;
+  const permitsTrend = Number.isFinite(metrics.permits_trend_pct) ? metrics.permits_trend_pct : null;
+
+  let score = 32;
+  const drivers = [];
+
+  if (constructionIndex !== null) {
+    if (constructionIndex >= 57) {
+      score += 15;
+      drivers.push(`construction index is firm (${constructionIndex.toFixed(1)})`);
+    } else if (constructionIndex < 46) {
+      score -= 10;
+      drivers.push(`construction index is weak (${constructionIndex.toFixed(1)})`);
+    }
+  }
+
+  if (subcontractors !== null) {
+    if (subcontractors >= 58) {
+      score += 18;
+      drivers.push(`subcontractor leverage is elevated (${subcontractors.toFixed(1)})`);
+    } else if (subcontractors < 45) {
+      score -= 8;
+      drivers.push(`subcontractor leverage is soft (${subcontractors.toFixed(1)})`);
+    }
+  }
+
+  if (metrics.liquidity_state === "tight") {
+    score += 8;
+    drivers.push("tight liquidity constrains payroll flexibility and hiring buffers");
+  }
+
+  if (permitsTrend !== null && permitsTrend > 1) {
+    score += 6;
+    drivers.push(`permits trend is positive (${permitsTrend.toFixed(2)}%), indicating future crew demand`);
+  } else if (permitsTrend !== null && permitsTrend < -1) {
+    score -= 5;
+    drivers.push(`permits trend is soft (${permitsTrend.toFixed(2)}%), reducing labor demand pressure`);
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 5),
+    explanation: `Labor tightness pressure is ${state} due to ${drivers.slice(0, 3).join("; ")}.`,
+  };
+}
+
+function buildMarginPressureModel(terminal) {
+  const materials = terminal.materials_shock || buildMaterialsShockModel(terminal);
+  const labor = terminal.labor_shock || buildLaborShockModel(terminal);
+  const metrics = extractTerminalInputs(terminal);
+  const subs = Number.isFinite(terminal?.power_index?.subcontractors?.score) ? terminal.power_index.subcontractors.score : null;
+  const gc = Number.isFinite(terminal?.power_index?.general_contractors?.score) ? terminal.power_index.general_contractors.score : null;
+
+  let score = materials.score * 0.5 + labor.score * 0.5;
+  const drivers = [
+    `materials shock score ${materials.score.toFixed(1)}`,
+    `labor shock score ${labor.score.toFixed(1)}`,
+  ];
+
+  if (metrics.commercial_pct_change !== null && metrics.housing_pct_change !== null
+      && metrics.commercial_pct_change >= 0 && metrics.housing_pct_change >= 0) {
+    score += 8;
+    drivers.push("demand remains stable while costs are rising, squeezing conversion");
+  }
+
+  if (metrics.risk_score !== null && metrics.risk_score >= 60) {
+    score += 8;
+    drivers.push(`macro risk is elevated (${metrics.risk_score.toFixed(1)})`);
+  }
+
+  if (subs !== null && gc !== null && subs > gc) {
+    score += 6;
+    drivers.push("subcontractor leverage exceeds GC leverage");
+  }
+
+  if (metrics.liquidity_state === "tight") {
+    score += 7;
+    drivers.push("tight liquidity limits repricing flexibility");
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Combined margin stress is ${state} from ${drivers.slice(0, 4).join("; ")}.`,
   };
 }
 
@@ -706,6 +869,12 @@ async function buildTerminalPayload(request, env) {
   terminal.early_warning_summary = terminal.early_warning.explanation;
   terminal.capital_flows = buildCapitalFlows(terminal);
   terminal.capital_flows_summary = terminal.capital_flows.explanation;
+  terminal.materials_shock = buildMaterialsShockModel(terminal);
+  terminal.materials_shock_summary = terminal.materials_shock.explanation;
+  terminal.labor_shock = buildLaborShockModel(terminal);
+  terminal.labor_shock_summary = terminal.labor_shock.explanation;
+  terminal.margin_pressure = buildMarginPressureModel(terminal);
+  terminal.margin_pressure_summary = terminal.margin_pressure.explanation;
   terminal.forecast_summary = {
     strongest_market: "unknown",
     weakest_market: "unknown",
@@ -1292,6 +1461,39 @@ export async function handleConstructionMigrationIndex(request, env) {
     return ok(env, { migration_index: terminal.migration_index });
   } catch (e) {
     return error(env, 500, "MIGRATION_INDEX_FAILED", "Unable to build construction migration index", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionMaterialsShock(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { materials_shock: terminal.materials_shock });
+  } catch (e) {
+    return error(env, 500, "MATERIALS_SHOCK_FAILED", "Unable to build construction materials shock model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionLaborShock(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { labor_shock: terminal.labor_shock });
+  } catch (e) {
+    return error(env, 500, "LABOR_SHOCK_FAILED", "Unable to build construction labor shock model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionMarginPressure(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { margin_pressure: terminal.margin_pressure });
+  } catch (e) {
+    return error(env, 500, "MARGIN_PRESSURE_FAILED", "Unable to build construction margin pressure model", {
       message: e?.message || String(e),
     });
   }

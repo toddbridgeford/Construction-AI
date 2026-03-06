@@ -356,6 +356,39 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionMigrationIndexResponse"
+  "/construction/materials-shock":
+    get:
+      operationId: constructionMaterialsShock
+      summary: Deterministic materials inflation pressure model
+      responses:
+        '200':
+          description: Deterministic materials inflation pressure model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionMaterialsShockResponse"
+  "/construction/labor-shock":
+    get:
+      operationId: constructionLaborShock
+      summary: Deterministic labor tightness pressure model
+      responses:
+        '200':
+          description: Deterministic labor tightness pressure model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionLaborShockResponse"
+  "/construction/margin-pressure":
+    get:
+      operationId: constructionMarginPressure
+      summary: Deterministic combined margin pressure model
+      responses:
+        '200':
+          description: Deterministic combined margin pressure model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionMarginPressureResponse"
 components:
   schemas:
     GenericOkObject:
@@ -691,11 +724,14 @@ components:
                   type: string
                 lender:
                   type: string
+                supplier:
+                  type: string
               required:
               - gc
               - subcontractor
               - developer
               - lender
+              - supplier
             power_index:
               type: object
               properties:
@@ -815,6 +851,18 @@ components:
               "$ref": "#/components/schemas/CapitalFlowsModel"
             capital_flows_summary:
               type: string
+            materials_shock:
+              "$ref": "#/components/schemas/MaterialsShockModel"
+            materials_shock_summary:
+              type: string
+            labor_shock:
+              "$ref": "#/components/schemas/LaborShockModel"
+            labor_shock_summary:
+              type: string
+            margin_pressure:
+              "$ref": "#/components/schemas/MarginPressureModel"
+            margin_pressure_summary:
+              type: string
             migration_index:
               "$ref": "#/components/schemas/MigrationIndexModel"
             migration_summary:
@@ -843,6 +891,12 @@ components:
           - early_warning_summary
           - capital_flows
           - capital_flows_summary
+          - materials_shock
+          - materials_shock_summary
+          - labor_shock
+          - labor_shock_summary
+          - margin_pressure
+          - margin_pressure_summary
           - migration_index
           - migration_summary
           - market_tape
@@ -1353,11 +1407,14 @@ components:
                   type: string
                 lender:
                   type: string
+                supplier:
+                  type: string
               required:
               - gc
               - subcontractor
               - developer
               - lender
+              - supplier
               additionalProperties: false
           required:
           - title
@@ -1633,6 +1690,121 @@ components:
       - top_market
       - weakest_market
       additionalProperties: false
+    ShockStateEnum:
+      type: string
+      enum:
+      - low
+      - moderate
+      - elevated
+      - severe
+    MaterialsShockModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    LaborShockModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    MarginPressureModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    ConstructionMaterialsShockResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        materials_shock:
+          "$ref": "#/components/schemas/MaterialsShockModel"
+      required:
+      - ok
+      - ts
+      - service
+      - materials_shock
+      additionalProperties: true
+    ConstructionLaborShockResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        labor_shock:
+          "$ref": "#/components/schemas/LaborShockModel"
+      required:
+      - ok
+      - ts
+      - service
+      - labor_shock
+      additionalProperties: true
+    ConstructionMarginPressureResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        margin_pressure:
+          "$ref": "#/components/schemas/MarginPressureModel"
+      required:
+      - ok
+      - ts
+      - service
+      - margin_pressure
+      additionalProperties: true
     ConstructionStressIndexResponse:
       type: object
       properties:

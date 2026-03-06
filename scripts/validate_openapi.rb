@@ -17,7 +17,10 @@ REQUIRED_NEW_PATHS = [
   '/construction/stress-index',
   '/construction/early-warning',
   '/construction/capital-flows',
-  '/construction/migration-index'
+  '/construction/migration-index',
+  '/construction/materials-shock',
+  '/construction/labor-shock',
+  '/construction/margin-pressure'
 ]
 REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/spending/ytd/summary']
 REQUIRED_SCHEMAS = [
@@ -43,7 +46,14 @@ REQUIRED_SCHEMAS = [
   'ConstructionStressIndexResponse',
   'ConstructionEarlyWarningResponse',
   'ConstructionCapitalFlowsResponse',
-  'ConstructionMigrationIndexResponse'
+  'ConstructionMigrationIndexResponse',
+  'ShockStateEnum',
+  'MaterialsShockModel',
+  'LaborShockModel',
+  'MarginPressureModel',
+  'ConstructionMaterialsShockResponse',
+  'ConstructionLaborShockResponse',
+  'ConstructionMarginPressureResponse'
 ]
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
@@ -85,6 +95,14 @@ errors << 'ConstructionTerminalResponse terminal schema must include capital_flo
 errors << 'ConstructionTerminalResponse terminal schema must include migration_index' unless terminal_properties.key?('migration_index')
 errors << 'ConstructionTerminalResponse terminal schema must include market_tape' unless terminal_properties.key?('market_tape')
 
+
+errors << 'ConstructionTerminalResponse terminal schema must include materials_shock' unless terminal_properties.key?('materials_shock')
+errors << 'ConstructionTerminalResponse terminal schema must include materials_shock_summary' unless terminal_properties.key?('materials_shock_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include labor_shock' unless terminal_properties.key?('labor_shock')
+errors << 'ConstructionTerminalResponse terminal schema must include labor_shock_summary' unless terminal_properties.key?('labor_shock_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include margin_pressure' unless terminal_properties.key?('margin_pressure')
+errors << 'ConstructionTerminalResponse terminal schema must include margin_pressure_summary' unless terminal_properties.key?('margin_pressure_summary')
+
 forecast_items = components.dig('ConstructionForecastResponse', 'properties', 'forecast', 'properties', 'strongest_next_12_months', 'items')
 errors << 'ConstructionForecastResponse strongest_next_12_months must reference ForecastMarketItem' unless forecast_items&.dig('$ref') == '#/components/schemas/ForecastMarketItem'
 
@@ -106,6 +124,8 @@ referenced.uniq.each do |name|
     errors << "Referenced component schema missing: #{name}"
     next
   end
+
+  next if sch['type'] == 'string' && sch['enum'].is_a?(Array) && !sch['enum'].empty?
 
   props = sch['properties']
   errors << "Referenced component schema #{name} must define non-empty properties" unless props.is_a?(Hash) && !props.empty?
