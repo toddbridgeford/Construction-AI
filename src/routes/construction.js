@@ -1,5 +1,5 @@
 import { error, ok } from "../lib/http.js";
-import { MARKETS_INDEX_ASSET_PATH, normalizeAssetPath } from "../lib/markets_assets.js";
+import { MARKETS_INDEX_ASSET_PATH, validateAssetRootRelativePath } from "../lib/markets_assets.js";
 import { buildConstructionDashboard } from "./existing.js";
 import { handleSpendingYtdSummary } from "./spending_ytd.js";
 
@@ -1012,11 +1012,16 @@ function buildRadarFromMarkets(scoredMarkets) {
 
 async function loadScoredMarketsFromAssets(env) {
   if (!env.ASSETS || typeof env.ASSETS.fetch !== "function") {
-    return subsectionError("ASSETS_NOT_CONFIGURED", "Static asset binding is not configured; cannot read dist/markets/*.json files");
+    return subsectionError("ASSETS_NOT_CONFIGURED", "Static asset binding is not configured; cannot read markets/*.json files");
   }
 
   const base = "http://assets";
-  const marketsIndexPath = normalizeAssetPath(MARKETS_INDEX_ASSET_PATH);
+  const indexPathValidation = validateAssetRootRelativePath(MARKETS_INDEX_ASSET_PATH, "markets index path");
+  if (!indexPathValidation.ok) {
+    return subsectionError("MARKETS_INDEX_PATH_INVALID", indexPathValidation.reason, { path: indexPathValidation.normalizedPath || MARKETS_INDEX_ASSET_PATH });
+  }
+
+  const marketsIndexPath = indexPathValidation.normalizedPath;
   const marketsIndexRes = await env.ASSETS.fetch(`${base}/${marketsIndexPath}`);
   if (!marketsIndexRes.ok) {
     return subsectionError("MARKETS_INDEX_MISSING", `Unable to read ${MARKETS_INDEX_ASSET_PATH}`, { status: marketsIndexRes.status });
@@ -1032,7 +1037,10 @@ async function loadScoredMarketsFromAssets(env) {
   for (const entry of entries) {
     const marketPath = entry?.path;
     if (typeof marketPath !== "string" || marketPath.length === 0) continue;
-    const normalizedMarketPath = normalizeAssetPath(marketPath);
+    const marketPathValidation = validateAssetRootRelativePath(marketPath, `market path for ${entry?.id || entry?.label || "unknown"}`);
+    if (!marketPathValidation.ok) continue;
+
+    const normalizedMarketPath = marketPathValidation.normalizedPath;
     const res = await env.ASSETS.fetch(`${base}/${normalizedMarketPath}`);
     if (!res.ok) continue;
     const payload = await res.json();

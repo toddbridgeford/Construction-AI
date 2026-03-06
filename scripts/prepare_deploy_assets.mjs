@@ -1,14 +1,19 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
-import { MARKETS_INDEX_ASSET_PATH, normalizeAssetPath } from "../src/lib/markets_assets.js";
+import { MARKETS_INDEX_ASSET_PATH, normalizeAssetPath, validateAssetRootRelativePath } from "../src/lib/markets_assets.js";
 
 const repoRoot = process.cwd();
 const sourceDistDir = path.join(repoRoot, "dist");
 const deployRootDir = path.join(repoRoot, ".deploy-assets");
-const deployDistDir = path.join(deployRootDir, "dist");
 const runtimeMarketsIndexPath = normalizeAssetPath(MARKETS_INDEX_ASSET_PATH);
 const deployMarketsIndex = path.join(deployRootDir, runtimeMarketsIndexPath);
+const indexPathValidation = validateAssetRootRelativePath(MARKETS_INDEX_ASSET_PATH, "markets index path");
+if (!indexPathValidation.ok) {
+  console.error(`ERROR: ${indexPathValidation.reason}`);
+  process.exit(1);
+}
+
 
 function copyDirectoryRecursive(sourceDir, targetDir) {
   fs.mkdirSync(targetDir, { recursive: true });
@@ -33,7 +38,7 @@ if (!fs.existsSync(sourceDistDir) || !fs.statSync(sourceDistDir).isDirectory()) 
 
 fs.rmSync(deployRootDir, { recursive: true, force: true });
 fs.mkdirSync(deployRootDir, { recursive: true });
-copyDirectoryRecursive(sourceDistDir, deployDistDir);
+copyDirectoryRecursive(sourceDistDir, deployRootDir);
 
 if (!fs.existsSync(deployMarketsIndex)) {
   console.error(`ERROR: Missing .deploy-assets/${runtimeMarketsIndexPath} in deploy bundle.`);
@@ -54,11 +59,17 @@ const markets = Array.isArray(marketsIndex?.markets) ? marketsIndex.markets : []
 for (const market of markets) {
   const marketPath = typeof market?.path === "string" ? market.path : "";
   if (!marketPath) {
-    console.error("ERROR: Market entry missing path in dist/markets/index.json");
+    console.error("ERROR: Market entry missing path in markets/index.json");
     process.exit(1);
   }
 
-  const bundledPath = path.join(deployRootDir, normalizeAssetPath(marketPath));
+  const pathValidation = validateAssetRootRelativePath(marketPath, `market path for ${market?.id || "unknown"}`);
+  if (!pathValidation.ok) {
+    console.error(`ERROR: ${pathValidation.reason}`);
+    process.exit(1);
+  }
+
+  const bundledPath = path.join(deployRootDir, pathValidation.normalizedPath);
   if (!fs.existsSync(bundledPath)) {
     console.error(`ERROR: Referenced market file missing from deploy bundle: ${marketPath}`);
     process.exit(1);
