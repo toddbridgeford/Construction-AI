@@ -20,6 +20,9 @@ const ENDPOINTS = {
   bidIntensity: `${API_BASE}/construction/bid-intensity`,
   backlogQuality: `${API_BASE}/construction/backlog-quality`,
   projectRisk: `${API_BASE}/construction/project-risk`,
+  receivablesRisk: `${API_BASE}/construction/receivables-risk`,
+  paymentDelayRisk: `${API_BASE}/construction/payment-delay-risk`,
+  collectionsStress: `${API_BASE}/construction/collections-stress`,
   spendingSummary: `${API_BASE}/spending/ytd/summary`,
 };
 
@@ -95,6 +98,9 @@ function modelFromSettled(results) {
   const bidIntensity = settledValue(results.bidIntensity, "bid_intensity") || terminal.bid_intensity || null;
   const backlogQuality = settledValue(results.backlogQuality, "backlog_quality") || terminal.backlog_quality || null;
   const projectRisk = settledValue(results.projectRisk, "project_risk") || terminal.project_risk || null;
+  const receivablesRisk = settledValue(results.receivablesRisk, "receivables_risk") || terminal.receivables_risk || null;
+  const paymentDelayRisk = settledValue(results.paymentDelayRisk, "payment_delay_risk") || terminal.payment_delay_risk || null;
+  const collectionsStress = settledValue(results.collectionsStress, "collections_stress") || terminal.collections_stress || null;
   const powerIndex = power?.power_index || terminal.power_index || null;
   const subcontractors = powerIndex?.subcontractors || null;
 
@@ -148,6 +154,9 @@ function modelFromSettled(results) {
     bidIntensity,
     backlogQuality,
     projectRisk,
+    receivablesRisk,
+    paymentDelayRisk,
+    collectionsStress,
     migrationIndex,
     projectPipeline,
     bidEnvironment,
@@ -255,6 +264,7 @@ function renderPanels(vm) {
     <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", vm.migrationSummary, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", asText(vm.terminal?.forecast_summary?.strongest_market, marketFromList(vm.forecast?.strongest_next_12_months)), forecastHeadline)}</section>
     <section class="row">${card("Materials Shock", formatOneDecimal(vm.materialsShock?.score), vm.materialsShock?.explanation || vm.terminal?.materials_shock_summary || "")}${card("Labor Shock", formatOneDecimal(vm.laborShock?.score), vm.laborShock?.explanation || vm.terminal?.labor_shock_summary || "")}${card("Margin Pressure", formatOneDecimal(vm.marginPressure?.score), vm.marginPressure?.explanation || vm.terminal?.margin_pressure_summary || "")}</section>
     <section class="row">${card("Bid Activity / Intensity", formatOneDecimal(vm.bidIntensity?.score), vm.bidIntensity?.explanation || vm.terminal?.bid_intensity_summary || "")}${card("Backlog Quality", formatOneDecimal(vm.backlogQuality?.score), vm.backlogQuality?.explanation || vm.terminal?.backlog_quality_summary || "")}${card("Project Risk", formatOneDecimal(vm.projectRisk?.score), vm.projectRisk?.explanation || vm.terminal?.project_risk_summary || "")}</section>
+    <section class="row">${card("Receivables Risk", formatOneDecimal(vm.receivablesRisk?.score), vm.receivablesRisk?.explanation || vm.terminal?.receivables_risk_summary || "")}${card("Payment Delay Risk", formatOneDecimal(vm.paymentDelayRisk?.score), vm.paymentDelayRisk?.explanation || vm.terminal?.payment_delay_risk_summary || "")}${card("Collections Stress", formatOneDecimal(vm.collectionsStress?.score), vm.collectionsStress?.explanation || vm.terminal?.collections_stress_summary || "")}</section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
 }

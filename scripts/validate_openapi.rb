@@ -20,7 +20,13 @@ REQUIRED_NEW_PATHS = [
   '/construction/migration-index',
   '/construction/materials-shock',
   '/construction/labor-shock',
-  '/construction/margin-pressure'
+  '/construction/margin-pressure',
+  '/construction/bid-intensity',
+  '/construction/backlog-quality',
+  '/construction/project-risk',
+  '/construction/receivables-risk',
+  '/construction/payment-delay-risk',
+  '/construction/collections-stress'
 ]
 REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/spending/ytd/summary']
 REQUIRED_SCHEMAS = [
@@ -53,7 +59,16 @@ REQUIRED_SCHEMAS = [
   'MarginPressureModel',
   'ConstructionMaterialsShockResponse',
   'ConstructionLaborShockResponse',
-  'ConstructionMarginPressureResponse'
+  'ConstructionMarginPressureResponse',
+  'ReceivablesRiskModel',
+  'PaymentDelayRiskModel',
+  'CollectionsStressModel',
+  'ConstructionReceivablesRiskResponse',
+  'ConstructionPaymentDelayRiskResponse',
+  'ConstructionCollectionsStressResponse',
+  'ConstructionBidIntensityResponse',
+  'ConstructionBacklogQualityResponse',
+  'ConstructionProjectRiskResponse'
 ]
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
@@ -94,6 +109,12 @@ errors << 'ConstructionTerminalResponse terminal schema must include early_warni
 errors << 'ConstructionTerminalResponse terminal schema must include capital_flows' unless terminal_properties.key?('capital_flows')
 errors << 'ConstructionTerminalResponse terminal schema must include migration_index' unless terminal_properties.key?('migration_index')
 errors << 'ConstructionTerminalResponse terminal schema must include market_tape' unless terminal_properties.key?('market_tape')
+errors << 'ConstructionTerminalResponse terminal schema must include collections_stress_summary' unless terminal_properties.key?('collections_stress_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include collections_stress' unless terminal_properties.key?('collections_stress')
+errors << 'ConstructionTerminalResponse terminal schema must include payment_delay_risk_summary' unless terminal_properties.key?('payment_delay_risk_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include payment_delay_risk' unless terminal_properties.key?('payment_delay_risk')
+errors << 'ConstructionTerminalResponse terminal schema must include receivables_risk_summary' unless terminal_properties.key?('receivables_risk_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include receivables_risk' unless terminal_properties.key?('receivables_risk')
 
 
 errors << 'ConstructionTerminalResponse terminal schema must include materials_shock' unless terminal_properties.key?('materials_shock')

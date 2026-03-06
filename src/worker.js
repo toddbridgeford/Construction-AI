@@ -34,6 +34,9 @@ import {
   handleConstructionBidIntensity,
   handleConstructionBacklogQuality,
   handleConstructionProjectRisk,
+  handleConstructionReceivablesRisk,
+  handleConstructionPaymentDelayRisk,
+  handleConstructionCollectionsStress,
 } from "./routes/construction.js";
 
 export default {
@@ -76,6 +79,9 @@ export default {
       if (pathname === "/construction/bid-intensity") return handleConstructionBidIntensity(request, env);
       if (pathname === "/construction/backlog-quality") return handleConstructionBacklogQuality(request, env);
       if (pathname === "/construction/project-risk") return handleConstructionProjectRisk(request, env);
+      if (pathname === "/construction/receivables-risk") return handleConstructionReceivablesRisk(request, env);
+      if (pathname === "/construction/payment-delay-risk") return handleConstructionPaymentDelayRisk(request, env);
+      if (pathname === "/construction/collections-stress") return handleConstructionCollectionsStress(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
       if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
       if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);
