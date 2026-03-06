@@ -18,6 +18,9 @@ jobs:
       - name: Validate OpenAPI
         run: ruby scripts/validate_openapi.rb
 
+      - name: Run worker smoke tests
+        run: node scripts/smoke_worker_node.js
+
   deploy_preview:
     if: github.event_name == 'pull_request'
     needs: validate
