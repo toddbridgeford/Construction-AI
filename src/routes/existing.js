@@ -294,7 +294,7 @@ export async function handleBundle(request, env) {
   return ok(env, { source: "live", bundle: { series } });
 }
 
-async function handleMacroEndpoint(env, limit = 12) {
+export async function buildMacroEndpointData(env, limit = 12) {
   const { snapshot } = await buildMacroSnapshot(env, limit);
   if (!snapshot?.ok) {
     return {
@@ -314,32 +314,55 @@ async function handleMacroEndpoint(env, limit = 12) {
 }
 
 export async function handleSignal(env) {
-  const result = await handleMacroEndpoint(env);
+  const result = await buildMacroEndpointData(env);
   if (result.failed) return result.response;
   const { signal, liquidity, construction, regime, risk } = result.data;
   return ok(env, { signal, regime, liquidity, construction, risk });
 }
 
+export async function buildConstructionDashboard(env, limit = 12) {
+  const result = await buildMacroEndpointData(env, limit);
+  if (result.failed) return result;
+
+  const { signal, regime, liquidity, risk, construction } = result.data;
+  return {
+    failed: false,
+    data: {
+      signal,
+      regime,
+      liquidity,
+      risk,
+      construction_index: construction?.construction_index ?? null,
+    },
+  };
+}
+
+export async function handleConstructionDashboard(env) {
+  const result = await buildConstructionDashboard(env);
+  if (result.failed) return result.response;
+  return ok(env, result.data);
+}
+
 export async function handleRegime(env) {
-  const result = await handleMacroEndpoint(env);
+  const result = await buildMacroEndpointData(env);
   if (result.failed) return result.response;
   return ok(env, { regime: result.data.regime });
 }
 
 export async function handleLiquidity(env) {
-  const result = await handleMacroEndpoint(env);
+  const result = await buildMacroEndpointData(env);
   if (result.failed) return result.response;
   return ok(env, { liquidity: result.data.liquidity });
 }
 
 export async function handleConstructionIndex(env) {
-  const result = await handleMacroEndpoint(env);
+  const result = await buildMacroEndpointData(env);
   if (result.failed) return result.response;
   return ok(env, { construction: result.data.construction });
 }
 
 export async function handleRiskScore(env) {
-  const result = await handleMacroEndpoint(env);
+  const result = await buildMacroEndpointData(env);
   if (result.failed) return result.response;
   return ok(env, { risk: result.data.risk });
 }

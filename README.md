@@ -35,6 +35,11 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `GET /liquidity`
 - `GET /construction-index`
 - `GET /risk-score`
+- `GET /construction/dashboard`
+- `GET /construction/terminal`
+- `GET /construction/market-radar`
+- `GET /spending/ytd`
+- `GET /spending/ytd/summary`
 - `GET /ytd/commercial`
 - `GET /ytd/housing`
 - `GET /ytd/summary`
@@ -47,7 +52,22 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
    `https://construction-ai.toddbridgeford.workers.dev`
 4. Save and test `/health` and `/cpi` from the Actions tester.
 
-> `/terminal` is intentionally excluded from the canonical API contract.
+> `/terminal` is intentionally excluded from the canonical API contract; use `/construction/terminal`.
+
+
+## Terminal Endpoints
+
+- `/construction/dashboard`
+- `/construction/terminal`
+- `/construction/market-radar`
+- `/spending/ytd`
+- `/spending/ytd/summary`
+
+Notes:
+- `terminal` = one-call operator intelligence (macro dashboard + spending summary + cycle interpretation + operator actions).
+- `market-radar` = hottest vs weakest markets ranked by deterministic market pressure scoring.
+- `commercial` = nonresidential construction spending.
+- `housing` = residential construction spending.
 
 ## Validation
 
