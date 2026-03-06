@@ -38,6 +38,9 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `GET /construction/dashboard`
 - `GET /construction/terminal`
 - `GET /construction/market-radar`
+- `GET /construction/morning-brief`
+- `GET /construction/alerts`
+- `GET /construction/recession-probability`
 - `GET /spending/ytd`
 - `GET /spending/ytd/summary`
 - `GET /ytd/commercial`
@@ -66,8 +69,17 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 Notes:
 - `terminal` = one-call operator intelligence (macro dashboard + spending summary + cycle interpretation + operator actions).
 - `market-radar` = hottest vs weakest markets ranked by deterministic market pressure scoring.
+- `morning-brief` = daily operator note combining terminal posture + market radar.
+- `alerts` = machine-readable active risk cards from deterministic construction conditions.
+- `recession-probability` = next-12-month construction slowdown/contraction risk estimate.
 - `commercial` = nonresidential construction spending.
 - `housing` = residential construction spending.
+
+## Terminal Intelligence Layer
+
+- `/construction/morning-brief` — daily operator note.
+- `/construction/alerts` — machine-readable active risk cards.
+- `/construction/recession-probability` — deterministic next-12-month construction slowdown risk estimate.
 
 ## Validation
 
