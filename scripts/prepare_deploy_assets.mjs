@@ -8,7 +8,7 @@ const sourceDistDir = path.join(repoRoot, "dist");
 const deployRootDir = path.join(repoRoot, ".deploy-assets");
 const deployDistDir = path.join(deployRootDir, "dist");
 const runtimeMarketsIndexPath = normalizeAssetPath(MARKETS_INDEX_ASSET_PATH);
-const deployMarketsIndex = path.join(deployRootDir, runtimeMarketsIndexPath);
+const deployMarketsIndex = path.join(deployDistDir, runtimeMarketsIndexPath);
 
 function copyDirectoryRecursive(sourceDir, targetDir) {
   fs.mkdirSync(targetDir, { recursive: true });
@@ -54,11 +54,11 @@ const markets = Array.isArray(marketsIndex?.markets) ? marketsIndex.markets : []
 for (const market of markets) {
   const marketPath = typeof market?.path === "string" ? market.path : "";
   if (!marketPath) {
-    console.error("ERROR: Market entry missing path in dist/markets/index.json");
+    console.error("ERROR: Market entry missing path in markets/index.json");
     process.exit(1);
   }
 
-  const bundledPath = path.join(deployRootDir, normalizeAssetPath(marketPath));
+  const bundledPath = path.join(deployDistDir, normalizeAssetPath(marketPath));
   if (!fs.existsSync(bundledPath)) {
     console.error(`ERROR: Referenced market file missing from deploy bundle: ${marketPath}`);
     process.exit(1);
