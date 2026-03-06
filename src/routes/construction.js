@@ -565,10 +565,28 @@ function buildCapitalFlows(terminal) {
 function buildMigrationIndex(heatmap, forecast) {
   const inbound_markets = (forecast?.strongest_next_12_months || heatmap?.hottest_markets || [])
     .slice(0, 5)
-    .map((m) => ({ market: m.market, score: Number.isFinite(m.forecast_score) ? m.forecast_score : m.score ?? null }));
+    .map((m) => ({
+      market: m.market,
+      score: Number.isFinite(m.forecast_score) ? m.forecast_score : m.score ?? null,
+      explanation:
+        typeof m.explanation === "string" && m.explanation.length > 0
+          ? m.explanation
+          : typeof m.note === "string" && m.note.length > 0
+            ? m.note
+            : "Deterministic migration ranking from relative construction momentum.",
+    }));
   const outbound_markets = (forecast?.weakest_next_12_months || heatmap?.weakest_markets || [])
     .slice(0, 5)
-    .map((m) => ({ market: m.market, score: Number.isFinite(m.forecast_score) ? m.forecast_score : m.score ?? null }));
+    .map((m) => ({
+      market: m.market,
+      score: Number.isFinite(m.forecast_score) ? m.forecast_score : m.score ?? null,
+      explanation:
+        typeof m.explanation === "string" && m.explanation.length > 0
+          ? m.explanation
+          : typeof m.note === "string" && m.note.length > 0
+            ? m.note
+            : "Deterministic migration ranking from relative construction momentum.",
+    }));
   const topInbound = inbound_markets[0]?.market || "unknown";
   const topOutbound = outbound_markets[0]?.market || "unknown";
 

@@ -191,6 +191,8 @@ function runIntelligenceLayerSmoke() {
   );
   assert(Array.isArray(migrationIndex.inbound_markets), "Migration inbound markets missing");
   assert(Array.isArray(migrationIndex.outbound_markets), "Migration outbound markets missing");
+  assert(typeof migrationIndex.inbound_markets[0]?.explanation === "string", "Migration inbound explanation missing");
+  assert(typeof migrationIndex.outbound_markets[0]?.explanation === "string", "Migration outbound explanation missing");
   assert(typeof migrationIndex.headline === "string", "Migration headline missing");
 
   const marketTape = buildMarketTape({

@@ -133,6 +133,11 @@ errors << 'MigrationIndexModel.inbound_markets must be defined' unless migration
 errors << 'MigrationIndexModel.outbound_markets must be defined' unless migration_props.key?('outbound_markets')
 errors << 'MigrationIndexModel.headline must be defined' unless migration_props.key?('headline')
 
+migration_item_props = components.dig('MigrationMarketItem', 'properties') || {}
+errors << 'MigrationMarketItem.market must be defined' unless migration_item_props.key?('market')
+errors << 'MigrationMarketItem.score must be defined' unless migration_item_props.key?('score')
+errors << 'MigrationMarketItem.explanation must be defined' unless migration_item_props.key?('explanation')
+
 market_tape_risk = components.dig('MarketTapeModel', 'properties', 'risk', 'type')
 errors << 'MarketTapeModel.risk must be a string' unless market_tape_risk == 'string'
 

@@ -9,7 +9,7 @@
  * - schema must either have non-empty properties OR be a $ref to a schema with non-empty properties
  */
 
-const fs = require("fs");
+import fs from "node:fs";
 
 function fail(msg) {
   console.error(`OPENAPI VALIDATION FAILED: ${msg}`);
@@ -20,21 +20,18 @@ function ok(msg) {
   console.log(`OK: ${msg}`);
 }
 
-function readYaml() {
-  // Prefer yaml dependency if present; fallback to ruby is not allowed here (node-only).
-  let yaml;
+async function readYaml() {
+  let yamlModule;
   try {
-    yaml = require("yaml");
+    yamlModule = await import("yaml");
   } catch (e) {
-    fail(
-      `Missing dependency "yaml". Add it with: npm i -D yaml (or bun add -d yaml).`
-    );
+    fail(`Missing dependency "yaml". Install it in repo dependencies to run this validator.`);
   }
 
   const raw = fs.readFileSync("openapi.yaml", "utf8");
   let doc;
   try {
-    doc = yaml.parse(raw);
+    doc = yamlModule.parse(raw);
   } catch (e) {
     fail(`YAML parse error: ${e.message}`);
   }
@@ -51,8 +48,8 @@ function getRefName(ref) {
   return parts[parts.length - 1];
 }
 
-function main() {
-  const d = readYaml();
+async function main() {
+  const d = await readYaml();
 
   // 1) OpenAPI version
   if (d.openapi !== "3.1.0") fail(`openapi must be "3.1.0" (found: ${d.openapi})`);
@@ -133,4 +130,4 @@ function main() {
   console.log("OPENAPI CHECKS PASSED");
 }
 
-main();
+await main();
