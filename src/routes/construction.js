@@ -267,6 +267,157 @@ function buildProjectRiskModel(terminal) {
   };
 }
 
+function buildReceivablesRiskModel(terminal) {
+  const backlog = terminal?.backlog_quality || buildBacklogQualityModel(terminal);
+  const projectRisk = terminal?.project_risk || buildProjectRiskModel(terminal);
+  const marginPressure = terminal?.margin_pressure || buildMarginPressureModel(terminal);
+  const developerPower = Number.isFinite(terminal?.power_index?.developers?.score) ? terminal.power_index.developers.score : null;
+  const weakMarketScore = Number.isFinite(terminal?.migration_index?.outbound_markets?.[0]?.score)
+    ? terminal.migration_index.outbound_markets[0].score
+    : null;
+  const weakMarketName = terminal?.migration_index?.outbound_markets?.[0]?.market || "weaker metros";
+
+  let score = 26;
+  const drivers = [];
+
+  if (backlog.state === "weak") {
+    score += 20;
+    drivers.push("backlog quality is weak");
+  } else if (backlog.state === "mixed") {
+    score += 8;
+    drivers.push("backlog quality is mixed");
+  }
+
+  if (projectRisk.score >= 60) {
+    score += 19;
+    drivers.push(`project risk is elevated (${projectRisk.score.toFixed(1)})`);
+  } else if (projectRisk.score >= 45) {
+    score += 9;
+    drivers.push(`project risk is moderate (${projectRisk.score.toFixed(1)})`);
+  }
+
+  if (weakMarketScore !== null && weakMarketScore <= 45) {
+    score += 11;
+    drivers.push(`${weakMarketName} is deteriorating (${weakMarketScore.toFixed(1)})`);
+  }
+
+  if (developerPower !== null) {
+    if (developerPower <= 44) {
+      score += 10;
+      drivers.push(`developer balance-sheet flexibility is constrained (${developerPower.toFixed(1)})`);
+    } else if (developerPower >= 58) {
+      score -= 5;
+      drivers.push(`developer capacity is supportive (${developerPower.toFixed(1)})`);
+    }
+  }
+
+  if (marginPressure.score >= 60) {
+    score += 12;
+    drivers.push(`margin pressure is elevated (${marginPressure.score.toFixed(1)})`);
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Receivables risk is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
+function buildPaymentDelayRiskModel(terminal) {
+  const projectRisk = terminal?.project_risk || buildProjectRiskModel(terminal);
+  const metrics = extractTerminalInputs(terminal);
+  const lenderPower = Number.isFinite(terminal?.power_index?.lenders?.score) ? terminal.power_index.lenders.score : null;
+  const weakMarketScore = Number.isFinite(terminal?.migration_index?.outbound_markets?.[0]?.score)
+    ? terminal.migration_index.outbound_markets[0].score
+    : null;
+
+  let score = 24;
+  const drivers = [];
+
+  if (lenderPower !== null) {
+    if (lenderPower <= 46) {
+      score += 20;
+      drivers.push(`lenders are cautious (${lenderPower.toFixed(1)})`);
+    } else if (lenderPower >= 58) {
+      score -= 8;
+      drivers.push(`lender risk appetite remains supportive (${lenderPower.toFixed(1)})`);
+    }
+  }
+
+  if (metrics.liquidity_state === "tight") {
+    score += 15;
+    drivers.push("liquidity is tight across the payment chain");
+  } else if (metrics.liquidity_state === "neutral") {
+    score += 7;
+    drivers.push("liquidity is neutral, reducing payment buffer capacity");
+  }
+
+  if (projectRisk.score >= 60) {
+    score += 14;
+    drivers.push(`project risk is elevated (${projectRisk.score.toFixed(1)})`);
+  }
+
+  if (metrics.commercial_pct_change !== null && metrics.commercial_pct_change < 0) {
+    score += 12;
+    drivers.push(`commercial spending softness persists (${metrics.commercial_pct_change.toFixed(2)}%)`);
+  }
+
+  if (weakMarketScore !== null && weakMarketScore <= 45) {
+    score += 10;
+    drivers.push(`weaker metros remain under pressure (${weakMarketScore.toFixed(1)})`);
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Payment delay risk is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
+function buildCollectionsStressModel(terminal) {
+  const receivablesRisk = terminal?.receivables_risk || buildReceivablesRiskModel(terminal);
+  const paymentDelayRisk = terminal?.payment_delay_risk || buildPaymentDelayRiskModel(terminal);
+  const marginPressure = terminal?.margin_pressure || buildMarginPressureModel(terminal);
+  const backlog = terminal?.backlog_quality || buildBacklogQualityModel(terminal);
+  const subPower = Number.isFinite(terminal?.power_index?.subcontractors?.score) ? terminal.power_index.subcontractors.score : null;
+
+  let score = receivablesRisk.score * 0.45 + paymentDelayRisk.score * 0.4;
+  const drivers = [
+    `receivables risk score ${receivablesRisk.score.toFixed(1)}`,
+    `payment delay risk score ${paymentDelayRisk.score.toFixed(1)}`,
+  ];
+
+  if (subPower !== null && subPower < 50) {
+    score += 10;
+    drivers.push(`subcontractor working-capital leverage is weak (${subPower.toFixed(1)})`);
+  }
+
+  if (marginPressure.score >= 60) {
+    score += 10;
+    drivers.push(`margin pressure is elevated (${marginPressure.score.toFixed(1)})`);
+  }
+
+  if (backlog.state === "weak") {
+    score += 10;
+    drivers.push("backlog conversion quality is weak");
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Collections stress is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
 function buildMaterialsShockModel(terminal) {
   const metrics = extractTerminalInputs(terminal);
   const inflationTrend = Number.isFinite(terminal?.risk?.inflation_trend_pct) ? terminal.risk.inflation_trend_pct : null;
@@ -1101,6 +1252,12 @@ async function buildTerminalPayload(request, env) {
   terminal.bid_intensity_summary = terminal.bid_intensity.explanation;
   terminal.project_risk = buildProjectRiskModel(terminal);
   terminal.project_risk_summary = terminal.project_risk.explanation;
+  terminal.receivables_risk = buildReceivablesRiskModel(terminal);
+  terminal.receivables_risk_summary = terminal.receivables_risk.explanation;
+  terminal.payment_delay_risk = buildPaymentDelayRiskModel(terminal);
+  terminal.payment_delay_risk_summary = terminal.payment_delay_risk.explanation;
+  terminal.collections_stress = buildCollectionsStressModel(terminal);
+  terminal.collections_stress_summary = terminal.collections_stress.explanation;
 
 
   terminal.forecast_summary = {
@@ -1143,13 +1300,19 @@ async function buildTerminalPayload(request, env) {
   terminal.bid_intensity_summary = terminal.bid_intensity.explanation;
   terminal.project_risk = buildProjectRiskModel(terminal);
   terminal.project_risk_summary = terminal.project_risk.explanation;
+  terminal.receivables_risk = buildReceivablesRiskModel(terminal);
+  terminal.receivables_risk_summary = terminal.receivables_risk.explanation;
+  terminal.payment_delay_risk = buildPaymentDelayRiskModel(terminal);
+  terminal.payment_delay_risk_summary = terminal.payment_delay_risk.explanation;
+  terminal.collections_stress = buildCollectionsStressModel(terminal);
+  terminal.collections_stress_summary = terminal.collections_stress.explanation;
 
-  if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated") {
-    terminal.operator_actions.gc = "Tighten pursuit criteria, favor negotiated work, and stress-test backlog conversion by metro.";
-    terminal.operator_actions.subcontractor = "Prioritize negotiated scopes, shorten pricing validity, and avoid thin-bid exposure in soft metros.";
-    terminal.operator_actions.developer = "Sequence starts by financing certainty and permit quality; defer marginal speculative starts.";
-    terminal.operator_actions.lender = "Underwrite delay/cancel scenarios explicitly and tighten covenants on weaker conversion markets.";
-    terminal.operator_actions.supplier = "Tighten credit terms and align inventory with higher-certainty backlog cohorts.";
+  if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated" || terminal.collections_stress.state === "elevated" || terminal.collections_stress.state === "severe") {
+    terminal.operator_actions.gc = "Tighten customer selection, shorten billing cadence, and stress-test backlog conversion by metro.";
+    terminal.operator_actions.subcontractor = "Monitor aging aggressively, favor stronger counterparties, and avoid thin-bid exposure in soft metros.";
+    terminal.operator_actions.developer = "Sequence starts by financing certainty, tighten pay-app governance, and defer marginal speculative starts.";
+    terminal.operator_actions.lender = "Underwrite payment-delay scenarios explicitly and tighten covenants on weaker conversion markets.";
+    terminal.operator_actions.supplier = "Tighten terms where collection risk is rising and align inventory with higher-certainty backlog cohorts.";
   }
 
   terminal.market_tape = buildMarketTape(terminal);
@@ -1772,6 +1935,38 @@ export async function handleConstructionProjectRisk(request, env) {
     });
   }
 }
+export async function handleConstructionReceivablesRisk(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { receivables_risk: terminal.receivables_risk });
+  } catch (e) {
+    return error(env, 500, "RECEIVABLES_RISK_FAILED", "Unable to build construction receivables risk model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionPaymentDelayRisk(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { payment_delay_risk: terminal.payment_delay_risk });
+  } catch (e) {
+    return error(env, 500, "PAYMENT_DELAY_RISK_FAILED", "Unable to build construction payment delay risk model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionCollectionsStress(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { collections_stress: terminal.collections_stress });
+  } catch (e) {
+    return error(env, 500, "COLLECTIONS_STRESS_FAILED", "Unable to build construction collections stress model", {
+      message: e?.message || String(e),
+    });
+  }
+}
 export async function handleConstructionForecast(request, env) {
   try {
     const terminal = await buildTerminalPayload(request, env);
@@ -1871,5 +2066,8 @@ export function __test_only__() {
     buildBidIntensityModel,
     buildBacklogQualityModel,
     buildProjectRiskModel,
+    buildReceivablesRiskModel,
+    buildPaymentDelayRiskModel,
+    buildCollectionsStressModel,
   };
 }

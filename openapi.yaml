@@ -422,6 +422,39 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionProjectRiskResponse"
+  "/construction/receivables-risk":
+    get:
+      operationId: constructionReceivablesRisk
+      summary: Deterministic receivables conversion and counterparty quality risk model
+      responses:
+        '200':
+          description: Deterministic receivables risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionReceivablesRiskResponse"
+  "/construction/payment-delay-risk":
+    get:
+      operationId: constructionPaymentDelayRisk
+      summary: Deterministic payment delay risk across lenders and project chain
+      responses:
+        '200':
+          description: Deterministic payment delay risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionPaymentDelayRiskResponse"
+  "/construction/collections-stress":
+    get:
+      operationId: constructionCollectionsStress
+      summary: Deterministic collections stress and working-capital pressure model
+      responses:
+        '200':
+          description: Deterministic collections stress model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionCollectionsStressResponse"
 components:
   schemas:
     GenericOkObject:
@@ -908,6 +941,18 @@ components:
               "$ref": "#/components/schemas/ProjectRiskModel"
             project_risk_summary:
               type: string
+            receivables_risk:
+              "$ref": "#/components/schemas/ReceivablesRiskModel"
+            receivables_risk_summary:
+              type: string
+            payment_delay_risk:
+              "$ref": "#/components/schemas/PaymentDelayRiskModel"
+            payment_delay_risk_summary:
+              type: string
+            collections_stress:
+              "$ref": "#/components/schemas/CollectionsStressModel"
+            collections_stress_summary:
+              type: string
             migration_index:
               "$ref": "#/components/schemas/MigrationIndexModel"
             migration_summary:
@@ -948,6 +993,12 @@ components:
           - backlog_quality_summary
           - project_risk
           - project_risk_summary
+          - receivables_risk
+          - receivables_risk_summary
+          - payment_delay_risk
+          - payment_delay_risk_summary
+          - collections_stress
+          - collections_stress_summary
           - migration_index
           - migration_summary
           - market_tape
@@ -1872,6 +1923,63 @@ components:
       - drivers
       - explanation
       additionalProperties: false
+    ReceivablesRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    PaymentDelayRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    CollectionsStressModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
     ConstructionMaterialsShockResponse:
       type: object
       properties:
@@ -1973,6 +2081,57 @@ components:
       - ts
       - service
       - project_risk
+      additionalProperties: true
+    ConstructionReceivablesRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        receivables_risk:
+          "$ref": "#/components/schemas/ReceivablesRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - receivables_risk
+      additionalProperties: true
+    ConstructionPaymentDelayRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        payment_delay_risk:
+          "$ref": "#/components/schemas/PaymentDelayRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - payment_delay_risk
+      additionalProperties: true
+    ConstructionCollectionsStressResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        collections_stress:
+          "$ref": "#/components/schemas/CollectionsStressModel"
+      required:
+      - ok
+      - ts
+      - service
+      - collections_stress
       additionalProperties: true
     ConstructionStressIndexResponse:
       type: object
