@@ -144,7 +144,7 @@ function runPowerHeatmapNowcastSmoke() {
 }
 
 function runIntelligenceLayerSmoke() {
-  const { buildConstructionAlerts, buildRecessionProbability, buildStressIndex, buildEarlyWarning, buildCapitalFlows, buildMigrationIndex, buildMarketTape } = constructionTestOnly();
+  const { buildConstructionAlerts, buildRecessionProbability, buildStressIndex, buildEarlyWarning, buildCapitalFlows, buildMigrationIndex, buildMarketTape, buildBidIntensityModel, buildBacklogQualityModel, buildProjectRiskModel } = constructionTestOnly();
   const terminal = {
     liquidity: { liquidity_state: "tight", liquidity_score: 62, mortgage_rate: 7.1 },
     risk: { risk_score: 58, risk_level: "elevated" },
@@ -215,6 +215,37 @@ function runIntelligenceLayerSmoke() {
     forecast_summary: { strongest_market: "Austin", weakest_market: "Boston" },
   });
   assert(typeof marketTape.risk === "string", "Market tape risk should be a string");
+
+  const enrichedTerminal = {
+    ...terminal,
+    activity_trends: { permits_trend_pct: 1.6, starts_trend_pct: 2.1 },
+    power_index: {
+      general_contractors: { score: 58 },
+      subcontractors: { score: 62 },
+      developers: { score: 55 },
+    },
+    migration_index: {
+      inbound_markets: [{ market: "Austin", score: 68 }],
+      outbound_markets: [{ market: "Seattle", score: 42 }],
+    },
+    stress_index: stress,
+    early_warning: earlyWarning,
+    recession_probability: recession,
+    labor_shock: { score: 67, state: "elevated", drivers: [], explanation: "test" },
+    margin_pressure: { score: 71, state: "elevated", drivers: [], explanation: "test" },
+  };
+
+  const backlogQuality = buildBacklogQualityModel(enrichedTerminal);
+  assert(typeof backlogQuality.score === "number", "Backlog quality score missing");
+  assert(["low", "moderate", "elevated", "severe", "weak", "mixed", "strong"].includes(backlogQuality.state), "Backlog quality state invalid");
+
+  const bidIntensity = buildBidIntensityModel({ ...enrichedTerminal, backlog_quality: backlogQuality });
+  assert(typeof bidIntensity.score === "number", "Bid intensity score missing");
+  assert(["low", "moderate", "elevated", "severe"].includes(bidIntensity.state), "Bid intensity state invalid");
+
+  const projectRisk = buildProjectRiskModel({ ...enrichedTerminal, backlog_quality: backlogQuality });
+  assert(typeof projectRisk.score === "number", "Project risk score missing");
+  assert(["low", "moderate", "elevated", "severe"].includes(projectRisk.state), "Project risk state invalid");
 }
 
 try {

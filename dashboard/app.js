@@ -17,6 +17,9 @@ const ENDPOINTS = {
   materialsShock: `${API_BASE}/construction/materials-shock`,
   laborShock: `${API_BASE}/construction/labor-shock`,
   marginPressure: `${API_BASE}/construction/margin-pressure`,
+  bidIntensity: `${API_BASE}/construction/bid-intensity`,
+  backlogQuality: `${API_BASE}/construction/backlog-quality`,
+  projectRisk: `${API_BASE}/construction/project-risk`,
   spendingSummary: `${API_BASE}/spending/ytd/summary`,
 };
 
@@ -89,6 +92,9 @@ function modelFromSettled(results) {
   const materialsShock = settledValue(results.materialsShock, "materials_shock") || terminal.materials_shock || null;
   const laborShock = settledValue(results.laborShock, "labor_shock") || terminal.labor_shock || null;
   const marginPressure = settledValue(results.marginPressure, "margin_pressure") || terminal.margin_pressure || null;
+  const bidIntensity = settledValue(results.bidIntensity, "bid_intensity") || terminal.bid_intensity || null;
+  const backlogQuality = settledValue(results.backlogQuality, "backlog_quality") || terminal.backlog_quality || null;
+  const projectRisk = settledValue(results.projectRisk, "project_risk") || terminal.project_risk || null;
   const powerIndex = power?.power_index || terminal.power_index || null;
   const subcontractors = powerIndex?.subcontractors || null;
 
@@ -139,6 +145,9 @@ function modelFromSettled(results) {
     materialsShock,
     laborShock,
     marginPressure,
+    bidIntensity,
+    backlogQuality,
+    projectRisk,
     migrationIndex,
     projectPipeline,
     bidEnvironment,
@@ -245,6 +254,7 @@ function renderPanels(vm) {
     <section class="row">${card("Alerts", topAlerts?.[0]?.headline || "No active alerts", topAlerts?.[0]?.explanation || "")}${card("Heatmap", heatmapSummary, asText(vm.terminal?.heatmap_summary?.top_weakness_theme, ""))}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.subcontractorCapacity?.explanation || "")}</section>
     <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", vm.migrationSummary, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", asText(vm.terminal?.forecast_summary?.strongest_market, marketFromList(vm.forecast?.strongest_next_12_months)), forecastHeadline)}</section>
     <section class="row">${card("Materials Shock", formatOneDecimal(vm.materialsShock?.score), vm.materialsShock?.explanation || vm.terminal?.materials_shock_summary || "")}${card("Labor Shock", formatOneDecimal(vm.laborShock?.score), vm.laborShock?.explanation || vm.terminal?.labor_shock_summary || "")}${card("Margin Pressure", formatOneDecimal(vm.marginPressure?.score), vm.marginPressure?.explanation || vm.terminal?.margin_pressure_summary || "")}</section>
+    <section class="row">${card("Bid Activity / Intensity", formatOneDecimal(vm.bidIntensity?.score), vm.bidIntensity?.explanation || vm.terminal?.bid_intensity_summary || "")}${card("Backlog Quality", formatOneDecimal(vm.backlogQuality?.score), vm.backlogQuality?.explanation || vm.terminal?.backlog_quality_summary || "")}${card("Project Risk", formatOneDecimal(vm.projectRisk?.score), vm.projectRisk?.explanation || vm.terminal?.project_risk_summary || "")}</section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
 }

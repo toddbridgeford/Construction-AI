@@ -47,6 +47,226 @@ function toPressureState(score) {
   return "low";
 }
 
+function toBacklogQualityState(score) {
+  if (score >= 67) return "strong";
+  if (score >= 45) return "mixed";
+  return "weak";
+}
+
+function buildBacklogQualityModel(terminal) {
+  const metrics = extractTerminalInputs(terminal);
+  const recessionProb = Number.isFinite(terminal?.recession_probability?.next_12_months)
+    ? terminal.recession_probability.next_12_months
+    : null;
+  const earlyWarningScore = Number.isFinite(terminal?.early_warning?.score) ? terminal.early_warning.score : null;
+  const stressScore = Number.isFinite(terminal?.stress_index?.score) ? terminal.stress_index.score : null;
+  const marginPressure = Number.isFinite(terminal?.margin_pressure?.score) ? terminal.margin_pressure.score : null;
+
+  let score = 58;
+  const drivers = [];
+
+  if (metrics.commercial_pct_change !== null && metrics.housing_pct_change !== null) {
+    if (metrics.commercial_pct_change >= 0 && metrics.housing_pct_change >= 0) {
+      score += 12;
+      drivers.push(`commercial and housing spending are both positive (${metrics.commercial_pct_change.toFixed(2)}%, ${metrics.housing_pct_change.toFixed(2)}%)`);
+    } else if (metrics.commercial_pct_change < 0 && metrics.housing_pct_change < 0) {
+      score -= 18;
+      drivers.push("commercial and housing spending are both negative year-over-year");
+    } else {
+      score -= 5;
+      drivers.push("spending segments are diverging, reducing backlog quality confidence");
+    }
+  }
+
+  if (recessionProb !== null) {
+    if (recessionProb >= 65) {
+      score -= 14;
+      drivers.push(`recession probability is elevated (${recessionProb.toFixed(1)}%)`);
+    } else if (recessionProb <= 35) {
+      score += 6;
+      drivers.push(`recession probability is contained (${recessionProb.toFixed(1)}%)`);
+    }
+  }
+
+  if (earlyWarningScore !== null) {
+    if (earlyWarningScore >= 65) {
+      score -= 10;
+      drivers.push(`early-warning score is elevated (${earlyWarningScore.toFixed(1)})`);
+    } else if (earlyWarningScore <= 35) {
+      score += 4;
+      drivers.push(`early-warning score is low (${earlyWarningScore.toFixed(1)})`);
+    }
+  }
+
+  if (stressScore !== null) {
+    if (stressScore >= 65) {
+      score -= 10;
+      drivers.push(`stress index is elevated (${stressScore.toFixed(1)})`);
+    } else if (stressScore <= 40) {
+      score += 5;
+      drivers.push(`stress index is contained (${stressScore.toFixed(1)})`);
+    }
+  }
+
+  if (metrics.starts_trend_pct !== null && metrics.permits_trend_pct !== null
+      && metrics.starts_trend_pct - metrics.permits_trend_pct >= 1.5
+      && metrics.liquidity_state === "tight") {
+    score -= 8;
+    drivers.push("starts are outpacing permits while liquidity is tight, increasing speculative conversion risk");
+  }
+
+  if (marginPressure !== null && marginPressure >= 60) {
+    score -= 8;
+    drivers.push(`margin pressure is elevated (${marginPressure.toFixed(1)})`);
+  }
+
+  const finalScore = clampScore(score);
+  const state = toBacklogQualityState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Backlog quality is ${state} based on ${drivers.slice(0, 3).join("; ")}.`,
+  };
+}
+
+function buildBidIntensityModel(terminal) {
+  const metrics = extractTerminalInputs(terminal);
+  const backlog = terminal?.backlog_quality || buildBacklogQualityModel(terminal);
+  const laborShock = terminal?.labor_shock || buildLaborShockModel(terminal);
+  const gcPower = Number.isFinite(terminal?.power_index?.general_contractors?.score) ? terminal.power_index.general_contractors.score : null;
+  const subPower = Number.isFinite(terminal?.power_index?.subcontractors?.score) ? terminal.power_index.subcontractors.score : null;
+  const devPower = Number.isFinite(terminal?.power_index?.developers?.score) ? terminal.power_index.developers.score : null;
+  const topMarketScore = Number.isFinite(terminal?.migration_index?.inbound_markets?.[0]?.score)
+    ? terminal.migration_index.inbound_markets[0].score
+    : null;
+
+  let score = 34;
+  const drivers = [];
+
+  if (metrics.construction_index !== null) {
+    if (metrics.construction_index >= 55) {
+      score += 16;
+      drivers.push(`construction index is firm (${metrics.construction_index.toFixed(1)})`);
+    } else if (metrics.construction_index < 46) {
+      score -= 10;
+      drivers.push(`construction index is soft (${metrics.construction_index.toFixed(1)})`);
+    }
+  }
+
+  if (metrics.permits_trend_pct !== null && metrics.starts_trend_pct !== null) {
+    const activityTrend = (metrics.permits_trend_pct + metrics.starts_trend_pct) / 2;
+    if (activityTrend > 1.0) {
+      score += 10;
+      drivers.push(`permits/starts trend is positive (${activityTrend.toFixed(2)}%)`);
+    } else if (activityTrend < -1.0) {
+      score -= 8;
+      drivers.push(`permits/starts trend is negative (${activityTrend.toFixed(2)}%)`);
+    }
+  }
+
+  if (backlog.state === "strong") {
+    score += 10;
+    drivers.push("backlog quality is strong, sustaining pursuit appetite");
+  } else if (backlog.state === "weak") {
+    score -= 9;
+    drivers.push("backlog quality is weak, reducing pursuit appetite");
+  }
+
+  if (laborShock.score >= 60) {
+    score += 9;
+    drivers.push(`labor shock is elevated (${laborShock.score.toFixed(1)}), crowding qualified bidder capacity`);
+  }
+
+  if (gcPower !== null && subPower !== null && devPower !== null) {
+    const competitiveComposite = (gcPower + subPower + devPower) / 3;
+    if (competitiveComposite >= 55) {
+      score += 8;
+      drivers.push(`operator competition composite is elevated (${competitiveComposite.toFixed(1)})`);
+    }
+  }
+
+  if (topMarketScore !== null && topMarketScore >= 60) {
+    score += 6;
+    drivers.push(`top inbound metros remain attractive (${topMarketScore.toFixed(1)})`);
+  }
+
+  if (metrics.liquidity_state === "tight") {
+    score -= 5;
+    drivers.push("tight liquidity screens out lower-conviction pursuits");
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Bid intensity is ${state} from ${drivers.slice(0, 3).join("; ")}.`,
+  };
+}
+
+function buildProjectRiskModel(terminal) {
+  const backlog = terminal?.backlog_quality || buildBacklogQualityModel(terminal);
+  const laborShock = terminal?.labor_shock || buildLaborShockModel(terminal);
+  const marginPressure = terminal?.margin_pressure || buildMarginPressureModel(terminal);
+  const recessionProb = Number.isFinite(terminal?.recession_probability?.next_12_months)
+    ? terminal.recession_probability.next_12_months
+    : null;
+  const weakMarketScore = Number.isFinite(terminal?.migration_index?.outbound_markets?.[0]?.score)
+    ? terminal.migration_index.outbound_markets[0].score
+    : null;
+  const weakMarketName = terminal?.migration_index?.outbound_markets?.[0]?.market || "softer metros";
+
+  let score = 28;
+  const drivers = [];
+
+  if (backlog.state === "weak") {
+    score += 24;
+    drivers.push("backlog quality is weak");
+  } else if (backlog.state === "mixed") {
+    score += 10;
+    drivers.push("backlog quality is mixed");
+  } else {
+    score -= 8;
+    drivers.push("backlog quality is strong");
+  }
+
+  if (laborShock.score >= 60) {
+    score += 15;
+    drivers.push(`labor shock is elevated (${laborShock.score.toFixed(1)})`);
+  }
+
+  if (marginPressure.score >= 60) {
+    score += 16;
+    drivers.push(`margin pressure is elevated (${marginPressure.score.toFixed(1)})`);
+  }
+
+  if (recessionProb !== null) {
+    if (recessionProb >= 60) {
+      score += 14;
+      drivers.push(`recession probability is elevated (${recessionProb.toFixed(1)}%)`);
+    } else if (recessionProb < 35) {
+      score -= 6;
+      drivers.push(`recession probability is contained (${recessionProb.toFixed(1)}%)`);
+    }
+  }
+
+  if (weakMarketScore !== null && weakMarketScore <= 45) {
+    score += 10;
+    drivers.push(`soft metros are screening poorly (e.g., ${weakMarketName} at ${weakMarketScore.toFixed(1)})`);
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Project delay/cancellation risk is ${state} due to ${drivers.slice(0, 3).join("; ")}.`,
+  };
+}
+
 function buildMaterialsShockModel(terminal) {
   const metrics = extractTerminalInputs(terminal);
   const inflationTrend = Number.isFinite(terminal?.risk?.inflation_trend_pct) ? terminal.risk.inflation_trend_pct : null;
@@ -875,6 +1095,14 @@ async function buildTerminalPayload(request, env) {
   terminal.labor_shock_summary = terminal.labor_shock.explanation;
   terminal.margin_pressure = buildMarginPressureModel(terminal);
   terminal.margin_pressure_summary = terminal.margin_pressure.explanation;
+  terminal.backlog_quality = buildBacklogQualityModel(terminal);
+  terminal.backlog_quality_summary = terminal.backlog_quality.explanation;
+  terminal.bid_intensity = buildBidIntensityModel(terminal);
+  terminal.bid_intensity_summary = terminal.bid_intensity.explanation;
+  terminal.project_risk = buildProjectRiskModel(terminal);
+  terminal.project_risk_summary = terminal.project_risk.explanation;
+
+
   terminal.forecast_summary = {
     strongest_market: "unknown",
     weakest_market: "unknown",
@@ -909,6 +1137,19 @@ async function buildTerminalPayload(request, env) {
       forecast
     );
     terminal.migration_summary = terminal.migration_index.headline;
+  }
+
+  terminal.bid_intensity = buildBidIntensityModel(terminal);
+  terminal.bid_intensity_summary = terminal.bid_intensity.explanation;
+  terminal.project_risk = buildProjectRiskModel(terminal);
+  terminal.project_risk_summary = terminal.project_risk.explanation;
+
+  if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated") {
+    terminal.operator_actions.gc = "Tighten pursuit criteria, favor negotiated work, and stress-test backlog conversion by metro.";
+    terminal.operator_actions.subcontractor = "Prioritize negotiated scopes, shorten pricing validity, and avoid thin-bid exposure in soft metros.";
+    terminal.operator_actions.developer = "Sequence starts by financing certainty and permit quality; defer marginal speculative starts.";
+    terminal.operator_actions.lender = "Underwrite delay/cancel scenarios explicitly and tighten covenants on weaker conversion markets.";
+    terminal.operator_actions.supplier = "Tighten credit terms and align inventory with higher-certainty backlog cohorts.";
   }
 
   terminal.market_tape = buildMarketTape(terminal);
@@ -1498,6 +1739,39 @@ export async function handleConstructionMarginPressure(request, env) {
     });
   }
 }
+
+export async function handleConstructionBidIntensity(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { bid_intensity: terminal.bid_intensity });
+  } catch (e) {
+    return error(env, 500, "BID_INTENSITY_FAILED", "Unable to build construction bid intensity model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionBacklogQuality(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { backlog_quality: terminal.backlog_quality });
+  } catch (e) {
+    return error(env, 500, "BACKLOG_QUALITY_FAILED", "Unable to build construction backlog quality model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionProjectRisk(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { project_risk: terminal.project_risk });
+  } catch (e) {
+    return error(env, 500, "PROJECT_RISK_FAILED", "Unable to build construction project risk model", {
+      message: e?.message || String(e),
+    });
+  }
+}
 export async function handleConstructionForecast(request, env) {
   try {
     const terminal = await buildTerminalPayload(request, env);
@@ -1594,5 +1868,8 @@ export function __test_only__() {
     toHeatmapPayload,
     buildForecastFromMarkets,
     scoreForecastMarket,
+    buildBidIntensityModel,
+    buildBacklogQualityModel,
+    buildProjectRiskModel,
   };
 }

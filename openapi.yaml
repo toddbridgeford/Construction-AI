@@ -389,6 +389,39 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionMarginPressureResponse"
+  "/construction/bid-intensity":
+    get:
+      operationId: constructionBidIntensity
+      summary: Deterministic bid intensity model for pursuit crowding
+      responses:
+        '200':
+          description: Deterministic bid intensity model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionBidIntensityResponse"
+  "/construction/backlog-quality":
+    get:
+      operationId: constructionBacklogQuality
+      summary: Deterministic backlog quality model
+      responses:
+        '200':
+          description: Deterministic backlog quality model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionBacklogQualityResponse"
+  "/construction/project-risk":
+    get:
+      operationId: constructionProjectRisk
+      summary: Deterministic project delay and cancellation risk model
+      responses:
+        '200':
+          description: Deterministic project risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionProjectRiskResponse"
 components:
   schemas:
     GenericOkObject:
@@ -863,6 +896,18 @@ components:
               "$ref": "#/components/schemas/MarginPressureModel"
             margin_pressure_summary:
               type: string
+            bid_intensity:
+              "$ref": "#/components/schemas/BidIntensityModel"
+            bid_intensity_summary:
+              type: string
+            backlog_quality:
+              "$ref": "#/components/schemas/BacklogQualityModel"
+            backlog_quality_summary:
+              type: string
+            project_risk:
+              "$ref": "#/components/schemas/ProjectRiskModel"
+            project_risk_summary:
+              type: string
             migration_index:
               "$ref": "#/components/schemas/MigrationIndexModel"
             migration_summary:
@@ -897,6 +942,12 @@ components:
           - labor_shock_summary
           - margin_pressure
           - margin_pressure_summary
+          - bid_intensity
+          - bid_intensity_summary
+          - backlog_quality
+          - backlog_quality_summary
+          - project_risk
+          - project_risk_summary
           - migration_index
           - migration_summary
           - market_tape
@@ -1754,6 +1805,73 @@ components:
       - drivers
       - explanation
       additionalProperties: false
+    BidIntensityModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    BacklogQualityStateEnum:
+      type: string
+      enum:
+      - low
+      - moderate
+      - elevated
+      - severe
+      - weak
+      - mixed
+      - strong
+    BacklogQualityModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/BacklogQualityStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    ProjectRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
     ConstructionMaterialsShockResponse:
       type: object
       properties:
@@ -1804,6 +1922,57 @@ components:
       - ts
       - service
       - margin_pressure
+      additionalProperties: true
+    ConstructionBidIntensityResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        bid_intensity:
+          "$ref": "#/components/schemas/BidIntensityModel"
+      required:
+      - ok
+      - ts
+      - service
+      - bid_intensity
+      additionalProperties: true
+    ConstructionBacklogQualityResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        backlog_quality:
+          "$ref": "#/components/schemas/BacklogQualityModel"
+      required:
+      - ok
+      - ts
+      - service
+      - backlog_quality
+      additionalProperties: true
+    ConstructionProjectRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        project_risk:
+          "$ref": "#/components/schemas/ProjectRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - project_risk
       additionalProperties: true
     ConstructionStressIndexResponse:
       type: object
