@@ -1015,12 +1015,35 @@ async function loadScoredMarketsFromAssets(env) {
   }
 
   const base = "http://assets";
-  const marketsIndexRes = await env.ASSETS.fetch(`${base}/dist/markets/index.json`);
-  if (!marketsIndexRes.ok) {
-    return subsectionError("MARKETS_INDEX_MISSING", "Unable to read dist/markets/index.json", { status: marketsIndexRes.status });
+  const fetchAssetJson = async (assetPath) => {
+    const normalized = String(assetPath || "").replace(/^\/+/, "");
+    if (!normalized) return null;
+
+    const candidates = normalized.startsWith("dist/")
+      ? [normalized, normalized.slice(5)]
+      : [normalized, `dist/${normalized}`];
+
+    for (const candidate of candidates) {
+      const res = await env.ASSETS.fetch(`${base}/${candidate}`);
+      if (res.ok) {
+        return {
+          payload: await res.json(),
+          path: candidate,
+        };
+      }
+    }
+
+    return null;
+  };
+
+  const marketsIndexAsset = await fetchAssetJson("markets/index.json");
+  if (!marketsIndexAsset) {
+    return subsectionError("MARKETS_INDEX_MISSING", "Unable to read dist/markets/index.json", {
+      attempted_paths: ["markets/index.json", "dist/markets/index.json"],
+    });
   }
 
-  const marketsIndex = await marketsIndexRes.json();
+  const marketsIndex = marketsIndexAsset.payload;
   const entries = Array.isArray(marketsIndex?.markets) ? marketsIndex.markets : [];
   if (entries.length === 0) {
     return subsectionError("MARKETS_INDEX_EMPTY", "No market entries found in dist/markets/index.json");
@@ -1030,9 +1053,10 @@ async function loadScoredMarketsFromAssets(env) {
   for (const entry of entries) {
     const marketPath = entry?.path;
     if (typeof marketPath !== "string" || marketPath.length === 0) continue;
-    const res = await env.ASSETS.fetch(`${base}/${marketPath}`);
-    if (!res.ok) continue;
-    const payload = await res.json();
+    const normalizedPath = marketPath.replace(/^\/+/, "").replace(/^\.\//, "");
+    const marketAsset = await fetchAssetJson(normalizedPath);
+    if (!marketAsset) continue;
+    const payload = marketAsset.payload;
     const scored = scoreMarketPayload(payload, entry?.label || entry?.id || "unknown");
     if (scored) scoredMarkets.push(scored);
   }
