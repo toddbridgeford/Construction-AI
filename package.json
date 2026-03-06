@@ -5,7 +5,9 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "test:openapi": "ruby scripts/validate_openapi.rb"
+    "test:openapi": "ruby scripts/validate_openapi.rb",
+    "validate:markets": "node scripts/validate_market_artifacts.mjs",
+    "predeploy": "npm run validate:markets"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

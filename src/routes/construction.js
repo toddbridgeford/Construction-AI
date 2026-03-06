@@ -1015,21 +1015,35 @@ async function loadScoredMarketsFromAssets(env) {
   }
 
   const base = "http://assets";
-  const marketsIndexRes = await env.ASSETS.fetch(`${base}/dist/markets/index.json`);
-  if (!marketsIndexRes.ok) {
-    return subsectionError("MARKETS_INDEX_MISSING", "Unable to read dist/markets/index.json", { status: marketsIndexRes.status });
+  const indexCandidates = ["markets/index.json", "dist/markets/index.json"];
+  let marketsIndexRes = null;
+  let resolvedIndexPath = null;
+  for (const candidate of indexCandidates) {
+    const candidateRes = await env.ASSETS.fetch(`${base}/${candidate}`);
+    if (candidateRes.ok) {
+      marketsIndexRes = candidateRes;
+      resolvedIndexPath = candidate;
+      break;
+    }
+  }
+
+  if (!marketsIndexRes) {
+    return subsectionError("MARKETS_INDEX_MISSING", "Unable to read market index asset", { attempted_paths: indexCandidates });
   }
 
   const marketsIndex = await marketsIndexRes.json();
   const entries = Array.isArray(marketsIndex?.markets) ? marketsIndex.markets : [];
   if (entries.length === 0) {
-    return subsectionError("MARKETS_INDEX_EMPTY", "No market entries found in dist/markets/index.json");
+    return subsectionError("MARKETS_INDEX_EMPTY", `No market entries found in ${resolvedIndexPath}`);
   }
 
   const scoredMarkets = [];
   for (const entry of entries) {
-    const marketPath = entry?.path;
-    if (typeof marketPath !== "string" || marketPath.length === 0) continue;
+    const rawMarketPath = typeof entry?.path === "string" ? entry.path.trim().replace(/^\/+/, "") : "";
+    if (!rawMarketPath) continue;
+    const marketPath = rawMarketPath.startsWith("dist/") ? rawMarketPath.slice("dist/".length) : rawMarketPath;
+    if (!marketPath.startsWith("markets/")) continue;
+
     const res = await env.ASSETS.fetch(`${base}/${marketPath}`);
     if (!res.ok) continue;
     const payload = await res.json();
