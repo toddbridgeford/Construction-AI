@@ -1015,7 +1015,7 @@ async function loadScoredMarketsFromAssets(env) {
   }
 
   const base = "http://assets";
-  const marketsIndexRes = await env.ASSETS.fetch(`${base}/dist/markets/index.json`);
+  const marketsIndexRes = await env.ASSETS.fetch(`${base}/markets/index.json`);
   if (!marketsIndexRes.ok) {
     return subsectionError("MARKETS_INDEX_MISSING", "Unable to read dist/markets/index.json", { status: marketsIndexRes.status });
   }
@@ -1030,7 +1030,8 @@ async function loadScoredMarketsFromAssets(env) {
   for (const entry of entries) {
     const marketPath = entry?.path;
     if (typeof marketPath !== "string" || marketPath.length === 0) continue;
-    const res = await env.ASSETS.fetch(`${base}/${marketPath}`);
+    const normalizedMarketPath = marketPath.replace(/^\/+/, "");
+    const res = await env.ASSETS.fetch(`${base}/${normalizedMarketPath}`);
     if (!res.ok) continue;
     const payload = await res.json();
     const scored = scoreMarketPayload(payload, entry?.label || entry?.id || "unknown");
