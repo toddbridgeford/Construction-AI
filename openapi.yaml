@@ -228,6 +228,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/ConstructionNowcastResponse"
 
+  /construction/forecast:
+    get:
+      operationId: constructionForecast
+      summary: Forecasted strongest and weakest construction markets over next 12 months
+      responses:
+        "200":
+          description: Construction forecast response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionForecastResponse"
+
   /construction/market-radar:
     get:
       operationId: constructionMarketRadar
@@ -739,6 +751,20 @@ components:
                 - top_strength_theme
                 - top_weakness_theme
               additionalProperties: false
+            forecast_summary:
+              type: object
+              properties:
+                strongest_market:
+                  type: string
+                weakest_market:
+                  type: string
+                headline:
+                  type: string
+              required:
+                - strongest_market
+                - weakest_market
+                - headline
+              additionalProperties: false
             alerts:
               type: array
               items:
@@ -773,6 +799,7 @@ components:
             - power_index
             - power_summary
             - nowcast
+            - forecast_summary
             - alerts
             - recession_probability
           additionalProperties: true
@@ -971,6 +998,81 @@ components:
         - ts
         - service
         - nowcast
+      additionalProperties: true
+
+    ForecastMarketItem:
+      type: object
+      properties:
+        market:
+          type: string
+        forecast_score:
+          type: number
+        current_score:
+          type: number
+        direction:
+          type: string
+          enum:
+            - strengthening
+            - softening
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+        - market
+        - forecast_score
+        - current_score
+        - direction
+        - drivers
+        - explanation
+      additionalProperties: false
+
+    ConstructionForecastResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        forecast:
+          type: object
+          properties:
+            strongest_next_12_months:
+              type: array
+              items:
+                $ref: "#/components/schemas/ForecastMarketItem"
+            weakest_next_12_months:
+              type: array
+              items:
+                $ref: "#/components/schemas/ForecastMarketItem"
+            summary:
+              type: object
+              properties:
+                top_strength_theme:
+                  type: string
+                top_weakness_theme:
+                  type: string
+                headline:
+                  type: string
+              required:
+                - top_strength_theme
+                - top_weakness_theme
+                - headline
+              additionalProperties: false
+          required:
+            - strongest_next_12_months
+            - weakest_next_12_months
+            - summary
+          additionalProperties: false
+      required:
+        - ok
+        - ts
+        - service
+        - forecast
       additionalProperties: true
 
     ConstructionMarketItem:

@@ -86,7 +86,7 @@ function runMarketRadarSmoke() {
 
 
 function runPowerHeatmapNowcastSmoke() {
-  const { buildConstructionPowerFromMetrics, buildConstructionNowcastFromMetrics, toHeatmapPayload } = constructionTestOnly();
+  const { buildConstructionPowerFromMetrics, buildConstructionNowcastFromMetrics, toHeatmapPayload, buildForecastFromMarkets } = constructionTestOnly();
 
   const metrics = {
     liquidity_state: "tight",
@@ -115,6 +115,23 @@ function runPowerHeatmapNowcastSmoke() {
   });
   assert(heatmap.ok === true, "Heatmap payload should be ok=true");
   assert(Array.isArray(heatmap.hottest_markets), "Heatmap hottest_markets missing");
+
+  const forecast = buildForecastFromMarkets([
+    { market: "Dallas", score: 72, regime: "expansion", signal: "bullish", note: "resilient demand and accelerating pipeline" },
+    { market: "San Francisco", score: 43, regime: "contraction", signal: "bearish", note: "soft office demand with restrictive credit" },
+    { market: "Phoenix", score: 66, regime: "late expansion", signal: "🟢", note: "strong migration backdrop" },
+  ], {
+    liquidity: { liquidity_state: "tight", liquidity_score: 72 },
+    risk: { risk_score: 61 },
+    construction_index: 47,
+    spending: { ok: true, commercial: { pct_change_ytd_vs_pytd: -0.5 }, housing: { pct_change_ytd_vs_pytd: 0.3 } },
+    nowcast: { next_6_months: "softening" },
+    recession_probability: { next_12_months: 64 },
+  });
+
+  assert(Array.isArray(forecast.strongest_next_12_months), "Forecast strongest_next_12_months should be an array");
+  assert(Array.isArray(forecast.weakest_next_12_months), "Forecast weakest_next_12_months should be an array");
+  assert(typeof forecast.summary?.headline === "string", "Forecast summary headline missing");
 }
 
 function runIntelligenceLayerSmoke() {

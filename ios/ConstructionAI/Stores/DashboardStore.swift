@@ -14,6 +14,7 @@ final class DashboardStore: ObservableObject {
     @Published var selectedAlert: AlertItem?
     @Published var regions: [RegionItem] = []
     @Published var sourceHealth: [SourceHealthItem] = []
+    @Published var forecast: ForecastViewModel = .empty
 
     private let service = GitHubDashboardService()
     private var refreshTask: Task<Void, Never>?
@@ -48,6 +49,7 @@ final class DashboardStore: ObservableObject {
             payload = bundle.payload
             regions = bundle.regions
             sourceHealth = bundle.sourceHealth
+            forecast = bundle.forecast
             lastRefresh = bundle.fetchedAt
             statusText = "Loaded ✅ from APIs"
             DiskCache.save(bundle.payload)

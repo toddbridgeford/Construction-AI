@@ -19,6 +19,7 @@ struct OverviewView: View {
                 LazyVGrid(columns: columns, spacing: TerminalTheme.Spacing.medium) {
                     executivePanel
                     alertsPanel
+                    forecastPanel
                     kpiPanel
                     signalsPanel
                     regionsPanel
@@ -79,6 +80,49 @@ struct OverviewView: View {
             ForEach(Array((store.payload?.cards ?? []).prefix(3))) { card in
                 KPIStatCardView(title: card.title, value: card.value.map { String(format: "%.0f", $0) } ?? "—", direction: Trend.from(arrow: card.trend), subtitle: card.subtitle ?? "")
             }
+        }
+        .terminalPanel()
+    }
+
+    private var forecastPanel: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Market Forecast").font(.headline)
+
+            Text("Strongest Next 12 Months")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            ForEach(Array(store.forecast.strongest.prefix(3).enumerated()), id: \.element.id) { index, item in
+                HStack {
+                    Text("\(index + 1) \(item.market)")
+                    Spacer()
+                    Text(String(format: "%.0f", item.forecastScore)).font(TerminalTheme.mono(size: 13))
+                }
+            }
+
+            Divider().overlay(Color.white.opacity(0.12))
+
+            Text("Weakest Next 12 Months")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            ForEach(Array(store.forecast.weakest.prefix(3).enumerated()), id: \.element.id) { index, item in
+                HStack {
+                    Text("\(index + 1) \(item.market)")
+                    Spacer()
+                    Text(String(format: "%.0f", item.forecastScore)).font(TerminalTheme.mono(size: 13))
+                }
+            }
+
+            Text(store.forecast.headline)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .padding(.top, 4)
+
+            Text("Strength theme: \(store.forecast.topStrengthTheme)")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+            Text("Weakness theme: \(store.forecast.topWeaknessTheme)")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
         }
         .terminalPanel()
     }
