@@ -84,10 +84,39 @@ function runMarketRadarSmoke() {
   assert(radar.weakest_markets[0].market === "Market B", "Lowest pressure market should rank first among weakest");
 }
 
+function runIntelligenceLayerSmoke() {
+  const { buildConstructionAlerts, buildRecessionProbability } = constructionTestOnly();
+  const terminal = {
+    liquidity: { liquidity_state: "tight", liquidity_score: 62, mortgage_rate: 7.1 },
+    risk: { risk_score: 58, risk_level: "elevated" },
+    construction_index: 43,
+    spending: {
+      ok: true,
+      commercial: { pct_change_ytd_vs_pytd: -2.5 },
+      housing: { pct_change_ytd_vs_pytd: -1.2 },
+    },
+  };
+
+  const alerts = buildConstructionAlerts(terminal);
+  const codes = alerts.map((a) => a.code);
+  assert(codes.includes("LIQUIDITY_TIGHTENING"), "Alerts should include liquidity tightening");
+  assert(codes.includes("ELEVATED_RISK"), "Alerts should include elevated risk");
+  assert(codes.includes("COMMERCIAL_WEAKNESS"), "Alerts should include commercial weakness");
+  assert(codes.includes("HOUSING_WEAKNESS"), "Alerts should include housing weakness");
+  assert(codes.includes("BROAD_SLOWDOWN"), "Alerts should include broad slowdown");
+  assert(codes.includes("CONSTRUCTION_CONTRACTION_RISK"), "Alerts should include contraction risk");
+
+  const recession = buildRecessionProbability(terminal);
+  assert(recession.next_12_months === 100, "Recession probability should deterministically score to 100 after clamping");
+  assert(recession.trend === "rising", "Recession trend should be rising for high probability");
+  assert(typeof recession.explanation === "string" && recession.explanation.length > 0, "Recession explanation missing");
+}
+
 try {
   runYtdSmoke();
   runTerminalSmoke();
   runMarketRadarSmoke();
+  runIntelligenceLayerSmoke();
   console.log("smoke_worker_node: PASS");
 } catch (err) {
   console.error("smoke_worker_node: FAIL");

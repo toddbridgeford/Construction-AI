@@ -204,6 +204,42 @@ paths:
               schema:
                 $ref: "#/components/schemas/ConstructionMarketRadarResponse"
 
+  /construction/morning-brief:
+    get:
+      operationId: constructionMorningBrief
+      summary: Daily operator-grade construction morning briefing
+      responses:
+        "200":
+          description: Construction morning brief response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionMorningBriefResponse"
+
+  /construction/alerts:
+    get:
+      operationId: constructionAlerts
+      summary: Deterministic active construction alert cards
+      responses:
+        "200":
+          description: Construction alerts response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionAlertsResponse"
+
+  /construction/recession-probability:
+    get:
+      operationId: constructionRecessionProbability
+      summary: Deterministic next-12-month slowdown probability
+      responses:
+        "200":
+          description: Construction recession probability response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecessionProbabilityResponse"
+
   /spending/ytd:
     get:
       operationId: spendingYtd
@@ -596,6 +632,28 @@ components:
                 - subcontractor
                 - developer
                 - lender
+            alerts:
+              type: array
+              items:
+                $ref: "#/components/schemas/AlertCard"
+            recession_probability:
+              type: object
+              properties:
+                next_12_months:
+                  type: number
+                trend:
+                  type: string
+                  enum:
+                    - rising
+                    - stable
+                    - falling
+                explanation:
+                  type: string
+              required:
+                - next_12_months
+                - trend
+                - explanation
+              additionalProperties: false
           required:
             - signal
             - regime
@@ -605,6 +663,8 @@ components:
             - spending
             - cycle_interpretation
             - operator_actions
+            - alerts
+            - recession_probability
           additionalProperties: true
       required:
         - ok
@@ -677,6 +737,194 @@ components:
         - ts
         - service
         - radar
+      additionalProperties: true
+
+    AlertCard:
+      type: object
+      properties:
+        code:
+          type: string
+        severity:
+          type: string
+          enum:
+            - high
+            - medium
+            - low
+        headline:
+          type: string
+        explanation:
+          type: string
+      required:
+        - code
+        - severity
+        - headline
+        - explanation
+      additionalProperties: false
+
+    ConstructionAlertsResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        alerts:
+          type: array
+          items:
+            $ref: "#/components/schemas/AlertCard"
+      required:
+        - ok
+        - ts
+        - service
+        - alerts
+      additionalProperties: true
+
+    RecessionProbabilityResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        recession_probability:
+          type: object
+          properties:
+            next_12_months:
+              type: number
+            trend:
+              type: string
+              enum:
+                - rising
+                - stable
+                - falling
+            explanation:
+              type: string
+          required:
+            - next_12_months
+            - trend
+            - explanation
+          additionalProperties: false
+      required:
+        - ok
+        - ts
+        - service
+        - recession_probability
+      additionalProperties: true
+
+    ConstructionMorningBriefResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        brief:
+          type: object
+          properties:
+            title:
+              type: string
+            market_signal:
+              type: object
+              properties:
+                signal:
+                  type: string
+                regime:
+                  type: string
+                liquidity_state:
+                  type: string
+                risk_level:
+                  type: string
+                construction_index:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+              required:
+                - signal
+                - regime
+                - liquidity_state
+                - risk_level
+                - construction_index
+              additionalProperties: false
+            spending:
+              type: object
+              properties:
+                commercial:
+                  type: object
+                  additionalProperties: true
+                housing:
+                  type: object
+                  additionalProperties: true
+                takeaway:
+                  type: string
+              required:
+                - commercial
+                - housing
+                - takeaway
+              additionalProperties: false
+            market_radar:
+              oneOf:
+                - type: object
+                  properties:
+                    hottest_markets:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/ConstructionMarketItem"
+                    weakest_markets:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/ConstructionMarketItem"
+                    summary:
+                      type: object
+                      properties:
+                        top_strength_theme:
+                          type: string
+                        top_weakness_theme:
+                          type: string
+                      required:
+                        - top_strength_theme
+                        - top_weakness_theme
+                      additionalProperties: false
+                  required:
+                    - hottest_markets
+                    - weakest_markets
+                    - summary
+                  additionalProperties: false
+                - $ref: "#/components/schemas/ConstructionSubsectionError"
+            operator_guidance:
+              type: object
+              properties:
+                gc:
+                  type: string
+                subcontractor:
+                  type: string
+                developer:
+                  type: string
+                lender:
+                  type: string
+              required:
+                - gc
+                - subcontractor
+                - developer
+                - lender
+              additionalProperties: false
+          required:
+            - title
+            - market_signal
+            - spending
+            - market_radar
+            - operator_guidance
+          additionalProperties: false
+      required:
+        - ok
+        - ts
+        - service
+        - brief
       additionalProperties: true
 
     SpendingObservation:

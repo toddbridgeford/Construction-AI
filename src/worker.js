@@ -14,7 +14,13 @@ import {
   handleConstructionDashboard,
 } from "./routes/existing.js";
 import { handleSpendingYtd, handleSpendingYtdSummary, handleYtdSegment, handleYtdSummary } from "./routes/spending_ytd.js";
-import { handleConstructionMarketRadar, handleConstructionTerminal } from "./routes/construction.js";
+import {
+  handleConstructionAlerts,
+  handleConstructionMarketRadar,
+  handleConstructionMorningBrief,
+  handleConstructionRecessionProbability,
+  handleConstructionTerminal,
+} from "./routes/construction.js";
 
 export default {
   async fetch(request, env) {
@@ -42,6 +48,9 @@ export default {
       if (pathname === "/construction/dashboard") return handleConstructionDashboard(env);
       if (pathname === "/construction/terminal") return handleConstructionTerminal(request, env);
       if (pathname === "/construction/market-radar") return handleConstructionMarketRadar(env);
+      if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
+      if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
+      if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);
 
       if (pathname === "/spending/ytd") return handleSpendingYtd(request, env);
       if (pathname === "/spending/ytd/summary") return handleSpendingYtdSummary(request, env);

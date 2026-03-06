@@ -4,9 +4,22 @@ require 'yaml'
 OPENAPI_PATH = File.expand_path('../openapi.yaml', __dir__)
 EXPECTED_VERSION = '3.1.0'
 EXPECTED_SERVER = 'https://construction-ai.toddbridgeford.workers.dev'
-REQUIRED_NEW_PATHS = ['/construction/terminal', '/construction/market-radar']
+REQUIRED_NEW_PATHS = [
+  '/construction/terminal',
+  '/construction/market-radar',
+  '/construction/morning-brief',
+  '/construction/alerts',
+  '/construction/recession-probability'
+]
 REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/spending/ytd/summary']
-REQUIRED_SCHEMAS = ['ConstructionTerminalResponse', 'ConstructionMarketRadarResponse']
+REQUIRED_SCHEMAS = [
+  'ConstructionTerminalResponse',
+  'ConstructionMarketRadarResponse',
+  'ConstructionMorningBriefResponse',
+  'ConstructionAlertsResponse',
+  'AlertCard',
+  'RecessionProbabilityResponse'
+]
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
 
@@ -32,6 +45,10 @@ components = doc.dig('components', 'schemas') || {}
 REQUIRED_SCHEMAS.each do |name|
   errors << "components.schemas must include #{name}" unless components.key?(name)
 end
+
+terminal_properties = components.dig('ConstructionTerminalResponse', 'properties', 'terminal', 'properties') || {}
+errors << 'ConstructionTerminalResponse terminal schema must include alerts' unless terminal_properties.key?('alerts')
+errors << 'ConstructionTerminalResponse terminal schema must include recession_probability' unless terminal_properties.key?('recession_probability')
 
 referenced = []
 paths.each do |route, methods|
