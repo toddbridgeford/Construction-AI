@@ -31,6 +31,9 @@ import {
   handleConstructionMaterialsShock,
   handleConstructionLaborShock,
   handleConstructionMarginPressure,
+  handleConstructionBidIntensity,
+  handleConstructionBacklogQuality,
+  handleConstructionProjectRisk,
 } from "./routes/construction.js";
 
 export default {
@@ -70,6 +73,9 @@ export default {
       if (pathname === "/construction/materials-shock") return handleConstructionMaterialsShock(request, env);
       if (pathname === "/construction/labor-shock") return handleConstructionLaborShock(request, env);
       if (pathname === "/construction/margin-pressure") return handleConstructionMarginPressure(request, env);
+      if (pathname === "/construction/bid-intensity") return handleConstructionBidIntensity(request, env);
+      if (pathname === "/construction/backlog-quality") return handleConstructionBacklogQuality(request, env);
+      if (pathname === "/construction/project-risk") return handleConstructionProjectRisk(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
       if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
       if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);
