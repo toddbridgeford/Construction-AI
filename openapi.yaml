@@ -53,11 +53,15 @@ paths:
         - name: series_id
           in: query
           required: true
-          schema: { type: string }
+          schema:
+            type: string
         - name: limit
           in: query
           required: false
-          schema: { type: integer, minimum: 1, maximum: 5000 }
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5000
       responses:
         "200":
           description: FRED observations
@@ -86,12 +90,16 @@ paths:
         - name: limit
           in: query
           required: false
-          schema: { type: integer, minimum: 1, maximum: 5000 }
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5000
         - name: series
           in: query
           required: false
           description: Optional override comma-separated series IDs (e.g. PERMIT,HOUST)
-          schema: { type: string }
+          schema:
+            type: string
       responses:
         "200":
           description: Macro bundle response
@@ -163,14 +171,16 @@ paths:
   /spending/ytd:
     get:
       operationId: spendingYtd
-      summary: Commercial or Housing YTD vs PYTD using FRED SAAR monthly-equivalent totals
+      summary: Commercial or housing YTD vs PYTD using FRED SAAR monthly-equivalent totals
       parameters:
         - name: segment
           in: query
           required: true
           schema:
             type: string
-            enum: [commercial, housing]
+            enum:
+              - commercial
+              - housing
         - name: year
           in: query
           required: false
@@ -188,6 +198,12 @@ paths:
     get:
       operationId: spendingYtdSummary
       summary: Combined commercial + housing YTD/PYTD response
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
       responses:
         "200":
           description: YTD/PYTD summary response
@@ -196,239 +212,183 @@ paths:
               schema:
                 $ref: "#/components/schemas/SpendingYtdSummaryResponse"
 
-  /ytd/commercial:
-    get:
-      operationId: getYtdCommercial
-      summary: Nonresidential construction spending YTD vs PYTD
-      parameters:
-        - name: year
-          in: query
-          required: false
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Commercial YTD/PYTD response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/YtdSegmentResponse"
-
-  /ytd/housing:
-    get:
-      operationId: getYtdHousing
-      summary: Residential construction spending YTD vs PYTD
-      parameters:
-        - name: year
-          in: query
-          required: false
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Housing YTD/PYTD response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/YtdSegmentResponse"
-
-  /ytd/summary:
-    get:
-      operationId: getYtdSummary
-      summary: Combined commercial + housing YTD/PYTD response
-      parameters:
-        - name: year
-          in: query
-          required: false
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Combined YTD/PYTD response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/YtdSummaryResponse"
-
 components:
   schemas:
     GenericOkObject:
       type: object
       description: Generic JSON response (explicit core fields + arbitrary payload).
       properties:
-        ok: { type: boolean }
-        ts: { type: string }
-        service: { type: string }
-      required: [ok]
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+      required:
+        - ok
       additionalProperties: true
 
     ErrorEnvelope:
       type: object
       properties:
-        ok: { type: boolean }
-        ts: { type: string }
-        service: { type: string }
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
         error:
           type: object
           properties:
-            code: { type: string }
-            message: { type: string }
-          required: [code, message]
-      required: [ok, ts, service, error]
+            code:
+              type: string
+            message:
+              type: string
+          required:
+            - code
+            - message
+      required:
+        - ok
+        - ts
+        - service
+        - error
       additionalProperties: true
 
     HealthResponse:
       type: object
       description: Health check response.
       properties:
-        ok: { type: boolean }
-        service: { type: string }
-        ts: { type: string }
+        ok:
+          type: boolean
+        service:
+          type: string
+        ts:
+          type: string
         git_sha:
           anyOf:
             - type: string
             - type: "null"
-        has_kv: { type: boolean }
-        has_fred_key: { type: boolean }
-      required: [ok, service, ts]
+        has_kv:
+          type: boolean
+        has_fred_key:
+          type: boolean
+      required:
+        - ok
+        - service
+        - ts
       additionalProperties: true
 
     FredObservation:
       type: object
       properties:
-        date: { type: string }
-        value: { type: string }
-      required: [date, value]
+        date:
+          type: string
+        value:
+          type: string
+      required:
+        - date
+        - value
       additionalProperties: true
 
     FredObservationsResponse:
       type: object
       properties:
-        realtime_start: { type: string }
-        realtime_end: { type: string }
-        observation_start: { type: string }
-        observation_end: { type: string }
-        sort_order: { type: string }
-        count: { type: integer }
-        limit: { type: integer }
+        realtime_start:
+          type: string
+        realtime_end:
+          type: string
+        observation_start:
+          type: string
+        observation_end:
+          type: string
+        sort_order:
+          type: string
+        count:
+          type: integer
+        limit:
+          type: integer
         observations:
           type: array
           items:
             $ref: "#/components/schemas/FredObservation"
-      required: [observations]
+      required:
+        - observations
       additionalProperties: true
 
     FredObservationsEnvelope:
       type: object
       properties:
-        ok: { type: boolean }
-        source: { type: string }
-        series_id: { type: string }
-        limit: { type: integer }
-        data:
-          $ref: "#/components/schemas/FredObservationsResponse"
-      required: [ok, data]
-      additionalProperties: true
-
-
-
-    YtdObservation:
-      type: object
-      properties:
-        date: { type: string }
-        value_saar: { type: number }
-        value_monthly_equiv: { type: number }
-      required: [date, value_saar, value_monthly_equiv]
-      additionalProperties: false
-
-    YtdSegmentResponse:
-      type: object
-      properties:
-        ok: { type: boolean }
-        ts: { type: string }
-        service: { type: string }
-        segment:
+        ok:
+          type: boolean
+        source:
           type: string
-          enum: [commercial, housing]
         series_id:
           type: string
-          enum: [PNRESCONS, PRRESCONS]
-        year: { type: integer }
-        latest_observation_date: { type: string }
-        latest_observation:
-          $ref: "#/components/schemas/YtdObservation"
-        months_included:
-          type: array
-          items: { type: string }
-        ytd_monthly_equiv_musd: { type: number }
-        pytd_monthly_equiv_musd: { type: number }
-        pct_change_ytd_vs_pytd:
-          anyOf:
-            - type: number
-            - type: "null"
-        raw:
-          type: object
-          properties:
-            ytd_observations:
-              type: array
-              items:
-                $ref: "#/components/schemas/YtdObservation"
-            pytd_observations:
-              type: array
-              items:
-                $ref: "#/components/schemas/YtdObservation"
-      required: [ok, ts, service, segment, series_id, year, latest_observation_date, latest_observation, months_included, ytd_monthly_equiv_musd, pytd_monthly_equiv_musd, pct_change_ytd_vs_pytd, raw]
-      additionalProperties: true
-
-    YtdSummaryResponse:
-      type: object
-      properties:
-        ok: { type: boolean }
-        ts: { type: string }
-        service: { type: string }
-        year: { type: integer }
-        summary:
-          type: object
-          properties:
-            commercial:
-              $ref: "#/components/schemas/YtdSegmentResponse"
-            housing:
-              $ref: "#/components/schemas/YtdSegmentResponse"
-      required: [ok, ts, service, year, summary]
+        limit:
+          type: integer
+        data:
+          $ref: "#/components/schemas/FredObservationsResponse"
+      required:
+        - ok
+        - data
       additionalProperties: true
 
     SpendingObservation:
       type: object
       properties:
-        date: { type: string }
-        value_saar: { type: string }
-        value_monthly_equiv: { type: number }
-      required: [date, value_saar, value_monthly_equiv]
+        date:
+          type: string
+        value_saar:
+          type: string
+        value_monthly_equiv:
+          type: number
+      required:
+        - date
+        - value_saar
+        - value_monthly_equiv
       additionalProperties: false
 
     SpendingYtdResponse:
       type: object
       properties:
-        ok: { type: boolean }
-        ts: { type: string }
-        service: { type: string }
-        segment: { type: string }
-        series_id: { type: string }
-        year: { type: integer }
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        segment:
+          type: string
+          enum:
+            - commercial
+            - housing
+        series_id:
+          type: string
+          enum:
+            - PNRESCONS
+            - PRRESCONS
+        year:
+          type: integer
+        latest_observation_date:
+          type: string
         latest_observation:
           $ref: "#/components/schemas/SpendingObservation"
         months_included:
           type: array
-          items: { type: string }
-        ytd_monthly_equiv_musd: { type: number }
-        pytd_monthly_equiv_musd: { type: number }
+          items:
+            type: string
+        ytd_monthly_equiv_musd:
+          type: number
+        pytd_monthly_equiv_musd:
+          type: number
         pct_change_ytd_vs_pytd:
           anyOf:
             - type: number
             - type: "null"
         notes:
           type: array
-          items: { type: string }
+          items:
+            type: string
         raw:
           type: object
           properties:
@@ -440,15 +400,36 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/SpendingObservation"
-      required: [ok, ts, service, segment, series_id, year, latest_observation, months_included, ytd_monthly_equiv_musd, pytd_monthly_equiv_musd, raw]
+          required:
+            - ytd_observations
+            - pytd_observations
+      required:
+        - ok
+        - ts
+        - service
+        - segment
+        - series_id
+        - year
+        - latest_observation_date
+        - latest_observation
+        - months_included
+        - ytd_monthly_equiv_musd
+        - pytd_monthly_equiv_musd
+        - pct_change_ytd_vs_pytd
+        - raw
       additionalProperties: true
 
     SpendingYtdSummaryResponse:
       type: object
       properties:
-        ok: { type: boolean }
-        ts: { type: string }
-        service: { type: string }
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        year:
+          type: integer
         summary:
           type: object
           properties:
@@ -456,5 +437,13 @@ components:
               $ref: "#/components/schemas/SpendingYtdResponse"
             housing:
               $ref: "#/components/schemas/SpendingYtdResponse"
-      required: [ok, ts, service, summary]
+          required:
+            - commercial
+            - housing
+      required:
+        - ok
+        - ts
+        - service
+        - year
+        - summary
       additionalProperties: true
