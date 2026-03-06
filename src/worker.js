@@ -24,6 +24,10 @@ import {
   handleConstructionHeatmap,
   handleConstructionNowcast,
   handleConstructionForecast,
+  handleConstructionStressIndex,
+  handleConstructionEarlyWarning,
+  handleConstructionCapitalFlows,
+  handleConstructionMigrationIndex,
 } from "./routes/construction.js";
 
 export default {
@@ -56,6 +60,10 @@ export default {
       if (pathname === "/construction/heatmap") return handleConstructionHeatmap(env);
       if (pathname === "/construction/nowcast") return handleConstructionNowcast(request, env);
       if (pathname === "/construction/forecast") return handleConstructionForecast(request, env);
+      if (pathname === "/construction/stress-index") return handleConstructionStressIndex(request, env);
+      if (pathname === "/construction/early-warning") return handleConstructionEarlyWarning(request, env);
+      if (pathname === "/construction/capital-flows") return handleConstructionCapitalFlows(request, env);
+      if (pathname === "/construction/migration-index") return handleConstructionMigrationIndex(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
       if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
       if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);
