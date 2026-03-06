@@ -39,6 +39,22 @@ function settledValue(result, key) {
   return result.value?.[key] ?? null;
 }
 
+function isSubsectionError(value) {
+  return !!(value && typeof value === "object" && value.ok === false && value.error);
+}
+
+function asText(value, fallback = "unknown") {
+  return typeof value === "string" && value.length > 0 ? value : fallback;
+}
+
+function asNumber(value) {
+  return Number.isFinite(value) ? value : null;
+}
+
+function marketFromList(list) {
+  return Array.isArray(list) && list[0]?.market ? list[0].market : "unknown";
+}
+
 function modelFromSettled(results) {
   const terminal = settledValue(results.terminal, "terminal") || {};
   const power = {
@@ -47,17 +63,23 @@ function modelFromSettled(results) {
   };
 
   const marketTape = terminal.market_tape || null;
+  const terminalSignal = isSubsectionError(terminal.signal) ? null : terminal.signal;
+  const terminalRegime = isSubsectionError(terminal.regime) ? null : terminal.regime;
+  const terminalLiquidity = isSubsectionError(terminal.liquidity) ? null : terminal.liquidity;
+  const terminalRisk = isSubsectionError(terminal.risk) ? null : terminal.risk;
+  const spendingSummary = settledValue(results.spendingSummary, "summary");
+  const spending = spendingSummary || (isSubsectionError(terminal.spending) ? null : terminal.spending);
 
   return {
     terminal,
     tape: marketTape,
-    signal: terminal.signal?.signal || "unknown",
-    regime: terminal.regime?.regime || "unknown",
-    liquidity: terminal.liquidity?.liquidity_state || "unknown",
-    risk: terminal.risk?.risk_level || marketTape?.risk || "unknown",
-    constructionIndex: terminal.construction_index ?? null,
+    signal: asText(terminalSignal?.signal, "unknown"),
+    regime: asText(terminalRegime?.regime, "unknown"),
+    liquidity: asText(terminalLiquidity?.liquidity_state, asText(marketTape?.liquidity, "unknown")),
+    risk: asText(terminalRisk?.risk_level, asText(marketTape?.risk, "unknown")),
+    constructionIndex: asNumber(terminal.construction_index),
     stressIndex: settledValue(results.stressIndex, "stress_index") || terminal.stress_index || null,
-    spending: settledValue(results.spendingSummary, "summary") || terminal.spending || null,
+    spending,
     power,
     nowcast: settledValue(results.nowcast, "nowcast") || terminal.nowcast || null,
     heatmap: settledValue(results.heatmap, "heatmap") || null,
@@ -69,8 +91,20 @@ function modelFromSettled(results) {
     migrationIndex: settledValue(results.migrationIndex, "migration_index") || terminal.migration_index || null,
     morningBrief: settledValue(results.morningBrief, "brief") || null,
     operatorActions: terminal.operator_actions || null,
-    cycleInterpretation: terminal.cycle_interpretation || "Neutral",
-    marketTape: terminal.market_tape || null,
+    cycleInterpretation: asText(terminal.cycle_interpretation, "Neutral"),
+    marketTape: marketTape || {
+      signal: asText(terminalSignal?.signal, "unknown"),
+      regime: asText(terminalRegime?.regime, "unknown"),
+      liquidity: asText(terminalLiquidity?.liquidity_state, "unknown"),
+      risk: asText(terminalRisk?.risk_level, "unknown"),
+      construction_index: asNumber(terminal.construction_index),
+      stress_index: asNumber(terminal.stress_index?.score),
+      recession_probability: asNumber(terminal.recession_probability?.next_12_months),
+      commercial_pct: asNumber(spending?.commercial?.pct_change_ytd_vs_pytd),
+      housing_pct: asNumber(spending?.housing?.pct_change_ytd_vs_pytd),
+      top_market: marketFromList(terminal.migration_index?.inbound_markets),
+      weakest_market: marketFromList(terminal.migration_index?.outbound_markets),
+    },
     failures: Object.entries(results)
       .filter(([, value]) => value.status === "rejected")
       .map(([key, value]) => ({ key, reason: value.reason?.message || "failed" })),
@@ -117,12 +151,12 @@ function renderTape(tape) {
 }
 
 function renderPanels(vm) {
-  const commercial = vm.spending?.commercial?.pct_change_ytd_vs_pytd;
-  const housing = vm.spending?.housing?.pct_change_ytd_vs_pytd;
+  const commercial = asNumber(vm.spending?.commercial?.pct_change_ytd_vs_pytd);
+  const housing = asNumber(vm.spending?.housing?.pct_change_ytd_vs_pytd);
   const powerHeadline = vm.power?.power_summary?.headline || "Power summary unavailable";
-  const heatmapSummary = vm.heatmap?.summary?.top_strength_theme || vm.terminal?.heatmap_summary?.top_strength_theme || "Heatmap unavailable";
-  const forecastHeadline = vm.forecast?.summary?.headline || vm.terminal?.forecast_summary?.headline || "Forecast unavailable";
-  const stressValue = vm.stressIndex?.score ?? "n/a";
+  const heatmapSummary = asText(vm.heatmap?.summary?.top_strength_theme, asText(vm.terminal?.heatmap_summary?.top_strength_theme, "Heatmap unavailable"));
+  const forecastHeadline = asText(vm.forecast?.summary?.headline, asText(vm.terminal?.forecast_summary?.headline, "Forecast unavailable"));
+  const stressValue = asNumber(vm.stressIndex?.score) ?? "n/a";
   const commercialHousingTakeaway = commercial !== undefined && housing !== undefined
     ? commercial >= 0 && housing >= 0
       ? "Both segments are above prior-year pace."
@@ -141,8 +175,8 @@ function renderPanels(vm) {
       ? "Disciplined"
       : "Balanced";
   const subCapacity = vm.power?.power_index?.subcontractors?.state || "unknown";
-  const migrationInbound = vm.migrationIndex?.inbound_markets?.[0]?.market || "unknown";
-  const migrationOutbound = vm.migrationIndex?.outbound_markets?.[0]?.market || "unknown";
+  const migrationInbound = marketFromList(vm.migrationIndex?.inbound_markets);
+  const migrationOutbound = marketFromList(vm.migrationIndex?.outbound_markets);
   const operatorActions = vm.operatorActions
     ? `GC: ${vm.operatorActions.gc} Sub: ${vm.operatorActions.subcontractor} Dev: ${vm.operatorActions.developer} Lender: ${vm.operatorActions.lender}`
     : "No operator actions available.";
@@ -150,8 +184,8 @@ function renderPanels(vm) {
   panelsEl.innerHTML = `
     <section class="row row-top">${card("Cycle Dial", vm.cycleInterpretation)}${card("Signal", vm.signal)}${card("Regime", vm.regime)}${card("Liquidity", vm.liquidity)}${card("Risk", vm.risk)}${card("Construction Index", vm.constructionIndex ?? "n/a")}${card("Stress Index", stressValue, vm.stressIndex?.explanation || "")}</section>
     <section class="row">${card("Commercial vs Housing", `${commercial ?? "n/a"} / ${housing ?? "n/a"}`, commercialHousingTakeaway)}${card("Power Index", vm.power?.power_summary?.margin_leader || "unknown", powerHeadline)}${card("Forward Outlook", vm.nowcast?.next_6_months || "unknown", `Recession: ${vm.recessionProbability?.next_12_months ?? "n/a"}%`)}${card("Project Pipeline", projectPipeline, vm.nowcast?.drivers?.[0] || "No driver available")}</section>
-    <section class="row">${card("Alerts", vm.alerts?.[0]?.headline || "No active alerts", vm.alerts?.[0]?.explanation || "")}${card("Heatmap", vm.terminal?.heatmap_summary?.top_strength_theme || "No heatmap", heatmapSummary)}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.power?.power_index?.subcontractors?.explanation || "")}</section>
-    <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", `${migrationInbound} → ${migrationOutbound}`, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", vm.terminal?.forecast_summary?.strongest_market || "unknown", forecastHeadline)}</section>
+    <section class="row">${card("Alerts", vm.alerts?.[0]?.headline || "No active alerts", vm.alerts?.[0]?.explanation || "")}${card("Heatmap", heatmapSummary, asText(vm.terminal?.heatmap_summary?.top_weakness_theme, ""))}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.power?.power_index?.subcontractors?.explanation || "")}</section>
+    <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", `${migrationInbound} → ${migrationOutbound}`, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", asText(vm.terminal?.forecast_summary?.strongest_market, marketFromList(vm.forecast?.strongest_next_12_months)), forecastHeadline)}</section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
 }
