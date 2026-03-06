@@ -2,10 +2,6 @@ name = "construction-ai"
 main = "src/worker.js"
 compatibility_date = "2026-03-01"
 
-[assets]
-binding = "ASSETS"
-directory = "./dist"
-
 kv_namespaces = [
   { binding = "CPI_SNAPSHOTS", id = "3ed4ce29b3c94758b531684cb927795a" }
 ]
