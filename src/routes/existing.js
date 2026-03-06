@@ -324,7 +324,9 @@ export async function buildConstructionDashboard(env, limit = 12) {
   const result = await buildMacroEndpointData(env, limit);
   if (result.failed) return result;
 
-  const { signal, regime, liquidity, risk, construction } = result.data;
+  const { signal, regime, liquidity, risk, construction, snapshot } = result.data;
+  const permitsTrendPct = Number.isFinite(snapshot?.series?.PERMIT?.trend_pct) ? snapshot.series.PERMIT.trend_pct : null;
+  const startsTrendPct = Number.isFinite(snapshot?.series?.HOUST?.trend_pct) ? snapshot.series.HOUST.trend_pct : null;
   return {
     failed: false,
     data: {
@@ -333,6 +335,10 @@ export async function buildConstructionDashboard(env, limit = 12) {
       liquidity,
       risk,
       construction_index: construction?.construction_index ?? null,
+      activity_trends: {
+        permits_trend_pct: permitsTrendPct,
+        starts_trend_pct: startsTrendPct,
+      },
     },
   };
 }

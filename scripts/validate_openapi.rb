@@ -9,7 +9,10 @@ REQUIRED_NEW_PATHS = [
   '/construction/market-radar',
   '/construction/morning-brief',
   '/construction/alerts',
-  '/construction/recession-probability'
+  '/construction/recession-probability',
+  '/construction/power',
+  '/construction/heatmap',
+  '/construction/nowcast'
 ]
 REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/spending/ytd/summary']
 REQUIRED_SCHEMAS = [
@@ -18,7 +21,12 @@ REQUIRED_SCHEMAS = [
   'ConstructionMorningBriefResponse',
   'ConstructionAlertsResponse',
   'AlertCard',
-  'RecessionProbabilityResponse'
+  'RecessionProbabilityResponse',
+  'PowerActorState',
+  'ConstructionPowerResponse',
+  'HeatmapMarketItem',
+  'ConstructionHeatmapResponse',
+  'ConstructionNowcastResponse'
 ]
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
@@ -49,6 +57,9 @@ end
 terminal_properties = components.dig('ConstructionTerminalResponse', 'properties', 'terminal', 'properties') || {}
 errors << 'ConstructionTerminalResponse terminal schema must include alerts' unless terminal_properties.key?('alerts')
 errors << 'ConstructionTerminalResponse terminal schema must include recession_probability' unless terminal_properties.key?('recession_probability')
+errors << 'ConstructionTerminalResponse terminal schema must include power_index' unless terminal_properties.key?('power_index')
+errors << 'ConstructionTerminalResponse terminal schema must include power_summary' unless terminal_properties.key?('power_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include nowcast' unless terminal_properties.key?('nowcast')
 
 referenced = []
 paths.each do |route, methods|

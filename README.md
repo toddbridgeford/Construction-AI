@@ -38,6 +38,9 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `GET /construction/dashboard`
 - `GET /construction/terminal`
 - `GET /construction/market-radar`
+- `GET /construction/power`
+- `GET /construction/heatmap`
+- `GET /construction/nowcast`
 - `GET /construction/morning-brief`
 - `GET /construction/alerts`
 - `GET /construction/recession-probability`
@@ -80,6 +83,12 @@ Notes:
 - `/construction/morning-brief` — daily operator note.
 - `/construction/alerts` — machine-readable active risk cards.
 - `/construction/recession-probability` — deterministic next-12-month construction slowdown risk estimate.
+
+## Advanced Intelligence Layer
+
+- **Construction Power Index** (`/construction/power`) — quantifies who controls margin and terms across general contractors, subcontractors, distributors, manufacturers, developers, and lenders.
+- **Metro Heatmap Engine** (`/construction/heatmap`) — ranks strongest vs weakest markets from canonical market artifact files using deterministic scoring.
+- **Forward Construction Cycle Model** (`/construction/nowcast`) — estimates 6–12 month construction direction and recession probability using liquidity, risk, activity, and spending momentum.
 
 ## Validation
 

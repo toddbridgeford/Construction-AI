@@ -84,6 +84,39 @@ function runMarketRadarSmoke() {
   assert(radar.weakest_markets[0].market === "Market B", "Lowest pressure market should rank first among weakest");
 }
 
+
+function runPowerHeatmapNowcastSmoke() {
+  const { buildConstructionPowerFromMetrics, buildConstructionNowcastFromMetrics, toHeatmapPayload } = constructionTestOnly();
+
+  const metrics = {
+    liquidity_state: "tight",
+    liquidity_score: 78,
+    risk_score: 62,
+    construction_index: 43,
+    commercial_pct_change: -2.1,
+    housing_pct_change: -1.3,
+    mortgage_rate: 7.2,
+  };
+
+  const power = buildConstructionPowerFromMetrics(metrics);
+  assert(typeof power.power_index.general_contractors.score === "number", "Power index GC score missing");
+  assert(typeof power.power_index.lenders.state === "string", "Power index lender state missing");
+  assert(typeof power.power_summary.margin_leader === "string", "Power summary margin_leader missing");
+
+  const nowcast = buildConstructionNowcastFromMetrics(metrics, { permits_trend_pct: -1.4, starts_trend_pct: -0.8 });
+  assert(["improving", "stable", "softening"].includes(nowcast.next_6_months), "Nowcast next_6_months invalid");
+  assert(typeof nowcast.next_12_months_recession_probability === "number", "Nowcast recession probability missing");
+  assert(Array.isArray(nowcast.drivers), "Nowcast drivers must be an array");
+
+  const heatmap = toHeatmapPayload({
+    hottest_markets: [{ market: "A", score: 60, regime: "Expansion", signal: "🟢", note: "x" }],
+    weakest_markets: [{ market: "B", score: 40, regime: "Contraction", signal: "🔴", note: "y" }],
+    summary: { top_strength_theme: "strength", top_weakness_theme: "weakness" },
+  });
+  assert(heatmap.ok === true, "Heatmap payload should be ok=true");
+  assert(Array.isArray(heatmap.hottest_markets), "Heatmap hottest_markets missing");
+}
+
 function runIntelligenceLayerSmoke() {
   const { buildConstructionAlerts, buildRecessionProbability } = constructionTestOnly();
   const terminal = {
@@ -117,6 +150,7 @@ try {
   runTerminalSmoke();
   runMarketRadarSmoke();
   runIntelligenceLayerSmoke();
+  runPowerHeatmapNowcastSmoke();
   console.log("smoke_worker_node: PASS");
 } catch (err) {
   console.error("smoke_worker_node: FAIL");
