@@ -8,24 +8,64 @@
       "type": "national"
     },
     {
-      "id": "denver",
-      "label": "Denver-Aurora-Lakewood, CO MSA",
+      "id": "austin",
+      "label": "Austin-Round Rock-Georgetown, TX MSA",
       "type": "msa",
-      "cbsa": "19740",
-      "fred": {
-        "permits_series": null,
-        "unemployment_series": null
-      }
+      "cbsa": "12420"
+    },
+    {
+      "id": "dallas",
+      "label": "Dallas-Fort Worth-Arlington, TX MSA",
+      "type": "msa",
+      "cbsa": "19100"
     },
     {
       "id": "phoenix",
       "label": "Phoenix-Mesa-Chandler, AZ MSA",
       "type": "msa",
-      "cbsa": "38060",
-      "fred": {
-        "permits_series": null,
-        "unemployment_series": null
-      }
+      "cbsa": "38060"
+    },
+    {
+      "id": "miami",
+      "label": "Miami-Fort Lauderdale-West Palm Beach, FL MSA",
+      "type": "msa",
+      "cbsa": "33100"
+    },
+    {
+      "id": "atlanta",
+      "label": "Atlanta-Sandy Springs-Roswell, GA MSA",
+      "type": "msa",
+      "cbsa": "12060"
+    },
+    {
+      "id": "nashville",
+      "label": "Nashville-Davidson--Murfreesboro--Franklin, TN MSA",
+      "type": "msa",
+      "cbsa": "34980"
+    },
+    {
+      "id": "charlotte",
+      "label": "Charlotte-Concord-Gastonia, NC-SC MSA",
+      "type": "msa",
+      "cbsa": "16740"
+    },
+    {
+      "id": "tampa",
+      "label": "Tampa-St. Petersburg-Clearwater, FL MSA",
+      "type": "msa",
+      "cbsa": "45300"
+    },
+    {
+      "id": "denver",
+      "label": "Denver-Aurora-Lakewood, CO MSA",
+      "type": "msa",
+      "cbsa": "19740"
+    },
+    {
+      "id": "raleigh",
+      "label": "Raleigh-Cary, NC MSA",
+      "type": "msa",
+      "cbsa": "39580"
     }
   ]
 }

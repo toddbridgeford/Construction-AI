@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-03-06T20:58:45.214Z",
+  "generated_at": "2026-03-06T22:03:49.147Z",
   "default_market": "national",
   "markets": [
     {
@@ -11,11 +11,18 @@
       "path": "markets/national/signal_api_latest.json"
     },
     {
-      "id": "denver",
-      "label": "Denver-Aurora-Lakewood, CO MSA",
+      "id": "austin",
+      "label": "Austin-Round Rock-Georgetown, TX MSA",
       "type": "msa",
-      "cbsa": "19740",
-      "path": "markets/denver/signal_api_latest.json"
+      "cbsa": "12420",
+      "path": "markets/austin/signal_api_latest.json"
+    },
+    {
+      "id": "dallas",
+      "label": "Dallas-Fort Worth-Arlington, TX MSA",
+      "type": "msa",
+      "cbsa": "19100",
+      "path": "markets/dallas/signal_api_latest.json"
     },
     {
       "id": "phoenix",
@@ -23,6 +30,55 @@
       "type": "msa",
       "cbsa": "38060",
       "path": "markets/phoenix/signal_api_latest.json"
+    },
+    {
+      "id": "miami",
+      "label": "Miami-Fort Lauderdale-West Palm Beach, FL MSA",
+      "type": "msa",
+      "cbsa": "33100",
+      "path": "markets/miami/signal_api_latest.json"
+    },
+    {
+      "id": "atlanta",
+      "label": "Atlanta-Sandy Springs-Roswell, GA MSA",
+      "type": "msa",
+      "cbsa": "12060",
+      "path": "markets/atlanta/signal_api_latest.json"
+    },
+    {
+      "id": "nashville",
+      "label": "Nashville-Davidson--Murfreesboro--Franklin, TN MSA",
+      "type": "msa",
+      "cbsa": "34980",
+      "path": "markets/nashville/signal_api_latest.json"
+    },
+    {
+      "id": "charlotte",
+      "label": "Charlotte-Concord-Gastonia, NC-SC MSA",
+      "type": "msa",
+      "cbsa": "16740",
+      "path": "markets/charlotte/signal_api_latest.json"
+    },
+    {
+      "id": "tampa",
+      "label": "Tampa-St. Petersburg-Clearwater, FL MSA",
+      "type": "msa",
+      "cbsa": "45300",
+      "path": "markets/tampa/signal_api_latest.json"
+    },
+    {
+      "id": "denver",
+      "label": "Denver-Aurora-Lakewood, CO MSA",
+      "type": "msa",
+      "cbsa": "19740",
+      "path": "markets/denver/signal_api_latest.json"
+    },
+    {
+      "id": "raleigh",
+      "label": "Raleigh-Cary, NC MSA",
+      "type": "msa",
+      "cbsa": "39580",
+      "path": "markets/raleigh/signal_api_latest.json"
     }
   ]
 }

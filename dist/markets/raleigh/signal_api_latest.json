@@ -5,12 +5,12 @@
     "mode": "data_assisted",
     "run_date": "2026-03-06",
     "region": {
-      "name": "Phoenix-Mesa-Chandler, AZ MSA",
-      "geo_id": "38060"
+      "name": "Raleigh-Cary, NC MSA",
+      "geo_id": "39580"
     }
   },
   "provenance": {
-    "generated_at": "2026-03-06T22:03:49.149Z",
+    "generated_at": "2026-03-06T22:03:49.152Z",
     "sources": [
       {
         "name": "FRED",
@@ -37,15 +37,15 @@
   },
   "indices": {
     "pressure_index": {
-      "value": 47,
-      "direction": "↓",
+      "value": 48,
+      "direction": "↑",
       "zone": "Balanced",
-      "delta_3m": -0.4,
-      "momentum_band": "Decelerating",
+      "delta_3m": 0.2,
+      "momentum_band": "Accelerating",
       "risk_state": "🟡",
       "drivers": {
         "capital": "mixed",
-        "pipeline": "softening",
+        "pipeline": "expanding",
         "trade": "mixed",
         "materials": "mixed",
         "regulatory": "mixed",
