@@ -9,6 +9,10 @@ kv_namespaces = [
 [vars]
 SERVICE_NAME = "construction-ai"
 
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
 [triggers]
 crons = ["0 * * * *"]
 
