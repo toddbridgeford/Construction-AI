@@ -599,11 +599,21 @@ function buildMigrationIndex(heatmap, forecast) {
 
 function buildMarketTape(terminal) {
   const metrics = extractTerminalInputs(terminal);
+  const signal = !isSubsectionFailure(terminal?.signal) && typeof terminal?.signal?.signal === "string"
+    ? terminal.signal.signal
+    : "unknown";
+  const regime = !isSubsectionFailure(terminal?.regime) && typeof terminal?.regime?.regime === "string"
+    ? terminal.regime.regime
+    : "unknown";
+  const risk = !isSubsectionFailure(terminal?.risk) && typeof terminal?.risk?.risk_level === "string"
+    ? terminal.risk.risk_level
+    : "unknown";
+
   return {
-    signal: isSubsectionFailure(terminal.signal) ? "unknown" : terminal.signal.signal,
-    regime: isSubsectionFailure(terminal.regime) ? "unknown" : terminal.regime.regime,
+    signal,
+    regime,
     liquidity: metrics.liquidity_state || "unknown",
-    risk: isSubsectionFailure(terminal.risk) ? "unknown" : terminal.risk.risk_level || "unknown",
+    risk,
     construction_index: metrics.construction_index,
     stress_index: terminal?.stress_index?.score ?? null,
     recession_probability: terminal?.recession_probability?.next_12_months ?? null,
