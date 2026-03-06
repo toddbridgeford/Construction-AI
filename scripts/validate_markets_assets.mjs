@@ -4,8 +4,10 @@ import path from "node:path";
 import { MARKETS_INDEX_ASSET_PATH, normalizeAssetPath } from "../src/lib/markets_assets.js";
 
 const ROOT = process.cwd();
+const ASSET_ROOT_DIR = "dist";
+const DIST_PREFIX = "dist/";
 const INDEX_RUNTIME_PATH = normalizeAssetPath(MARKETS_INDEX_ASSET_PATH);
-const INDEX_PATH = path.join(ROOT, INDEX_RUNTIME_PATH);
+const INDEX_PATH = path.join(ROOT, ASSET_ROOT_DIR, INDEX_RUNTIME_PATH);
 
 function fail(message) {
   console.error(`validate_markets_assets: FAIL - ${message}`);
@@ -45,7 +47,12 @@ for (const entry of markets) {
   }
 
   const normalized = normalizeAssetPath(marketPath);
-  const fullPath = path.join(ROOT, normalized);
+  if (normalized.startsWith(DIST_PREFIX)) {
+    missing.push({ market: marketId, reason: `invalid runtime path ${normalized}; paths must be asset-root relative when assets.directory=./dist` });
+    continue;
+  }
+
+  const fullPath = path.join(ROOT, ASSET_ROOT_DIR, normalized);
   if (!fs.existsSync(fullPath)) {
     missing.push({ market: marketId, reason: `missing file at ${normalized}` });
   }

@@ -1012,7 +1012,7 @@ function buildRadarFromMarkets(scoredMarkets) {
 
 async function loadScoredMarketsFromAssets(env) {
   if (!env.ASSETS || typeof env.ASSETS.fetch !== "function") {
-    return subsectionError("ASSETS_NOT_CONFIGURED", "Static asset binding is not configured; cannot read dist/markets/*.json files");
+    return subsectionError("ASSETS_NOT_CONFIGURED", "Static asset binding is not configured; cannot read markets/*.json files");
   }
 
   const base = "http://assets";

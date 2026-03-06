@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-03-06T19:04:02.942Z",
+  "generated_at": "2026-03-06T20:30:32.598Z",
   "default_market": "national",
   "markets": [
     {
@@ -8,21 +8,21 @@
       "label": "United States",
       "type": "national",
       "cbsa": null,
-      "path": "dist/markets/national/signal_api_latest.json"
+      "path": "markets/national/signal_api_latest.json"
     },
     {
       "id": "denver",
       "label": "Denver-Aurora-Lakewood, CO MSA",
       "type": "msa",
       "cbsa": "19740",
-      "path": "dist/markets/denver/signal_api_latest.json"
+      "path": "markets/denver/signal_api_latest.json"
     },
     {
       "id": "phoenix",
       "label": "Phoenix-Mesa-Chandler, AZ MSA",
       "type": "msa",
       "cbsa": "38060",
-      "path": "dist/markets/phoenix/signal_api_latest.json"
+      "path": "markets/phoenix/signal_api_latest.json"
     }
   ]
 }

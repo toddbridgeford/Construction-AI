@@ -6,9 +6,10 @@ import { MARKETS_INDEX_ASSET_PATH, normalizeAssetPath } from "../src/lib/markets
 const repoRoot = process.cwd();
 const sourceDistDir = path.join(repoRoot, "dist");
 const deployRootDir = path.join(repoRoot, ".deploy-assets");
-const deployDistDir = path.join(deployRootDir, "dist");
 const runtimeMarketsIndexPath = normalizeAssetPath(MARKETS_INDEX_ASSET_PATH);
 const deployMarketsIndex = path.join(deployRootDir, runtimeMarketsIndexPath);
+const ASSET_ROOT_DIR = "./dist";
+const DIST_PREFIX = "dist/";
 
 function copyDirectoryRecursive(sourceDir, targetDir) {
   fs.mkdirSync(targetDir, { recursive: true });
@@ -33,7 +34,7 @@ if (!fs.existsSync(sourceDistDir) || !fs.statSync(sourceDistDir).isDirectory()) 
 
 fs.rmSync(deployRootDir, { recursive: true, force: true });
 fs.mkdirSync(deployRootDir, { recursive: true });
-copyDirectoryRecursive(sourceDistDir, deployDistDir);
+copyDirectoryRecursive(sourceDistDir, deployRootDir);
 
 if (!fs.existsSync(deployMarketsIndex)) {
   console.error(`ERROR: Missing .deploy-assets/${runtimeMarketsIndexPath} in deploy bundle.`);
@@ -54,11 +55,17 @@ const markets = Array.isArray(marketsIndex?.markets) ? marketsIndex.markets : []
 for (const market of markets) {
   const marketPath = typeof market?.path === "string" ? market.path : "";
   if (!marketPath) {
-    console.error("ERROR: Market entry missing path in dist/markets/index.json");
+    console.error(`ERROR: Market entry missing path in ${runtimeMarketsIndexPath}`);
     process.exit(1);
   }
 
-  const bundledPath = path.join(deployRootDir, normalizeAssetPath(marketPath));
+  const normalizedMarketPath = normalizeAssetPath(marketPath);
+  if (ASSET_ROOT_DIR === "./dist" && normalizedMarketPath.startsWith(DIST_PREFIX)) {
+    console.error(`ERROR: Invalid market runtime path '${marketPath}'. Paths must be asset-root relative when assets.directory=${ASSET_ROOT_DIR}.`);
+    process.exit(1);
+  }
+
+  const bundledPath = path.join(deployRootDir, normalizedMarketPath);
   if (!fs.existsSync(bundledPath)) {
     console.error(`ERROR: Referenced market file missing from deploy bundle: ${marketPath}`);
     process.exit(1);
