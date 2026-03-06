@@ -21,6 +21,9 @@ jobs:
       - name: Run worker smoke tests
         run: node scripts/smoke_worker_node.js
 
+      - name: Validate market artifacts
+        run: node scripts/validate_markets_assets.mjs
+
   deploy_preview:
     if: github.event_name == 'pull_request'
     needs: validate
