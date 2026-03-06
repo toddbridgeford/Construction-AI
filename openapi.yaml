@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Construction AI Terminal
-  version: "1.0.3"
+  version: "1.0.4"
   description: Canonical API for the construction-ai Cloudflare Worker (no /terminal; Action matches live routes).
 
 servers:
@@ -160,6 +160,42 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericOkObject"
 
+  /spending/ytd:
+    get:
+      operationId: spendingYtd
+      summary: Commercial or Housing YTD vs PYTD using FRED SAAR monthly-equivalent totals
+      parameters:
+        - name: segment
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [commercial, housing]
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: YTD/PYTD response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpendingYtdResponse"
+
+  /spending/ytd/summary:
+    get:
+      operationId: spendingYtdSummary
+      summary: Combined commercial + housing YTD/PYTD response
+      responses:
+        "200":
+          description: YTD/PYTD summary response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SpendingYtdSummaryResponse"
+
 components:
   schemas:
     GenericOkObject:
@@ -170,6 +206,21 @@ components:
         ts: { type: string }
         service: { type: string }
       required: [ok]
+      additionalProperties: true
+
+    ErrorEnvelope:
+      type: object
+      properties:
+        ok: { type: boolean }
+        ts: { type: string }
+        service: { type: string }
+        error:
+          type: object
+          properties:
+            code: { type: string }
+            message: { type: string }
+          required: [code, message]
+      required: [ok, ts, service, error]
       additionalProperties: true
 
     HealthResponse:
@@ -223,4 +274,66 @@ components:
         data:
           $ref: "#/components/schemas/FredObservationsResponse"
       required: [ok, data]
+      additionalProperties: true
+
+    SpendingObservation:
+      type: object
+      properties:
+        date: { type: string }
+        value_saar: { type: string }
+        value_monthly_equiv: { type: number }
+      required: [date, value_saar, value_monthly_equiv]
+      additionalProperties: false
+
+    SpendingYtdResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        ts: { type: string }
+        service: { type: string }
+        segment: { type: string }
+        series_id: { type: string }
+        year: { type: integer }
+        latest_observation:
+          $ref: "#/components/schemas/SpendingObservation"
+        months_included:
+          type: array
+          items: { type: string }
+        ytd_monthly_equiv_musd: { type: number }
+        pytd_monthly_equiv_musd: { type: number }
+        pct_change_ytd_vs_pytd:
+          anyOf:
+            - type: number
+            - type: "null"
+        notes:
+          type: array
+          items: { type: string }
+        raw:
+          type: object
+          properties:
+            ytd_observations:
+              type: array
+              items:
+                $ref: "#/components/schemas/SpendingObservation"
+            pytd_observations:
+              type: array
+              items:
+                $ref: "#/components/schemas/SpendingObservation"
+      required: [ok, ts, service, segment, series_id, year, latest_observation, months_included, ytd_monthly_equiv_musd, pytd_monthly_equiv_musd, raw]
+      additionalProperties: true
+
+    SpendingYtdSummaryResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        ts: { type: string }
+        service: { type: string }
+        summary:
+          type: object
+          properties:
+            commercial:
+              $ref: "#/components/schemas/SpendingYtdResponse"
+            housing:
+              $ref: "#/components/schemas/SpendingYtdResponse"
+      required: [ok, ts, service, summary]
       additionalProperties: true

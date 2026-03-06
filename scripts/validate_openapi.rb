@@ -4,6 +4,7 @@ require 'yaml'
 OPENAPI_PATH = File.expand_path('../openapi.yaml', __dir__)
 EXPECTED_VERSION = '3.1.0'
 EXPECTED_SERVER = 'https://construction-ai.toddbridgeford.workers.dev'
+REQUIRED_PATHS = ['/', '/health', '/spending/ytd', '/spending/ytd/summary']
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
 
@@ -16,31 +17,39 @@ server_url = doc.dig('servers', 0, 'url')
 errors << "servers[0].url must be #{EXPECTED_SERVER}" unless server_url == EXPECTED_SERVER
 
 paths = doc['paths'] || {}
-errors << 'paths must include / and /health' unless paths.key?('/') && paths.key?('/health')
+REQUIRED_PATHS.each do |p|
+  errors << "paths must include #{p}" unless paths.key?(p)
+end
 errors << 'paths must not include /terminal' if paths.key?('/terminal')
 
 components = doc.dig('components', 'schemas') || {}
-
 referenced = []
 
 paths.each do |route, methods|
-  next unless methods.is_a?(Hash)
-  methods.each do |method, op|
-    next unless method.to_s.downcase == 'get' && op.is_a?(Hash)
-    schema = op.dig('responses', '200', 'content', 'application/json', 'schema')
-    if schema.nil?
-      errors << "#{route} GET must define responses.200.content.application/json.schema"
-      next
-    end
+  unless methods.is_a?(Hash) && methods.key?('get')
+    errors << "#{route} must define GET"
+    next
+  end
 
-    has_ref = schema['$ref'].is_a?(String)
-    props = schema['properties']
-    has_props = props.is_a?(Hash) && !props.empty?
-    errors << "#{route} GET 200 schema must have $ref or non-empty properties" unless has_ref || has_props
+  op = methods['get']
+  unless op.is_a?(Hash)
+    errors << "#{route} GET must be an object"
+    next
+  end
 
-    if has_ref && schema['$ref'].start_with?('#/components/schemas/')
-      referenced << schema['$ref'].split('/').last
-    end
+  schema = op.dig('responses', '200', 'content', 'application/json', 'schema')
+  if schema.nil?
+    errors << "#{route} GET must define responses.200.content.application/json.schema"
+    next
+  end
+
+  has_ref = schema['$ref'].is_a?(String)
+  props = schema['properties']
+  has_props = props.is_a?(Hash) && !props.empty?
+  errors << "#{route} GET 200 schema must have $ref or non-empty properties" unless has_ref || has_props
+
+  if has_ref && schema['$ref'].start_with?('#/components/schemas/')
+    referenced << schema['$ref'].split('/').last
   end
 end
 
@@ -57,7 +66,7 @@ referenced.uniq.each do |name|
 end
 
 if errors.any?
-  warn "OpenAPI validation failed:"
+  warn 'OpenAPI validation failed:'
   errors.each { |e| warn "- #{e}" }
   exit 1
 end
