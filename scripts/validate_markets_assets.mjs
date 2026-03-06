@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
-import { MARKETS_INDEX_ASSET_PATH, normalizeAssetPath } from "../src/lib/markets_assets.js";
+import { MARKETS_INDEX_ASSET_PATH, normalizeAssetPath, validateAssetRootRelativePath } from "../src/lib/markets_assets.js";
 
 const ROOT = process.cwd();
 const INDEX_RUNTIME_PATH = normalizeAssetPath(MARKETS_INDEX_ASSET_PATH);
-const INDEX_PATH = path.join(ROOT, INDEX_RUNTIME_PATH);
+const INDEX_PATH = path.join(ROOT, "dist", INDEX_RUNTIME_PATH);
+
+const indexPathValidation = validateAssetRootRelativePath(MARKETS_INDEX_ASSET_PATH, "markets index path");
+if (!indexPathValidation.ok) {
+  fail(indexPathValidation.reason);
+}
+
 
 function fail(message) {
   console.error(`validate_markets_assets: FAIL - ${message}`);
@@ -44,8 +50,14 @@ for (const entry of markets) {
     continue;
   }
 
-  const normalized = normalizeAssetPath(marketPath);
-  const fullPath = path.join(ROOT, normalized);
+  const pathValidation = validateAssetRootRelativePath(marketPath, `market path for ${marketId}`);
+  if (!pathValidation.ok) {
+    missing.push({ market: marketId, reason: pathValidation.reason });
+    continue;
+  }
+
+  const normalized = pathValidation.normalizedPath;
+  const fullPath = path.join(ROOT, "dist", normalized);
   if (!fs.existsSync(fullPath)) {
     missing.push({ market: marketId, reason: `missing file at ${normalized}` });
   }

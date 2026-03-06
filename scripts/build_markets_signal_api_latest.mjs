@@ -179,7 +179,7 @@ function main() {
       label: market.label,
       type: market.type ?? null,
       cbsa: market.cbsa ?? null,
-      path: `dist/markets/${market.id}/signal_api_latest.json`
+      path: `markets/${market.id}/signal_api_latest.json`
     });
 
     // National copy
