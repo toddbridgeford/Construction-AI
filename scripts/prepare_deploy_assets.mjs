@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 import path from "node:path";
+import { MARKETS_INDEX_ASSET_PATH, normalizeAssetPath } from "../src/lib/markets_assets.js";
 
 const repoRoot = process.cwd();
 const sourceDistDir = path.join(repoRoot, "dist");
 const deployRootDir = path.join(repoRoot, ".deploy-assets");
 const deployDistDir = path.join(deployRootDir, "dist");
-const deployMarketsIndex = path.join(deployDistDir, "markets", "index.json");
+const runtimeMarketsIndexPath = normalizeAssetPath(MARKETS_INDEX_ASSET_PATH);
+const deployMarketsIndex = path.join(deployRootDir, runtimeMarketsIndexPath);
 
 function copyDirectoryRecursive(sourceDir, targetDir) {
   fs.mkdirSync(targetDir, { recursive: true });
@@ -34,7 +36,7 @@ fs.mkdirSync(deployRootDir, { recursive: true });
 copyDirectoryRecursive(sourceDistDir, deployDistDir);
 
 if (!fs.existsSync(deployMarketsIndex)) {
-  console.error("ERROR: Missing .deploy-assets/dist/markets/index.json in deploy bundle.");
+  console.error(`ERROR: Missing .deploy-assets/${runtimeMarketsIndexPath} in deploy bundle.`);
   process.exit(1);
 }
 
@@ -56,7 +58,7 @@ for (const market of markets) {
     process.exit(1);
   }
 
-  const bundledPath = path.join(deployRootDir, marketPath);
+  const bundledPath = path.join(deployRootDir, normalizeAssetPath(marketPath));
   if (!fs.existsSync(bundledPath)) {
     console.error(`ERROR: Referenced market file missing from deploy bundle: ${marketPath}`);
     process.exit(1);
@@ -64,4 +66,4 @@ for (const market of markets) {
 }
 
 console.log(`Prepared deploy bundle at ${path.relative(repoRoot, deployRootDir)}/`);
-console.log(`Verified markets index and ${markets.length} referenced market file(s).`);
+console.log(`Verified runtime path ${runtimeMarketsIndexPath} and ${markets.length} referenced market file(s).`);

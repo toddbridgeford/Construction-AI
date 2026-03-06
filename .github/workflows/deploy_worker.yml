@@ -24,6 +24,9 @@ jobs:
       - name: Validate market artifacts
         run: node scripts/validate_markets_assets.mjs
 
+      - name: Validate deploy asset bundle paths
+        run: node scripts/prepare_deploy_assets.mjs
+
   deploy_preview:
     if: github.event_name == 'pull_request'
     needs: validate
