@@ -192,7 +192,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/ConstructionTerminalResponse"
 
-
   /construction/power:
     get:
       operationId: constructionPower
@@ -783,7 +782,6 @@ components:
         - service
         - terminal
       additionalProperties: true
-
 
     PowerActorState:
       type: object
