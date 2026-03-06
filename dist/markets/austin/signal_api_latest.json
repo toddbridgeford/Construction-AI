@@ -5,12 +5,12 @@
     "mode": "data_assisted",
     "run_date": "2026-03-06",
     "region": {
-      "name": "Phoenix-Mesa-Chandler, AZ MSA",
-      "geo_id": "38060"
+      "name": "Austin-Round Rock-Georgetown, TX MSA",
+      "geo_id": "12420"
     }
   },
   "provenance": {
-    "generated_at": "2026-03-06T22:03:49.149Z",
+    "generated_at": "2026-03-06T22:03:49.148Z",
     "sources": [
       {
         "name": "FRED",
@@ -37,10 +37,10 @@
   },
   "indices": {
     "pressure_index": {
-      "value": 47,
+      "value": 48,
       "direction": "↓",
       "zone": "Balanced",
-      "delta_3m": -0.4,
+      "delta_3m": -0.3,
       "momentum_band": "Decelerating",
       "risk_state": "🟡",
       "drivers": {

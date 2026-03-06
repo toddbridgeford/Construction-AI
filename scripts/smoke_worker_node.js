@@ -82,6 +82,15 @@ function runMarketRadarSmoke() {
   assert(typeof radar.summary?.top_weakness_theme === "string", "Radar summary top_weakness_theme missing");
   assert(radar.hottest_markets[0].market === "Market A", "Highest pressure market should rank first");
   assert(radar.weakest_markets[0].market === "Market B", "Lowest pressure market should rank first among weakest");
+
+  const radarWithNational = buildRadarFromMarkets([
+    scoreMarketPayload({ meta: { region: { name: "United States" } }, indices: { pressure_index: { value: 80, zone: "Hot", momentum_band: "Accelerating", risk_state: "🔴" } }, regime: { cycle_state: "Expansion" } }, "United States"),
+    scoreMarketPayload({ meta: { region: { name: "Austin" } }, indices: { pressure_index: { value: 61, zone: "Balanced", momentum_band: "Rising", risk_state: "🟡" } }, regime: { cycle_state: "Neutral" } }, "Austin"),
+    scoreMarketPayload({ meta: { region: { name: "Dallas" } }, indices: { pressure_index: { value: 49, zone: "Balanced", momentum_band: "Stable", risk_state: "🟡" } }, regime: { cycle_state: "Neutral" } }, "Dallas"),
+  ].filter(Boolean));
+
+  assert(radarWithNational.hottest_markets[0].market !== "United States", "National should be excluded when metro entries exist");
+  assert(radarWithNational.weakest_markets[0].market !== "United States", "National should be excluded from weakest when metro entries exist");
 }
 
 

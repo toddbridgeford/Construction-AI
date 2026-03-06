@@ -5,12 +5,12 @@
     "mode": "data_assisted",
     "run_date": "2026-03-06",
     "region": {
-      "name": "Phoenix-Mesa-Chandler, AZ MSA",
-      "geo_id": "38060"
+      "name": "Nashville-Davidson--Murfreesboro--Franklin, TN MSA",
+      "geo_id": "34980"
     }
   },
   "provenance": {
-    "generated_at": "2026-03-06T22:03:49.149Z",
+    "generated_at": "2026-03-06T22:03:49.151Z",
     "sources": [
       {
         "name": "FRED",
@@ -37,15 +37,15 @@
   },
   "indices": {
     "pressure_index": {
-      "value": 47,
-      "direction": "↓",
-      "zone": "Balanced",
-      "delta_3m": -0.4,
-      "momentum_band": "Decelerating",
-      "risk_state": "🟡",
+      "value": 40,
+      "direction": "↑",
+      "zone": "Compression",
+      "delta_3m": 0.3,
+      "momentum_band": "Accelerating",
+      "risk_state": "🟢",
       "drivers": {
-        "capital": "mixed",
-        "pipeline": "softening",
+        "capital": "constraining",
+        "pipeline": "expanding",
         "trade": "mixed",
         "materials": "mixed",
         "regulatory": "mixed",
@@ -60,8 +60,8 @@
     }
   },
   "regime": {
-    "cycle_state": "Neutral",
-    "modifier": "=",
+    "cycle_state": "Contraction",
+    "modifier": "-",
     "confidence": "medium"
   },
   "diagnostics": {

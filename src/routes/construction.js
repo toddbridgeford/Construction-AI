@@ -984,6 +984,12 @@ function toHeatmapPayload(radar) {
   };
 }
 
+
+function isNationalMarket(scoredMarket) {
+  const normalized = String(scoredMarket?.market || "").trim().toLowerCase();
+  return normalized === "united states" || normalized === "national";
+}
+
 function buildRadarFromMarkets(scoredMarkets) {
   if (!Array.isArray(scoredMarkets) || scoredMarkets.length === 0) {
     return subsectionError(
@@ -992,13 +998,29 @@ function buildRadarFromMarkets(scoredMarkets) {
     );
   }
 
-  const rankedDesc = [...scoredMarkets].sort((a, b) => {
+  const hasMetro = scoredMarkets.some((market) => !isNationalMarket(market));
+  const rankingUniverse = hasMetro
+    ? scoredMarkets.filter((market) => !isNationalMarket(market))
+    : scoredMarkets;
+
+  if (rankingUniverse.length === 0) {
+    return subsectionError(
+      "MARKETS_DATA_UNUSABLE",
+      "No market signal files contained a numeric indices.pressure_index.value for deterministic ranking"
+    );
+  }
+
+  const rankedDesc = [...rankingUniverse].sort((a, b) => {
     if (b.score !== a.score) return b.score - a.score;
     return a.market.localeCompare(b.market);
   });
 
-  const rankedAsc = [...rankedDesc].reverse();
-  const topCount = Math.min(3, rankedDesc.length);
+  const rankedAsc = [...rankingUniverse].sort((a, b) => {
+    if (a.score !== b.score) return a.score - b.score;
+    return a.market.localeCompare(b.market);
+  });
+
+  const topCount = Math.min(3, rankingUniverse.length);
 
   return {
     hottest_markets: rankedDesc.slice(0, topCount).map(toRadarMarketEntry),
