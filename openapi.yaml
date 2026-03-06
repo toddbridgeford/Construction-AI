@@ -168,6 +168,43 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericOkObject"
 
+
+  /construction/dashboard:
+    get:
+      operationId: constructionDashboard
+      summary: Canonical construction dashboard payload
+      responses:
+        "200":
+          description: Construction dashboard response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionDashboardResponse"
+
+  /construction/terminal:
+    get:
+      operationId: constructionTerminal
+      summary: One-call operator intelligence terminal
+      responses:
+        "200":
+          description: Construction terminal response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionTerminalResponse"
+
+  /construction/market-radar:
+    get:
+      operationId: constructionMarketRadar
+      summary: Hottest and weakest construction markets
+      responses:
+        "200":
+          description: Construction market radar response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionMarketRadarResponse"
+
   /spending/ytd:
     get:
       operationId: spendingYtd
@@ -331,6 +368,298 @@ components:
       required:
         - ok
         - data
+      additionalProperties: true
+
+
+    ConstructionDashboardResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        signal:
+          type: object
+          properties:
+            signal:
+              type: string
+            confidence:
+              type: number
+            regime:
+              type: string
+            risk_level:
+              type: string
+          required:
+            - signal
+            - confidence
+            - regime
+            - risk_level
+          additionalProperties: true
+        regime:
+          type: object
+          properties:
+            regime:
+              type: string
+            confidence:
+              type: number
+          required:
+            - regime
+            - confidence
+          additionalProperties: true
+        liquidity:
+          type: object
+          properties:
+            liquidity_score:
+              anyOf:
+                - type: number
+                - type: "null"
+            liquidity_state:
+              type: string
+            mortgage_rate:
+              anyOf:
+                - type: number
+                - type: "null"
+            fed_funds:
+              anyOf:
+                - type: number
+                - type: "null"
+          required:
+            - liquidity_score
+            - liquidity_state
+            - mortgage_rate
+            - fed_funds
+          additionalProperties: true
+        risk:
+          type: object
+          properties:
+            risk_score:
+              anyOf:
+                - type: number
+                - type: "null"
+            risk_level:
+              type: string
+            inflation_trend_pct:
+              anyOf:
+                - type: number
+                - type: "null"
+          required:
+            - risk_score
+            - risk_level
+            - inflation_trend_pct
+          additionalProperties: true
+        construction_index:
+          anyOf:
+            - type: number
+            - type: "null"
+      required:
+        - ok
+        - ts
+        - service
+        - signal
+        - regime
+        - liquidity
+        - risk
+        - construction_index
+      additionalProperties: true
+
+    ConstructionSubsectionError:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+          required:
+            - code
+            - message
+          additionalProperties: true
+      required:
+        - ok
+        - error
+      additionalProperties: true
+
+    ConstructionTerminalResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        terminal:
+          type: object
+          properties:
+            signal:
+              oneOf:
+                - type: object
+                  properties:
+                    signal:
+                      type: string
+                  required:
+                    - signal
+                  additionalProperties: true
+                - $ref: "#/components/schemas/ConstructionSubsectionError"
+            regime:
+              oneOf:
+                - type: object
+                  properties:
+                    regime:
+                      type: string
+                  required:
+                    - regime
+                  additionalProperties: true
+                - $ref: "#/components/schemas/ConstructionSubsectionError"
+            liquidity:
+              oneOf:
+                - type: object
+                  properties:
+                    liquidity_state:
+                      type: string
+                  required:
+                    - liquidity_state
+                  additionalProperties: true
+                - $ref: "#/components/schemas/ConstructionSubsectionError"
+            risk:
+              oneOf:
+                - type: object
+                  properties:
+                    risk_level:
+                      type: string
+                  required:
+                    - risk_level
+                  additionalProperties: true
+                - $ref: "#/components/schemas/ConstructionSubsectionError"
+            construction_index:
+              oneOf:
+                - type: number
+                - type: "null"
+                - $ref: "#/components/schemas/ConstructionSubsectionError"
+            spending:
+              oneOf:
+                - type: object
+                  properties:
+                    ok:
+                      type: boolean
+                    commercial:
+                      $ref: "#/components/schemas/SpendingYtdResponse"
+                    housing:
+                      $ref: "#/components/schemas/SpendingYtdResponse"
+                  required:
+                    - ok
+                    - commercial
+                    - housing
+                  additionalProperties: true
+                - $ref: "#/components/schemas/ConstructionSubsectionError"
+            cycle_interpretation:
+              type: string
+            operator_actions:
+              type: object
+              properties:
+                gc:
+                  type: string
+                subcontractor:
+                  type: string
+                developer:
+                  type: string
+                lender:
+                  type: string
+              required:
+                - gc
+                - subcontractor
+                - developer
+                - lender
+          required:
+            - signal
+            - regime
+            - liquidity
+            - risk
+            - construction_index
+            - spending
+            - cycle_interpretation
+            - operator_actions
+          additionalProperties: true
+      required:
+        - ok
+        - ts
+        - service
+        - terminal
+      additionalProperties: true
+
+    ConstructionMarketItem:
+      type: object
+      properties:
+        market:
+          type: string
+        score:
+          type: number
+        regime:
+          type: string
+        signal:
+          type: string
+        note:
+          type: string
+      required:
+        - market
+        - score
+        - regime
+        - signal
+        - note
+      additionalProperties: false
+
+    ConstructionMarketRadarResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        radar:
+          oneOf:
+            - type: object
+              properties:
+                hottest_markets:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/ConstructionMarketItem"
+                weakest_markets:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/ConstructionMarketItem"
+                summary:
+                  type: object
+                  properties:
+                    top_strength_theme:
+                      type: string
+                    top_weakness_theme:
+                      type: string
+                  required:
+                    - top_strength_theme
+                    - top_weakness_theme
+                  additionalProperties: false
+              required:
+                - hottest_markets
+                - weakest_markets
+                - summary
+              additionalProperties: false
+            - $ref: "#/components/schemas/ConstructionSubsectionError"
+      required:
+        - ok
+        - ts
+        - service
+        - radar
       additionalProperties: true
 
     SpendingObservation:
