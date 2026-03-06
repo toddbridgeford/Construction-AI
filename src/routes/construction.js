@@ -493,14 +493,17 @@ function buildStressIndex(terminal) {
   if (metrics.housing_pct_change !== null && metrics.housing_pct_change < 0) score += 5;
 
   const stressScore = clampScore(score);
-  const band = stressScore >= 70 ? "high" : stressScore >= 50 ? "elevated" : "contained";
+  const state = stressScore >= 70 ? "high" : stressScore >= 50 ? "elevated" : "contained";
+  const trend = terminal?.nowcast?.next_6_months === "softening" ? "rising" : stressScore >= 60 ? "elevated" : "stable";
 
   return {
-    stress_index: stressScore,
-    band,
+    score: stressScore,
+    state,
+    trend,
+    drivers: drivers.slice(0, 4),
     explanation:
       drivers.length > 0
-        ? `Stress is ${band} from ${drivers.slice(0, 3).join("; ")}.`
+        ? `Stress is ${state} from ${drivers.slice(0, 3).join("; ")}.`
         : "Stress is contained with mixed but stable inputs.",
   };
 }
@@ -508,47 +511,71 @@ function buildStressIndex(terminal) {
 function buildEarlyWarning(terminal) {
   const nowcast = terminal.nowcast || { next_6_months: "stable" };
   const recession = terminal.recession_probability || { next_12_months: 0 };
-  const stress = terminal.stress_index || { stress_index: 0, band: "contained" };
+  const stress = terminal.stress_index || { score: 0, state: "contained" };
   const riskFlags = [];
   if (nowcast.next_6_months === "softening") riskFlags.push("forward activity is softening");
   if (recession.next_12_months >= 50) riskFlags.push(`recession probability is ${recession.next_12_months.toFixed(1)}%`);
-  if (stress.stress_index >= 60) riskFlags.push(`stress index is ${stress.stress_index.toFixed(1)}`);
+  if (stress.score >= 60) riskFlags.push(`stress index is ${stress.score.toFixed(1)}`);
+
+  const state = riskFlags.length >= 3 ? "high" : riskFlags.length === 2 ? "medium" : "low";
+  const score = state === "high" ? 80 : state === "medium" ? 60 : 35;
+  const trend = nowcast.next_6_months === "softening" || recession.next_12_months >= 50 ? "rising" : "stable";
 
   return {
-    warning_level: riskFlags.length >= 3 ? "high" : riskFlags.length === 2 ? "medium" : "low",
-    flags: riskFlags,
-    summary: riskFlags.length > 0 ? riskFlags.slice(0, 2).join("; ") + "." : "No major cycle-risk flags are active.",
+    state,
+    score,
+    trend,
+    drivers: riskFlags,
+    explanation: riskFlags.length > 0 ? riskFlags.slice(0, 2).join("; ") + "." : "No major cycle-risk flags are active.",
   };
 }
 
 function buildCapitalFlows(terminal) {
   const metrics = extractTerminalInputs(terminal);
   const lenderScore = terminal?.power_index?.lenders?.score ?? null;
-  let flow = "neutral";
-  if (metrics.liquidity_state === "tight" || (lenderScore !== null && lenderScore >= 60)) flow = "defensive";
-  if (metrics.liquidity_state === "easy" && (metrics.risk_score === null || metrics.risk_score < 55)) flow = "expansionary";
+  const defensive = metrics.liquidity_state === "tight" || (lenderScore !== null && lenderScore >= 60);
+  const expansionary = metrics.liquidity_state === "easy" && (metrics.risk_score === null || metrics.risk_score < 55);
+
+  const lending_growth = expansionary ? "expanding" : defensive ? "contracting" : "stable";
+  const private_development_capital = defensive ? "selective" : expansionary ? "risk-on" : "balanced";
+  const manufacturing_investment = metrics.construction_index !== null && metrics.construction_index >= 50 ? "supported" : "cautious";
+  const infrastructure_spending = metrics.commercial_pct_change !== null && metrics.commercial_pct_change >= 0 ? "accelerating" : "stable";
+
+  const headline = defensive
+    ? "Credit is defensive with tighter underwriting and selective deployment."
+    : expansionary
+      ? "Financing conditions support broader project deployment."
+      : "Capital allocation remains balanced with selective risk-taking.";
+
   return {
-    flow_regime: flow,
+    lending_growth,
+    private_development_capital,
+    manufacturing_investment,
+    infrastructure_spending,
+    headline,
     explanation:
-      flow === "defensive"
+      defensive
         ? "Capital is concentrating in resilient projects and tighter credit structures."
-        : flow === "expansionary"
+        : expansionary
           ? "Capital is rotating toward growth projects as financing conditions improve."
           : "Capital allocation remains selective with balanced risk posture.",
   };
 }
 
 function buildMigrationIndex(heatmap, forecast) {
-  const topMarket = heatmap?.hottest_markets?.[0]?.market || forecast?.strongest_next_12_months?.[0]?.market || "unknown";
-  const weakMarket = heatmap?.weakest_markets?.[0]?.market || forecast?.weakest_next_12_months?.[0]?.market || "unknown";
-  const topScore = heatmap?.hottest_markets?.[0]?.score;
-  const weakScore = heatmap?.weakest_markets?.[0]?.score;
-  const spread = Number.isFinite(topScore) && Number.isFinite(weakScore) ? Number((topScore - weakScore).toFixed(1)) : null;
+  const inbound_markets = (forecast?.strongest_next_12_months || heatmap?.hottest_markets || [])
+    .slice(0, 5)
+    .map((m) => ({ market: m.market, score: Number.isFinite(m.forecast_score) ? m.forecast_score : m.score ?? null }));
+  const outbound_markets = (forecast?.weakest_next_12_months || heatmap?.weakest_markets || [])
+    .slice(0, 5)
+    .map((m) => ({ market: m.market, score: Number.isFinite(m.forecast_score) ? m.forecast_score : m.score ?? null }));
+  const topInbound = inbound_markets[0]?.market || "unknown";
+  const topOutbound = outbound_markets[0]?.market || "unknown";
+
   return {
-    migration_index: spread === null ? 0 : Math.max(0, spread),
-    top_market: topMarket,
-    weakest_market: weakMarket,
-    explanation: `Relative demand momentum favors ${topMarket} over ${weakMarket}.`,
+    inbound_markets,
+    outbound_markets,
+    headline: `Relative demand momentum favors ${topInbound} over ${topOutbound}.`,
   };
 }
 
@@ -558,14 +585,14 @@ function buildMarketTape(terminal) {
     signal: isSubsectionFailure(terminal.signal) ? "unknown" : terminal.signal.signal,
     regime: isSubsectionFailure(terminal.regime) ? "unknown" : terminal.regime.regime,
     liquidity: metrics.liquidity_state || "unknown",
-    risk: metrics.risk_score,
+    risk: isSubsectionFailure(terminal.risk) ? "unknown" : terminal.risk.risk_level || "unknown",
     construction_index: metrics.construction_index,
-    stress_index: terminal?.stress_index?.stress_index ?? null,
+    stress_index: terminal?.stress_index?.score ?? null,
     recession_probability: terminal?.recession_probability?.next_12_months ?? null,
     commercial_pct: metrics.commercial_pct_change,
     housing_pct: metrics.housing_pct_change,
-    top_market: terminal?.migration_index?.top_market || terminal?.forecast_summary?.strongest_market || "unknown",
-    weakest_market: terminal?.migration_index?.weakest_market || terminal?.forecast_summary?.weakest_market || "unknown",
+    top_market: terminal?.migration_index?.inbound_markets?.[0]?.market || terminal?.forecast_summary?.strongest_market || "unknown",
+    weakest_market: terminal?.migration_index?.outbound_markets?.[0]?.market || terminal?.forecast_summary?.weakest_market || "unknown",
   };
 }
 
@@ -642,7 +669,7 @@ async function buildTerminalPayload(request, env) {
   terminal.stress_index = buildStressIndex(terminal);
   terminal.stress_index_summary = terminal.stress_index.explanation;
   terminal.early_warning = buildEarlyWarning(terminal);
-  terminal.early_warning_summary = terminal.early_warning.summary;
+  terminal.early_warning_summary = terminal.early_warning.explanation;
   terminal.capital_flows = buildCapitalFlows(terminal);
   terminal.capital_flows_summary = terminal.capital_flows.explanation;
   terminal.forecast_summary = {
@@ -651,12 +678,11 @@ async function buildTerminalPayload(request, env) {
     headline: "Forecast summary unavailable",
   };
   terminal.migration_index = {
-    migration_index: 0,
-    top_market: "unknown",
-    weakest_market: "unknown",
-    explanation: "Migration index unavailable until market forecast and heatmap are available.",
+    inbound_markets: [],
+    outbound_markets: [],
+    headline: "Migration index unavailable until market forecast and heatmap are available.",
   };
-  terminal.migration_summary = terminal.migration_index.explanation;
+  terminal.migration_summary = terminal.migration_index.headline;
 
   const marketRadar = await tryReadMarketRadar(env);
   if (!isSubsectionFailure(marketRadar) && marketRadar?.summary) {
@@ -679,7 +705,7 @@ async function buildTerminalPayload(request, env) {
       isSubsectionFailure(marketRadar) ? null : marketRadar,
       forecast
     );
-    terminal.migration_summary = terminal.migration_index.explanation;
+    terminal.migration_summary = terminal.migration_index.headline;
   }
 
   terminal.market_tape = buildMarketTape(terminal);

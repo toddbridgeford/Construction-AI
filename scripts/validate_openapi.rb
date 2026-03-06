@@ -37,6 +37,7 @@ REQUIRED_SCHEMAS = [
   'StressIndexModel',
   'EarlyWarningModel',
   'CapitalFlowsModel',
+  'MigrationMarketItem',
   'MigrationIndexModel',
   'MarketTapeModel',
   'ConstructionStressIndexResponse',
@@ -110,6 +111,32 @@ referenced.uniq.each do |name|
   errors << "Referenced component schema #{name} must define non-empty properties" unless props.is_a?(Hash) && !props.empty?
 end
 
+stress_props = components.dig('StressIndexModel', 'properties') || {}
+errors << 'StressIndexModel.score must be defined' unless stress_props.key?('score')
+errors << 'StressIndexModel.state must be defined' unless stress_props.key?('state')
+errors << 'StressIndexModel.trend must be defined' unless stress_props.key?('trend')
+errors << 'StressIndexModel.drivers must be defined' unless stress_props.key?('drivers')
+
+early_props = components.dig('EarlyWarningModel', 'properties') || {}
+errors << 'EarlyWarningModel.state must be defined' unless early_props.key?('state')
+errors << 'EarlyWarningModel.score must be defined' unless early_props.key?('score')
+errors << 'EarlyWarningModel.trend must be defined' unless early_props.key?('trend')
+errors << 'EarlyWarningModel.drivers must be defined' unless early_props.key?('drivers')
+
+capital_props = components.dig('CapitalFlowsModel', 'properties') || {}
+%w[lending_growth private_development_capital manufacturing_investment infrastructure_spending headline explanation].each do |field|
+  errors << "CapitalFlowsModel.#{field} must be defined" unless capital_props.key?(field)
+end
+
+migration_props = components.dig('MigrationIndexModel', 'properties') || {}
+errors << 'MigrationIndexModel.inbound_markets must be defined' unless migration_props.key?('inbound_markets')
+errors << 'MigrationIndexModel.outbound_markets must be defined' unless migration_props.key?('outbound_markets')
+errors << 'MigrationIndexModel.headline must be defined' unless migration_props.key?('headline')
+
+market_tape_risk = components.dig('MarketTapeModel', 'properties', 'risk', 'type')
+errors << 'MarketTapeModel.risk must be a string' unless market_tape_risk == 'string'
+
+
 if errors.any?
   warn 'OpenAPI validation failed:'
   errors.each { |e| warn "- #{e}" }
@@ -117,3 +144,4 @@ if errors.any?
 end
 
 puts 'OpenAPI validation passed.'
+

@@ -1487,72 +1487,100 @@ components:
     StressIndexModel:
       type: object
       properties:
-        stress_index:
+        score:
           type: number
-        band:
+        state:
           type: string
-          enum:
-          - contained
-          - elevated
-          - high
+        trend:
+          type: string
+        drivers:
+          type: array
+          items:
+            type: string
         explanation:
           type: string
       required:
-      - stress_index
-      - band
+      - score
+      - state
+      - trend
+      - drivers
       - explanation
       additionalProperties: false
     EarlyWarningModel:
       type: object
       properties:
-        warning_level:
+        state:
           type: string
-          enum:
-          - low
-          - medium
-          - high
-        flags:
+        score:
+          type: number
+        trend:
+          type: string
+        drivers:
           type: array
           items:
             type: string
-        summary:
+        explanation:
           type: string
       required:
-      - warning_level
-      - flags
-      - summary
+      - state
+      - score
+      - trend
+      - drivers
+      - explanation
       additionalProperties: false
     CapitalFlowsModel:
       type: object
       properties:
-        flow_regime:
+        lending_growth:
           type: string
-          enum:
-          - defensive
-          - neutral
-          - expansionary
+        private_development_capital:
+          type: string
+        manufacturing_investment:
+          type: string
+        infrastructure_spending:
+          type: string
+        headline:
+          type: string
         explanation:
           type: string
       required:
-      - flow_regime
+      - lending_growth
+      - private_development_capital
+      - manufacturing_investment
+      - infrastructure_spending
+      - headline
       - explanation
+      additionalProperties: false
+    MigrationMarketItem:
+      type: object
+      properties:
+        market:
+          type: string
+        score:
+          type:
+          - number
+          - 'null'
+      required:
+      - market
+      - score
       additionalProperties: false
     MigrationIndexModel:
       type: object
       properties:
-        migration_index:
-          type: number
-        top_market:
-          type: string
-        weakest_market:
-          type: string
-        explanation:
+        inbound_markets:
+          type: array
+          items:
+            "$ref": "#/components/schemas/MigrationMarketItem"
+        outbound_markets:
+          type: array
+          items:
+            "$ref": "#/components/schemas/MigrationMarketItem"
+        headline:
           type: string
       required:
-      - migration_index
-      - top_market
-      - weakest_market
-      - explanation
+      - inbound_markets
+      - outbound_markets
+      - headline
       additionalProperties: false
     MarketTapeModel:
       type: object
@@ -1564,9 +1592,7 @@ components:
         liquidity:
           type: string
         risk:
-          type:
-          - number
-          - 'null'
+          type: string
         construction_index:
           type:
           - number

@@ -135,7 +135,7 @@ function runPowerHeatmapNowcastSmoke() {
 }
 
 function runIntelligenceLayerSmoke() {
-  const { buildConstructionAlerts, buildRecessionProbability } = constructionTestOnly();
+  const { buildConstructionAlerts, buildRecessionProbability, buildStressIndex, buildEarlyWarning, buildCapitalFlows, buildMigrationIndex, buildMarketTape } = constructionTestOnly();
   const terminal = {
     liquidity: { liquidity_state: "tight", liquidity_score: 62, mortgage_rate: 7.1 },
     risk: { risk_score: 58, risk_level: "elevated" },
@@ -160,6 +160,50 @@ function runIntelligenceLayerSmoke() {
   assert(recession.next_12_months === 100, "Recession probability should deterministically score to 100 after clamping");
   assert(recession.trend === "rising", "Recession trend should be rising for high probability");
   assert(typeof recession.explanation === "string" && recession.explanation.length > 0, "Recession explanation missing");
+
+  const stress = buildStressIndex({ ...terminal, nowcast: { next_6_months: "softening" } });
+  assert(typeof stress.score === "number", "Stress score missing");
+  assert(typeof stress.state === "string", "Stress state missing");
+  assert(Array.isArray(stress.drivers), "Stress drivers should be an array");
+
+  const earlyWarning = buildEarlyWarning({
+    nowcast: { next_6_months: "softening" },
+    recession_probability: { next_12_months: 62 },
+    stress_index: stress,
+  });
+  assert(typeof earlyWarning.state === "string", "Early warning state missing");
+  assert(typeof earlyWarning.score === "number", "Early warning score missing");
+  assert(Array.isArray(earlyWarning.drivers), "Early warning drivers should be an array");
+
+  const capitalFlows = buildCapitalFlows({
+    ...terminal,
+    power_index: { lenders: { score: 66 } },
+  });
+  assert(typeof capitalFlows.lending_growth === "string", "Capital flows lending_growth missing");
+  assert(typeof capitalFlows.headline === "string", "Capital flows headline missing");
+
+  const migrationIndex = buildMigrationIndex(
+    { hottest_markets: [{ market: "Dallas", score: 74 }], weakest_markets: [{ market: "Seattle", score: 41 }] },
+    {
+      strongest_next_12_months: [{ market: "Austin", forecast_score: 78 }],
+      weakest_next_12_months: [{ market: "Boston", forecast_score: 39 }],
+    },
+  );
+  assert(Array.isArray(migrationIndex.inbound_markets), "Migration inbound markets missing");
+  assert(Array.isArray(migrationIndex.outbound_markets), "Migration outbound markets missing");
+  assert(typeof migrationIndex.headline === "string", "Migration headline missing");
+
+  const marketTape = buildMarketTape({
+    ...terminal,
+    signal: { signal: "🟡 Neutral" },
+    regime: { regime: "Late Cycle" },
+    risk: { risk_level: "elevated", risk_score: 58 },
+    stress_index: stress,
+    recession_probability: recession,
+    migration_index: migrationIndex,
+    forecast_summary: { strongest_market: "Austin", weakest_market: "Boston" },
+  });
+  assert(typeof marketTape.risk === "string", "Market tape risk should be a string");
 }
 
 try {
