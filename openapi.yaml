@@ -192,6 +192,43 @@ paths:
               schema:
                 $ref: "#/components/schemas/ConstructionTerminalResponse"
 
+
+  /construction/power:
+    get:
+      operationId: constructionPower
+      summary: Construction Power Index (pricing/margin leverage by actor)
+      responses:
+        "200":
+          description: Construction power index response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionPowerResponse"
+
+  /construction/heatmap:
+    get:
+      operationId: constructionHeatmap
+      summary: Metro heatmap engine for strongest and weakest markets
+      responses:
+        "200":
+          description: Construction heatmap response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionHeatmapResponse"
+
+  /construction/nowcast:
+    get:
+      operationId: constructionNowcast
+      summary: Forward construction cycle nowcast (6-12 month direction)
+      responses:
+        "200":
+          description: Construction nowcast response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConstructionNowcastResponse"
+
   /construction/market-radar:
     get:
       operationId: constructionMarketRadar
@@ -632,6 +669,77 @@ components:
                 - subcontractor
                 - developer
                 - lender
+            power_index:
+              type: object
+              properties:
+                general_contractors:
+                  $ref: "#/components/schemas/PowerActorState"
+                subcontractors:
+                  $ref: "#/components/schemas/PowerActorState"
+                distributors:
+                  $ref: "#/components/schemas/PowerActorState"
+                manufacturers:
+                  $ref: "#/components/schemas/PowerActorState"
+                developers:
+                  $ref: "#/components/schemas/PowerActorState"
+                lenders:
+                  $ref: "#/components/schemas/PowerActorState"
+              required:
+                - general_contractors
+                - subcontractors
+                - distributors
+                - manufacturers
+                - developers
+                - lenders
+              additionalProperties: false
+            power_summary:
+              type: object
+              properties:
+                margin_leader:
+                  type: string
+                most_constrained:
+                  type: string
+                headline:
+                  type: string
+              required:
+                - margin_leader
+                - most_constrained
+                - headline
+              additionalProperties: false
+            nowcast:
+              type: object
+              properties:
+                next_6_months:
+                  type: string
+                  enum:
+                    - improving
+                    - stable
+                    - softening
+                next_12_months_recession_probability:
+                  type: number
+                confidence:
+                  type: number
+                drivers:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - next_6_months
+                - next_12_months_recession_probability
+                - confidence
+                - drivers
+              additionalProperties: false
+            heatmap_summary:
+              type: object
+              properties:
+                top_strength_theme:
+                  type: string
+                top_weakness_theme:
+                  type: string
+              required:
+                - top_strength_theme
+                - top_weakness_theme
+              additionalProperties: false
             alerts:
               type: array
               items:
@@ -663,6 +771,9 @@ components:
             - spending
             - cycle_interpretation
             - operator_actions
+            - power_index
+            - power_summary
+            - nowcast
             - alerts
             - recession_probability
           additionalProperties: true
@@ -671,6 +782,197 @@ components:
         - ts
         - service
         - terminal
+      additionalProperties: true
+
+
+    PowerActorState:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          type: string
+          enum:
+            - strong
+            - neutral
+            - weak
+        explanation:
+          type: string
+      required:
+        - score
+        - state
+        - explanation
+      additionalProperties: false
+
+    ConstructionPowerResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        power_index:
+          type: object
+          properties:
+            general_contractors:
+              $ref: "#/components/schemas/PowerActorState"
+            subcontractors:
+              $ref: "#/components/schemas/PowerActorState"
+            distributors:
+              $ref: "#/components/schemas/PowerActorState"
+            manufacturers:
+              $ref: "#/components/schemas/PowerActorState"
+            developers:
+              $ref: "#/components/schemas/PowerActorState"
+            lenders:
+              $ref: "#/components/schemas/PowerActorState"
+          required:
+            - general_contractors
+            - subcontractors
+            - distributors
+            - manufacturers
+            - developers
+            - lenders
+          additionalProperties: false
+        power_summary:
+          type: object
+          properties:
+            margin_leader:
+              type: string
+            most_constrained:
+              type: string
+            headline:
+              type: string
+          required:
+            - margin_leader
+            - most_constrained
+            - headline
+          additionalProperties: false
+      required:
+        - ok
+        - ts
+        - service
+        - power_index
+        - power_summary
+      additionalProperties: true
+
+    HeatmapMarketItem:
+      type: object
+      properties:
+        market:
+          type: string
+        score:
+          type: number
+        regime:
+          type: string
+        signal:
+          type: string
+        note:
+          type: string
+      required:
+        - market
+        - score
+        - regime
+        - signal
+        - note
+      additionalProperties: false
+
+    ConstructionHeatmapResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        heatmap:
+          type: object
+          properties:
+            ok:
+              type: boolean
+            hottest_markets:
+              type: array
+              items:
+                $ref: "#/components/schemas/HeatmapMarketItem"
+            weakest_markets:
+              type: array
+              items:
+                $ref: "#/components/schemas/HeatmapMarketItem"
+            summary:
+              type: object
+              properties:
+                top_strength_theme:
+                  type: string
+                top_weakness_theme:
+                  type: string
+              required:
+                - top_strength_theme
+                - top_weakness_theme
+              additionalProperties: false
+            error:
+              type: object
+              properties:
+                code:
+                  type: string
+                message:
+                  type: string
+                details:
+                  type: object
+                  additionalProperties: true
+              required:
+                - code
+                - message
+              additionalProperties: true
+          required:
+            - ok
+          additionalProperties: false
+      required:
+        - ok
+        - ts
+        - service
+        - heatmap
+      additionalProperties: true
+
+    ConstructionNowcastResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        nowcast:
+          type: object
+          properties:
+            next_6_months:
+              type: string
+              enum:
+                - improving
+                - stable
+                - softening
+            next_12_months_recession_probability:
+              type: number
+            confidence:
+              type: number
+            drivers:
+              type: array
+              items:
+                type: string
+          required:
+            - next_6_months
+            - next_12_months_recession_probability
+            - confidence
+            - drivers
+          additionalProperties: false
+      required:
+        - ok
+        - ts
+        - service
+        - nowcast
       additionalProperties: true
 
     ConstructionMarketItem:
@@ -894,6 +1196,19 @@ components:
                     - hottest_markets
                     - weakest_markets
                     - summary
+                  additionalProperties: false
+                - $ref: "#/components/schemas/ConstructionSubsectionError"
+            heatmap_summary:
+              oneOf:
+                - type: object
+                  properties:
+                    top_strength_theme:
+                      type: string
+                    top_weakness_theme:
+                      type: string
+                  required:
+                    - top_strength_theme
+                    - top_weakness_theme
                   additionalProperties: false
                 - $ref: "#/components/schemas/ConstructionSubsectionError"
             operator_guidance:

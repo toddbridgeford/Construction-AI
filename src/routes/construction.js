@@ -68,6 +68,263 @@ function extractTerminalInputs(terminal) {
     commercial_pct_change: commercialPct,
     housing_pct_change: housingPct,
     mortgage_rate: Number.isFinite(liquidity?.mortgage_rate) ? liquidity.mortgage_rate : null,
+    permits_trend_pct: Number.isFinite(terminal?.activity_trends?.permits_trend_pct) ? terminal.activity_trends.permits_trend_pct : null,
+    starts_trend_pct: Number.isFinite(terminal?.activity_trends?.starts_trend_pct) ? terminal.activity_trends.starts_trend_pct : null,
+  };
+}
+
+
+function toPowerState(score) {
+  if (score >= 65) return "strong";
+  if (score >= 45) return "neutral";
+  return "weak";
+}
+
+function clampScore(score) {
+  if (!Number.isFinite(score)) return null;
+  return Math.max(0, Math.min(100, Number(score.toFixed(1))));
+}
+
+function buildConstructionPowerFromMetrics(metrics) {
+  const liqState = metrics.liquidity_state;
+  const liqScore = metrics.liquidity_score;
+  const riskScore = metrics.risk_score;
+  const idx = metrics.construction_index;
+  const commercial = metrics.commercial_pct_change;
+  const housing = metrics.housing_pct_change;
+
+  const bothNegative = commercial !== null && housing !== null && commercial < 0 && housing < 0;
+  const bothPositiveOrFlat = commercial !== null && housing !== null && commercial >= -0.5 && housing >= -0.5;
+  const bothExpanding = commercial !== null && housing !== null && commercial > 0 && housing > 0;
+  const weakCommercial = commercial !== null && commercial < 0;
+
+  let gc = 50;
+  const gcDrivers = [];
+  if (idx !== null && idx >= 55) {
+    gc += 14;
+    gcDrivers.push("construction index is firm");
+  } else if (idx !== null && idx < 45) {
+    gc -= 14;
+    gcDrivers.push("construction index is weak");
+  }
+  if (liqState !== "tight") {
+    gc += 10;
+    gcDrivers.push("liquidity is not tight");
+  } else {
+    gc -= 16;
+    gcDrivers.push("tight liquidity pressures buyout terms");
+  }
+  if (riskScore !== null && riskScore >= 55) {
+    gc -= 10;
+    gcDrivers.push("elevated risk constrains margin conversion");
+  }
+
+  let subs = 50;
+  const subsDrivers = [];
+  if (idx !== null && idx >= 50) {
+    subs += 10;
+    subsDrivers.push("activity is stable to expanding");
+  } else if (idx !== null && idx < 45) {
+    subs -= 12;
+    subsDrivers.push("activity is in slowdown/contraction range");
+  }
+  if (riskScore !== null && riskScore < 60) {
+    subs += 6;
+    subsDrivers.push("risk backdrop is not collapsing");
+  } else if (riskScore !== null && riskScore >= 70) {
+    subs -= 10;
+    subsDrivers.push("very high risk undermines trade-level pricing power");
+  }
+
+  let distributors = 50;
+  const distributorDrivers = [];
+  if (bothPositiveOrFlat) {
+    distributors += 14;
+    distributorDrivers.push("commercial and housing are positive or near-flat");
+  }
+  if (bothNegative) {
+    distributors -= 16;
+    distributorDrivers.push("broad demand softening across segments");
+  } else if ((commercial !== null && commercial < -1) || (housing !== null && housing < -1)) {
+    distributors -= 8;
+    distributorDrivers.push("softness in at least one major demand segment");
+  }
+
+  let manufacturers = 50;
+  const manufacturerDrivers = [];
+  if (bothExpanding) {
+    manufacturers += 16;
+    manufacturerDrivers.push("both segments are expanding");
+  } else if (bothNegative) {
+    manufacturers -= 18;
+    manufacturerDrivers.push("both segments are negative");
+  }
+
+  let developers = 50;
+  const developerDrivers = [];
+  if (liqState === "tight") {
+    developers -= 16;
+    developerDrivers.push("tight liquidity raises cost of capital");
+  } else if (liqState === "easy") {
+    developers += 14;
+    developerDrivers.push("easier liquidity supports project optionality");
+  }
+  if (weakCommercial) {
+    developers -= 8;
+    developerDrivers.push("commercial demand is weak");
+  }
+  if (idx !== null && idx >= 60 && liqState === "easy") {
+    developers += 8;
+    developerDrivers.push("strong construction index with easy liquidity");
+  }
+
+  let lenders = 50;
+  const lenderDrivers = [];
+  if (liqState === "tight") {
+    lenders += 12;
+    lenderDrivers.push("tight liquidity improves lender term control");
+  } else if (liqState === "easy") {
+    lenders -= 8;
+    lenderDrivers.push("easy liquidity reduces pricing leverage");
+  }
+  if (riskScore !== null && riskScore >= 75) {
+    lenders -= 14;
+    lenderDrivers.push("extreme risk deteriorates credit quality");
+  } else if (riskScore !== null && riskScore >= 60) {
+    lenders -= 6;
+    lenderDrivers.push("elevated risk modestly weakens credit conditions");
+  }
+
+  const actorScores = {
+    general_contractors: clampScore(gc),
+    subcontractors: clampScore(subs),
+    distributors: clampScore(distributors),
+    manufacturers: clampScore(manufacturers),
+    developers: clampScore(developers),
+    lenders: clampScore(lenders),
+  };
+
+  const explanations = {
+    general_contractors: gcDrivers,
+    subcontractors: subsDrivers,
+    distributors: distributorDrivers,
+    manufacturers: manufacturerDrivers,
+    developers: developerDrivers,
+    lenders: lenderDrivers,
+  };
+
+  const power_index = {};
+  for (const [actor, score] of Object.entries(actorScores)) {
+    const actorDrivers = explanations[actor];
+    power_index[actor] = {
+      score,
+      state: toPowerState(score),
+      explanation:
+        actorDrivers.length > 0
+          ? actorDrivers.join("; ") + "."
+          : "Conditions are mixed and broadly balanced.",
+    };
+  }
+
+  const ordered = Object.entries(actorScores)
+    .map(([actor, score]) => ({ actor, score }))
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.actor.localeCompare(b.actor);
+    });
+
+  const marginLeader = ordered[0]?.actor || "unknown";
+  const mostConstrained = ordered[ordered.length - 1]?.actor || "unknown";
+
+  return {
+    power_index,
+    power_summary: {
+      margin_leader: marginLeader,
+      most_constrained: mostConstrained,
+      headline: `${marginLeader.replaceAll("_", " ")} lead pricing leverage while ${mostConstrained.replaceAll("_", " ")} face the tightest constraints.`,
+    },
+  };
+}
+
+function buildConstructionNowcastFromMetrics(metrics, activityTrends = null) {
+  let score = 0;
+  const drivers = [];
+  const permitsTrend = Number.isFinite(activityTrends?.permits_trend_pct) ? activityTrends.permits_trend_pct : null;
+  const startsTrend = Number.isFinite(activityTrends?.starts_trend_pct) ? activityTrends.starts_trend_pct : null;
+
+  if (metrics.liquidity_state === "tight") {
+    score += 1.4;
+    drivers.push("tight liquidity adds downside pressure");
+  } else if (metrics.liquidity_state === "easy") {
+    score -= 1.0;
+    drivers.push("easy liquidity supports forward activity");
+  }
+
+  if (permitsTrend !== null && permitsTrend < 0) {
+    score += 0.9;
+    drivers.push(`permits trend is negative (${permitsTrend.toFixed(2)}%)`);
+  } else if (permitsTrend !== null && permitsTrend > 0) {
+    score -= 0.6;
+    drivers.push(`permits trend is positive (${permitsTrend.toFixed(2)}%)`);
+  }
+
+  if (startsTrend !== null && startsTrend < 0) {
+    score += 0.9;
+    drivers.push(`starts trend is negative (${startsTrend.toFixed(2)}%)`);
+  } else if (startsTrend !== null && startsTrend > 0) {
+    score -= 0.6;
+    drivers.push(`starts trend is positive (${startsTrend.toFixed(2)}%)`);
+  }
+
+  if (metrics.commercial_pct_change !== null && metrics.commercial_pct_change < 0) {
+    score += 0.7;
+    drivers.push("commercial spending momentum is negative");
+  } else if (metrics.commercial_pct_change !== null && metrics.commercial_pct_change > 0) {
+    score -= 0.5;
+    drivers.push("commercial spending momentum is positive");
+  }
+
+  if (metrics.housing_pct_change !== null && metrics.housing_pct_change < 0) {
+    score += 0.7;
+    drivers.push("housing spending momentum is negative");
+  } else if (metrics.housing_pct_change !== null && metrics.housing_pct_change > 0) {
+    score -= 0.5;
+    drivers.push("housing spending momentum is positive");
+  }
+
+  if (metrics.construction_index !== null && metrics.construction_index < 45) {
+    score += 1.0;
+    drivers.push(`construction index is weak (${metrics.construction_index.toFixed(1)})`);
+  } else if (metrics.construction_index !== null && metrics.construction_index >= 58) {
+    score -= 0.8;
+    drivers.push(`construction index is firm (${metrics.construction_index.toFixed(1)})`);
+  }
+
+  if (metrics.risk_score !== null && metrics.risk_score >= 60) {
+    score += 1.0;
+    drivers.push(`risk score is elevated (${metrics.risk_score.toFixed(1)})`);
+  } else if (metrics.risk_score !== null && metrics.risk_score < 45) {
+    score -= 0.5;
+    drivers.push(`risk score is contained (${metrics.risk_score.toFixed(1)})`);
+  }
+
+  if (metrics.mortgage_rate !== null && metrics.mortgage_rate >= 7) {
+    score += 0.5;
+    drivers.push(`mortgage rate remains restrictive (${metrics.mortgage_rate.toFixed(2)}%)`);
+  } else if (metrics.mortgage_rate !== null && metrics.mortgage_rate <= 5.5) {
+    score -= 0.4;
+    drivers.push(`mortgage rate is comparatively supportive (${metrics.mortgage_rate.toFixed(2)}%)`);
+  }
+
+  const next6 = score >= 1.75 ? "softening" : score <= -1.0 ? "improving" : "stable";
+  const recessionProbability = Math.max(5, Math.min(95, Number((38 + score * 10).toFixed(1))));
+  const confidence = Math.max(35, Math.min(90, Number((55 + Math.abs(score) * 10).toFixed(1))));
+
+  return {
+    next_6_months: next6,
+    next_12_months_recession_probability: recessionProbability,
+    confidence,
+    drivers: drivers.slice(0, 5),
   };
 }
 
@@ -255,8 +512,7 @@ async function buildTerminalPayload(request, env) {
       dashboardResult.data.risk?.risk_score ?? null
     );
     if (dashboardResult.data.cycle) terminal.cycle = dashboardResult.data.cycle;
-    if (dashboardResult.data.power_index !== undefined) terminal.power_index = dashboardResult.data.power_index;
-    if (dashboardResult.data.power_summary) terminal.power_summary = dashboardResult.data.power_summary;
+    if (dashboardResult.data.activity_trends) terminal.activity_trends = dashboardResult.data.activity_trends;
   } else {
     const dashboardPayload = await safeJsonResponseBody(dashboardResult.response);
     const dashboardError = subsectionError(
@@ -272,8 +528,19 @@ async function buildTerminalPayload(request, env) {
     terminal.cycle_interpretation = "Neutral";
   }
 
+  const metrics = extractTerminalInputs(terminal);
+  const power = buildConstructionPowerFromMetrics(metrics);
+  terminal.power_index = power.power_index;
+  terminal.power_summary = power.power_summary;
+  terminal.nowcast = buildConstructionNowcastFromMetrics(metrics, terminal.activity_trends || null);
   terminal.alerts = buildConstructionAlerts(terminal);
   terminal.recession_probability = buildRecessionProbability(terminal);
+
+  const marketRadar = await tryReadMarketRadar(env);
+  if (!isSubsectionFailure(marketRadar) && marketRadar?.summary) {
+    terminal.heatmap_summary = marketRadar.summary;
+  }
+
   return terminal;
 }
 
@@ -349,6 +616,26 @@ function scoreMarketPayload(payload, fallbackMarketName) {
   };
 }
 
+
+function toHeatmapPayload(radar) {
+  if (isSubsectionFailure(radar)) {
+    return {
+      ok: false,
+      error: {
+        code: radar.error.code,
+        message: radar.error.message,
+        ...(radar.error.details ? { details: radar.error.details } : {}),
+      },
+    };
+  }
+
+  return {
+    ok: true,
+    hottest_markets: radar.hottest_markets,
+    weakest_markets: radar.weakest_markets,
+    summary: radar.summary,
+  };
+}
 
 function buildRadarFromMarkets(scoredMarkets) {
   if (!Array.isArray(scoredMarkets) || scoredMarkets.length === 0) {
@@ -437,12 +724,77 @@ export async function handleConstructionMorningBrief(request, env) {
             : "Spending data is incomplete; rely on liquidity and risk posture until updates arrive.",
       },
       market_radar: marketRadar,
+      heatmap_summary: !isSubsectionFailure(marketRadar) ? marketRadar.summary : marketRadar,
       operator_guidance: operatorActions(),
     };
 
     return ok(env, { brief });
   } catch (e) {
     return error(env, 500, "MORNING_BRIEF_FAILED", "Unable to build construction morning brief", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionPower(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, {
+      power_index: terminal.power_index,
+      power_summary: terminal.power_summary,
+    });
+  } catch (e) {
+    return error(env, 500, "POWER_FAILED", "Unable to build construction power index", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionNowcast(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, {
+      nowcast: terminal.nowcast,
+    });
+  } catch (e) {
+    return error(env, 500, "NOWCAST_FAILED", "Unable to build construction nowcast", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionHeatmap(env) {
+  try {
+    const radarResponse = await handleConstructionMarketRadar(env);
+    if (!(radarResponse instanceof Response)) {
+      return ok(env, {
+        heatmap: {
+          ok: false,
+          error: { code: "HEATMAP_INVALID", message: "Unexpected market radar response type" },
+        },
+      });
+    }
+
+    if (radarResponse.status >= 400) {
+      const payload = await safeJsonResponseBody(radarResponse);
+      return ok(env, {
+        heatmap: {
+          ok: false,
+          error: {
+            code: payload?.error?.code || "HEATMAP_FAILED",
+            message: payload?.error?.message || "Unable to build construction heatmap",
+            ...(payload?.error?.details ? { details: payload.error.details } : {}),
+          },
+        },
+      });
+    }
+
+    const payload = await safeJsonResponseBody(radarResponse);
+    return ok(env, {
+      heatmap: toHeatmapPayload(payload?.radar || subsectionError("HEATMAP_INVALID", "Market radar payload missing radar")),
+    });
+  } catch (e) {
+    return error(env, 500, "HEATMAP_FAILED", "Unable to build construction heatmap", {
       message: e?.message || String(e),
     });
   }
@@ -500,5 +852,8 @@ export function __test_only__() {
     buildConstructionAlerts,
     buildRecessionProbability,
     extractTerminalInputs,
+    buildConstructionPowerFromMetrics,
+    buildConstructionNowcastFromMetrics,
+    toHeatmapPayload,
   };
 }

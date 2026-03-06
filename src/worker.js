@@ -20,6 +20,9 @@ import {
   handleConstructionMorningBrief,
   handleConstructionRecessionProbability,
   handleConstructionTerminal,
+  handleConstructionPower,
+  handleConstructionHeatmap,
+  handleConstructionNowcast,
 } from "./routes/construction.js";
 
 export default {
@@ -48,6 +51,9 @@ export default {
       if (pathname === "/construction/dashboard") return handleConstructionDashboard(env);
       if (pathname === "/construction/terminal") return handleConstructionTerminal(request, env);
       if (pathname === "/construction/market-radar") return handleConstructionMarketRadar(env);
+      if (pathname === "/construction/power") return handleConstructionPower(request, env);
+      if (pathname === "/construction/heatmap") return handleConstructionHeatmap(env);
+      if (pathname === "/construction/nowcast") return handleConstructionNowcast(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
       if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
       if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);
