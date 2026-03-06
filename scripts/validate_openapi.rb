@@ -142,6 +142,31 @@ market_tape_risk = components.dig('MarketTapeModel', 'properties', 'risk', 'type
 errors << 'MarketTapeModel.risk must be a string' unless market_tape_risk == 'string'
 
 
+stress_required = components.dig('StressIndexModel', 'required') || []
+%w[score state trend drivers explanation].each do |field|
+  errors << "StressIndexModel.required must include #{field}" unless stress_required.include?(field)
+end
+
+early_required = components.dig('EarlyWarningModel', 'required') || []
+%w[state score trend drivers explanation].each do |field|
+  errors << "EarlyWarningModel.required must include #{field}" unless early_required.include?(field)
+end
+
+capital_required = components.dig('CapitalFlowsModel', 'required') || []
+%w[lending_growth private_development_capital manufacturing_investment infrastructure_spending headline explanation].each do |field|
+  errors << "CapitalFlowsModel.required must include #{field}" unless capital_required.include?(field)
+end
+
+migration_required = components.dig('MigrationIndexModel', 'required') || []
+%w[inbound_markets outbound_markets headline].each do |field|
+  errors << "MigrationIndexModel.required must include #{field}" unless migration_required.include?(field)
+end
+
+market_tape_required = components.dig('MarketTapeModel', 'required') || []
+%w[signal regime liquidity risk construction_index stress_index recession_probability commercial_pct housing_pct top_market weakest_market].each do |field|
+  errors << "MarketTapeModel.required must include #{field}" unless market_tape_required.include?(field)
+end
+
 if errors.any?
   warn 'OpenAPI validation failed:'
   errors.each { |e| warn "- #{e}" }

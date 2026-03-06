@@ -154,10 +154,12 @@ function renderPanels(vm) {
   const commercial = asNumber(vm.spending?.commercial?.pct_change_ytd_vs_pytd);
   const housing = asNumber(vm.spending?.housing?.pct_change_ytd_vs_pytd);
   const powerHeadline = vm.power?.power_summary?.headline || "Power summary unavailable";
-  const heatmapSummary = asText(vm.heatmap?.summary?.top_strength_theme, asText(vm.terminal?.heatmap_summary?.top_strength_theme, "Heatmap unavailable"));
+  const heatmapSummary = vm.heatmap?.ok === false
+    ? asText(vm.heatmap?.error?.message, "Heatmap unavailable")
+    : asText(vm.heatmap?.summary?.top_strength_theme, asText(vm.terminal?.heatmap_summary?.top_strength_theme, "Heatmap unavailable"));
   const forecastHeadline = asText(vm.forecast?.summary?.headline, asText(vm.terminal?.forecast_summary?.headline, "Forecast unavailable"));
   const stressValue = asNumber(vm.stressIndex?.score) ?? "n/a";
-  const commercialHousingTakeaway = commercial !== undefined && housing !== undefined
+  const commercialHousingTakeaway = commercial !== null && housing !== null
     ? commercial >= 0 && housing >= 0
       ? "Both segments are above prior-year pace."
       : commercial < 0 && housing < 0
@@ -175,16 +177,17 @@ function renderPanels(vm) {
       ? "Disciplined"
       : "Balanced";
   const subCapacity = vm.power?.power_index?.subcontractors?.state || "unknown";
+  const topAlerts = Array.from(new Map((vm.alerts || []).map((a) => [a.headline, a])).values());
   const migrationInbound = marketFromList(vm.migrationIndex?.inbound_markets);
   const migrationOutbound = marketFromList(vm.migrationIndex?.outbound_markets);
   const operatorActions = vm.operatorActions
     ? `GC: ${vm.operatorActions.gc} Sub: ${vm.operatorActions.subcontractor} Dev: ${vm.operatorActions.developer} Lender: ${vm.operatorActions.lender}`
-    : "No operator actions available.";
+    : "GC: Protect backlog quality. Sub: Maintain pricing discipline. Dev: Stage starts by financing certainty. Lender: Monitor commercial exposures.";
 
   panelsEl.innerHTML = `
     <section class="row row-top">${card("Cycle Dial", vm.cycleInterpretation)}${card("Signal", vm.signal)}${card("Regime", vm.regime)}${card("Liquidity", vm.liquidity)}${card("Risk", vm.risk)}${card("Construction Index", vm.constructionIndex ?? "n/a")}${card("Stress Index", stressValue, vm.stressIndex?.explanation || "")}</section>
     <section class="row">${card("Commercial vs Housing", `${commercial ?? "n/a"} / ${housing ?? "n/a"}`, commercialHousingTakeaway)}${card("Power Index", vm.power?.power_summary?.margin_leader || "unknown", powerHeadline)}${card("Forward Outlook", vm.nowcast?.next_6_months || "unknown", `Recession: ${vm.recessionProbability?.next_12_months ?? "n/a"}%`)}${card("Project Pipeline", projectPipeline, vm.nowcast?.drivers?.[0] || "No driver available")}</section>
-    <section class="row">${card("Alerts", vm.alerts?.[0]?.headline || "No active alerts", vm.alerts?.[0]?.explanation || "")}${card("Heatmap", heatmapSummary, asText(vm.terminal?.heatmap_summary?.top_weakness_theme, ""))}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.power?.power_index?.subcontractors?.explanation || "")}</section>
+    <section class="row">${card("Alerts", topAlerts?.[0]?.headline || "No active alerts", topAlerts?.[0]?.explanation || "")}${card("Heatmap", heatmapSummary, asText(vm.terminal?.heatmap_summary?.top_weakness_theme, ""))}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.power?.power_index?.subcontractors?.explanation || "")}</section>
     <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", `${migrationInbound} → ${migrationOutbound}`, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", asText(vm.terminal?.forecast_summary?.strongest_market, marketFromList(vm.forecast?.strongest_next_12_months)), forecastHeadline)}</section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
