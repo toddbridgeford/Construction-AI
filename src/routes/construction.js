@@ -490,6 +490,13 @@ async function tryReadMarketRadar(env) {
   return payload?.radar || subsectionError("MARKET_RADAR_INVALID", "Market radar payload missing radar");
 }
 
+async function tryBuildForecast(request, env, terminal = null) {
+  const activeTerminal = terminal || await buildTerminalPayload(request, env);
+  const scoredMarkets = await loadScoredMarketsFromAssets(env);
+  if (isSubsectionFailure(scoredMarkets)) return scoredMarkets;
+  return buildForecastFromMarkets(scoredMarkets, activeTerminal);
+}
+
 async function buildTerminalPayload(request, env) {
   const dashboardResult = await buildConstructionDashboard(env);
   const spending = await readSpendingSummary(request, env);
@@ -541,6 +548,15 @@ async function buildTerminalPayload(request, env) {
     terminal.heatmap_summary = marketRadar.summary;
   }
 
+  const forecast = await tryBuildForecast(request, env, terminal);
+  if (!isSubsectionFailure(forecast)) {
+    terminal.forecast_summary = {
+      strongest_market: forecast.strongest_next_12_months[0]?.market || "unknown",
+      weakest_market: forecast.weakest_next_12_months[0]?.market || "unknown",
+      headline: forecast.summary?.headline || "Forecast summary unavailable",
+    };
+  }
+
   return terminal;
 }
 
@@ -590,6 +606,155 @@ function summarizeTheme(markets, direction) {
   const zonePart = zones.length > 0 ? `zone=${zones[0]}` : "zone=unknown";
   const momentumPart = momentum.length > 0 ? `momentum=${momentum[0]}` : "momentum=unknown";
   return `${direction}: ${zonePart}, ${momentumPart}`;
+}
+
+function normalizeLabel(value) {
+  if (typeof value !== "string") return "";
+  return value.trim().toLowerCase();
+}
+
+function regimeModifier(regimeRaw) {
+  const regime = normalizeLabel(regimeRaw);
+  if (regime.includes("contraction")) return -8;
+  if (regime.includes("slowdown")) return -4;
+  if (regime.includes("late") && regime.includes("expansion")) return 3;
+  if (regime.includes("expansion")) return 6;
+  if (regime.includes("recovery")) return 2;
+  return 0;
+}
+
+function signalModifier(signalRaw) {
+  const signal = normalizeLabel(signalRaw);
+  if (signal.includes("bull")) return 5;
+  if (signal.includes("bear")) return -5;
+  if (signal.includes("🟢")) return 4;
+  if (signal.includes("🟡")) return 0;
+  if (signal.includes("🔴")) return -4;
+  return 0;
+}
+
+function noteThemeModifier(noteRaw) {
+  const note = normalizeLabel(noteRaw);
+  if (!note) return { score: 0, driver: null };
+
+  const positiveHits = ["resilient", "strong", "expanding", "accelerating", "improving", "supportive"]
+    .filter((token) => note.includes(token)).length;
+  const negativeHits = ["soft", "weak", "tight", "slow", "contraction", "risk", "restrictive"]
+    .filter((token) => note.includes(token)).length;
+
+  if (positiveHits > negativeHits) return { score: 3, driver: "Resilient local market commentary" };
+  if (negativeHits > positiveHits) return { score: -3, driver: "Softening local market commentary" };
+  return { score: 0, driver: null };
+}
+
+function macroOverlayAdjustment(baseScore, metrics, nowcast, recessionProbability) {
+  let adjustment = 0;
+  const drivers = [];
+  const vulnerable = baseScore < 50;
+
+  if (nowcast?.next_6_months === "softening") {
+    adjustment -= 2;
+    drivers.push("National nowcast is softening");
+  }
+
+  if (Number.isFinite(recessionProbability?.next_12_months) && recessionProbability.next_12_months > 50) {
+    const recessionPenalty = vulnerable ? -4 : -2;
+    adjustment += recessionPenalty;
+    drivers.push(vulnerable ? "Elevated recession risk penalizes weaker markets more" : "Elevated recession risk caps upside for stronger markets");
+  }
+
+  if (metrics.liquidity_state === "tight") {
+    const liquidityPenalty = vulnerable ? -3 : -1;
+    adjustment += liquidityPenalty;
+    drivers.push(vulnerable ? "Tight liquidity amplifies downside for vulnerable markets" : "National liquidity remains restrictive");
+  }
+
+  return { adjustment, drivers };
+}
+
+function toForecastExplanation(market, direction, drivers) {
+  const because = drivers.slice(0, 3).join(", ").toLowerCase();
+  if (direction === "strengthening") {
+    return `${market} remains likely to outperform because ${because}, though macro constraints temper the upside.`;
+  }
+  return `${market} is more likely to soften because ${because}, with macro pressure increasing downside risk over the next 12 months.`;
+}
+
+function buildForecastSummary(strongest, weakest) {
+  const topStrong = strongest[0];
+  const topWeak = weakest[0];
+  const topStrengthTheme = topStrong?.drivers?.[0] || "Strength is concentrated in markets with resilient current conditions.";
+  const topWeaknessTheme = topWeak?.drivers?.[0] || "Weakness is concentrated in markets exposed to restrictive macro conditions.";
+  const headline = topStrong && topWeak
+    ? `${topStrong.market} screens as the most likely strengthening market while ${topWeak.market} screens as the most likely to soften over the next 12 months.`
+    : "Insufficient market coverage for a full strongest-vs-weakest split; forecast reflects available deterministic market signals.";
+
+  return {
+    top_strength_theme: topStrengthTheme,
+    top_weakness_theme: topWeaknessTheme,
+    headline,
+  };
+}
+
+function scoreForecastMarket(market, context) {
+  const currentScore = Number.isFinite(market.score) ? market.score : 50;
+  const regimeAdj = regimeModifier(market.regime);
+  const signalAdj = signalModifier(market.signal);
+  const noteAdj = noteThemeModifier(market.note);
+  const baseScore = currentScore + regimeAdj + signalAdj + noteAdj.score;
+  const macro = macroOverlayAdjustment(baseScore, context.metrics, context.nowcast, context.recessionProbability);
+  const forecastScore = clampScore(baseScore + macro.adjustment);
+  const direction = forecastScore >= currentScore ? "strengthening" : "softening";
+
+  const drivers = [
+    currentScore >= 55 ? "Strong current market score" : currentScore <= 45 ? "Weak current market score" : "Balanced current market score",
+    regimeAdj > 0 ? `${market.regime || "Positive"} regime` : regimeAdj < 0 ? `${market.regime || "Negative"} regime` : "Neutral regime",
+    signalAdj > 0 ? "Bullish market signal" : signalAdj < 0 ? "Bearish market signal" : "Neutral market signal",
+    ...(noteAdj.driver ? [noteAdj.driver] : []),
+    ...macro.drivers,
+  ].filter((driver, index, arr) => typeof driver === "string" && driver.length > 0 && arr.indexOf(driver) === index);
+
+  return {
+    market: market.market,
+    forecast_score: forecastScore,
+    current_score: clampScore(currentScore),
+    direction,
+    drivers: drivers.slice(0, 5),
+    explanation: toForecastExplanation(market.market, direction, drivers),
+  };
+}
+
+function buildForecastFromMarkets(scoredMarkets, terminal) {
+  const metrics = extractTerminalInputs(terminal);
+  const context = {
+    metrics,
+    nowcast: terminal?.nowcast || null,
+    recessionProbability: terminal?.recession_probability || null,
+  };
+
+  if (!Array.isArray(scoredMarkets) || scoredMarkets.length === 0) {
+    return {
+      strongest_next_12_months: [],
+      weakest_next_12_months: [],
+      summary: buildForecastSummary([], []),
+    };
+  }
+
+  const forecasted = scoredMarkets.map((market) => scoreForecastMarket(market, context));
+  const strongest = [...forecasted]
+    .sort((a, b) => (b.forecast_score - a.forecast_score) || a.market.localeCompare(b.market))
+    .slice(0, Math.min(10, forecasted.length))
+    .map((item) => ({ ...item, direction: "strengthening" }));
+  const weakest = [...forecasted]
+    .sort((a, b) => (a.forecast_score - b.forecast_score) || a.market.localeCompare(b.market))
+    .slice(0, Math.min(10, forecasted.length))
+    .map((item) => ({ ...item, direction: "softening" }));
+
+  return {
+    strongest_next_12_months: strongest,
+    weakest_next_12_months: weakest,
+    summary: buildForecastSummary(strongest, weakest),
+  };
 }
 
 function scoreMarketPayload(payload, fallbackMarketName) {
@@ -661,6 +826,44 @@ function buildRadarFromMarkets(scoredMarkets) {
       top_weakness_theme: summarizeTheme(rankedAsc.slice(0, topCount), "weakness"),
     },
   };
+}
+
+async function loadScoredMarketsFromAssets(env) {
+  if (!env.ASSETS || typeof env.ASSETS.fetch !== "function") {
+    return subsectionError("ASSETS_NOT_CONFIGURED", "Static asset binding is not configured; cannot read dist/markets/*.json files");
+  }
+
+  const base = "http://assets";
+  const marketsIndexRes = await env.ASSETS.fetch(`${base}/dist/markets/index.json`);
+  if (!marketsIndexRes.ok) {
+    return subsectionError("MARKETS_INDEX_MISSING", "Unable to read dist/markets/index.json", { status: marketsIndexRes.status });
+  }
+
+  const marketsIndex = await marketsIndexRes.json();
+  const entries = Array.isArray(marketsIndex?.markets) ? marketsIndex.markets : [];
+  if (entries.length === 0) {
+    return subsectionError("MARKETS_INDEX_EMPTY", "No market entries found in dist/markets/index.json");
+  }
+
+  const scoredMarkets = [];
+  for (const entry of entries) {
+    const marketPath = entry?.path;
+    if (typeof marketPath !== "string" || marketPath.length === 0) continue;
+    const res = await env.ASSETS.fetch(`${base}/${marketPath}`);
+    if (!res.ok) continue;
+    const payload = await res.json();
+    const scored = scoreMarketPayload(payload, entry?.label || entry?.id || "unknown");
+    if (scored) scoredMarkets.push(scored);
+  }
+
+  if (scoredMarkets.length === 0) {
+    return subsectionError(
+      "MARKETS_DATA_UNUSABLE",
+      "No market signal files contained a numeric indices.pressure_index.value for deterministic ranking"
+    );
+  }
+
+  return scoredMarkets;
 }
 
 export async function handleConstructionTerminal(request, env) {
@@ -763,6 +966,33 @@ export async function handleConstructionNowcast(request, env) {
   }
 }
 
+export async function handleConstructionForecast(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    const forecast = await tryBuildForecast(request, env, terminal);
+
+    if (isSubsectionFailure(forecast)) {
+      return ok(env, {
+        forecast: {
+          strongest_next_12_months: [],
+          weakest_next_12_months: [],
+          summary: {
+            top_strength_theme: "Forecast unavailable",
+            top_weakness_theme: "Forecast unavailable",
+            headline: forecast.error.message,
+          },
+        },
+      });
+    }
+
+    return ok(env, { forecast });
+  } catch (e) {
+    return error(env, 500, "FORECAST_FAILED", "Unable to build construction market forecast", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
 export async function handleConstructionHeatmap(env) {
   try {
     const radarResponse = await handleConstructionMarketRadar(env);
@@ -802,41 +1032,11 @@ export async function handleConstructionHeatmap(env) {
 
 export async function handleConstructionMarketRadar(env) {
   try {
-    if (!env.ASSETS || typeof env.ASSETS.fetch !== "function") {
-      return ok(env, {
-        radar: subsectionError("ASSETS_NOT_CONFIGURED", "Static asset binding is not configured; cannot read dist/markets/*.json files"),
-      });
+    const scoredMarkets = await loadScoredMarketsFromAssets(env);
+    if (isSubsectionFailure(scoredMarkets)) {
+      return ok(env, { radar: scoredMarkets });
     }
-
-    const base = "http://assets";
-    const marketsIndexRes = await env.ASSETS.fetch(`${base}/dist/markets/index.json`);
-
-    if (!marketsIndexRes.ok) {
-      return ok(env, {
-        radar: subsectionError("MARKETS_INDEX_MISSING", "Unable to read dist/markets/index.json", { status: marketsIndexRes.status }),
-      });
-    }
-
-    const marketsIndex = await marketsIndexRes.json();
-    const entries = Array.isArray(marketsIndex?.markets) ? marketsIndex.markets : [];
-    if (entries.length === 0) {
-      return ok(env, { radar: subsectionError("MARKETS_INDEX_EMPTY", "No market entries found in dist/markets/index.json") });
-    }
-
-    const scoredMarkets = [];
-    for (const entry of entries) {
-      const marketPath = entry?.path;
-      if (typeof marketPath !== "string" || marketPath.length === 0) continue;
-      const res = await env.ASSETS.fetch(`${base}/${marketPath}`);
-      if (!res.ok) continue;
-      const payload = await res.json();
-      const scored = scoreMarketPayload(payload, entry?.label || entry?.id || "unknown");
-      if (scored) scoredMarkets.push(scored);
-    }
-
-    return ok(env, {
-      radar: buildRadarFromMarkets(scoredMarkets),
-    });
+    return ok(env, { radar: buildRadarFromMarkets(scoredMarkets) });
   } catch (e) {
     return error(env, 500, "MARKET_RADAR_FAILED", "Unable to build construction market radar", {
       message: e?.message || String(e),
@@ -855,5 +1055,7 @@ export function __test_only__() {
     buildConstructionPowerFromMetrics,
     buildConstructionNowcastFromMetrics,
     toHeatmapPayload,
+    buildForecastFromMarkets,
+    scoreForecastMarket,
   };
 }

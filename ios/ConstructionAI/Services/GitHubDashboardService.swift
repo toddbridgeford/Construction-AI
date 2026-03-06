@@ -8,6 +8,7 @@ struct DashboardBundle {
     let fetchedAt: Date
     let regions: [RegionItem]
     let sourceHealth: [SourceHealthItem]
+    let forecast: ForecastViewModel
 }
 
 struct GitHubDashboardService {
@@ -17,12 +18,14 @@ struct GitHubDashboardService {
 
         async let dashboardResponse = fetchDashboard()
         async let marketResponse = fetchMarketFeeds()
+        async let forecastResponse = fetchConstructionForecast()
 
         let (payload, fetchedAt) = try await dashboardResponse
         let marketResult = await marketResponse
+        let forecast = await forecastResponse
 
         let mergedSources = mergeSourceHealth(base: payload.sources, marketSources: marketResult.health)
-        return DashboardBundle(payload: payload, fetchedAt: fetchedAt, regions: marketResult.regions, sourceHealth: mergedSources)
+        return DashboardBundle(payload: payload, fetchedAt: fetchedAt, regions: marketResult.regions, sourceHealth: mergedSources, forecast: forecast)
     }
 
     private func fetchDashboard() async throws -> (DashboardPayload, Date) {
@@ -100,6 +103,33 @@ struct GitHubDashboardService {
                 sources.append(source)
             }
             return (regions.sorted { $0.name < $1.name }, sources.sorted { $0.source < $1.source })
+        }
+    }
+
+    private func fetchConstructionForecast() async -> ForecastViewModel {
+        let url = Config.workerBaseURL.appendingPathComponent("construction/forecast")
+        var request = URLRequest(url: url)
+        request.timeoutInterval = Config.requestTimeout
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+
+        do {
+            let signpost = Signpost.begin("Construction Forecast Fetch")
+            let (data, response) = try await URLSession.shared.data(for: request)
+            Signpost.end("Construction Forecast Fetch", id: signpost)
+            guard let http = response as? HTTPURLResponse else { return .empty }
+            guard http.statusCode == 200 else { return .empty }
+
+            let decoded = try JSONDecoder().decode(ConstructionForecastResponse.self, from: data)
+            return ForecastViewModel(
+                strongest: decoded.forecast.strongestNext12Months,
+                weakest: decoded.forecast.weakestNext12Months,
+                headline: decoded.forecast.summary.headline,
+                topStrengthTheme: decoded.forecast.summary.topStrengthTheme,
+                topWeaknessTheme: decoded.forecast.summary.topWeaknessTheme
+            )
+        } catch {
+            AppLogger.network.error("Construction forecast fetch failed")
+            return .empty
         }
     }
 

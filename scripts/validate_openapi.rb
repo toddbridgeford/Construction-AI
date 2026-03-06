@@ -12,7 +12,8 @@ REQUIRED_NEW_PATHS = [
   '/construction/recession-probability',
   '/construction/power',
   '/construction/heatmap',
-  '/construction/nowcast'
+  '/construction/nowcast',
+  '/construction/forecast'
 ]
 REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/spending/ytd/summary']
 REQUIRED_SCHEMAS = [
@@ -26,7 +27,9 @@ REQUIRED_SCHEMAS = [
   'ConstructionPowerResponse',
   'HeatmapMarketItem',
   'ConstructionHeatmapResponse',
-  'ConstructionNowcastResponse'
+  'ConstructionNowcastResponse',
+  'ForecastMarketItem',
+  'ConstructionForecastResponse'
 ]
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
@@ -60,6 +63,10 @@ errors << 'ConstructionTerminalResponse terminal schema must include recession_p
 errors << 'ConstructionTerminalResponse terminal schema must include power_index' unless terminal_properties.key?('power_index')
 errors << 'ConstructionTerminalResponse terminal schema must include power_summary' unless terminal_properties.key?('power_summary')
 errors << 'ConstructionTerminalResponse terminal schema must include nowcast' unless terminal_properties.key?('nowcast')
+errors << 'ConstructionTerminalResponse terminal schema must include forecast_summary' unless terminal_properties.key?('forecast_summary')
+
+forecast_items = components.dig('ConstructionForecastResponse', 'properties', 'forecast', 'properties', 'strongest_next_12_months', 'items')
+errors << 'ConstructionForecastResponse strongest_next_12_months must reference ForecastMarketItem' unless forecast_items&.dig('$ref') == '#/components/schemas/ForecastMarketItem'
 
 referenced = []
 paths.each do |route, methods|

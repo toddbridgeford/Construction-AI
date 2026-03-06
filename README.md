@@ -41,6 +41,7 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `GET /construction/power`
 - `GET /construction/heatmap`
 - `GET /construction/nowcast`
+- `GET /construction/forecast`
 - `GET /construction/morning-brief`
 - `GET /construction/alerts`
 - `GET /construction/recession-probability`
@@ -89,6 +90,15 @@ Notes:
 - **Construction Power Index** (`/construction/power`) — quantifies who controls margin and terms across general contractors, subcontractors, distributors, manufacturers, developers, and lenders.
 - **Metro Heatmap Engine** (`/construction/heatmap`) — ranks strongest vs weakest markets from canonical market artifact files using deterministic scoring.
 - **Forward Construction Cycle Model** (`/construction/nowcast`) — estimates 6–12 month construction direction and recession probability using liquidity, risk, activity, and spending momentum.
+- **Construction Market Forecast Engine** (`/construction/forecast`) — predicts strongest and weakest next-12-month metros using deterministic market-state scoring with macro overlays.
+
+## Construction Market Forecast Engine
+
+The Construction Market Forecast Engine provides a deterministic next-12-month ranking of markets most likely to strengthen or soften.
+
+- Predicts strongest and weakest markets over the next 12 months.
+- Uses transparent heuristic scoring from current market state (score, regime, signal, commentary) plus national macro overlays (nowcast, recession probability, liquidity).
+- Designed for operator-grade use by developers, contractors, lenders, and investors who need explainable, actionable market direction.
 
 ## Validation
 

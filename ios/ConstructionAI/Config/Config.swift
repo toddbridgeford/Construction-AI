@@ -2,6 +2,7 @@ import Foundation
 
 enum Config {
     static let dashboardURL = URL(string: "https://raw.githubusercontent.com/toddbridgeford/Construction-AI/Predictive-Model/dashboard_latest.json")!
+    static let workerBaseURL = URL(string: "https://construction-ai.toddbridgeford.workers.dev")!
     static let requestTimeout: TimeInterval = 20
     static let appSupportFolder = "ConstructionAI"
 

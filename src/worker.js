@@ -23,6 +23,7 @@ import {
   handleConstructionPower,
   handleConstructionHeatmap,
   handleConstructionNowcast,
+  handleConstructionForecast,
 } from "./routes/construction.js";
 
 export default {
@@ -54,6 +55,7 @@ export default {
       if (pathname === "/construction/power") return handleConstructionPower(request, env);
       if (pathname === "/construction/heatmap") return handleConstructionHeatmap(env);
       if (pathname === "/construction/nowcast") return handleConstructionNowcast(request, env);
+      if (pathname === "/construction/forecast") return handleConstructionForecast(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
       if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
       if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);
