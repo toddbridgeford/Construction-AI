@@ -1,0 +1,220 @@
+{
+  "meta": {
+    "system": "Construction Intelligence OS",
+    "version": "signal_api_v1",
+    "mode": "data_assisted",
+    "run_date": "2026-03-06",
+    "region": {
+      "name": "United States",
+      "geo_id": null
+    }
+  },
+  "provenance": {
+    "as_of": "2026-03-06",
+    "sources": [
+      {
+        "name": "FRED",
+        "series": "macro_fred_pack",
+        "release_date": null,
+        "last_updated": null,
+        "url": "https://api.stlouisfed.org/fred/series/observations"
+      },
+      {
+        "name": "Census BPS",
+        "series": "bps_monthly",
+        "release_date": null,
+        "last_updated": null,
+        "url": "https://www.census.gov/construction/bps/msamonthly.html"
+      },
+      {
+        "name": "BLS LAUS",
+        "series": "laus_unemployment",
+        "release_date": null,
+        "last_updated": null,
+        "url": "https://download.bls.gov/pub/time.series/la/"
+      }
+    ]
+  },
+  "indices": {
+    "pressure_index": {
+      "value": 47,
+      "direction": "→",
+      "zone": "Compression Phase",
+      "delta_3m": 0,
+      "momentum_band": "Stable",
+      "risk_state": "🟢",
+      "drivers": {
+        "capital": 45,
+        "pipeline": 47,
+        "trade": 50,
+        "materials": 50,
+        "regulatory": 50,
+        "macro": 43
+      },
+      "subindices": {
+        "cpi_sf": null,
+        "cpi_mf": null,
+        "cpi_inst": null,
+        "cpi_infra": null,
+        "cpi_r": null,
+        "cpi_i": null
+      },
+      "divergences": {
+        "r_minus_i": -1,
+        "sf_minus_mf": 0,
+        "inst_minus_infra": 0
+      }
+    },
+    "capital_stress_index": {
+      "value": 45,
+      "risk_state": "🟢",
+      "overlays": {
+        "active_triggers": [
+          "stock_overlay_5"
+        ],
+        "overlay_points": 5
+      }
+    },
+    "residential_index": {
+      "value": null,
+      "risk_state": "🟡",
+      "bifurcation": {
+        "single_family": "🟡",
+        "multifamily": "🟡"
+      }
+    },
+    "institutional_infra_index": {
+      "value": null,
+      "risk_state": "🟡",
+      "overlays": {
+        "active_triggers": [],
+        "overlay_points": 0
+      }
+    },
+    "contractor_margin_index": {
+      "value": 50,
+      "risk_state": "🟢",
+      "overlays": {
+        "active_triggers": [],
+        "overlay_points": 0
+      }
+    },
+    "distributor_inventory_index": {
+      "value": null,
+      "risk_state": "🟡",
+      "overlays": {
+        "active_triggers": [],
+        "overlay_points": 0
+      }
+    },
+    "manufacturer_pricing_index": {
+      "value": null,
+      "risk_state": "🟡",
+      "overlays": {
+        "active_triggers": [],
+        "overlay_points": 0
+      }
+    }
+  },
+  "ecosystem_pulse": {
+    "home_builders": "🟡",
+    "architects": "🟡",
+    "general_contractors": "🟡",
+    "distributors": "🟡",
+    "manufacturers": "🟡"
+  },
+  "ecosystem_power": {
+    "index": 61,
+    "risk_state": "🟡",
+    "drivers": [
+      "slowdown_band",
+      "overlay_points_5"
+    ],
+    "actors": [
+      {
+        "actor": "general_contractors",
+        "power": 55,
+        "tier": "Tier B",
+        "control": true
+      },
+      {
+        "actor": "subcontractors",
+        "power": 50,
+        "tier": "Tier C",
+        "control": false
+      },
+      {
+        "actor": "distributors",
+        "power": 45,
+        "tier": "Tier C",
+        "control": false
+      }
+    ],
+    "transmission": [
+      "Baseline: GC sets terms; subs compete; distributors transmit price/terms, not control."
+    ],
+    "call": "GCs are primary control node; protect scope clarity and buyout timing."
+  },
+  "thermometer": {
+    "active": false,
+    "trigger_reason": [],
+    "display": {
+      "cpi_value": 47,
+      "zone": "Compression Phase",
+      "delta_3m": 0,
+      "risk_state": "🟢"
+    }
+  },
+  "heatmap": {
+    "as_of": "2026-03-06",
+    "regions": [
+      {
+        "name": "National",
+        "velocity": "→",
+        "pressure": "🟢",
+        "capital": "🟢",
+        "residential": "🟡",
+        "institutional": "🟡",
+        "contractors": "🟡",
+        "distribution": "🟡",
+        "manufacturing": "🟡"
+      }
+    ]
+  },
+  "regime": {
+    "cycle_state": "",
+    "modifier": "",
+    "confidence": "medium",
+    "inflection_triggers": [
+      {
+        "name": "Freeze Threshold",
+        "condition": "CPI >= 76",
+        "active": false
+      },
+      {
+        "name": "Acceleration",
+        "condition": "Δ3m >= +8",
+        "active": false
+      },
+      {
+        "name": "Capital Override",
+        "condition": "Capital >= 80",
+        "active": false
+      }
+    ]
+  },
+  "actions": {
+    "strategic_posture": [
+      "Top Headlines Active: NewsAPI Top Headlines is active for executive signal strip."
+    ],
+    "decision_delta": []
+  },
+  "diagnostics": {
+    "missing_inputs": [],
+    "non_deterministic_blocks": [],
+    "notes": [
+      "Built deterministically from dashboard_latest.json",
+      "Includes Ecosystem Power Index (EPI) v1"
+    ]
+  }
+}

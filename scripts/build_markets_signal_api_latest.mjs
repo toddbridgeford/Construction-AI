@@ -10,6 +10,8 @@ const ROOT = path.resolve(__dirname, "..");
 const MARKETS_PATH = path.join(ROOT, "config", "markets.json");
 const DIST_DIR = path.join(ROOT, "dist", "markets");
 const INDEX_PATH = path.join(DIST_DIR, "index.json");
+const DIST_RUNTIME_MIRROR_DIR = path.join(ROOT, "dist", "dist", "markets");
+const INDEX_RUNTIME_MIRROR_PATH = path.join(DIST_RUNTIME_MIRROR_DIR, "index.json");
 const NATIONAL_SIGNAL_PATH = path.join(ROOT, "artifacts", "signal_api_latest.json");
 
 // --------------------------------------------------
@@ -23,6 +25,11 @@ function readJson(p) {
 function writeJson(p, obj) {
   fs.mkdirSync(path.dirname(p), { recursive: true });
   fs.writeFileSync(p, JSON.stringify(obj, null, 2), "utf8");
+}
+
+function copyFile(src, dst) {
+  fs.mkdirSync(path.dirname(dst), { recursive: true });
+  fs.copyFileSync(src, dst);
 }
 
 function exists(p) {
@@ -173,6 +180,7 @@ function main() {
 
   for (const market of markets) {
     const outPath = path.join(DIST_DIR, market.id, "signal_api_latest.json");
+    const runtimeMirrorOutPath = path.join(DIST_RUNTIME_MIRROR_DIR, market.id, "signal_api_latest.json");
 
     registry.markets.push({
       id: market.id,
@@ -185,6 +193,7 @@ function main() {
     // National copy
     if (market.id === "national") {
       writeJson(outPath, national);
+      copyFile(outPath, runtimeMirrorOutPath);
       continue;
     }
 
@@ -196,11 +205,14 @@ function main() {
     });
 
     writeJson(outPath, skeleton);
+    copyFile(outPath, runtimeMirrorOutPath);
   }
 
   writeJson(INDEX_PATH, registry);
+  copyFile(INDEX_PATH, INDEX_RUNTIME_MIRROR_PATH);
 
   console.log(`Wrote ${INDEX_PATH}`);
+  console.log(`Wrote runtime mirror ${INDEX_RUNTIME_MIRROR_PATH}`);
   console.log(`Wrote ${markets.length} market payload(s) under dist/markets/`);
 }
 
