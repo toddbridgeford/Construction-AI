@@ -46,13 +46,15 @@ function modelFromSettled(results) {
     power_summary: settledValue(results.power, "power_summary") || terminal.power_summary || null,
   };
 
+  const marketTape = terminal.market_tape || null;
+
   return {
     terminal,
-    tape: terminal.market_tape || null,
+    tape: marketTape,
     signal: terminal.signal?.signal || "unknown",
     regime: terminal.regime?.regime || "unknown",
     liquidity: terminal.liquidity?.liquidity_state || "unknown",
-    risk: terminal.risk?.risk_score ?? null,
+    risk: terminal.risk?.risk_level || marketTape?.risk || "unknown",
     constructionIndex: terminal.construction_index ?? null,
     stressIndex: settledValue(results.stressIndex, "stress_index") || terminal.stress_index || null,
     spending: settledValue(results.spendingSummary, "summary") || terminal.spending || null,
@@ -120,13 +122,37 @@ function renderPanels(vm) {
   const powerHeadline = vm.power?.power_summary?.headline || "Power summary unavailable";
   const heatmapSummary = vm.heatmap?.summary?.top_strength_theme || vm.terminal?.heatmap_summary?.top_strength_theme || "Heatmap unavailable";
   const forecastHeadline = vm.forecast?.summary?.headline || vm.terminal?.forecast_summary?.headline || "Forecast unavailable";
+  const stressValue = vm.stressIndex?.score ?? "n/a";
+  const commercialHousingTakeaway = commercial !== undefined && housing !== undefined
+    ? commercial >= 0 && housing >= 0
+      ? "Both segments are above prior-year pace."
+      : commercial < 0 && housing < 0
+        ? "Both segments are below prior-year pace."
+        : "Segments are diverging; stay selective by market."
+    : "Segment data unavailable.";
+  const projectPipeline = vm.nowcast?.next_6_months === "softening"
+    ? "Pipeline bias: cautious"
+    : vm.liquidity === "tight"
+      ? "Pipeline bias: selective"
+      : "Pipeline bias: stable";
+  const bidEnvironment = vm.constructionIndex !== null && vm.constructionIndex >= 55
+    ? "Competitive"
+    : vm.liquidity === "tight"
+      ? "Disciplined"
+      : "Balanced";
+  const subCapacity = vm.power?.power_index?.subcontractors?.state || "unknown";
+  const migrationInbound = vm.migrationIndex?.inbound_markets?.[0]?.market || "unknown";
+  const migrationOutbound = vm.migrationIndex?.outbound_markets?.[0]?.market || "unknown";
+  const operatorActions = vm.operatorActions
+    ? `GC: ${vm.operatorActions.gc} Sub: ${vm.operatorActions.subcontractor} Dev: ${vm.operatorActions.developer} Lender: ${vm.operatorActions.lender}`
+    : "No operator actions available.";
 
   panelsEl.innerHTML = `
-    <section class="row row-top">${card("Cycle Dial", vm.cycleInterpretation)}${card("Signal", vm.signal)}${card("Regime", vm.regime)}${card("Liquidity", vm.liquidity)}${card("Risk", vm.risk ?? "n/a")}${card("Construction Index", vm.constructionIndex ?? "n/a")}${card("Stress Index", vm.stressIndex?.stress_index ?? "n/a", vm.stressIndex?.explanation || "")}</section>
-    <section class="row">${card("Commercial vs Housing", `${commercial ?? "n/a"} / ${housing ?? "n/a"}`)}${card("Power Index", vm.power?.power_summary?.margin_leader || "unknown", powerHeadline)}${card("Forward Outlook", vm.nowcast?.next_6_months || "unknown", `Recession: ${vm.recessionProbability?.next_12_months ?? "n/a"}%`)}${card("Project Pipeline", vm.nowcast?.drivers?.[0] || "No driver available")}</section>
-    <section class="row">${card("Alerts", vm.alerts?.[0]?.headline || "No active alerts", vm.alerts?.[0]?.explanation || "")}${card("Heatmap", vm.terminal?.heatmap_summary?.top_strength_theme || "No heatmap", heatmapSummary)}${card("Bid Environment", vm.signal, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", vm.power?.power_index?.subcontractors?.state || "unknown", vm.power?.power_index?.subcontractors?.explanation || "")}</section>
-    <section class="row">${card("Capital Flows", vm.capitalFlows?.flow_regime || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", vm.migrationIndex?.migration_index ?? "n/a", vm.migrationIndex?.explanation || vm.terminal?.migration_summary || "")}${card("Market Forecast", vm.terminal?.forecast_summary?.strongest_market || "unknown", forecastHeadline)}</section>
-    <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", Object.values(vm.operatorActions || {}).join(" "))}</section>
+    <section class="row row-top">${card("Cycle Dial", vm.cycleInterpretation)}${card("Signal", vm.signal)}${card("Regime", vm.regime)}${card("Liquidity", vm.liquidity)}${card("Risk", vm.risk)}${card("Construction Index", vm.constructionIndex ?? "n/a")}${card("Stress Index", stressValue, vm.stressIndex?.explanation || "")}</section>
+    <section class="row">${card("Commercial vs Housing", `${commercial ?? "n/a"} / ${housing ?? "n/a"}`, commercialHousingTakeaway)}${card("Power Index", vm.power?.power_summary?.margin_leader || "unknown", powerHeadline)}${card("Forward Outlook", vm.nowcast?.next_6_months || "unknown", `Recession: ${vm.recessionProbability?.next_12_months ?? "n/a"}%`)}${card("Project Pipeline", projectPipeline, vm.nowcast?.drivers?.[0] || "No driver available")}</section>
+    <section class="row">${card("Alerts", vm.alerts?.[0]?.headline || "No active alerts", vm.alerts?.[0]?.explanation || "")}${card("Heatmap", vm.terminal?.heatmap_summary?.top_strength_theme || "No heatmap", heatmapSummary)}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.power?.power_index?.subcontractors?.explanation || "")}</section>
+    <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", `${migrationInbound} → ${migrationOutbound}`, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", vm.terminal?.forecast_summary?.strongest_market || "unknown", forecastHeadline)}</section>
+    <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
 }
 
