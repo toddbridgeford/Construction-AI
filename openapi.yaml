@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Construction AI Terminal
-  version: "1.0.6"
+  version: "1.0.7"
   description: Canonical API for the construction-ai Cloudflare Worker (no /terminal; Action matches live routes).
 
 servers:
