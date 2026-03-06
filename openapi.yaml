@@ -168,7 +168,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/GenericOkObject"
 
-
   /construction/dashboard:
     get:
       operationId: constructionDashboard
@@ -370,7 +369,6 @@ components:
         - data
       additionalProperties: true
 
-
     ConstructionDashboardResponse:
       type: object
       properties:
@@ -380,88 +378,107 @@ components:
           type: string
         service:
           type: string
-        signal:
+        dashboard:
           type: object
           properties:
+            cpi:
+              type: object
+              additionalProperties: true
             signal:
-              type: string
-            confidence:
-              type: number
+              type: object
+              properties:
+                signal:
+                  type: string
+                confidence:
+                  type: number
+                regime:
+                  type: string
+                risk_level:
+                  type: string
+              required:
+                - signal
+                - confidence
+                - regime
+                - risk_level
+              additionalProperties: true
             regime:
-              type: string
-            risk_level:
-              type: string
+              type: object
+              properties:
+                regime:
+                  type: string
+                confidence:
+                  type: number
+              required:
+                - regime
+                - confidence
+              additionalProperties: true
+            liquidity:
+              type: object
+              properties:
+                liquidity_score:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                liquidity_state:
+                  type: string
+                mortgage_rate:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                fed_funds:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+              required:
+                - liquidity_score
+                - liquidity_state
+                - mortgage_rate
+                - fed_funds
+              additionalProperties: true
+            risk:
+              type: object
+              properties:
+                risk_score:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                risk_level:
+                  type: string
+                inflation_trend_pct:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+              required:
+                - risk_score
+                - risk_level
+                - inflation_trend_pct
+              additionalProperties: true
+            construction:
+              type: object
+              properties:
+                construction_index:
+                  anyOf:
+                    - type: number
+                    - type: "null"
+                construction_trend:
+                  type: string
+              required:
+                - construction_index
+                - construction_trend
+              additionalProperties: true
+            spending_summary:
+              $ref: "#/components/schemas/SpendingYtdSummaryResponse"
           required:
             - signal
-            - confidence
             - regime
-            - risk_level
+            - liquidity
+            - risk
           additionalProperties: true
-        regime:
-          type: object
-          properties:
-            regime:
-              type: string
-            confidence:
-              type: number
-          required:
-            - regime
-            - confidence
-          additionalProperties: true
-        liquidity:
-          type: object
-          properties:
-            liquidity_score:
-              anyOf:
-                - type: number
-                - type: "null"
-            liquidity_state:
-              type: string
-            mortgage_rate:
-              anyOf:
-                - type: number
-                - type: "null"
-            fed_funds:
-              anyOf:
-                - type: number
-                - type: "null"
-          required:
-            - liquidity_score
-            - liquidity_state
-            - mortgage_rate
-            - fed_funds
-          additionalProperties: true
-        risk:
-          type: object
-          properties:
-            risk_score:
-              anyOf:
-                - type: number
-                - type: "null"
-            risk_level:
-              type: string
-            inflation_trend_pct:
-              anyOf:
-                - type: number
-                - type: "null"
-          required:
-            - risk_score
-            - risk_level
-            - inflation_trend_pct
-          additionalProperties: true
-        construction_index:
-          anyOf:
-            - type: number
-            - type: "null"
       required:
         - ok
         - ts
         - service
-        - signal
-        - regime
-        - liquidity
-        - risk
-        - construction_index
+        - dashboard
       additionalProperties: true
 
     ConstructionSubsectionError:
