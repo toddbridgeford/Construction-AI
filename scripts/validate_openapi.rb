@@ -13,7 +13,11 @@ REQUIRED_NEW_PATHS = [
   '/construction/power',
   '/construction/heatmap',
   '/construction/nowcast',
-  '/construction/forecast'
+  '/construction/forecast',
+  '/construction/stress-index',
+  '/construction/early-warning',
+  '/construction/capital-flows',
+  '/construction/migration-index'
 ]
 REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/spending/ytd/summary']
 REQUIRED_SCHEMAS = [
@@ -29,7 +33,16 @@ REQUIRED_SCHEMAS = [
   'ConstructionHeatmapResponse',
   'ConstructionNowcastResponse',
   'ForecastMarketItem',
-  'ConstructionForecastResponse'
+  'ConstructionForecastResponse',
+  'StressIndexModel',
+  'EarlyWarningModel',
+  'CapitalFlowsModel',
+  'MigrationIndexModel',
+  'MarketTapeModel',
+  'ConstructionStressIndexResponse',
+  'ConstructionEarlyWarningResponse',
+  'ConstructionCapitalFlowsResponse',
+  'ConstructionMigrationIndexResponse'
 ]
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
@@ -64,6 +77,12 @@ errors << 'ConstructionTerminalResponse terminal schema must include power_index
 errors << 'ConstructionTerminalResponse terminal schema must include power_summary' unless terminal_properties.key?('power_summary')
 errors << 'ConstructionTerminalResponse terminal schema must include nowcast' unless terminal_properties.key?('nowcast')
 errors << 'ConstructionTerminalResponse terminal schema must include forecast_summary' unless terminal_properties.key?('forecast_summary')
+
+errors << 'ConstructionTerminalResponse terminal schema must include stress_index' unless terminal_properties.key?('stress_index')
+errors << 'ConstructionTerminalResponse terminal schema must include early_warning' unless terminal_properties.key?('early_warning')
+errors << 'ConstructionTerminalResponse terminal schema must include capital_flows' unless terminal_properties.key?('capital_flows')
+errors << 'ConstructionTerminalResponse terminal schema must include migration_index' unless terminal_properties.key?('migration_index')
+errors << 'ConstructionTerminalResponse terminal schema must include market_tape' unless terminal_properties.key?('market_tape')
 
 forecast_items = components.dig('ConstructionForecastResponse', 'properties', 'forecast', 'properties', 'strongest_next_12_months', 'items')
 errors << 'ConstructionForecastResponse strongest_next_12_months must reference ForecastMarketItem' unless forecast_items&.dig('$ref') == '#/components/schemas/ForecastMarketItem'

@@ -45,6 +45,10 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `GET /construction/morning-brief`
 - `GET /construction/alerts`
 - `GET /construction/recession-probability`
+- `GET /construction/stress-index`
+- `GET /construction/early-warning`
+- `GET /construction/capital-flows`
+- `GET /construction/migration-index`
 - `GET /spending/ytd`
 - `GET /spending/ytd/summary`
 - `GET /ytd/commercial`
@@ -67,17 +71,22 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `/construction/dashboard`
 - `/construction/terminal`
 - `/construction/market-radar`
-- `/spending/ytd`
+- `/construction/power`
+- `/construction/heatmap`
+- `/construction/forecast`
+- `/construction/nowcast`
+- `/construction/alerts`
+- `/construction/recession-probability`
+- `/construction/stress-index`
+- `/construction/early-warning`
+- `/construction/capital-flows`
+- `/construction/migration-index`
+- `/construction/morning-brief`
 - `/spending/ytd/summary`
 
 Notes:
-- `terminal` = one-call operator intelligence (macro dashboard + spending summary + cycle interpretation + operator actions).
-- `market-radar` = hottest vs weakest markets ranked by deterministic market pressure scoring.
-- `morning-brief` = daily operator note combining terminal posture + market radar.
-- `alerts` = machine-readable active risk cards from deterministic construction conditions.
-- `recession-probability` = next-12-month construction slowdown/contraction risk estimate.
-- `commercial` = nonresidential construction spending.
-- `housing` = residential construction spending.
+- `terminal` = one-call Bloomberg-style construction market intelligence for operators and capital allocators.
+- `market_tape` inside terminal carries raw values for signal, regime, liquidity, risk, construction index, stress, recession probability, spending momentum, and top/weakest markets.
 
 ## Terminal Intelligence Layer
 
@@ -115,3 +124,20 @@ curl "https://construction-ai.toddbridgeford.workers.dev/ytd/commercial?year=202
 curl "https://construction-ai.toddbridgeford.workers.dev/ytd/housing?year=2025"
 curl "https://construction-ai.toddbridgeford.workers.dev/ytd/summary?year=2025"
 ```
+
+## Architecture (v1)
+
+1. **Data layer** — deterministic macro + spending ingestion, market artifact reads from `dist/markets`, and reusable helper models for cached snapshots.
+2. **Intelligence layer** — modular model families: core (signal/regime/liquidity/risk/construction index), forward (nowcast/recession/early warning/stress), market (heatmap/forecast/migration), operator (power/alerts/morning brief/capital flows).
+3. **API layer** — stable Worker routes with `/construction/terminal` as the canonical one-call object; no `/terminal` route.
+4. **UI layer** — dense dark operator terminal powered by one shared hook using `Promise.allSettled` and graceful partial-failure rendering.
+5. **GPT layer** — routing guidance to map user intent to terminal, forecast, migration, power, stress, or early-warning endpoints.
+
+## GPT Routing Guidance
+
+- Broad market questions → `/construction/terminal`
+- Daily briefings → `/construction/morning-brief`
+- Forward market questions → `/construction/forecast`
+- Long-horizon structural questions → `/construction/migration-index`
+- Cycle-risk questions → `/construction/stress-index` or `/construction/early-warning`
+- Pricing-power questions → `/construction/power`

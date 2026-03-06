@@ -1,337 +1,361 @@
+---
 openapi: 3.1.0
 info:
   title: Construction AI Terminal
-  version: "1.0.7"
-  description: Canonical API for the construction-ai Cloudflare Worker (no /terminal; Action matches live routes).
-
+  version: 1.1.0
+  description: Canonical API for the construction-ai Cloudflare Worker (no /terminal;
+    Action matches live routes).
 servers:
-  - url: https://construction-ai.toddbridgeford.workers.dev
-    description: Cloudflare Worker (canonical)
-
+- url: https://construction-ai.toddbridgeford.workers.dev
+  description: Cloudflare Worker (canonical)
 paths:
-  /:
+  "/":
     get:
       operationId: root
       summary: Root (alias of health)
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HealthResponse"
-
-  /health:
+                "$ref": "#/components/schemas/HealthResponse"
+  "/health":
     get:
       operationId: health
       summary: Health check
       responses:
-        "200":
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/HealthResponse"
-
-  /cpi:
+                "$ref": "#/components/schemas/HealthResponse"
+  "/cpi":
     get:
       operationId: getCpi
       summary: Latest CPI (KV snapshot with FRED fallback)
       responses:
-        "200":
+        '200':
           description: CPI response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /fred/observations:
+                "$ref": "#/components/schemas/GenericOkObject"
+  "/fred/observations":
     get:
       operationId: getFred
       summary: Fetch FRED observations for a single series
       parameters:
-        - name: series_id
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 5000
+      - name: series_id
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 5000
       responses:
-        "200":
+        '200':
           description: FRED observations
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FredObservationsEnvelope"
-
-  /notion/series:
+                "$ref": "#/components/schemas/FredObservationsEnvelope"
+  "/notion/series":
     get:
       operationId: listNotionSeries
       summary: Query Notion database and return pages/properties (if configured)
       responses:
-        "200":
+        '200':
           description: Notion series response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /bundle:
+                "$ref": "#/components/schemas/GenericOkObject"
+  "/bundle":
     get:
       operationId: macroBundle
       summary: Macro bundle
       parameters:
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 5000
-        - name: series
-          in: query
-          required: false
-          description: Optional override comma-separated series IDs (e.g. PERMIT,HOUST)
-          schema:
-            type: string
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 5000
+      - name: series
+        in: query
+        required: false
+        description: Optional override comma-separated series IDs (e.g. PERMIT,HOUST)
+        schema:
+          type: string
       responses:
-        "200":
+        '200':
           description: Macro bundle response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /signal:
+                "$ref": "#/components/schemas/GenericOkObject"
+  "/signal":
     get:
       operationId: macroSignal
       summary: Construction macro signal
       responses:
-        "200":
+        '200':
           description: Macro signal response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /regime:
+                "$ref": "#/components/schemas/GenericOkObject"
+  "/regime":
     get:
       operationId: macroRegime
       summary: Determine macro regime
       responses:
-        "200":
+        '200':
           description: Regime response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /liquidity:
+                "$ref": "#/components/schemas/GenericOkObject"
+  "/liquidity":
     get:
       operationId: macroLiquidity
       summary: Credit liquidity state
       responses:
-        "200":
+        '200':
           description: Liquidity response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /construction-index:
+                "$ref": "#/components/schemas/GenericOkObject"
+  "/construction-index":
     get:
       operationId: constructionIndex
       summary: Construction cycle strength
       responses:
-        "200":
+        '200':
           description: Construction index response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /risk-score:
+                "$ref": "#/components/schemas/GenericOkObject"
+  "/risk-score":
     get:
       operationId: macroRiskScore
       summary: Combined macro risk score
       responses:
-        "200":
+        '200':
           description: Risk score response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GenericOkObject"
-
-  /construction/dashboard:
+                "$ref": "#/components/schemas/GenericOkObject"
+  "/construction/dashboard":
     get:
       operationId: constructionDashboard
       summary: Canonical construction dashboard payload
       responses:
-        "200":
+        '200':
           description: Construction dashboard response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConstructionDashboardResponse"
-
-  /construction/terminal:
+                "$ref": "#/components/schemas/ConstructionDashboardResponse"
+  "/construction/terminal":
     get:
       operationId: constructionTerminal
       summary: One-call operator intelligence terminal
       responses:
-        "200":
+        '200':
           description: Construction terminal response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConstructionTerminalResponse"
-
-  /construction/power:
+                "$ref": "#/components/schemas/ConstructionTerminalResponse"
+  "/construction/power":
     get:
       operationId: constructionPower
       summary: Construction Power Index (pricing/margin leverage by actor)
       responses:
-        "200":
+        '200':
           description: Construction power index response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConstructionPowerResponse"
-
-  /construction/heatmap:
+                "$ref": "#/components/schemas/ConstructionPowerResponse"
+  "/construction/heatmap":
     get:
       operationId: constructionHeatmap
       summary: Metro heatmap engine for strongest and weakest markets
       responses:
-        "200":
+        '200':
           description: Construction heatmap response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConstructionHeatmapResponse"
-
-  /construction/nowcast:
+                "$ref": "#/components/schemas/ConstructionHeatmapResponse"
+  "/construction/nowcast":
     get:
       operationId: constructionNowcast
       summary: Forward construction cycle nowcast (6-12 month direction)
       responses:
-        "200":
+        '200':
           description: Construction nowcast response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConstructionNowcastResponse"
-
-  /construction/forecast:
+                "$ref": "#/components/schemas/ConstructionNowcastResponse"
+  "/construction/forecast":
     get:
       operationId: constructionForecast
-      summary: Forecasted strongest and weakest construction markets over next 12 months
+      summary: Forecasted strongest and weakest construction markets over next 12
+        months
       responses:
-        "200":
+        '200':
           description: Construction forecast response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConstructionForecastResponse"
-
-  /construction/market-radar:
+                "$ref": "#/components/schemas/ConstructionForecastResponse"
+  "/construction/market-radar":
     get:
       operationId: constructionMarketRadar
       summary: Hottest and weakest construction markets
       responses:
-        "200":
+        '200':
           description: Construction market radar response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConstructionMarketRadarResponse"
-
-  /construction/morning-brief:
+                "$ref": "#/components/schemas/ConstructionMarketRadarResponse"
+  "/construction/morning-brief":
     get:
       operationId: constructionMorningBrief
       summary: Daily operator-grade construction morning briefing
       responses:
-        "200":
+        '200':
           description: Construction morning brief response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConstructionMorningBriefResponse"
-
-  /construction/alerts:
+                "$ref": "#/components/schemas/ConstructionMorningBriefResponse"
+  "/construction/alerts":
     get:
       operationId: constructionAlerts
       summary: Deterministic active construction alert cards
       responses:
-        "200":
+        '200':
           description: Construction alerts response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ConstructionAlertsResponse"
-
-  /construction/recession-probability:
+                "$ref": "#/components/schemas/ConstructionAlertsResponse"
+  "/construction/recession-probability":
     get:
       operationId: constructionRecessionProbability
       summary: Deterministic next-12-month slowdown probability
       responses:
-        "200":
+        '200':
           description: Construction recession probability response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RecessionProbabilityResponse"
-
-  /spending/ytd:
+                "$ref": "#/components/schemas/RecessionProbabilityResponse"
+  "/spending/ytd":
     get:
       operationId: spendingYtd
-      summary: Commercial or housing YTD vs PYTD using FRED SAAR monthly-equivalent totals
+      summary: Commercial or housing YTD vs PYTD using FRED SAAR monthly-equivalent
+        totals
       parameters:
-        - name: segment
-          in: query
-          required: true
-          schema:
-            type: string
-            enum:
-              - commercial
-              - housing
-        - name: year
-          in: query
-          required: false
-          schema:
-            type: integer
+      - name: segment
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - commercial
+          - housing
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: YTD/PYTD response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SpendingYtdResponse"
-
-  /spending/ytd/summary:
+                "$ref": "#/components/schemas/SpendingYtdResponse"
+  "/spending/ytd/summary":
     get:
       operationId: spendingYtdSummary
       summary: Combined commercial + housing YTD/PYTD response
       parameters:
-        - name: year
-          in: query
-          required: false
-          schema:
-            type: integer
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: integer
       responses:
-        "200":
+        '200':
           description: YTD/PYTD summary response
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SpendingYtdSummaryResponse"
-
+                "$ref": "#/components/schemas/SpendingYtdSummaryResponse"
+  "/construction/stress-index":
+    get:
+      operationId: constructionStressIndex
+      summary: Deterministic construction stress index
+      responses:
+        '200':
+          description: Deterministic construction stress index response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionStressIndexResponse"
+  "/construction/early-warning":
+    get:
+      operationId: constructionEarlyWarning
+      summary: Deterministic cycle-risk early warning
+      responses:
+        '200':
+          description: Deterministic cycle-risk early warning response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionEarlyWarningResponse"
+  "/construction/capital-flows":
+    get:
+      operationId: constructionCapitalFlows
+      summary: Capital allocation posture for operators and lenders
+      responses:
+        '200':
+          description: Capital allocation posture for operators and lenders response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionCapitalFlowsResponse"
+  "/construction/migration-index":
+    get:
+      operationId: constructionMigrationIndex
+      summary: Structural market migration index from heatmap and forecast
+      responses:
+        '200':
+          description: Structural market migration index from heatmap and forecast
+            response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionMigrationIndexResponse"
 components:
   schemas:
     GenericOkObject:
@@ -345,9 +369,8 @@ components:
         service:
           type: string
       required:
-        - ok
+      - ok
       additionalProperties: true
-
     ErrorEnvelope:
       type: object
       properties:
@@ -365,15 +388,14 @@ components:
             message:
               type: string
           required:
-            - code
-            - message
+          - code
+          - message
       required:
-        - ok
-        - ts
-        - service
-        - error
+      - ok
+      - ts
+      - service
+      - error
       additionalProperties: true
-
     HealthResponse:
       type: object
       description: Health check response.
@@ -386,18 +408,17 @@ components:
           type: string
         git_sha:
           anyOf:
-            - type: string
-            - type: "null"
+          - type: string
+          - type: 'null'
         has_kv:
           type: boolean
         has_fred_key:
           type: boolean
       required:
-        - ok
-        - service
-        - ts
+      - ok
+      - service
+      - ts
       additionalProperties: true
-
     FredObservation:
       type: object
       properties:
@@ -406,10 +427,9 @@ components:
         value:
           type: string
       required:
-        - date
-        - value
+      - date
+      - value
       additionalProperties: true
-
     FredObservationsResponse:
       type: object
       properties:
@@ -430,11 +450,10 @@ components:
         observations:
           type: array
           items:
-            $ref: "#/components/schemas/FredObservation"
+            "$ref": "#/components/schemas/FredObservation"
       required:
-        - observations
+      - observations
       additionalProperties: true
-
     FredObservationsEnvelope:
       type: object
       properties:
@@ -447,12 +466,11 @@ components:
         limit:
           type: integer
         data:
-          $ref: "#/components/schemas/FredObservationsResponse"
+          "$ref": "#/components/schemas/FredObservationsResponse"
       required:
-        - ok
-        - data
+      - ok
+      - data
       additionalProperties: true
-
     ConstructionDashboardResponse:
       type: object
       properties:
@@ -480,10 +498,10 @@ components:
                 risk_level:
                   type: string
               required:
-                - signal
-                - confidence
-                - regime
-                - risk_level
+              - signal
+              - confidence
+              - regime
+              - risk_level
               additionalProperties: true
             regime:
               type: object
@@ -493,78 +511,77 @@ components:
                 confidence:
                   type: number
               required:
-                - regime
-                - confidence
+              - regime
+              - confidence
               additionalProperties: true
             liquidity:
               type: object
               properties:
                 liquidity_score:
                   anyOf:
-                    - type: number
-                    - type: "null"
+                  - type: number
+                  - type: 'null'
                 liquidity_state:
                   type: string
                 mortgage_rate:
                   anyOf:
-                    - type: number
-                    - type: "null"
+                  - type: number
+                  - type: 'null'
                 fed_funds:
                   anyOf:
-                    - type: number
-                    - type: "null"
+                  - type: number
+                  - type: 'null'
               required:
-                - liquidity_score
-                - liquidity_state
-                - mortgage_rate
-                - fed_funds
+              - liquidity_score
+              - liquidity_state
+              - mortgage_rate
+              - fed_funds
               additionalProperties: true
             risk:
               type: object
               properties:
                 risk_score:
                   anyOf:
-                    - type: number
-                    - type: "null"
+                  - type: number
+                  - type: 'null'
                 risk_level:
                   type: string
                 inflation_trend_pct:
                   anyOf:
-                    - type: number
-                    - type: "null"
+                  - type: number
+                  - type: 'null'
               required:
-                - risk_score
-                - risk_level
-                - inflation_trend_pct
+              - risk_score
+              - risk_level
+              - inflation_trend_pct
               additionalProperties: true
             construction:
               type: object
               properties:
                 construction_index:
                   anyOf:
-                    - type: number
-                    - type: "null"
+                  - type: number
+                  - type: 'null'
                 construction_trend:
                   type: string
               required:
-                - construction_index
-                - construction_trend
+              - construction_index
+              - construction_trend
               additionalProperties: true
             spending_summary:
-              $ref: "#/components/schemas/SpendingYtdSummaryResponse"
+              "$ref": "#/components/schemas/SpendingYtdSummaryResponse"
           required:
-            - signal
-            - regime
-            - liquidity
-            - risk
+          - signal
+          - regime
+          - liquidity
+          - risk
           additionalProperties: true
       required:
-        - ok
-        - ts
-        - service
-        - dashboard
+      - ok
+      - ts
+      - service
+      - dashboard
       additionalProperties: true
-
     ConstructionSubsectionError:
       type: object
       properties:
@@ -581,14 +598,13 @@ components:
               type: object
               additionalProperties: true
           required:
-            - code
-            - message
+          - code
+          - message
           additionalProperties: true
       required:
-        - ok
-        - error
+      - ok
+      - error
       additionalProperties: true
-
     ConstructionTerminalResponse:
       type: object
       properties:
@@ -603,65 +619,65 @@ components:
           properties:
             signal:
               oneOf:
-                - type: object
-                  properties:
-                    signal:
-                      type: string
-                  required:
-                    - signal
-                  additionalProperties: true
-                - $ref: "#/components/schemas/ConstructionSubsectionError"
+              - type: object
+                properties:
+                  signal:
+                    type: string
+                required:
+                - signal
+                additionalProperties: true
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
             regime:
               oneOf:
-                - type: object
-                  properties:
-                    regime:
-                      type: string
-                  required:
-                    - regime
-                  additionalProperties: true
-                - $ref: "#/components/schemas/ConstructionSubsectionError"
+              - type: object
+                properties:
+                  regime:
+                    type: string
+                required:
+                - regime
+                additionalProperties: true
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
             liquidity:
               oneOf:
-                - type: object
-                  properties:
-                    liquidity_state:
-                      type: string
-                  required:
-                    - liquidity_state
-                  additionalProperties: true
-                - $ref: "#/components/schemas/ConstructionSubsectionError"
+              - type: object
+                properties:
+                  liquidity_state:
+                    type: string
+                required:
+                - liquidity_state
+                additionalProperties: true
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
             risk:
               oneOf:
-                - type: object
-                  properties:
-                    risk_level:
-                      type: string
-                  required:
-                    - risk_level
-                  additionalProperties: true
-                - $ref: "#/components/schemas/ConstructionSubsectionError"
+              - type: object
+                properties:
+                  risk_level:
+                    type: string
+                required:
+                - risk_level
+                additionalProperties: true
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
             construction_index:
               oneOf:
-                - type: number
-                - type: "null"
-                - $ref: "#/components/schemas/ConstructionSubsectionError"
+              - type: number
+              - type: 'null'
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
             spending:
               oneOf:
-                - type: object
-                  properties:
-                    ok:
-                      type: boolean
-                    commercial:
-                      $ref: "#/components/schemas/SpendingYtdResponse"
-                    housing:
-                      $ref: "#/components/schemas/SpendingYtdResponse"
-                  required:
-                    - ok
-                    - commercial
-                    - housing
-                  additionalProperties: true
-                - $ref: "#/components/schemas/ConstructionSubsectionError"
+              - type: object
+                properties:
+                  ok:
+                    type: boolean
+                  commercial:
+                    "$ref": "#/components/schemas/SpendingYtdResponse"
+                  housing:
+                    "$ref": "#/components/schemas/SpendingYtdResponse"
+                required:
+                - ok
+                - commercial
+                - housing
+                additionalProperties: true
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
             cycle_interpretation:
               type: string
             operator_actions:
@@ -676,32 +692,32 @@ components:
                 lender:
                   type: string
               required:
-                - gc
-                - subcontractor
-                - developer
-                - lender
+              - gc
+              - subcontractor
+              - developer
+              - lender
             power_index:
               type: object
               properties:
                 general_contractors:
-                  $ref: "#/components/schemas/PowerActorState"
+                  "$ref": "#/components/schemas/PowerActorState"
                 subcontractors:
-                  $ref: "#/components/schemas/PowerActorState"
+                  "$ref": "#/components/schemas/PowerActorState"
                 distributors:
-                  $ref: "#/components/schemas/PowerActorState"
+                  "$ref": "#/components/schemas/PowerActorState"
                 manufacturers:
-                  $ref: "#/components/schemas/PowerActorState"
+                  "$ref": "#/components/schemas/PowerActorState"
                 developers:
-                  $ref: "#/components/schemas/PowerActorState"
+                  "$ref": "#/components/schemas/PowerActorState"
                 lenders:
-                  $ref: "#/components/schemas/PowerActorState"
+                  "$ref": "#/components/schemas/PowerActorState"
               required:
-                - general_contractors
-                - subcontractors
-                - distributors
-                - manufacturers
-                - developers
-                - lenders
+              - general_contractors
+              - subcontractors
+              - distributors
+              - manufacturers
+              - developers
+              - lenders
               additionalProperties: false
             power_summary:
               type: object
@@ -713,9 +729,9 @@ components:
                 headline:
                   type: string
               required:
-                - margin_leader
-                - most_constrained
-                - headline
+              - margin_leader
+              - most_constrained
+              - headline
               additionalProperties: false
             nowcast:
               type: object
@@ -723,9 +739,9 @@ components:
                 next_6_months:
                   type: string
                   enum:
-                    - improving
-                    - stable
-                    - softening
+                  - improving
+                  - stable
+                  - softening
                 next_12_months_recession_probability:
                   type: number
                 confidence:
@@ -735,10 +751,10 @@ components:
                   items:
                     type: string
               required:
-                - next_6_months
-                - next_12_months_recession_probability
-                - confidence
-                - drivers
+              - next_6_months
+              - next_12_months_recession_probability
+              - confidence
+              - drivers
               additionalProperties: false
             heatmap_summary:
               type: object
@@ -748,8 +764,8 @@ components:
                 top_weakness_theme:
                   type: string
               required:
-                - top_strength_theme
-                - top_weakness_theme
+              - top_strength_theme
+              - top_weakness_theme
               additionalProperties: false
             forecast_summary:
               type: object
@@ -761,14 +777,14 @@ components:
                 headline:
                   type: string
               required:
-                - strongest_market
-                - weakest_market
-                - headline
+              - strongest_market
+              - weakest_market
+              - headline
               additionalProperties: false
             alerts:
               type: array
               items:
-                $ref: "#/components/schemas/AlertCard"
+                "$ref": "#/components/schemas/AlertCard"
             recession_probability:
               type: object
               properties:
@@ -777,39 +793,66 @@ components:
                 trend:
                   type: string
                   enum:
-                    - rising
-                    - stable
-                    - falling
+                  - rising
+                  - stable
+                  - falling
                 explanation:
                   type: string
               required:
-                - next_12_months
-                - trend
-                - explanation
+              - next_12_months
+              - trend
+              - explanation
               additionalProperties: false
+            stress_index:
+              "$ref": "#/components/schemas/StressIndexModel"
+            stress_index_summary:
+              type: string
+            early_warning:
+              "$ref": "#/components/schemas/EarlyWarningModel"
+            early_warning_summary:
+              type: string
+            capital_flows:
+              "$ref": "#/components/schemas/CapitalFlowsModel"
+            capital_flows_summary:
+              type: string
+            migration_index:
+              "$ref": "#/components/schemas/MigrationIndexModel"
+            migration_summary:
+              type: string
+            market_tape:
+              "$ref": "#/components/schemas/MarketTapeModel"
           required:
-            - signal
-            - regime
-            - liquidity
-            - risk
-            - construction_index
-            - spending
-            - cycle_interpretation
-            - operator_actions
-            - power_index
-            - power_summary
-            - nowcast
-            - forecast_summary
-            - alerts
-            - recession_probability
+          - signal
+          - regime
+          - liquidity
+          - risk
+          - construction_index
+          - spending
+          - cycle_interpretation
+          - operator_actions
+          - power_index
+          - power_summary
+          - nowcast
+          - forecast_summary
+          - alerts
+          - recession_probability
+          - heatmap_summary
+          - stress_index
+          - stress_index_summary
+          - early_warning
+          - early_warning_summary
+          - capital_flows
+          - capital_flows_summary
+          - migration_index
+          - migration_summary
+          - market_tape
           additionalProperties: true
       required:
-        - ok
-        - ts
-        - service
-        - terminal
+      - ok
+      - ts
+      - service
+      - terminal
       additionalProperties: true
-
     PowerActorState:
       type: object
       properties:
@@ -818,17 +861,16 @@ components:
         state:
           type: string
           enum:
-            - strong
-            - neutral
-            - weak
+          - strong
+          - neutral
+          - weak
         explanation:
           type: string
       required:
-        - score
-        - state
-        - explanation
+      - score
+      - state
+      - explanation
       additionalProperties: false
-
     ConstructionPowerResponse:
       type: object
       properties:
@@ -842,24 +884,24 @@ components:
           type: object
           properties:
             general_contractors:
-              $ref: "#/components/schemas/PowerActorState"
+              "$ref": "#/components/schemas/PowerActorState"
             subcontractors:
-              $ref: "#/components/schemas/PowerActorState"
+              "$ref": "#/components/schemas/PowerActorState"
             distributors:
-              $ref: "#/components/schemas/PowerActorState"
+              "$ref": "#/components/schemas/PowerActorState"
             manufacturers:
-              $ref: "#/components/schemas/PowerActorState"
+              "$ref": "#/components/schemas/PowerActorState"
             developers:
-              $ref: "#/components/schemas/PowerActorState"
+              "$ref": "#/components/schemas/PowerActorState"
             lenders:
-              $ref: "#/components/schemas/PowerActorState"
+              "$ref": "#/components/schemas/PowerActorState"
           required:
-            - general_contractors
-            - subcontractors
-            - distributors
-            - manufacturers
-            - developers
-            - lenders
+          - general_contractors
+          - subcontractors
+          - distributors
+          - manufacturers
+          - developers
+          - lenders
           additionalProperties: false
         power_summary:
           type: object
@@ -871,18 +913,17 @@ components:
             headline:
               type: string
           required:
-            - margin_leader
-            - most_constrained
-            - headline
+          - margin_leader
+          - most_constrained
+          - headline
           additionalProperties: false
       required:
-        - ok
-        - ts
-        - service
-        - power_index
-        - power_summary
+      - ok
+      - ts
+      - service
+      - power_index
+      - power_summary
       additionalProperties: true
-
     HeatmapMarketItem:
       type: object
       properties:
@@ -897,13 +938,12 @@ components:
         note:
           type: string
       required:
-        - market
-        - score
-        - regime
-        - signal
-        - note
+      - market
+      - score
+      - regime
+      - signal
+      - note
       additionalProperties: false
-
     ConstructionHeatmapResponse:
       type: object
       properties:
@@ -921,11 +961,11 @@ components:
             hottest_markets:
               type: array
               items:
-                $ref: "#/components/schemas/HeatmapMarketItem"
+                "$ref": "#/components/schemas/HeatmapMarketItem"
             weakest_markets:
               type: array
               items:
-                $ref: "#/components/schemas/HeatmapMarketItem"
+                "$ref": "#/components/schemas/HeatmapMarketItem"
             summary:
               type: object
               properties:
@@ -934,8 +974,8 @@ components:
                 top_weakness_theme:
                   type: string
               required:
-                - top_strength_theme
-                - top_weakness_theme
+              - top_strength_theme
+              - top_weakness_theme
               additionalProperties: false
             error:
               type: object
@@ -948,19 +988,18 @@ components:
                   type: object
                   additionalProperties: true
               required:
-                - code
-                - message
+              - code
+              - message
               additionalProperties: true
           required:
-            - ok
+          - ok
           additionalProperties: false
       required:
-        - ok
-        - ts
-        - service
-        - heatmap
+      - ok
+      - ts
+      - service
+      - heatmap
       additionalProperties: true
-
     ConstructionNowcastResponse:
       type: object
       properties:
@@ -976,9 +1015,9 @@ components:
             next_6_months:
               type: string
               enum:
-                - improving
-                - stable
-                - softening
+              - improving
+              - stable
+              - softening
             next_12_months_recession_probability:
               type: number
             confidence:
@@ -988,18 +1027,17 @@ components:
               items:
                 type: string
           required:
-            - next_6_months
-            - next_12_months_recession_probability
-            - confidence
-            - drivers
+          - next_6_months
+          - next_12_months_recession_probability
+          - confidence
+          - drivers
           additionalProperties: false
       required:
-        - ok
-        - ts
-        - service
-        - nowcast
+      - ok
+      - ts
+      - service
+      - nowcast
       additionalProperties: true
-
     ForecastMarketItem:
       type: object
       properties:
@@ -1012,8 +1050,8 @@ components:
         direction:
           type: string
           enum:
-            - strengthening
-            - softening
+          - strengthening
+          - softening
         drivers:
           type: array
           items:
@@ -1021,14 +1059,13 @@ components:
         explanation:
           type: string
       required:
-        - market
-        - forecast_score
-        - current_score
-        - direction
-        - drivers
-        - explanation
+      - market
+      - forecast_score
+      - current_score
+      - direction
+      - drivers
+      - explanation
       additionalProperties: false
-
     ConstructionForecastResponse:
       type: object
       properties:
@@ -1044,11 +1081,11 @@ components:
             strongest_next_12_months:
               type: array
               items:
-                $ref: "#/components/schemas/ForecastMarketItem"
+                "$ref": "#/components/schemas/ForecastMarketItem"
             weakest_next_12_months:
               type: array
               items:
-                $ref: "#/components/schemas/ForecastMarketItem"
+                "$ref": "#/components/schemas/ForecastMarketItem"
             summary:
               type: object
               properties:
@@ -1059,22 +1096,21 @@ components:
                 headline:
                   type: string
               required:
-                - top_strength_theme
-                - top_weakness_theme
-                - headline
+              - top_strength_theme
+              - top_weakness_theme
+              - headline
               additionalProperties: false
           required:
-            - strongest_next_12_months
-            - weakest_next_12_months
-            - summary
+          - strongest_next_12_months
+          - weakest_next_12_months
+          - summary
           additionalProperties: false
       required:
-        - ok
-        - ts
-        - service
-        - forecast
+      - ok
+      - ts
+      - service
+      - forecast
       additionalProperties: true
-
     ConstructionMarketItem:
       type: object
       properties:
@@ -1089,13 +1125,12 @@ components:
         note:
           type: string
       required:
-        - market
-        - score
-        - regime
-        - signal
-        - note
+      - market
+      - score
+      - regime
+      - signal
+      - note
       additionalProperties: false
-
     ConstructionMarketRadarResponse:
       type: object
       properties:
@@ -1107,40 +1142,39 @@ components:
           type: string
         radar:
           oneOf:
-            - type: object
-              properties:
-                hottest_markets:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/ConstructionMarketItem"
-                weakest_markets:
-                  type: array
-                  items:
-                    $ref: "#/components/schemas/ConstructionMarketItem"
-                summary:
-                  type: object
-                  properties:
-                    top_strength_theme:
-                      type: string
-                    top_weakness_theme:
-                      type: string
-                  required:
-                    - top_strength_theme
-                    - top_weakness_theme
-                  additionalProperties: false
-              required:
-                - hottest_markets
-                - weakest_markets
-                - summary
-              additionalProperties: false
-            - $ref: "#/components/schemas/ConstructionSubsectionError"
+          - type: object
+            properties:
+              hottest_markets:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ConstructionMarketItem"
+              weakest_markets:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ConstructionMarketItem"
+              summary:
+                type: object
+                properties:
+                  top_strength_theme:
+                    type: string
+                  top_weakness_theme:
+                    type: string
+                required:
+                - top_strength_theme
+                - top_weakness_theme
+                additionalProperties: false
+            required:
+            - hottest_markets
+            - weakest_markets
+            - summary
+            additionalProperties: false
+          - "$ref": "#/components/schemas/ConstructionSubsectionError"
       required:
-        - ok
-        - ts
-        - service
-        - radar
+      - ok
+      - ts
+      - service
+      - radar
       additionalProperties: true
-
     AlertCard:
       type: object
       properties:
@@ -1149,20 +1183,19 @@ components:
         severity:
           type: string
           enum:
-            - high
-            - medium
-            - low
+          - high
+          - medium
+          - low
         headline:
           type: string
         explanation:
           type: string
       required:
-        - code
-        - severity
-        - headline
-        - explanation
+      - code
+      - severity
+      - headline
+      - explanation
       additionalProperties: false
-
     ConstructionAlertsResponse:
       type: object
       properties:
@@ -1175,14 +1208,13 @@ components:
         alerts:
           type: array
           items:
-            $ref: "#/components/schemas/AlertCard"
+            "$ref": "#/components/schemas/AlertCard"
       required:
-        - ok
-        - ts
-        - service
-        - alerts
+      - ok
+      - ts
+      - service
+      - alerts
       additionalProperties: true
-
     RecessionProbabilityResponse:
       type: object
       properties:
@@ -1200,23 +1232,22 @@ components:
             trend:
               type: string
               enum:
-                - rising
-                - stable
-                - falling
+              - rising
+              - stable
+              - falling
             explanation:
               type: string
           required:
-            - next_12_months
-            - trend
-            - explanation
+          - next_12_months
+          - trend
+          - explanation
           additionalProperties: false
       required:
-        - ok
-        - ts
-        - service
-        - recession_probability
+      - ok
+      - ts
+      - service
+      - recession_probability
       additionalProperties: true
-
     ConstructionMorningBriefResponse:
       type: object
       properties:
@@ -1244,14 +1275,14 @@ components:
                   type: string
                 construction_index:
                   anyOf:
-                    - type: number
-                    - type: "null"
+                  - type: number
+                  - type: 'null'
               required:
-                - signal
-                - regime
-                - liquidity_state
-                - risk_level
-                - construction_index
+              - signal
+              - regime
+              - liquidity_state
+              - risk_level
+              - construction_index
               additionalProperties: false
             spending:
               type: object
@@ -1265,52 +1296,52 @@ components:
                 takeaway:
                   type: string
               required:
-                - commercial
-                - housing
-                - takeaway
+              - commercial
+              - housing
+              - takeaway
               additionalProperties: false
             market_radar:
               oneOf:
-                - type: object
-                  properties:
-                    hottest_markets:
-                      type: array
-                      items:
-                        $ref: "#/components/schemas/ConstructionMarketItem"
-                    weakest_markets:
-                      type: array
-                      items:
-                        $ref: "#/components/schemas/ConstructionMarketItem"
-                    summary:
-                      type: object
-                      properties:
-                        top_strength_theme:
-                          type: string
-                        top_weakness_theme:
-                          type: string
-                      required:
-                        - top_strength_theme
-                        - top_weakness_theme
-                      additionalProperties: false
-                  required:
-                    - hottest_markets
-                    - weakest_markets
-                    - summary
-                  additionalProperties: false
-                - $ref: "#/components/schemas/ConstructionSubsectionError"
-            heatmap_summary:
-              oneOf:
-                - type: object
-                  properties:
-                    top_strength_theme:
-                      type: string
-                    top_weakness_theme:
-                      type: string
-                  required:
+              - type: object
+                properties:
+                  hottest_markets:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/ConstructionMarketItem"
+                  weakest_markets:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/ConstructionMarketItem"
+                  summary:
+                    type: object
+                    properties:
+                      top_strength_theme:
+                        type: string
+                      top_weakness_theme:
+                        type: string
+                    required:
                     - top_strength_theme
                     - top_weakness_theme
-                  additionalProperties: false
-                - $ref: "#/components/schemas/ConstructionSubsectionError"
+                    additionalProperties: false
+                required:
+                - hottest_markets
+                - weakest_markets
+                - summary
+                additionalProperties: false
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
+            heatmap_summary:
+              oneOf:
+              - type: object
+                properties:
+                  top_strength_theme:
+                    type: string
+                  top_weakness_theme:
+                    type: string
+                required:
+                - top_strength_theme
+                - top_weakness_theme
+                additionalProperties: false
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
             operator_guidance:
               type: object
               properties:
@@ -1323,25 +1354,24 @@ components:
                 lender:
                   type: string
               required:
-                - gc
-                - subcontractor
-                - developer
-                - lender
+              - gc
+              - subcontractor
+              - developer
+              - lender
               additionalProperties: false
           required:
-            - title
-            - market_signal
-            - spending
-            - market_radar
-            - operator_guidance
+          - title
+          - market_signal
+          - spending
+          - market_radar
+          - operator_guidance
           additionalProperties: false
       required:
-        - ok
-        - ts
-        - service
-        - brief
+      - ok
+      - ts
+      - service
+      - brief
       additionalProperties: true
-
     SpendingObservation:
       type: object
       properties:
@@ -1352,11 +1382,10 @@ components:
         value_monthly_equiv:
           type: number
       required:
-        - date
-        - value_saar
-        - value_monthly_equiv
+      - date
+      - value_saar
+      - value_monthly_equiv
       additionalProperties: false
-
     SpendingYtdResponse:
       type: object
       properties:
@@ -1369,19 +1398,19 @@ components:
         segment:
           type: string
           enum:
-            - commercial
-            - housing
+          - commercial
+          - housing
         series_id:
           type: string
           enum:
-            - PNRESCONS
-            - PRRESCONS
+          - PNRESCONS
+          - PRRESCONS
         year:
           type: integer
         latest_observation_date:
           type: string
         latest_observation:
-          $ref: "#/components/schemas/SpendingObservation"
+          "$ref": "#/components/schemas/SpendingObservation"
         months_included:
           type: array
           items:
@@ -1392,8 +1421,8 @@ components:
           type: number
         pct_change_ytd_vs_pytd:
           anyOf:
-            - type: number
-            - type: "null"
+          - type: number
+          - type: 'null'
         notes:
           type: array
           items:
@@ -1404,30 +1433,29 @@ components:
             ytd_observations:
               type: array
               items:
-                $ref: "#/components/schemas/SpendingObservation"
+                "$ref": "#/components/schemas/SpendingObservation"
             pytd_observations:
               type: array
               items:
-                $ref: "#/components/schemas/SpendingObservation"
+                "$ref": "#/components/schemas/SpendingObservation"
           required:
-            - ytd_observations
-            - pytd_observations
+          - ytd_observations
+          - pytd_observations
       required:
-        - ok
-        - ts
-        - service
-        - segment
-        - series_id
-        - year
-        - latest_observation_date
-        - latest_observation
-        - months_included
-        - ytd_monthly_equiv_musd
-        - pytd_monthly_equiv_musd
-        - pct_change_ytd_vs_pytd
-        - raw
+      - ok
+      - ts
+      - service
+      - segment
+      - series_id
+      - year
+      - latest_observation_date
+      - latest_observation
+      - months_included
+      - ytd_monthly_equiv_musd
+      - pytd_monthly_equiv_musd
+      - pct_change_ytd_vs_pytd
+      - raw
       additionalProperties: true
-
     SpendingYtdSummaryResponse:
       type: object
       properties:
@@ -1443,16 +1471,204 @@ components:
           type: object
           properties:
             commercial:
-              $ref: "#/components/schemas/SpendingYtdResponse"
+              "$ref": "#/components/schemas/SpendingYtdResponse"
             housing:
-              $ref: "#/components/schemas/SpendingYtdResponse"
+              "$ref": "#/components/schemas/SpendingYtdResponse"
           required:
-            - commercial
-            - housing
+          - commercial
+          - housing
       required:
-        - ok
-        - ts
-        - service
-        - year
-        - summary
+      - ok
+      - ts
+      - service
+      - year
+      - summary
+      additionalProperties: true
+    StressIndexModel:
+      type: object
+      properties:
+        stress_index:
+          type: number
+        band:
+          type: string
+          enum:
+          - contained
+          - elevated
+          - high
+        explanation:
+          type: string
+      required:
+      - stress_index
+      - band
+      - explanation
+      additionalProperties: false
+    EarlyWarningModel:
+      type: object
+      properties:
+        warning_level:
+          type: string
+          enum:
+          - low
+          - medium
+          - high
+        flags:
+          type: array
+          items:
+            type: string
+        summary:
+          type: string
+      required:
+      - warning_level
+      - flags
+      - summary
+      additionalProperties: false
+    CapitalFlowsModel:
+      type: object
+      properties:
+        flow_regime:
+          type: string
+          enum:
+          - defensive
+          - neutral
+          - expansionary
+        explanation:
+          type: string
+      required:
+      - flow_regime
+      - explanation
+      additionalProperties: false
+    MigrationIndexModel:
+      type: object
+      properties:
+        migration_index:
+          type: number
+        top_market:
+          type: string
+        weakest_market:
+          type: string
+        explanation:
+          type: string
+      required:
+      - migration_index
+      - top_market
+      - weakest_market
+      - explanation
+      additionalProperties: false
+    MarketTapeModel:
+      type: object
+      properties:
+        signal:
+          type: string
+        regime:
+          type: string
+        liquidity:
+          type: string
+        risk:
+          type:
+          - number
+          - 'null'
+        construction_index:
+          type:
+          - number
+          - 'null'
+        stress_index:
+          type:
+          - number
+          - 'null'
+        recession_probability:
+          type:
+          - number
+          - 'null'
+        commercial_pct:
+          type:
+          - number
+          - 'null'
+        housing_pct:
+          type:
+          - number
+          - 'null'
+        top_market:
+          type: string
+        weakest_market:
+          type: string
+      required:
+      - signal
+      - regime
+      - liquidity
+      - risk
+      - construction_index
+      - stress_index
+      - recession_probability
+      - commercial_pct
+      - housing_pct
+      - top_market
+      - weakest_market
+      additionalProperties: false
+    ConstructionStressIndexResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        stress_index:
+          "$ref": "#/components/schemas/StressIndexModel"
+      required:
+      - ok
+      - ts
+      - service
+      - stress_index
+      additionalProperties: true
+    ConstructionEarlyWarningResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        early_warning:
+          "$ref": "#/components/schemas/EarlyWarningModel"
+      required:
+      - ok
+      - ts
+      - service
+      - early_warning
+      additionalProperties: true
+    ConstructionCapitalFlowsResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        capital_flows:
+          "$ref": "#/components/schemas/CapitalFlowsModel"
+      required:
+      - ok
+      - ts
+      - service
+      - capital_flows
+      additionalProperties: true
+    ConstructionMigrationIndexResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        migration_index:
+          "$ref": "#/components/schemas/MigrationIndexModel"
+      required:
+      - ok
+      - ts
+      - service
+      - migration_index
       additionalProperties: true
