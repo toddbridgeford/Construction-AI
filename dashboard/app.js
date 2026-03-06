@@ -51,6 +51,15 @@ function asNumber(value) {
   return Number.isFinite(value) ? value : null;
 }
 
+function formatOneDecimal(value, fallback = "n/a") {
+  const numeric = asNumber(value);
+  return numeric === null ? fallback : numeric.toFixed(1);
+}
+
+function isUnavailableText(value, unavailableLabel) {
+  return typeof value === "string" && value.toLowerCase().includes(unavailableLabel.toLowerCase());
+}
+
 function marketFromList(list) {
   return Array.isArray(list) && list[0]?.market ? list[0].market : "unknown";
 }
@@ -70,6 +79,37 @@ function modelFromSettled(results) {
   const spendingSummary = settledValue(results.spendingSummary, "summary");
   const spending = spendingSummary || (isSubsectionError(terminal.spending) ? null : terminal.spending);
 
+  const nowcast = settledValue(results.nowcast, "nowcast") || terminal.nowcast || null;
+  const stressIndex = settledValue(results.stressIndex, "stress_index") || terminal.stress_index || null;
+  const capitalFlows = settledValue(results.capitalFlows, "capital_flows") || terminal.capital_flows || null;
+  const migrationIndex = settledValue(results.migrationIndex, "migration_index") || terminal.migration_index || null;
+  const powerIndex = power?.power_index || terminal.power_index || null;
+  const subcontractors = powerIndex?.subcontractors || null;
+
+  const permitsTrend = asNumber(terminal.activity_trends?.permits_trend_pct);
+  const startsTrend = asNumber(terminal.activity_trends?.starts_trend_pct);
+  const avgActivityTrend = permitsTrend !== null && startsTrend !== null ? (permitsTrend + startsTrend) / 2 : null;
+
+  const projectPipeline = nowcast?.next_6_months === "softening" || (avgActivityTrend !== null && avgActivityTrend < 0)
+    ? "Pipeline bias: cautious"
+    : terminalLiquidity?.liquidity_state === "tight"
+      ? "Pipeline bias: selective"
+      : "Pipeline bias: stable";
+
+  const bidEnvironment = asNumber(terminal.construction_index) !== null && asNumber(terminal.construction_index) >= 55
+    ? "Competitive"
+    : subcontractors?.state === "tight" || nowcast?.next_6_months === "softening"
+      ? "Disciplined"
+      : "Balanced";
+
+  const migrationUnavailable = !migrationIndex
+    || (!Array.isArray(migrationIndex?.inbound_markets) && !Array.isArray(migrationIndex?.outbound_markets))
+    || (Array.isArray(migrationIndex?.inbound_markets) && migrationIndex.inbound_markets.length === 0
+      && Array.isArray(migrationIndex?.outbound_markets) && migrationIndex.outbound_markets.length === 0);
+
+  const forecastHeadline = terminal?.forecast_summary?.headline;
+  const heatmapTheme = terminal?.heatmap_summary?.top_strength_theme;
+
   return {
     terminal,
     tape: marketTape,
@@ -78,17 +118,35 @@ function modelFromSettled(results) {
     liquidity: asText(terminalLiquidity?.liquidity_state, asText(marketTape?.liquidity, "unknown")),
     risk: asText(terminalRisk?.risk_level, asText(marketTape?.risk, "unknown")),
     constructionIndex: asNumber(terminal.construction_index),
-    stressIndex: settledValue(results.stressIndex, "stress_index") || terminal.stress_index || null,
+    formattedConstructionIndex: formatOneDecimal(terminal.construction_index),
+    stressIndex,
+    formattedStressIndex: formatOneDecimal(stressIndex?.score),
     spending,
     power,
-    nowcast: settledValue(results.nowcast, "nowcast") || terminal.nowcast || null,
+    nowcast,
     heatmap: settledValue(results.heatmap, "heatmap") || null,
     forecast: settledValue(results.forecast, "forecast") || null,
     alerts: settledValue(results.alerts, "alerts") || terminal.alerts || [],
     recessionProbability: settledValue(results.recessionProbability, "recession_probability") || terminal.recession_probability || null,
     earlyWarning: settledValue(results.earlyWarning, "early_warning") || terminal.early_warning || null,
-    capitalFlows: settledValue(results.capitalFlows, "capital_flows") || terminal.capital_flows || null,
-    migrationIndex: settledValue(results.migrationIndex, "migration_index") || terminal.migration_index || null,
+    capitalFlows,
+    migrationIndex,
+    projectPipeline,
+    bidEnvironment,
+    subcontractorCapacity: {
+      score: asNumber(subcontractors?.score),
+      state: asText(subcontractors?.state, "unknown"),
+      explanation: asText(subcontractors?.explanation, ""),
+    },
+    migrationSummary: migrationUnavailable
+      ? "Migration index unavailable"
+      : `${marketFromList(migrationIndex?.inbound_markets)} → ${marketFromList(migrationIndex?.outbound_markets)}`,
+    forecastSummary: isUnavailableText(forecastHeadline, "unavailable")
+      ? "Forecast unavailable"
+      : asText(forecastHeadline, "Forecast unavailable"),
+    heatmapSummary: isUnavailableText(heatmapTheme, "unavailable")
+      ? "Heatmap unavailable"
+      : asText(heatmapTheme, "Heatmap unavailable"),
     morningBrief: settledValue(results.morningBrief, "brief") || null,
     operatorActions: terminal.operator_actions || null,
     cycleInterpretation: asText(terminal.cycle_interpretation, "Neutral"),
@@ -97,9 +155,9 @@ function modelFromSettled(results) {
       regime: asText(terminalRegime?.regime, "unknown"),
       liquidity: asText(terminalLiquidity?.liquidity_state, "unknown"),
       risk: asText(terminalRisk?.risk_level, "unknown"),
-      construction_index: asNumber(terminal.construction_index),
-      stress_index: asNumber(terminal.stress_index?.score),
-      recession_probability: asNumber(terminal.recession_probability?.next_12_months),
+      construction_index: formatOneDecimal(terminal.construction_index),
+      stress_index: formatOneDecimal(stressIndex?.score),
+      recession_probability: asNumber(nowcast?.next_12_months_recession_probability),
       commercial_pct: asNumber(spending?.commercial?.pct_change_ytd_vs_pytd),
       housing_pct: asNumber(spending?.housing?.pct_change_ytd_vs_pytd),
       top_market: marketFromList(terminal.migration_index?.inbound_markets),
@@ -154,11 +212,9 @@ function renderPanels(vm) {
   const commercial = asNumber(vm.spending?.commercial?.pct_change_ytd_vs_pytd);
   const housing = asNumber(vm.spending?.housing?.pct_change_ytd_vs_pytd);
   const powerHeadline = vm.power?.power_summary?.headline || "Power summary unavailable";
-  const heatmapSummary = vm.heatmap?.ok === false
-    ? asText(vm.heatmap?.error?.message, "Heatmap unavailable")
-    : asText(vm.heatmap?.summary?.top_strength_theme, asText(vm.terminal?.heatmap_summary?.top_strength_theme, "Heatmap unavailable"));
-  const forecastHeadline = asText(vm.forecast?.summary?.headline, asText(vm.terminal?.forecast_summary?.headline, "Forecast unavailable"));
-  const stressValue = asNumber(vm.stressIndex?.score) ?? "n/a";
+  const heatmapSummary = vm.heatmapSummary;
+  const forecastHeadline = vm.forecastSummary;
+  const stressValue = vm.formattedStressIndex;
   const commercialHousingTakeaway = commercial !== null && housing !== null
     ? commercial >= 0 && housing >= 0
       ? "Both segments are above prior-year pace."
@@ -166,29 +222,19 @@ function renderPanels(vm) {
         ? "Both segments are below prior-year pace."
         : "Segments are diverging; stay selective by market."
     : "Segment data unavailable.";
-  const projectPipeline = vm.nowcast?.next_6_months === "softening"
-    ? "Pipeline bias: cautious"
-    : vm.liquidity === "tight"
-      ? "Pipeline bias: selective"
-      : "Pipeline bias: stable";
-  const bidEnvironment = vm.constructionIndex !== null && vm.constructionIndex >= 55
-    ? "Competitive"
-    : vm.liquidity === "tight"
-      ? "Disciplined"
-      : "Balanced";
-  const subCapacity = vm.power?.power_index?.subcontractors?.state || "unknown";
+  const projectPipeline = vm.projectPipeline;
+  const bidEnvironment = vm.bidEnvironment;
+  const subCapacity = vm.subcontractorCapacity?.state || "unknown";
   const topAlerts = Array.from(new Map((vm.alerts || []).map((a) => [a.headline, a])).values());
-  const migrationInbound = marketFromList(vm.migrationIndex?.inbound_markets);
-  const migrationOutbound = marketFromList(vm.migrationIndex?.outbound_markets);
   const operatorActions = vm.operatorActions
     ? `GC: ${vm.operatorActions.gc} Sub: ${vm.operatorActions.subcontractor} Dev: ${vm.operatorActions.developer} Lender: ${vm.operatorActions.lender}`
     : "GC: Protect backlog quality. Sub: Maintain pricing discipline. Dev: Stage starts by financing certainty. Lender: Monitor commercial exposures.";
 
   panelsEl.innerHTML = `
-    <section class="row row-top">${card("Cycle Dial", vm.cycleInterpretation)}${card("Signal", vm.signal)}${card("Regime", vm.regime)}${card("Liquidity", vm.liquidity)}${card("Risk", vm.risk)}${card("Construction Index", vm.constructionIndex ?? "n/a")}${card("Stress Index", stressValue, vm.stressIndex?.explanation || "")}</section>
-    <section class="row">${card("Commercial vs Housing", `${commercial ?? "n/a"} / ${housing ?? "n/a"}`, commercialHousingTakeaway)}${card("Power Index", vm.power?.power_summary?.margin_leader || "unknown", powerHeadline)}${card("Forward Outlook", vm.nowcast?.next_6_months || "unknown", `Recession: ${vm.recessionProbability?.next_12_months ?? "n/a"}%`)}${card("Project Pipeline", projectPipeline, vm.nowcast?.drivers?.[0] || "No driver available")}</section>
-    <section class="row">${card("Alerts", topAlerts?.[0]?.headline || "No active alerts", topAlerts?.[0]?.explanation || "")}${card("Heatmap", heatmapSummary, asText(vm.terminal?.heatmap_summary?.top_weakness_theme, ""))}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.power?.power_index?.subcontractors?.explanation || "")}</section>
-    <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", `${migrationInbound} → ${migrationOutbound}`, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", asText(vm.terminal?.forecast_summary?.strongest_market, marketFromList(vm.forecast?.strongest_next_12_months)), forecastHeadline)}</section>
+    <section class="row row-top">${card("Cycle Dial", vm.cycleInterpretation)}${card("Signal", vm.signal)}${card("Regime", vm.regime)}${card("Liquidity", vm.liquidity)}${card("Risk", vm.risk)}${card("Construction Index", vm.formattedConstructionIndex)}${card("Stress Index", stressValue, vm.stressIndex?.explanation || "")}</section>
+    <section class="row">${card("Commercial vs Housing", `${commercial ?? "n/a"} / ${housing ?? "n/a"}`, commercialHousingTakeaway)}${card("Power Index", vm.power?.power_summary?.margin_leader || "unknown", powerHeadline)}${card("Forward Outlook", vm.nowcast?.next_6_months || "unknown", `Recession: ${vm.nowcast?.next_12_months_recession_probability ?? "n/a"}%`)}${card("Project Pipeline", projectPipeline, vm.nowcast?.drivers?.[0] || "No driver available")}</section>
+    <section class="row">${card("Alerts", topAlerts?.[0]?.headline || "No active alerts", topAlerts?.[0]?.explanation || "")}${card("Heatmap", heatmapSummary, asText(vm.terminal?.heatmap_summary?.top_weakness_theme, ""))}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.subcontractorCapacity?.explanation || "")}</section>
+    <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", vm.migrationSummary, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", asText(vm.terminal?.forecast_summary?.strongest_market, marketFromList(vm.forecast?.strongest_next_12_months)), forecastHeadline)}</section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
 }
