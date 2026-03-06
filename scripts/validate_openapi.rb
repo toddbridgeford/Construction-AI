@@ -26,7 +26,11 @@ REQUIRED_NEW_PATHS = [
   '/construction/project-risk',
   '/construction/receivables-risk',
   '/construction/payment-delay-risk',
-  '/construction/collections-stress'
+  '/construction/collections-stress',
+  '/construction/owner-risk',
+  '/construction/developer-fragility',
+  '/construction/lender-pullback-risk',
+  '/construction/counterparty-quality'
 ]
 REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/spending/ytd/summary']
 REQUIRED_SCHEMAS = [
@@ -68,7 +72,15 @@ REQUIRED_SCHEMAS = [
   'ConstructionCollectionsStressResponse',
   'ConstructionBidIntensityResponse',
   'ConstructionBacklogQualityResponse',
-  'ConstructionProjectRiskResponse'
+  'ConstructionProjectRiskResponse',
+  'OwnerRiskModel',
+  'DeveloperFragilityModel',
+  'LenderPullbackRiskModel',
+  'CounterpartyQualityModel',
+  'ConstructionOwnerRiskResponse',
+  'ConstructionDeveloperFragilityResponse',
+  'ConstructionLenderPullbackRiskResponse',
+  'ConstructionCounterpartyQualityResponse'
 ]
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
@@ -123,6 +135,15 @@ errors << 'ConstructionTerminalResponse terminal schema must include labor_shock
 errors << 'ConstructionTerminalResponse terminal schema must include labor_shock_summary' unless terminal_properties.key?('labor_shock_summary')
 errors << 'ConstructionTerminalResponse terminal schema must include margin_pressure' unless terminal_properties.key?('margin_pressure')
 errors << 'ConstructionTerminalResponse terminal schema must include margin_pressure_summary' unless terminal_properties.key?('margin_pressure_summary')
+
+errors << 'ConstructionTerminalResponse terminal schema must include owner_risk' unless terminal_properties.key?('owner_risk')
+errors << 'ConstructionTerminalResponse terminal schema must include owner_risk_summary' unless terminal_properties.key?('owner_risk_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include developer_fragility' unless terminal_properties.key?('developer_fragility')
+errors << 'ConstructionTerminalResponse terminal schema must include developer_fragility_summary' unless terminal_properties.key?('developer_fragility_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include lender_pullback_risk' unless terminal_properties.key?('lender_pullback_risk')
+errors << 'ConstructionTerminalResponse terminal schema must include lender_pullback_risk_summary' unless terminal_properties.key?('lender_pullback_risk_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include counterparty_quality' unless terminal_properties.key?('counterparty_quality')
+errors << 'ConstructionTerminalResponse terminal schema must include counterparty_quality_summary' unless terminal_properties.key?('counterparty_quality_summary')
 
 forecast_items = components.dig('ConstructionForecastResponse', 'properties', 'forecast', 'properties', 'strongest_next_12_months', 'items')
 errors << 'ConstructionForecastResponse strongest_next_12_months must reference ForecastMarketItem' unless forecast_items&.dig('$ref') == '#/components/schemas/ForecastMarketItem'

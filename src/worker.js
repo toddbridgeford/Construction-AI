@@ -37,6 +37,10 @@ import {
   handleConstructionReceivablesRisk,
   handleConstructionPaymentDelayRisk,
   handleConstructionCollectionsStress,
+  handleConstructionOwnerRisk,
+  handleConstructionDeveloperFragility,
+  handleConstructionLenderPullbackRisk,
+  handleConstructionCounterpartyQuality,
 } from "./routes/construction.js";
 
 export default {
@@ -82,6 +86,10 @@ export default {
       if (pathname === "/construction/receivables-risk") return handleConstructionReceivablesRisk(request, env);
       if (pathname === "/construction/payment-delay-risk") return handleConstructionPaymentDelayRisk(request, env);
       if (pathname === "/construction/collections-stress") return handleConstructionCollectionsStress(request, env);
+      if (pathname === "/construction/owner-risk") return handleConstructionOwnerRisk(request, env);
+      if (pathname === "/construction/developer-fragility") return handleConstructionDeveloperFragility(request, env);
+      if (pathname === "/construction/lender-pullback-risk") return handleConstructionLenderPullbackRisk(request, env);
+      if (pathname === "/construction/counterparty-quality") return handleConstructionCounterpartyQuality(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
       if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
       if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);

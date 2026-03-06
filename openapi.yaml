@@ -455,6 +455,50 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionCollectionsStressResponse"
+  "/construction/owner-risk":
+    get:
+      operationId: constructionOwnerRisk
+      summary: Deterministic owner counterparty risk model
+      responses:
+        '200':
+          description: Deterministic owner risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionOwnerRiskResponse"
+  "/construction/developer-fragility":
+    get:
+      operationId: constructionDeveloperFragility
+      summary: Deterministic developer fragility model
+      responses:
+        '200':
+          description: Deterministic developer fragility model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionDeveloperFragilityResponse"
+  "/construction/lender-pullback-risk":
+    get:
+      operationId: constructionLenderPullbackRisk
+      summary: Deterministic lender pullback risk model
+      responses:
+        '200':
+          description: Deterministic lender pullback risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionLenderPullbackRiskResponse"
+  "/construction/counterparty-quality":
+    get:
+      operationId: constructionCounterpartyQuality
+      summary: Deterministic counterparty quality model
+      responses:
+        '200':
+          description: Deterministic counterparty quality model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionCounterpartyQualityResponse"
 components:
   schemas:
     GenericOkObject:
@@ -953,6 +997,22 @@ components:
               "$ref": "#/components/schemas/CollectionsStressModel"
             collections_stress_summary:
               type: string
+            owner_risk:
+              "$ref": "#/components/schemas/OwnerRiskModel"
+            owner_risk_summary:
+              type: string
+            developer_fragility:
+              "$ref": "#/components/schemas/DeveloperFragilityModel"
+            developer_fragility_summary:
+              type: string
+            lender_pullback_risk:
+              "$ref": "#/components/schemas/LenderPullbackRiskModel"
+            lender_pullback_risk_summary:
+              type: string
+            counterparty_quality:
+              "$ref": "#/components/schemas/CounterpartyQualityModel"
+            counterparty_quality_summary:
+              type: string
             migration_index:
               "$ref": "#/components/schemas/MigrationIndexModel"
             migration_summary:
@@ -999,6 +1059,14 @@ components:
           - payment_delay_risk_summary
           - collections_stress
           - collections_stress_summary
+          - owner_risk
+          - owner_risk_summary
+          - developer_fragility
+          - developer_fragility_summary
+          - lender_pullback_risk
+          - lender_pullback_risk_summary
+          - counterparty_quality
+          - counterparty_quality_summary
           - migration_index
           - migration_summary
           - market_tape
@@ -1980,6 +2048,88 @@ components:
       - drivers
       - explanation
       additionalProperties: false
+    OwnerRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    DeveloperFragilityModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    LenderPullbackRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    CounterpartyQualityStateEnum:
+      type: string
+      enum:
+      - weak
+      - mixed
+      - strong
+    CounterpartyQualityModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/CounterpartyQualityStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
     ConstructionMaterialsShockResponse:
       type: object
       properties:
@@ -2132,6 +2282,74 @@ components:
       - ts
       - service
       - collections_stress
+      additionalProperties: true
+    ConstructionOwnerRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        owner_risk:
+          "$ref": "#/components/schemas/OwnerRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - owner_risk
+      additionalProperties: true
+    ConstructionDeveloperFragilityResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        developer_fragility:
+          "$ref": "#/components/schemas/DeveloperFragilityModel"
+      required:
+      - ok
+      - ts
+      - service
+      - developer_fragility
+      additionalProperties: true
+    ConstructionLenderPullbackRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        lender_pullback_risk:
+          "$ref": "#/components/schemas/LenderPullbackRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - lender_pullback_risk
+      additionalProperties: true
+    ConstructionCounterpartyQualityResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        counterparty_quality:
+          "$ref": "#/components/schemas/CounterpartyQualityModel"
+      required:
+      - ok
+      - ts
+      - service
+      - counterparty_quality
       additionalProperties: true
     ConstructionStressIndexResponse:
       type: object

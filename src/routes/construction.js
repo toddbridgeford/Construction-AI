@@ -53,6 +53,12 @@ function toBacklogQualityState(score) {
   return "weak";
 }
 
+function toCounterpartyQualityState(score) {
+  if (score >= 67) return "strong";
+  if (score >= 45) return "mixed";
+  return "weak";
+}
+
 function buildBacklogQualityModel(terminal) {
   const metrics = extractTerminalInputs(terminal);
   const recessionProb = Number.isFinite(terminal?.recession_probability?.next_12_months)
@@ -415,6 +421,219 @@ function buildCollectionsStressModel(terminal) {
     state,
     drivers: drivers.slice(0, 6),
     explanation: `Collections stress is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
+function buildOwnerRiskModel(terminal) {
+  const receivablesRisk = terminal?.receivables_risk || buildReceivablesRiskModel(terminal);
+  const projectRisk = terminal?.project_risk || buildProjectRiskModel(terminal);
+  const collectionsStress = terminal?.collections_stress || buildCollectionsStressModel(terminal);
+  const marginPressure = terminal?.margin_pressure || buildMarginPressureModel(terminal);
+  const weakMarketScore = Number.isFinite(terminal?.migration_index?.outbound_markets?.[0]?.score)
+    ? terminal.migration_index.outbound_markets[0].score
+    : null;
+  const weakMarketName = terminal?.migration_index?.outbound_markets?.[0]?.market || "weaker metros";
+
+  let score = 24;
+  const drivers = [];
+
+  if (receivablesRisk.score >= 60) {
+    score += 22;
+    drivers.push(`receivables risk is elevated (${receivablesRisk.score.toFixed(1)})`);
+  } else if (receivablesRisk.score >= 45) {
+    score += 10;
+    drivers.push(`receivables risk is moderate (${receivablesRisk.score.toFixed(1)})`);
+  }
+
+  if (projectRisk.score >= 60) {
+    score += 18;
+    drivers.push(`project risk is elevated (${projectRisk.score.toFixed(1)})`);
+  }
+
+  if (collectionsStress.score >= 60) {
+    score += 16;
+    drivers.push(`collections stress is elevated (${collectionsStress.score.toFixed(1)})`);
+  }
+
+  if (marginPressure.score >= 60) {
+    score += 10;
+    drivers.push(`margin pressure is elevated (${marginPressure.score.toFixed(1)})`);
+  }
+
+  if (weakMarketScore !== null && weakMarketScore <= 45) {
+    score += 12;
+    drivers.push(`${weakMarketName} is deteriorating (${weakMarketScore.toFixed(1)})`);
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Owner risk is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
+function buildDeveloperFragilityModel(terminal) {
+  const backlog = terminal?.backlog_quality || buildBacklogQualityModel(terminal);
+  const paymentDelayRisk = terminal?.payment_delay_risk || buildPaymentDelayRiskModel(terminal);
+  const collectionsStress = terminal?.collections_stress || buildCollectionsStressModel(terminal);
+  const developerPower = Number.isFinite(terminal?.power_index?.developers?.score) ? terminal.power_index.developers.score : null;
+  const metrics = extractTerminalInputs(terminal);
+
+  let score = 22;
+  const drivers = [];
+
+  if (developerPower !== null) {
+    if (developerPower <= 44) {
+      score += 24;
+      drivers.push(`developer power is weak (${developerPower.toFixed(1)})`);
+    } else if (developerPower < 55) {
+      score += 10;
+      drivers.push(`developer power is mixed (${developerPower.toFixed(1)})`);
+    } else {
+      score -= 6;
+      drivers.push(`developer power is supportive (${developerPower.toFixed(1)})`);
+    }
+  }
+
+  if (backlog.state === "weak") {
+    score += 17;
+    drivers.push("backlog quality is weak");
+  } else if (backlog.state === "mixed") {
+    score += 8;
+    drivers.push("backlog quality is mixed");
+  }
+
+  if (paymentDelayRisk.score >= 60) {
+    score += 16;
+    drivers.push(`payment delay risk is elevated (${paymentDelayRisk.score.toFixed(1)})`);
+  }
+
+  if (collectionsStress.score >= 60) {
+    score += 14;
+    drivers.push(`collections stress is elevated (${collectionsStress.score.toFixed(1)})`);
+  }
+
+  if (metrics.liquidity_state === "tight" && backlog.state !== "strong") {
+    score += 10;
+    drivers.push("tight liquidity is reducing speculative project security");
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Developer fragility is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
+function buildLenderPullbackRiskModel(terminal) {
+  const projectRisk = terminal?.project_risk || buildProjectRiskModel(terminal);
+  const recessionProb = Number.isFinite(terminal?.recession_probability?.next_12_months)
+    ? terminal.recession_probability.next_12_months
+    : null;
+  const capitalFlows = terminal?.capital_flows || buildCapitalFlows(terminal);
+  const metrics = extractTerminalInputs(terminal);
+  const weakMarketScore = Number.isFinite(terminal?.migration_index?.outbound_markets?.[0]?.score)
+    ? terminal.migration_index.outbound_markets[0].score
+    : null;
+  const weakMarketName = terminal?.migration_index?.outbound_markets?.[0]?.market || "softer metros";
+
+  let score = 20;
+  const drivers = [];
+
+  if (metrics.liquidity_state === "tight") {
+    score += 21;
+    drivers.push("liquidity is tight");
+  } else if (metrics.liquidity_state === "neutral") {
+    score += 11;
+    drivers.push("liquidity is neutral");
+  }
+
+  if (projectRisk.score >= 60) {
+    score += 16;
+    drivers.push(`project risk is elevated (${projectRisk.score.toFixed(1)})`);
+  }
+
+  if (recessionProb !== null) {
+    if (recessionProb >= 60) {
+      score += 16;
+      drivers.push(`recession probability is elevated (${recessionProb.toFixed(1)}%)`);
+    } else if (recessionProb >= 45) {
+      score += 8;
+      drivers.push(`recession probability is rising (${recessionProb.toFixed(1)}%)`);
+    }
+  }
+
+  if (weakMarketScore !== null && weakMarketScore <= 45) {
+    score += 12;
+    drivers.push(`${weakMarketName} is deteriorating (${weakMarketScore.toFixed(1)})`);
+  }
+
+  if (capitalFlows.headline === "Defensive") {
+    score += 14;
+    drivers.push("capital flows are defensive");
+  } else if (capitalFlows.headline === "Supportive") {
+    score -= 8;
+    drivers.push("capital flows remain supportive");
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Lender pullback risk is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
+function buildCounterpartyQualityModel(terminal) {
+  const ownerRisk = terminal?.owner_risk || buildOwnerRiskModel(terminal);
+  const developerFragility = terminal?.developer_fragility || buildDeveloperFragilityModel(terminal);
+  const lenderPullbackRisk = terminal?.lender_pullback_risk || buildLenderPullbackRiskModel(terminal);
+  const receivablesRisk = terminal?.receivables_risk || buildReceivablesRiskModel(terminal);
+  const paymentDelayRisk = terminal?.payment_delay_risk || buildPaymentDelayRiskModel(terminal);
+
+  let score = 72;
+  const drivers = [];
+
+  if (ownerRisk.score >= 60) {
+    score -= 16;
+    drivers.push(`owner risk is elevated (${ownerRisk.score.toFixed(1)})`);
+  }
+
+  if (developerFragility.score >= 60) {
+    score -= 15;
+    drivers.push(`developer fragility is elevated (${developerFragility.score.toFixed(1)})`);
+  }
+
+  if (lenderPullbackRisk.score >= 60) {
+    score -= 14;
+    drivers.push(`lender pullback risk is elevated (${lenderPullbackRisk.score.toFixed(1)})`);
+  }
+
+  if (receivablesRisk.score >= 60 || paymentDelayRisk.score >= 60) {
+    score -= 13;
+    drivers.push("receivables and payment delay stress are elevated");
+  }
+
+  if (ownerRisk.score < 45 && developerFragility.score < 45 && lenderPullbackRisk.score < 45) {
+    score += 10;
+    drivers.push("sponsor and lender conditions are broadly stable");
+  }
+
+  const finalScore = clampScore(score);
+  const state = toCounterpartyQualityState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Counterparty quality is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
   };
 }
 
@@ -1258,7 +1477,14 @@ async function buildTerminalPayload(request, env) {
   terminal.payment_delay_risk_summary = terminal.payment_delay_risk.explanation;
   terminal.collections_stress = buildCollectionsStressModel(terminal);
   terminal.collections_stress_summary = terminal.collections_stress.explanation;
-
+  terminal.owner_risk = buildOwnerRiskModel(terminal);
+  terminal.owner_risk_summary = terminal.owner_risk.explanation;
+  terminal.developer_fragility = buildDeveloperFragilityModel(terminal);
+  terminal.developer_fragility_summary = terminal.developer_fragility.explanation;
+  terminal.lender_pullback_risk = buildLenderPullbackRiskModel(terminal);
+  terminal.lender_pullback_risk_summary = terminal.lender_pullback_risk.explanation;
+  terminal.counterparty_quality = buildCounterpartyQualityModel(terminal);
+  terminal.counterparty_quality_summary = terminal.counterparty_quality.explanation;
 
   terminal.forecast_summary = {
     strongest_market: "unknown",
@@ -1306,13 +1532,21 @@ async function buildTerminalPayload(request, env) {
   terminal.payment_delay_risk_summary = terminal.payment_delay_risk.explanation;
   terminal.collections_stress = buildCollectionsStressModel(terminal);
   terminal.collections_stress_summary = terminal.collections_stress.explanation;
+  terminal.owner_risk = buildOwnerRiskModel(terminal);
+  terminal.owner_risk_summary = terminal.owner_risk.explanation;
+  terminal.developer_fragility = buildDeveloperFragilityModel(terminal);
+  terminal.developer_fragility_summary = terminal.developer_fragility.explanation;
+  terminal.lender_pullback_risk = buildLenderPullbackRiskModel(terminal);
+  terminal.lender_pullback_risk_summary = terminal.lender_pullback_risk.explanation;
+  terminal.counterparty_quality = buildCounterpartyQualityModel(terminal);
+  terminal.counterparty_quality_summary = terminal.counterparty_quality.explanation;
 
-  if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated" || terminal.collections_stress.state === "elevated" || terminal.collections_stress.state === "severe") {
+  if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated" || terminal.collections_stress.state === "elevated" || terminal.collections_stress.state === "severe" || terminal.owner_risk.state === "elevated" || terminal.owner_risk.state === "severe" || terminal.developer_fragility.state === "elevated" || terminal.developer_fragility.state === "severe" || terminal.lender_pullback_risk.state === "elevated" || terminal.lender_pullback_risk.state === "severe" || terminal.counterparty_quality.state === "weak") {
     terminal.operator_actions.gc = "Tighten customer selection, shorten billing cadence, and stress-test backlog conversion by metro.";
     terminal.operator_actions.subcontractor = "Monitor aging aggressively, favor stronger counterparties, and avoid thin-bid exposure in soft metros.";
     terminal.operator_actions.developer = "Sequence starts by financing certainty, tighten pay-app governance, and defer marginal speculative starts.";
-    terminal.operator_actions.lender = "Underwrite payment-delay scenarios explicitly and tighten covenants on weaker conversion markets.";
-    terminal.operator_actions.supplier = "Tighten terms where collection risk is rising and align inventory with higher-certainty backlog cohorts.";
+    terminal.operator_actions.lender = "Underwrite payment-delay and lender retreat scenarios explicitly and tighten covenants on weaker conversion markets.";
+    terminal.operator_actions.supplier = "Tighten terms where owner quality is weakening and align inventory with higher-certainty backlog cohorts.";
   }
 
   terminal.market_tape = buildMarketTape(terminal);
@@ -1967,6 +2201,50 @@ export async function handleConstructionCollectionsStress(request, env) {
     });
   }
 }
+export async function handleConstructionOwnerRisk(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { owner_risk: terminal.owner_risk });
+  } catch (e) {
+    return error(env, 500, "OWNER_RISK_FAILED", "Unable to build construction owner risk model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionDeveloperFragility(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { developer_fragility: terminal.developer_fragility });
+  } catch (e) {
+    return error(env, 500, "DEVELOPER_FRAGILITY_FAILED", "Unable to build construction developer fragility model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionLenderPullbackRisk(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { lender_pullback_risk: terminal.lender_pullback_risk });
+  } catch (e) {
+    return error(env, 500, "LENDER_PULLBACK_RISK_FAILED", "Unable to build construction lender pullback risk model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionCounterpartyQuality(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { counterparty_quality: terminal.counterparty_quality });
+  } catch (e) {
+    return error(env, 500, "COUNTERPARTY_QUALITY_FAILED", "Unable to build construction counterparty quality model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
 export async function handleConstructionForecast(request, env) {
   try {
     const terminal = await buildTerminalPayload(request, env);
