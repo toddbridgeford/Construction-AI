@@ -1,4 +1,5 @@
 import { error, ok } from "../lib/http.js";
+import { MARKETS_INDEX_ASSET_PATH, normalizeAssetPath } from "../lib/markets_assets.js";
 import { buildConstructionDashboard } from "./existing.js";
 import { handleSpendingYtdSummary } from "./spending_ytd.js";
 
@@ -1015,22 +1016,23 @@ async function loadScoredMarketsFromAssets(env) {
   }
 
   const base = "http://assets";
-  const marketsIndexRes = await env.ASSETS.fetch(`${base}/markets/index.json`);
+  const marketsIndexPath = normalizeAssetPath(MARKETS_INDEX_ASSET_PATH);
+  const marketsIndexRes = await env.ASSETS.fetch(`${base}/${marketsIndexPath}`);
   if (!marketsIndexRes.ok) {
-    return subsectionError("MARKETS_INDEX_MISSING", "Unable to read dist/markets/index.json", { status: marketsIndexRes.status });
+    return subsectionError("MARKETS_INDEX_MISSING", `Unable to read ${MARKETS_INDEX_ASSET_PATH}`, { status: marketsIndexRes.status });
   }
 
   const marketsIndex = await marketsIndexRes.json();
   const entries = Array.isArray(marketsIndex?.markets) ? marketsIndex.markets : [];
   if (entries.length === 0) {
-    return subsectionError("MARKETS_INDEX_EMPTY", "No market entries found in dist/markets/index.json");
+    return subsectionError("MARKETS_INDEX_EMPTY", `No market entries found in ${MARKETS_INDEX_ASSET_PATH}`);
   }
 
   const scoredMarkets = [];
   for (const entry of entries) {
     const marketPath = entry?.path;
     if (typeof marketPath !== "string" || marketPath.length === 0) continue;
-    const normalizedMarketPath = marketPath.replace(/^\/+/, "");
+    const normalizedMarketPath = normalizeAssetPath(marketPath);
     const res = await env.ASSETS.fetch(`${base}/${normalizedMarketPath}`);
     if (!res.ok) continue;
     const payload = await res.json();
