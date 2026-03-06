@@ -35,6 +35,9 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `GET /liquidity`
 - `GET /construction-index`
 - `GET /risk-score`
+- `GET /ytd/commercial`
+- `GET /ytd/housing`
+- `GET /ytd/summary`
 
 ## Actions Integration (Custom GPT)
 
@@ -52,4 +55,12 @@ Run local OpenAPI checks:
 
 ```bash
 ruby scripts/validate_openapi.rb
+```
+
+## YTD quick usage
+
+```bash
+curl "https://construction-ai.toddbridgeford.workers.dev/ytd/commercial?year=2025"
+curl "https://construction-ai.toddbridgeford.workers.dev/ytd/housing?year=2025"
+curl "https://construction-ai.toddbridgeford.workers.dev/ytd/summary?year=2025"
 ```

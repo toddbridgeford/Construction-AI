@@ -4,7 +4,13 @@ require 'yaml'
 OPENAPI_PATH = File.expand_path('../openapi.yaml', __dir__)
 EXPECTED_VERSION = '3.1.0'
 EXPECTED_SERVER = 'https://construction-ai.toddbridgeford.workers.dev'
-REQUIRED_PATHS = ['/', '/health', '/spending/ytd', '/spending/ytd/summary']
+REQUIRED_PATHS = ['/', '/health', '/spending/ytd', '/spending/ytd/summary', '/ytd/commercial', '/ytd/housing', '/ytd/summary']
+REQUIRED_OPERATION_IDS = {
+  '/ytd/commercial' => 'getYtdCommercial',
+  '/ytd/housing' => 'getYtdHousing',
+  '/ytd/summary' => 'getYtdSummary'
+}
+REQUIRED_SCHEMAS = ['YtdSegmentResponse', 'YtdSummaryResponse']
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
 
@@ -22,7 +28,16 @@ REQUIRED_PATHS.each do |p|
 end
 errors << 'paths must not include /terminal' if paths.key?('/terminal')
 
+REQUIRED_OPERATION_IDS.each do |path, operation_id|
+  actual = paths.dig(path, 'get', 'operationId')
+  errors << "#{path} GET operationId must be #{operation_id}" unless actual == operation_id
+end
+
 components = doc.dig('components', 'schemas') || {}
+REQUIRED_SCHEMAS.each do |name|
+  errors << "components.schemas must include #{name}" unless components.key?(name)
+end
+
 referenced = []
 
 paths.each do |route, methods|

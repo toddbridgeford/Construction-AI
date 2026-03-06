@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Construction AI Terminal
-  version: "1.0.4"
+  version: "1.0.5"
   description: Canonical API for the construction-ai Cloudflare Worker (no /terminal; Action matches live routes).
 
 servers:
@@ -196,6 +196,60 @@ paths:
               schema:
                 $ref: "#/components/schemas/SpendingYtdSummaryResponse"
 
+  /ytd/commercial:
+    get:
+      operationId: getYtdCommercial
+      summary: Nonresidential construction spending YTD vs PYTD
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Commercial YTD/PYTD response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YtdSegmentResponse"
+
+  /ytd/housing:
+    get:
+      operationId: getYtdHousing
+      summary: Residential construction spending YTD vs PYTD
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Housing YTD/PYTD response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YtdSegmentResponse"
+
+  /ytd/summary:
+    get:
+      operationId: getYtdSummary
+      summary: Combined commercial + housing YTD/PYTD response
+      parameters:
+        - name: year
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Combined YTD/PYTD response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/YtdSummaryResponse"
+
 components:
   schemas:
     GenericOkObject:
@@ -274,6 +328,73 @@ components:
         data:
           $ref: "#/components/schemas/FredObservationsResponse"
       required: [ok, data]
+      additionalProperties: true
+
+
+
+    YtdObservation:
+      type: object
+      properties:
+        date: { type: string }
+        value_saar: { type: number }
+        value_monthly_equiv: { type: number }
+      required: [date, value_saar, value_monthly_equiv]
+      additionalProperties: false
+
+    YtdSegmentResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        ts: { type: string }
+        service: { type: string }
+        segment:
+          type: string
+          enum: [commercial, housing]
+        series_id:
+          type: string
+          enum: [PNRESCONS, PRRESCONS]
+        year: { type: integer }
+        latest_observation_date: { type: string }
+        latest_observation:
+          $ref: "#/components/schemas/YtdObservation"
+        months_included:
+          type: array
+          items: { type: string }
+        ytd_monthly_equiv_musd: { type: number }
+        pytd_monthly_equiv_musd: { type: number }
+        pct_change_ytd_vs_pytd:
+          anyOf:
+            - type: number
+            - type: "null"
+        raw:
+          type: object
+          properties:
+            ytd_observations:
+              type: array
+              items:
+                $ref: "#/components/schemas/YtdObservation"
+            pytd_observations:
+              type: array
+              items:
+                $ref: "#/components/schemas/YtdObservation"
+      required: [ok, ts, service, segment, series_id, year, latest_observation_date, latest_observation, months_included, ytd_monthly_equiv_musd, pytd_monthly_equiv_musd, pct_change_ytd_vs_pytd, raw]
+      additionalProperties: true
+
+    YtdSummaryResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        ts: { type: string }
+        service: { type: string }
+        year: { type: integer }
+        summary:
+          type: object
+          properties:
+            commercial:
+              $ref: "#/components/schemas/YtdSegmentResponse"
+            housing:
+              $ref: "#/components/schemas/YtdSegmentResponse"
+      required: [ok, ts, service, year, summary]
       additionalProperties: true
 
     SpendingObservation:
