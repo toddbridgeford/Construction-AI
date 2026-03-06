@@ -19,3 +19,6 @@ yarn-error.log*
 .wrangler/
 .dev.vars
 
+
+# Deploy bundle staging
+.deploy-assets/
