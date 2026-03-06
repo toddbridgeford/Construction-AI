@@ -12,7 +12,7 @@ import {
   handleScheduled,
   handleSignal,
 } from "./routes/existing.js";
-import { handleSpendingYtd, handleSpendingYtdSummary } from "./routes/spending_ytd.js";
+import { handleSpendingYtd, handleSpendingYtdSummary, handleYtdSegment, handleYtdSummary } from "./routes/spending_ytd.js";
 
 export default {
   async fetch(request, env) {
@@ -39,6 +39,10 @@ export default {
 
       if (pathname === "/spending/ytd") return handleSpendingYtd(request, env);
       if (pathname === "/spending/ytd/summary") return handleSpendingYtdSummary(request, env);
+
+      if (pathname === "/ytd/commercial") return handleYtdSegment(request, env, "commercial");
+      if (pathname === "/ytd/housing") return handleYtdSegment(request, env, "housing");
+      if (pathname === "/ytd/summary") return handleYtdSummary(request, env);
 
       return error(env, 404, "NOT_FOUND", "Not found", { path: pathname });
     } catch (e) {

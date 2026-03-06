@@ -7,39 +7,75 @@ const SEGMENTS = {
   housing: "PRRESCONS",
 };
 
+const DOLLARS_TO_MUSD = 1_000_000;
 
-function toMonthlyEquiv(saarValue) {
-  return saarValue / 12;
+function toMonthlyEquiv(valueSaar) {
+  return valueSaar / 12;
 }
 
-function toNumberOrNull(value) {
-  const n = parseObsValue(value);
-  return n === null ? null : n;
-}
-
-export function computeYtdPytdFromObservations(observations, yearOpt = null) {
-  const normalized = (Array.isArray(observations) ? observations : [])
+function normalizeObservations(observations) {
+  return (Array.isArray(observations) ? observations : [])
     .map((obs) => {
-      const saar = toNumberOrNull(obs?.value);
-      if (!obs?.date || saar === null) return null;
-      return { date: obs.date, year: Number(obs.date.slice(0, 4)), month: Number(obs.date.slice(5, 7)), value_saar: saar };
+      const valueSaar = parseObsValue(obs?.value);
+      if (!obs?.date || valueSaar === null) return null;
+      const year = Number(obs.date.slice(0, 4));
+      const month = Number(obs.date.slice(5, 7));
+      if (!Number.isInteger(year) || !Number.isInteger(month)) return null;
+      if (month < 1 || month > 12) return null;
+      return {
+        date: obs.date,
+        year,
+        month,
+        value_saar: valueSaar,
+      };
     })
     .filter(Boolean)
     .sort((a, b) => (a.date < b.date ? -1 : 1));
+}
 
+function latestCompleteYear(observations) {
+  const monthsByYear = new Map();
+  for (const obs of observations) {
+    if (!monthsByYear.has(obs.year)) monthsByYear.set(obs.year, new Set());
+    monthsByYear.get(obs.year).add(obs.month);
+  }
+
+  const completeYears = [...monthsByYear.entries()]
+    .filter(([, months]) => months.size === 12)
+    .map(([year]) => year)
+    .sort((a, b) => b - a);
+
+  return completeYears[0] || null;
+}
+
+function toRawObservation(obs) {
+  return {
+    date: obs.date,
+    value_saar: obs.value_saar,
+    value_monthly_equiv: toMonthlyEquiv(obs.value_saar),
+  };
+}
+
+export function buildYtdPytdFromObservations(observations, yearOpt = null) {
+  const normalized = normalizeObservations(observations);
   if (normalized.length === 0) {
     const e = new Error("No usable observations");
-    e.code = "NO_OBSERVATIONS";
+    e.code = "INSUFFICIENT_DATA";
     throw e;
   }
 
-  const latestGlobal = normalized[normalized.length - 1];
-  const targetYear = Number.isInteger(yearOpt) ? yearOpt : latestGlobal.year;
+  const targetYear = Number.isInteger(yearOpt) ? yearOpt : latestCompleteYear(normalized);
+  if (!Number.isInteger(targetYear)) {
+    const e = new Error("No complete year with data is available");
+    e.code = "INSUFFICIENT_DATA";
+    e.details = { reason: "no_complete_year" };
+    throw e;
+  }
 
-  const targetYearObs = normalized.filter((o) => o.year === targetYear);
-  if (!targetYearObs.length) {
+  const targetYearObs = normalized.filter((obs) => obs.year === targetYear);
+  if (targetYearObs.length === 0) {
     const e = new Error("No observations for requested year");
-    e.code = "NO_OBSERVATIONS";
+    e.code = "INSUFFICIENT_DATA";
     e.details = { year: targetYear };
     throw e;
   }
@@ -47,46 +83,47 @@ export function computeYtdPytdFromObservations(observations, yearOpt = null) {
   const latestInTargetYear = targetYearObs[targetYearObs.length - 1];
   const latestMonth = latestInTargetYear.month;
 
-  const allowedMonths = new Set(Array.from({ length: latestMonth }, (_, i) => String(i + 1).padStart(2, "0")));
+  const ytdObservations = targetYearObs
+    .filter((obs) => obs.month <= latestMonth)
+    .map(toRawObservation);
 
-  const ytdObs = normalized.filter((o) => o.year === targetYear && allowedMonths.has(String(o.month).padStart(2, "0")));
-  const pytdObs = normalized.filter((o) => o.year === targetYear - 1 && allowedMonths.has(String(o.month).padStart(2, "0")));
+  const pytdObservations = normalized
+    .filter((obs) => obs.year === targetYear - 1 && obs.month <= latestMonth)
+    .map(toRawObservation);
 
-  const ytdWithMonthly = ytdObs.map((o) => ({
-    date: o.date,
-    value_saar: String(o.value_saar),
-    value_monthly_equiv: toMonthlyEquiv(o.value_saar),
-  }));
-  const pytdWithMonthly = pytdObs.map((o) => ({
-    date: o.date,
-    value_saar: String(o.value_saar),
-    value_monthly_equiv: toMonthlyEquiv(o.value_saar),
-  }));
-
-  const ytdTotal = ytdWithMonthly.reduce((a, o) => a + o.value_monthly_equiv, 0);
-  const pytdTotal = pytdWithMonthly.reduce((a, o) => a + o.value_monthly_equiv, 0);
-  const pct = pytdTotal > 0 ? ((ytdTotal - pytdTotal) / pytdTotal) * 100 : null;
+  const ytdTotalDollars = ytdObservations.reduce((sum, obs) => sum + obs.value_monthly_equiv, 0);
+  const pytdTotalDollars = pytdObservations.reduce((sum, obs) => sum + obs.value_monthly_equiv, 0);
 
   return {
     year: targetYear,
-    latest_observation: {
-      date: latestInTargetYear.date,
-      value_saar: String(latestInTargetYear.value_saar),
-      value_monthly_equiv: toMonthlyEquiv(latestInTargetYear.value_saar),
-    },
     latest_observation_date: latestInTargetYear.date,
-    months_included: ytdWithMonthly.map((o) => o.date),
-    ytd_monthly_equiv_musd: ytdTotal,
-    pytd_monthly_equiv_musd: pytdTotal,
-    pct_change_ytd_vs_pytd: pct,
+    latest_observation: toRawObservation(latestInTargetYear),
+    months_included: ytdObservations.map((obs) => obs.date),
+    ytd_monthly_equiv_musd: ytdTotalDollars / DOLLARS_TO_MUSD,
+    pytd_monthly_equiv_musd: pytdTotalDollars / DOLLARS_TO_MUSD,
+    pct_change_ytd_vs_pytd: pytdTotalDollars > 0 ? ((ytdTotalDollars - pytdTotalDollars) / pytdTotalDollars) * 100 : null,
     raw: {
-      ytd_observations: ytdWithMonthly,
-      pytd_observations: pytdWithMonthly,
+      ytd_observations: ytdObservations,
+      pytd_observations: pytdObservations,
     },
   };
 }
 
-export async function computeYtdPytdFromFred(env, segment, yearOpt = null) {
+export function computeYtdPytdFromObservations(observations, yearOpt = null) {
+  return buildYtdPytdFromObservations(observations, yearOpt);
+}
+
+export async function buildYtdPytd(env, seriesId, segmentName, yearOpt = null) {
+  const data = await fetchFredSeries(env, seriesId, 36);
+  const computed = buildYtdPytdFromObservations(data?.observations || [], yearOpt);
+  return {
+    segment: segmentName,
+    series_id: seriesId,
+    ...computed,
+  };
+}
+
+async function getFromCacheOrCompute(env, segment, yearOpt = null) {
   const seriesId = SEGMENTS[segment];
   if (!seriesId) {
     const e = new Error("segment must be one of: commercial, housing");
@@ -94,39 +131,34 @@ export async function computeYtdPytdFromFred(env, segment, yearOpt = null) {
     throw e;
   }
 
-  const data = await fetchFredSeries(env, seriesId, 36);
-  const computed = computeYtdPytdFromObservations(data?.observations || [], yearOpt);
+  const pre = await buildYtdPytd(env, seriesId, segment, yearOpt);
+  const cacheKey = `spending:ytd:${segment}:${pre.year}:${pre.latest_observation_date}`;
 
-  return {
-    segment,
-    series_id: seriesId,
-    ...computed,
-    notes: ["SAAR converted to monthly-equivalent by dividing by 12."],
-  };
-}
-
-async function getFromCacheOrCompute(env, segment, yearOpt = null) {
-  const pre = await computeYtdPytdFromFred(env, segment, yearOpt);
-  const key = `spending:ytd:${segment}:${pre.year}:${pre.latest_observation_date}`;
-
-  const cached = await kvGetJson(env, key);
+  const cached = await kvGetJson(env, cacheKey);
   if (cached) return cached;
 
-  await kvPutJson(env, key, pre, 60 * 30);
+  await kvPutJson(env, cacheKey, pre, 60 * 30);
   return pre;
 }
 
-export async function handleSpendingYtd(request, env) {
+function parseYearParam(value) {
+  if (value === null) return null;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) ? parsed : Number.NaN;
+}
+
+function mapSpendingError(env, e) {
+  if (e?.code === "BAD_REQUEST") return error(env, 400, "BAD_REQUEST", e.message, e.details || null);
+  if (e?.code === "MISSING_ENV") return error(env, 500, "MISSING_ENV", "Missing required env vars", e.details || null);
+  if (e?.code === "UPSTREAM_FRED") return error(env, 502, "UPSTREAM_FRED", "FRED request failed", e.details || null);
+  if (e?.code === "INSUFFICIENT_DATA") return error(env, 422, "INSUFFICIENT_DATA", e.message, e.details || null);
+  return error(env, 500, e?.code || "ERROR", e?.message || "Unhandled error", e?.details || null);
+}
+
+export async function handleYtdSegment(request, env, segment) {
   const url = new URL(request.url);
-  const segment = (url.searchParams.get("segment") || "").trim().toLowerCase();
-  const yearParam = url.searchParams.get("year");
-
-  if (!segment || !SEGMENTS[segment]) {
-    return error(env, 400, "BAD_REQUEST", "Query param 'segment' is required and must be 'commercial' or 'housing'.");
-  }
-
-  const yearOpt = yearParam === null ? null : Number(yearParam);
-  if (yearParam !== null && !Number.isInteger(yearOpt)) {
+  const yearOpt = parseYearParam(url.searchParams.get("year"));
+  if (Number.isNaN(yearOpt)) {
     return error(env, 400, "BAD_REQUEST", "Query param 'year' must be an integer when provided.");
   }
 
@@ -134,21 +166,41 @@ export async function handleSpendingYtd(request, env) {
     const result = await getFromCacheOrCompute(env, segment, yearOpt);
     return ok(env, result);
   } catch (e) {
-    if (e?.code === "BAD_REQUEST") return error(env, 400, "BAD_REQUEST", e.message, e.details || null);
-    if (e?.code === "MISSING_ENV") return error(env, 500, "MISSING_ENV", "Missing required env vars", e.details || null);
-    if (e?.code === "UPSTREAM_FRED") return error(env, 502, "UPSTREAM_FRED", "FRED request failed", e.details || null);
-    return error(env, 500, e?.code || "ERROR", e?.message || "Unhandled error", e?.details || null);
+    return mapSpendingError(env, e);
   }
 }
 
-export async function handleSpendingYtdSummary(_request, env) {
-  try {
-    const commercial = await getFromCacheOrCompute(env, "commercial", null);
-    const housing = await getFromCacheOrCompute(env, "housing", null);
-    return ok(env, { summary: { commercial, housing } });
-  } catch (e) {
-    if (e?.code === "MISSING_ENV") return error(env, 500, "MISSING_ENV", "Missing required env vars", e.details || null);
-    if (e?.code === "UPSTREAM_FRED") return error(env, 502, "UPSTREAM_FRED", "FRED request failed", e.details || null);
-    return error(env, 500, e?.code || "ERROR", e?.message || "Unhandled error", e?.details || null);
+export async function handleYtdSummary(request, env) {
+  const url = new URL(request.url);
+  const yearOpt = parseYearParam(url.searchParams.get("year"));
+  if (Number.isNaN(yearOpt)) {
+    return error(env, 400, "BAD_REQUEST", "Query param 'year' must be an integer when provided.");
   }
+
+  try {
+    const commercial = await getFromCacheOrCompute(env, "commercial", yearOpt);
+    const housing = await getFromCacheOrCompute(env, "housing", yearOpt);
+    return ok(env, {
+      year: commercial.year,
+      summary: {
+        commercial,
+        housing,
+      },
+    });
+  } catch (e) {
+    return mapSpendingError(env, e);
+  }
+}
+
+export async function handleSpendingYtd(request, env) {
+  const url = new URL(request.url);
+  const segment = (url.searchParams.get("segment") || "").trim().toLowerCase();
+  if (!segment || !SEGMENTS[segment]) {
+    return error(env, 400, "BAD_REQUEST", "Query param 'segment' is required and must be 'commercial' or 'housing'.");
+  }
+  return handleYtdSegment(request, env, segment);
+}
+
+export async function handleSpendingYtdSummary(request, env) {
+  return handleYtdSummary(request, env);
 }
