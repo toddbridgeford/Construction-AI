@@ -564,7 +564,12 @@ function buildCapitalFlows(terminal) {
 }
 
 function buildMigrationIndex(heatmap, forecast) {
-  const inbound_markets = (forecast?.strongest_next_12_months || heatmap?.hottest_markets || [])
+  const inboundSource = forecast?.strongest_next_12_months || heatmap?.hottest_markets || [];
+  const outboundSource = forecast?.weakest_next_12_months || heatmap?.weakest_markets || [];
+  const inboundUniverse = filterMetroOnlyWhenAvailable(inboundSource);
+  const outboundUniverse = filterMetroOnlyWhenAvailable(outboundSource);
+
+  const inbound_markets = inboundUniverse
     .slice(0, 5)
     .map((m) => ({
       market: m.market,
@@ -576,7 +581,7 @@ function buildMigrationIndex(heatmap, forecast) {
             ? m.note
             : "Deterministic migration ranking from relative construction momentum.",
     }));
-  const outbound_markets = (forecast?.weakest_next_12_months || heatmap?.weakest_markets || [])
+  const outbound_markets = outboundUniverse
     .slice(0, 5)
     .map((m) => ({
       market: m.market,
@@ -874,9 +879,13 @@ function macroOverlayAdjustment(baseScore, metrics, nowcast, recessionProbabilit
 function toForecastExplanation(market, direction, drivers) {
   const because = drivers.slice(0, 3).join(", ").toLowerCase();
   if (direction === "strengthening") {
-    return `${market} remains likely to outperform because ${because}, though macro constraints temper the upside.`;
+    return `${market} ranks on the stronger side because ${because}, with conditions that still support relative outperformance over the next 12 months.`;
   }
-  return `${market} is more likely to soften because ${because}, with macro pressure increasing downside risk over the next 12 months.`;
+  return `${market} ranks on the weaker side because ${because}, with macro pressure increasing downside risk over the next 12 months.`;
+}
+
+function toRankPositionExplanation(market, rankDirection, drivers) {
+  return toForecastExplanation(market, rankDirection, drivers);
 }
 
 function buildForecastSummary(strongest, weakest) {
@@ -940,14 +949,23 @@ function buildForecastFromMarkets(scoredMarkets, terminal) {
   }
 
   const forecasted = scoredMarkets.map((market) => scoreForecastMarket(market, context));
-  const strongest = [...forecasted]
+  const rankingUniverse = filterMetroOnlyWhenAvailable(forecasted);
+  const strongest = [...rankingUniverse]
     .sort((a, b) => (b.forecast_score - a.forecast_score) || a.market.localeCompare(b.market))
     .slice(0, Math.min(10, forecasted.length))
-    .map((item) => ({ ...item, direction: "strengthening" }));
-  const weakest = [...forecasted]
+    .map((item) => ({
+      ...item,
+      direction: "strengthening",
+      explanation: toRankPositionExplanation(item.market, "strengthening", item.drivers),
+    }));
+  const weakest = [...rankingUniverse]
     .sort((a, b) => (a.forecast_score - b.forecast_score) || a.market.localeCompare(b.market))
     .slice(0, Math.min(10, forecasted.length))
-    .map((item) => ({ ...item, direction: "softening" }));
+    .map((item) => ({
+      ...item,
+      direction: "softening",
+      explanation: toRankPositionExplanation(item.market, "softening", item.drivers),
+    }));
 
   return {
     strongest_next_12_months: strongest,
@@ -1019,6 +1037,12 @@ function isNationalMarket(scoredMarket) {
 
   const normalized = String(scoredMarket?.market || "").trim().toLowerCase();
   return normalized === "united states" || normalized === "national";
+}
+
+function filterMetroOnlyWhenAvailable(markets) {
+  if (!Array.isArray(markets) || markets.length === 0) return [];
+  const hasMetro = markets.some((market) => !isNationalMarket(market));
+  return hasMetro ? markets.filter((market) => !isNationalMarket(market)) : markets;
 }
 
 function buildRadarFromMarkets(scoredMarkets) {
