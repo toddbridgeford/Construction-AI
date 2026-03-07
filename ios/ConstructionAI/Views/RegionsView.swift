@@ -6,27 +6,29 @@ struct RegionsView: View {
     var body: some View {
         List {
             if store.filteredRegions.isEmpty {
-                Text("No regional data available")
-                    .foregroundStyle(.secondary)
+                ContentUnavailableView("No regional data", systemImage: "map", description: Text("No regions matched your current search."))
+                    .listRowBackground(Color.clear)
             } else {
                 ForEach(store.filteredRegions) { region in
-                    HStack {
-                        VStack(alignment: .leading) {
+                    HStack(alignment: .top, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 4) {
                             Text(region.name)
                                 .font(.headline)
                             Text(region.summary ?? "—")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
+                                .lineLimit(2)
                         }
                         Spacer()
                         Text(region.value.map { String(format: "%.0f", $0) } ?? "—")
                             .font(.system(.title3, design: .monospaced).weight(.semibold))
                             .foregroundStyle(.orange)
                     }
-                    .padding(.vertical, 4)
+                    .padding(.vertical, 6)
                 }
             }
         }
+        .listStyle(.plain)
         .navigationTitle("Regions")
     }
 }

@@ -11,11 +11,23 @@ struct TerminalShellView: View {
     var body: some View {
         NavigationSplitView {
             List(selection: $selection) {
-                NavigationLink("Overview", value: "overview")
-                NavigationLink("Signals", value: "signals")
-                NavigationLink("Regions", value: "regions")
-                NavigationLink("Briefings", value: "briefings")
-                NavigationLink("Settings", value: "settings")
+                Section("Workspace") {
+                    NavigationLink(value: "overview") {
+                        Label("Overview", systemImage: "square.grid.3x3")
+                    }
+                    NavigationLink(value: "signals") {
+                        Label("Signals", systemImage: "waveform.path.ecg")
+                    }
+                    NavigationLink(value: "regions") {
+                        Label("Regions", systemImage: "map")
+                    }
+                    NavigationLink(value: "briefings") {
+                        Label("Briefings", systemImage: "doc.text")
+                    }
+                    NavigationLink(value: "settings") {
+                        Label("Settings", systemImage: "gearshape")
+                    }
+                }
             }
             .navigationTitle("Workspace")
         } content: {
@@ -25,13 +37,11 @@ struct TerminalShellView: View {
                     TerminalTopBarView(searchText: $store.searchText, statusText: store.statusText, lastRefresh: store.lastRefresh)
 
                     if let errorMessage = store.errorMessage {
-                        Text(errorMessage)
-                            .font(.caption)
-                            .padding(8)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.red.opacity(0.15))
-                            .padding(.horizontal, 8)
-                            .padding(.bottom, 4)
+                        ErrorBannerView(message: errorMessage) {
+                            Task { await store.refreshFromGitHub() }
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 4)
                     }
 
                     if store.hasNoData {
@@ -125,6 +135,33 @@ struct TerminalShellView: View {
             }
         }
         isPalettePresented = false
+    }
+}
+
+private struct ErrorBannerView: View {
+    let message: String
+    let retry: () -> Void
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "wifi.exclamationmark")
+                .foregroundStyle(.red)
+                .padding(.top, 1)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Connection warning")
+                    .font(.subheadline.weight(.semibold))
+                Text(message)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(3)
+            }
+            Spacer()
+            Button("Retry", action: retry)
+                .buttonStyle(.bordered)
+                .font(.caption)
+        }
+        .padding(10)
+        .background(Color.red.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
     }
 }
 
