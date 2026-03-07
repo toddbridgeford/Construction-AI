@@ -3042,7 +3042,8 @@ export async function handleConstructionSettingsProfilesCreate(request, env) {
 
     const envelope = await readSettingsProfilesModel(env);
     const activeProfile = envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id) || envelope.profiles[0];
-    const baseSettings = body.settings && typeof body.settings === "object" ? body.settings : activeProfile.settings;
+    const hasSettingsOverride = Object.prototype.hasOwnProperty.call(body, "settings");
+    const baseSettings = hasSettingsOverride ? body.settings : activeProfile.settings;
     const validation = validatePartialSettingsPayload(baseSettings);
     if (!validation.ok) {
       return error(env, 400, "SETTINGS_PROFILE_CREATE_VALIDATION_FAILED", "Invalid settings payload", { errors: validation.errors });
