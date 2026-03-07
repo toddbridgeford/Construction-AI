@@ -1,21 +1,17 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-07T02:44:19.365Z",
+  "generated_at": "2026-03-07T06:59:12.690Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
     "summary": "Pressure stable. Monitor capital direction, spreads, permits, and headline impact for inflection."
   },
   "cpi": {
-    "headline": 47,
+    "headline": 48,
     "zone": "Slowdown",
-    "delta_3m": 0,
+    "delta_3m": 1,
     "momentum": "Stable",
     "history": [
-      {
-        "date": "2026-03-04",
-        "value": 46
-      },
       {
         "date": "2026-03-04",
         "value": 46
@@ -59,21 +55,25 @@
       {
         "date": "2026-03-07",
         "value": 47
+      },
+      {
+        "date": "2026-03-07",
+        "value": 48
       }
     ],
-    "cpi_r": 47,
+    "cpi_r": 48,
     "cpi_i": 48,
-    "cpi_sf": 47,
-    "cpi_mf": 47,
+    "cpi_sf": 49,
+    "cpi_mf": 48,
     "cpi_inst": 48,
     "cpi_infra": 48,
     "divergences": {
-      "r_minus_i": -1,
-      "sf_minus_mf": 0,
+      "r_minus_i": 0,
+      "sf_minus_mf": 1,
       "inst_minus_infra": 0
     },
     "components": {
-      "capital": 45,
+      "capital": 50,
       "pipeline": 47,
       "trade": 50,
       "materials": 50,
@@ -81,12 +81,12 @@
       "macro_sentiment": 43,
       "overlays": {
         "stock_overlay": 5,
-        "news_pressure_overlay": 0,
+        "news_pressure_overlay": 5,
         "energy_overlay": 0
       }
     }
   },
-  "ceps_score": 47,
+  "ceps_score": 48,
   "risk_mode": false,
   "risk_thermometer_mode": false,
   "volatility_regime": "NORMAL",
@@ -115,6 +115,12 @@
     "alerts": [
       {
         "severity": "NORMAL",
+        "symbol": "newspaper.fill",
+        "title": "Headline Drift",
+        "message": "Signal Impact Engine overlay mild (+5). Monitor confirmation in rates/spreads/permits."
+      },
+      {
+        "severity": "NORMAL",
         "symbol": "sparkles",
         "title": "Top Headlines Active",
         "message": "NewsAPI Top Headlines is active for executive signal strip."
@@ -122,8 +128,8 @@
     ],
     "trends": {
       "cpi": {
-        "arrow": "→",
-        "symbol": "arrow.right"
+        "arrow": "↑",
+        "symbol": "arrow.up.right"
       },
       "mortgage_30y": {
         "arrow": "↑",
@@ -151,16 +157,16 @@
         "id": "headline_cpi",
         "title": "Construction Pressure",
         "subtitle": "Headline CPI • Slowdown",
-        "value": 47,
-        "trend": "→",
+        "value": 48,
+        "trend": "↑",
         "symbol": "gauge.with.dots",
         "severity": "NORMAL"
       },
       {
         "id": "capital",
         "title": "Capital",
-        "subtitle": "Rates • Credit • Headlines (+0)",
-        "value": 45,
+        "subtitle": "Rates • Credit • Headlines (+5)",
+        "value": 50,
         "trend": "↑",
         "symbol": "banknote",
         "severity": "NORMAL"
@@ -185,9 +191,9 @@
       }
     ],
     "heat_strip": {
-      "cpi": 47,
+      "cpi": 48,
       "zone": "Slowdown",
-      "delta_3m": 0,
+      "delta_3m": 1,
       "momentum": "Stable",
       "risk_thermometer_mode": false,
       "freeze_risk": false
@@ -199,6 +205,15 @@
       "newsapi:everything": 78
     },
     "news_unified": [
+      {
+        "title": "US Considers Requiring Permits for Nvidia, AMD Global AI Chip Sales - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-05/us-drafts-rules-for-sweeping-power-over-nvidia-s-global-sales",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T03:50:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Nvidia Corp. has long been the world’s AI kingmaker. Now, the Trump administration is considering taking a formal role in the industry that would include similarly sweeping powers."
+      },
       {
         "title": "Opinion | In defense of sugar - The Washington Post",
         "url": "https://www.washingtonpost.com/opinions/2026/03/05/kennedy-dunkin-starbucks-maha-food/",
@@ -245,6 +260,15 @@
         "description": "U.S. crude oil hit as much as $80 per barrel Thursday, as the escalating Iran war enters its seventh day and continues disrupting global fuel supplies."
       },
       {
+        "title": "Goldman Junior Bankers’ Photo Shoot in Hermes, Tom Ford Sparks Blame Game - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-06/goldman-junior-banker-fashion-shoot-sets-off-blame-game-at-firm",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T00:34:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A magazine’s glossy photo shoot with young Wall Streeters, including a pair from Goldman Sachs Group Inc. who opined on their spending and dating, is setting off finger-pointing inside the famously restrained investment bank."
+      },
+      {
         "title": "Block employee says the company dangled a 75% pay raise to get her to stay after layoffs — but she decided to quit - Business Insider",
         "url": "https://www.businessinsider.com/block-employee-says-quit-retention-bonus-package-offer-2026-3",
         "source": "Business Insider",
@@ -254,13 +278,13 @@
         "description": "\"I saw my company discard half of my peers and double my pay,\" the former Block employee wrote. \"That's not an honor. It feels shameful.\""
       },
       {
-        "title": "US considers tying Nvidia and AMD AI chip exports to foreign investment pledges - Financial Times",
-        "url": "https://www.ft.com/content/30d0b1df-ad8c-42eb-852b-dad53acaecfc",
-        "source": "Financial Times",
-        "published_at": "2026-03-05T22:48:42Z",
+        "title": "Six Flags selling Great Escape and six other parks; Official says no change to guest experience - WNYT.com",
+        "url": "https://wnyt.com/top-stories/six-flags-selling-great-escape-and-six-other-parks/",
+        "source": "WNYT",
+        "published_at": "2026-03-05T21:41:26Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Draft rule would require countries to invest in America in exchange for advanced semiconductors"
+        "description": "Six Flags is selling the Great Escape and six other theme parks to EPR Properties, another theme park operator."
       },
       {
         "title": "Historic winter storms weigh on Gap, Old Navy performance after 800 temporary store closures - CNBC",
@@ -281,15 +305,6 @@
         "description": "The prediction market reportedly tried justifying not paying its winner by saying the site doesn’t allow transactions \"directly tied to death.\""
       },
       {
-        "title": "OpenAI's 'stunning admission': Maybe people don't want to book stuff inside ChatGPT - Business Insider",
-        "url": "https://www.businessinsider.com/openai-shifts-chatgpt-strategy-booking-expedia-surge-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-05T20:29:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "OpenAI changes course on ChatGPT bookings, raising Booking.com and Expedia shares. Analysts call it a major strategic shift."
-      },
-      {
         "title": "California AG Cites Antitrust Concerns Over Paramount-WBD Merger: EXCLU - Deadline",
         "url": "http://deadline.com/2026/03/california-attorney-general-antitrust-paramount-warner-deal-1236745088/",
         "source": "Deadline",
@@ -308,6 +323,33 @@
         "description": "Maybe it really is the dawning of the Chinese Century."
       },
       {
+        "title": "Investors betting on international stocks trouncing the U.S. are getting a rude awakening from the Iran conflict - MarketWatch",
+        "url": "https://www.marketwatch.com/story/investors-betting-on-international-stocks-trouncing-the-u-s-are-getting-a-rude-awakening-from-the-iran-conflict-beff2b1e",
+        "source": "MarketWatch",
+        "published_at": "2026-03-05T19:53:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The outperformance of international stocks is faltering as oil prices climb to $80 barrel"
+      },
+      {
+        "title": "37 million pounds of frozen foods recalled by Portland company, may contain glass - KATU",
+        "url": "https://katu.com/news/local/37-million-pounds-of-frozen-foods-recalled-by-portland-company-may-contain-glass-contamination-ajinomoto-kroger-ling-tai-pei-trader-joes-chicken-carrot-carrots-food-ramen-fried-rice-dumplings",
+        "source": "KATU",
+        "published_at": "2026-03-05T19:42:34Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A Portland-based business is expanding its recall over possible broken glass contamination to nearly 37 million pounds of its frozen chicken foods, like fried r"
+      },
+      {
+        "title": "U.S. manufacturers are still shedding thousands of jobs, as workers ask White House for help - CBS News",
+        "url": "https://www.cbsnews.com/news/manufacturing-jobs-whirlpool-layoffs-iowa-trump-tariffs/",
+        "source": "CBS News",
+        "published_at": "2026-03-05T19:42:07Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Job cuts at a Whirlpool factory in Iowa underscore the challenges in reviving American manufacturing. \"Every day, workers' jobs are still in jeopardy,\" a union official said."
+      },
+      {
         "title": "MrBeast’s company fired a video editor after Kalshi accused the employee of insider trading - AP News",
         "url": "https://apnews.com/article/mrbeast-jimmy-donaldson-kalshi-7a8bb7e2aecee7428bcc2dd1eb08ac67",
         "source": "Associated Press",
@@ -317,22 +359,13 @@
         "description": "A MrBeast video editor has been fired after accusations of insider trading by Kalshi. The prediction market operator says the immensely popular YouTube channel's employee traded about $4,000 on YouTube streaming markets with “near-perfect” success. The user h…"
       },
       {
-        "title": "In leaked audio, Salesforce president says company is 'appropriately adjusting' after Marc Benioff's ICE jokes - Business Insider",
-        "url": "https://www.businessinsider.com/salesforce-coo-addresses-marc-benioff-ice-jokes-meeting-with-employees-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-05T19:04:00Z",
+        "title": "President Trump Secures Historic Commitment to Keep Electricity Costs Down Amid Data Center Boom - The White House (.gov)",
+        "url": "http://www.whitehouse.gov/articles/2026/03/president-trump-secures-historic-commitment-to-keep-electricity-costs-down-amid-data-center-boom/",
+        "source": "Whitehouse.gov",
+        "published_at": "2026-03-05T18:20:46Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "President Robin Washington discussed how the company is responding, after some  employees and executives complained about Benioff's ICE jokes."
-      },
-      {
-        "title": "Santa Cruz restaurant changes logo after flurry of negative reviews - SFGATE",
-        "url": "https://www.sfgate.com/food/article/santa-cruz-restaurant-ai-21955920.php",
-        "source": "SFGate",
-        "published_at": "2026-03-05T19:03:35Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The Salty Otter, a restaurant and sports bar that opened in downtown Santa Cruz last spring, has received criticism for using AI to generate its logo."
+        "description": "Under President Donald J. Trump’s leadership, America’s leading AI and technology companies gathered at the White House to sign the Ratepayer Protection"
       },
       {
         "title": "OpenAI launches GPT-5.4 with Pro and Thinking versions - TechCrunch",
@@ -344,15 +377,6 @@
         "description": "GPT-5.4 is billed as \"our most capable and efficient frontier model for professional work.\""
       },
       {
-        "title": "Six Flags selling Great Escape, other amusement parks - Times Union",
-        "url": "https://www.timesunion.com/news/article/six-flags-selling-great-escape-owner-hunter-21956833.php",
-        "source": "Albany Times Union",
-        "published_at": "2026-03-05T17:48:45Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The Queensbury location that got its start as Storytown is among several amusement parks being sold to EPR Properties."
-      },
-      {
         "title": "Breaking News: National radio giant files Chapter 11 bankruptcy - thestreet.com",
         "url": "https://www.thestreet.com/retail/breaking-news-national-radio-giant-files-chapter-11-bankruptcy",
         "source": "TheStreet",
@@ -362,13 +386,13 @@
         "description": "The radio brand has a bankruptcy plan that would allow it to keep operating."
       },
       {
-        "title": "Food Recall Expands to Include Ramen, Dumplings, and Other Asian Foods From Trader Joe’s, Costco, and More - Real Simple",
-        "url": "https://www.realsimple.com/food-recall-expands-to-include-ramen-dumplings-11920145",
-        "source": "Real Simple",
-        "published_at": "2026-03-05T17:29:57Z",
+        "title": "Mortgage rates hit 6% as Iran war spooks bond market traders - CNN",
+        "url": "https://www.cnn.com/2026/03/05/economy/mortgage-rates",
+        "source": "CNN",
+        "published_at": "2026-03-05T17:10:25Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The Ajinomoto Foods recall has expanded to include fried rice, ramen, and sui mai dumplings, sold at Trader Joe's, Costco, Kroger, and more. Learn which products have been recalled, and what to do if you have the recalled foods."
+        "description": "The average 30-year fixed mortgage was 6% for the week ending March 5, according to Freddie Mac – after war with Iran has started to show signs of rattling financial markets."
       },
       {
         "title": "Home sellers are relisting properties at fastest pace in a decade, but spring supply is still low - CNBC",
@@ -380,33 +404,6 @@
         "description": "Frustrated sellers who pulled homes off the market last fall are now re-listing them at a quick pace, thanks to lower mortgage rates, but supply is still low."
       },
       {
-        "title": "President Trump, Pam Bondi sued over sale of TikTok assets - NPR",
-        "url": "https://www.npr.org/2026/03/05/g-s1-112605/tiktok-deal-lawsuit-trump-bondi",
-        "source": "NPR",
-        "published_at": "2026-03-05T16:11:09Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The case accuses the Trump administration of ignoring legislation designed to stop the spread of Chinese propaganda — and instead helping to broker a partial sale to businessmen close to Trump."
-      },
-      {
-        "title": "Your morning can’t be as bad as the finance guys photographed for Interview. - readfeedme.com",
-        "url": "https://www.readfeedme.com/p/your-morning-cant-be-as-bad-as-the",
-        "source": "Readfeedme.com",
-        "published_at": "2026-03-05T16:09:54Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "I’ll gladly Venmo them for drinks this weekend."
-      },
-      {
-        "title": "FDA Push for Fake Brain Surgery Trial Spurs Ethical Concerns - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-04/fda-push-for-10-hour-fake-brain-surgery-trial-raises-ethical-concerns",
-        "source": "Bloomberg",
-        "published_at": "2026-03-05T14:45:09Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Katie Jackson desperately wants a new treatment for Huntington’s disease. Her husband died from the devastating brain disorder. And because the disease runs in families, her three children have a 50% chance of inheriting the condition. She’s pinned her hopes …"
-      },
-      {
         "title": "Berkshire Hathaway Resumes Share Buybacks - WSJ",
         "url": "https://www.wsj.com/business/berkshire-hathaway-resumes-share-buybacks-c4b1bbce",
         "source": "The Wall Street Journal",
@@ -414,15 +411,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Greg Abel begins his run by taking a step Warren Buffett hadn’t since early 2024: repurchasing Berkshire shares"
-      },
-      {
-        "title": "Google Gemini was a deadly 'AI wife' for this 36-year-old who resisted its call for a 'mass casualty' event before his death, lawsuit says - Fortune",
-        "url": "https://fortune.com/2026/03/05/google-gemini-wrongful-death-lawsuit-mass-casualty-event-suicide-ai-wife/",
-        "source": "Fortune",
-        "published_at": "2026-03-05T13:33:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "“Our models generally perform well in these types of challenging conversations ... but unfortunately AI models are not perfect,” Google said."
       },
       {
         "title": "LNG Shipping Rates Soar 650% to $300,000 Per Day - Crude Oil Prices Today | OilPrice.com",
@@ -450,6 +438,96 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Below is a curated list of fast payout casinos in the USA for 2026 that stand out for quick cashouts, strong bonuses, and a seamless gaming experience. Use the quick “best for” highlights to find the right platform and start playing in minutes."
+      },
+      {
+        "title": "Private credit's problems are going public. Here's why you should care. - Business Insider",
+        "url": "https://www.businessinsider.com/private-credit-wall-street-blackstone-apollo-blue-owl-investors-2026-3",
+        "source": "Business Insider",
+        "published_at": "2026-03-05T11:07:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
+      {
+        "title": "Bill Gates’ nuclear company is the first to get approval to build next-gen reactor - The Verge",
+        "url": "https://www.theverge.com/science/889768/bill-gates-terrapower-nuclear-wyoming-reactor",
+        "source": "The Verge",
+        "published_at": "2026-03-05T10:16:58Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "﻿Construction on the advanced Wyoming nuclear power plant is set to finish by 2030."
+      },
+      {
+        "title": "Buildner and Kingspan Launch MICROHOME 2026 With €100K in Awards and Announce 10th Edition Winners",
+        "url": "https://www.archdaily.com/1039183/buildner-and-kingspan-launch-microhome-2026-with-eu100k-in-awards-and-announce-10th-edition-winners",
+        "source": "ArchDaily",
+        "published_at": "2026-03-06T06:45:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "In collaboration with building materials manufacturer Kingspan, Buildner has launched MICROHOME 2026, the eleventh edition of its annual competition, offering a €100,000 prize fund. This global competition invites architects, designers, and creative thinkers …"
+      },
+      {
+        "title": "Paris’ Tour Montparnasse Observatory to Close in March 2026 as Redevelopment Plans Move Forward",
+        "url": "https://www.archdaily.com/1039384/paris-tour-montparnasse-observatory-to-close-in-march-2026-as-redevelopment-plans-move-forward",
+        "source": "ArchDaily",
+        "published_at": "2026-03-06T06:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The public observation deck at the top of the Tour Montparnasse, long considered one of the most debated additions to the Parisian skyline, is set to close on March 31, 2026, ahead of a major redevelopment of the tower and its surrounding complex. Completed i…"
+      },
+      {
+        "title": "ElvalHalcor: Energy costs and scrap prices key drivers of 2026 performance",
+        "url": "https://www.naftemporiki.gr/english/2081698/elvalhalcor-energy-costs-and-scrap-prices-key-drivers-of-2026-performance/",
+        "source": "Naftemporiki.gr",
+        "published_at": "2026-03-06T06:19:11Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "ElvalHalcor is focusing on the increased needs of data centers in Europe and the US for aluminum and copper, as well as on meeting the needs of energy network applications,…\nElvalHalcor: Energy costs and scrap prices key drivers of 2026 performance - Η ΝΑΥΤΕΜ…"
+      },
+      {
+        "title": "Big railway PSU merger on the way? IRCON, RVNL shares rally up to 12% on merger reports",
+        "url": "https://economictimes.indiatimes.com/markets/stocks/news/big-railway-psu-merger-on-the-way-ircon-rvnl-shares-rally-up-to-12-on-merger-reports/articleshow/129135350.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-06T05:43:47Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "IRCON and RVNL shares surged significantly on Friday following reports of a proposed merger initiated by the Ministry of Railways. This consolidation aims to create a larger, more efficient railway entity by combining specialized expertise and enhancing execu…"
+      },
+      {
+        "title": "What does a hummingbird’s nest look like in a tree?",
+        "url": "https://www.lifesciencesworld.com/what-does-a-hummingbirds-nest-look-like-in-a-tree/",
+        "source": "Lifesciencesworld.com",
+        "published_at": "2026-03-06T05:13:42Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "What Does a Hummingbird’s Nest Look Like in a Tree? A hummingbird’s nest in a tree is a marvel of natural engineering: a tiny, meticulously crafted cup of soft plant down, spider silk, and lichen, perfectly camouflaged and often no larger than a thimble. It o…"
+      },
+      {
+        "title": "`It’s a fantastic moment for Ireland ... €275bn of investment in the next 10 years’",
+        "url": "https://www.irishtimes.com/business/2026/03/06/its-a-fantastic-moment-for-ireland275-billion-of-investment-in-the-next-10-years-in-every-bit-of-infrastructure-you-can-think-of/",
+        "source": "The Irish Times",
+        "published_at": "2026-03-06T05:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "As the State prepares to spend big on infrastructure, Arup boss Jerome Frost is keen to expand its activities here"
+      },
+      {
+        "title": "Global Market | Economic reality check: China sets lowest growth target in more than three decades",
+        "url": "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-economic-reality-check-china-sets-lowest-growth-target-in-more-than-three-decades/articleshow/129131723.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-06T04:19:04Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "China has set its lowest economic growth target in more than three decades, signalling rising economic pressures as the country grapples with a property slowdown, weak consumption and demographic decline. Beijing is focusing on technological self-reliance, hi…"
+      },
+      {
+        "title": "Card-Based Electronic Access Control Systems Market Size to Hit USD 127.96 Billion by 2035 | SNS Insider",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3250798/0/en/Card-Based-Electronic-Access-Control-Systems-Market-Size-to-Hit-USD-127-96-Billion-by-2035-SNS-Insider.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T04:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Card-Based Electronic Access Control Systems Market is expanding as organizations adopt RFID, proximity, and smart card solutions for secure facility access, with the U.S. market growing from USD 16.52 billion in 2025 to USD 38.34 billion by 2035. The Car…"
       },
       {
         "title": "Economic Digest: Nepal’s Business News in a Snap",
@@ -605,15 +683,6 @@
         "description": "From zoning reform and housing construction to regulatory redesign and civic belonging, the Civic Track at the Yale Innovation Summit explores how bold ideas move beyond theory and into the systems that shape daily life.The 2026 Civic Track asks a direct ques…"
       },
       {
-        "title": "Southern Realty Trust Expands Revolving Credit Facility to $125 Million with Addition of Customers Bank",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250707/0/en/Southern-Realty-Trust-Expands-Revolving-Credit-Facility-to-125-Million-with-Addition-of-Customers-Bank.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Southern Realty Trust Inc. (“SRT” or the “Company”), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving credit facility…"
-      },
-      {
         "title": "Methode Electronics, Inc. Reports Fiscal 2026 Third Quarter Financial Results",
         "url": "https://www.globenewswire.com/news-release/2026/03/05/3250709/0/en/Methode-Electronics-Inc-Reports-Fiscal-2026-Third-Quarter-Financial-Results.html",
         "source": "GlobeNewswire",
@@ -621,6 +690,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Progress on transformation amid mixed market conditions Progress on transformation amid mixed market conditions"
+      },
+      {
+        "title": "Southern Realty Trust Expands Revolving Credit Facility to $125 Million with Addition of Customers Bank",
+        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250707/0/en/Southern-Realty-Trust-Expands-Revolving-Credit-Facility-to-125-Million-with-Addition-of-Customers-Bank.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-05T21:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Southern Realty Trust Inc. (“SRT” or the “Company”), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving credit facility…"
       },
       {
         "title": "Sunrise Realty Trust Expands Revolving Credit Facility to $165 Million with Addition of Customers Bank",
@@ -983,15 +1061,6 @@
         "description": "By Bryan Stringer ~ In the 1940s, as federal public health ambitions expanded in the wake of the New Deal, the United States Public Health Service (USPHS) turned its attention to a seemingly ordina…"
       },
       {
-        "title": "The Perfect Game for Nintendo Has Finally Released on Switch 2",
-        "url": "http://comicbook.com/gaming/feature/the-perfect-game-for-nintendo-has-finally-released-on-switch-2/",
-        "source": "ComicBook.com",
-        "published_at": "2026-03-05T16:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Courtesy of Dogubomb\n\nThe Nintendo Switch 2 has many different games coming to its platform in 2026, with a few indie titles and AAA mega-hits among the experiences being offered through its store. However, the handheld nature of the Switch 2 makes it perfect…"
-      },
-      {
         "title": "Stats Corner: Correlation of Transfer Portal and Success",
         "url": "https://www.mwcconnection.com/stats-corner/82510/stats-corner-correlation-of-transfer-portal-and-success",
         "source": "Mwcconnection.com",
@@ -999,6 +1068,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "One of the most interesting things to talk about in math classes is the difference between correlation and causation. For example, there is a correlation between the number of movies Elijah Wood appears in and the number of orderlies in Oklahoma since 2012 an…"
+      },
+      {
+        "title": "The Perfect Game for Nintendo Has Finally Released on Switch 2",
+        "url": "http://comicbook.com/gaming/feature/the-perfect-game-for-nintendo-has-finally-released-on-switch-2/",
+        "source": "ComicBook.com",
+        "published_at": "2026-03-05T16:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Courtesy of Dogubomb\n\nThe Nintendo Switch 2 has many different games coming to its platform in 2026, with a few indie titles and AAA mega-hits among the experiences being offered through its store. However, the handheld nature of the Switch 2 makes it perfect…"
       },
       {
         "title": "San Diego’s first free street soccer park opens to the public",
@@ -1080,81 +1158,22 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Age verification is the new pandemic."
-      },
-      {
-        "title": "The Terrifying New Era of American Imperialism",
-        "url": "http://www.rollingstone.com/politics/political-commentary/trump-america-military-industrial-iran-war-1235524970/",
-        "source": "Rolling Stone",
-        "published_at": "2026-03-05T15:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Donald Trump's war against Iran is part of a terrifying new era of American imperialism, one in which the military budget never stops growing."
-      },
-      {
-        "title": "$39k tiny house fits full-time living into 16 ft length",
-        "url": "https://newatlas.com/tiny-houses/genesis-16-dragon-tiny-homes/",
-        "source": "New Atlas",
-        "published_at": "2026-03-05T14:57:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "How much can you realistically fit into a tiny house measuring just 16 ft (4.9 m) in length? You might assume the answer is \"not much,\" but this model squeezes in a surprisingly effective space-saving layout – and does so at a low cost.Continue ReadingCategor…"
-      },
-      {
-        "title": "Methodology",
-        "url": "http://www.pewresearch.org/religion/2026/03/05/methodology-international-morality/",
-        "source": "Pew Research Center",
-        "published_at": "2026-03-05T14:52:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "About Pew Research Center’s Spring 2025 Global Attitudes Survey Results for the survey are based on a mix of telephone, face-to-face and online interviews conducted under the direction of Gallup, Langer Research Associates and Social Research Centre. The resu…"
-      },
-      {
-        "title": "Mount of Olives reclaimed in historic events",
-        "url": "https://www.israelnationalnews.com/news/423413",
-        "source": "Israelnationalnews.com",
-        "published_at": "2026-03-05T14:49:59Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Israei and world Jewry celebrate reclamation of Mt. of Olives with major ceremonies in Jerusalem in February."
-      },
-      {
-        "title": "Nashville opposes Elon Musk’s Loop tunnel — a decade later, still no proof it beats a subway",
-        "url": "http://electrek.co/2026/03/05/nashville-opposes-boring-company-loop-elon-musk-no-proof-better-than-subway/",
-        "source": "Electrek",
-        "published_at": "2026-03-05T14:47:27Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Nashville’s Metro Council voted 20-15 to formally oppose the Boring Company’s Music City Loop, a proposed 13-mile underground tunnel system that would shuttle passengers in Tesla vehicles between downtown Nashville and the airport.\n\n\n\nThe non-binding resoluti…"
-      },
-      {
-        "title": "Arvig Interconnects with Eagan Data Center, Expands Twin Cities Network Presence",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250337/0/en/Arvig-Interconnects-with-Eagan-Data-Center-Expands-Twin-Cities-Network-Presence.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T14:45:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Arvig is expanding its Twin Cities network footprint after finalizing plans to interconnect with a new data center under construction in Eagan, Minn..."
-      },
-      {
-        "title": "Is D.R. Horton Stock Underperforming the Nasdaq?",
-        "url": "https://www.barchart.com/story/news/584888/is-d-r-horton-stock-underperforming-the-nasdaq",
-        "source": "Barchart.com",
-        "published_at": "2026-03-05T14:31:48Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Due to D.R. Horton's weak performance relative to the broader Nasdaq Composite over the past year, Wall Street analysts remain cautious about the stock’s..."
-      },
-      {
-        "title": "Panel led by Trump allies to consider White House ballroom approval",
-        "url": "https://www.nbcnews.com/politics/white-house/trump-allies-planning-commission-white-house-ballrooom-approval-rcna261884",
-        "source": "NBC News",
-        "published_at": "2026-03-05T14:23:11Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The National Capital Planning Commission on Thursday will review and could vote on President Donald Trump's new White House ballroom plans, potentially paving the way for the massive architectural project to move forward."
       }
     ],
     "news_with_impact": [
+      {
+        "title": "US Considers Requiring Permits for Nvidia, AMD Global AI Chip Sales - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-05/us-drafts-rules-for-sweeping-power-over-nvidia-s-global-sales",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T03:50:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Nvidia Corp. has long been the world’s AI kingmaker. Now, the Trump administration is considering taking a formal role in the industry that would include similarly sweeping powers.",
+        "impact_score": 60,
+        "themes": [
+          "pipeline"
+        ]
+      },
       {
         "title": "Opinion | In defense of sugar - The Washington Post",
         "url": "https://www.washingtonpost.com/opinions/2026/03/05/kennedy-dunkin-starbucks-maha-food/",
@@ -1221,6 +1240,19 @@
         ]
       },
       {
+        "title": "Goldman Junior Bankers’ Photo Shoot in Hermes, Tom Ford Sparks Blame Game - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-06/goldman-junior-banker-fashion-shoot-sets-off-blame-game-at-firm",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T00:34:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A magazine’s glossy photo shoot with young Wall Streeters, including a pair from Goldman Sachs Group Inc. who opined on their spending and dating, is setting off finger-pointing inside the famously restrained investment bank.",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
         "title": "Block employee says the company dangled a 75% pay raise to get her to stay after layoffs — but she decided to quit - Business Insider",
         "url": "https://www.businessinsider.com/block-employee-says-quit-retention-bonus-package-offer-2026-3",
         "source": "Business Insider",
@@ -1234,13 +1266,13 @@
         ]
       },
       {
-        "title": "US considers tying Nvidia and AMD AI chip exports to foreign investment pledges - Financial Times",
-        "url": "https://www.ft.com/content/30d0b1df-ad8c-42eb-852b-dad53acaecfc",
-        "source": "Financial Times",
-        "published_at": "2026-03-05T22:48:42Z",
+        "title": "Six Flags selling Great Escape and six other parks; Official says no change to guest experience - WNYT.com",
+        "url": "https://wnyt.com/top-stories/six-flags-selling-great-escape-and-six-other-parks/",
+        "source": "WNYT",
+        "published_at": "2026-03-05T21:41:26Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Draft rule would require countries to invest in America in exchange for advanced semiconductors",
+        "description": "Six Flags is selling the Great Escape and six other theme parks to EPR Properties, another theme park operator.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1273,19 +1305,6 @@
         ]
       },
       {
-        "title": "OpenAI's 'stunning admission': Maybe people don't want to book stuff inside ChatGPT - Business Insider",
-        "url": "https://www.businessinsider.com/openai-shifts-chatgpt-strategy-booking-expedia-surge-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-05T20:29:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "OpenAI changes course on ChatGPT bookings, raising Booking.com and Expedia shares. Analysts call it a major strategic shift.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "California AG Cites Antitrust Concerns Over Paramount-WBD Merger: EXCLU - Deadline",
         "url": "http://deadline.com/2026/03/california-attorney-general-antitrust-paramount-warner-deal-1236745088/",
         "source": "Deadline",
@@ -1312,6 +1331,45 @@
         ]
       },
       {
+        "title": "Investors betting on international stocks trouncing the U.S. are getting a rude awakening from the Iran conflict - MarketWatch",
+        "url": "https://www.marketwatch.com/story/investors-betting-on-international-stocks-trouncing-the-u-s-are-getting-a-rude-awakening-from-the-iran-conflict-beff2b1e",
+        "source": "MarketWatch",
+        "published_at": "2026-03-05T19:53:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The outperformance of international stocks is faltering as oil prices climb to $80 barrel",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "37 million pounds of frozen foods recalled by Portland company, may contain glass - KATU",
+        "url": "https://katu.com/news/local/37-million-pounds-of-frozen-foods-recalled-by-portland-company-may-contain-glass-contamination-ajinomoto-kroger-ling-tai-pei-trader-joes-chicken-carrot-carrots-food-ramen-fried-rice-dumplings",
+        "source": "KATU",
+        "published_at": "2026-03-05T19:42:34Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A Portland-based business is expanding its recall over possible broken glass contamination to nearly 37 million pounds of its frozen chicken foods, like fried r",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "U.S. manufacturers are still shedding thousands of jobs, as workers ask White House for help - CBS News",
+        "url": "https://www.cbsnews.com/news/manufacturing-jobs-whirlpool-layoffs-iowa-trump-tariffs/",
+        "source": "CBS News",
+        "published_at": "2026-03-05T19:42:07Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Job cuts at a Whirlpool factory in Iowa underscore the challenges in reviving American manufacturing. \"Every day, workers' jobs are still in jeopardy,\" a union official said.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
         "title": "MrBeast’s company fired a video editor after Kalshi accused the employee of insider trading - AP News",
         "url": "https://apnews.com/article/mrbeast-jimmy-donaldson-kalshi-7a8bb7e2aecee7428bcc2dd1eb08ac67",
         "source": "Associated Press",
@@ -1325,29 +1383,16 @@
         ]
       },
       {
-        "title": "In leaked audio, Salesforce president says company is 'appropriately adjusting' after Marc Benioff's ICE jokes - Business Insider",
-        "url": "https://www.businessinsider.com/salesforce-coo-addresses-marc-benioff-ice-jokes-meeting-with-employees-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-05T19:04:00Z",
+        "title": "President Trump Secures Historic Commitment to Keep Electricity Costs Down Amid Data Center Boom - The White House (.gov)",
+        "url": "http://www.whitehouse.gov/articles/2026/03/president-trump-secures-historic-commitment-to-keep-electricity-costs-down-amid-data-center-boom/",
+        "source": "Whitehouse.gov",
+        "published_at": "2026-03-05T18:20:46Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "President Robin Washington discussed how the company is responding, after some  employees and executives complained about Benioff's ICE jokes.",
+        "description": "Under President Donald J. Trump’s leadership, America’s leading AI and technology companies gathered at the White House to sign the Ratepayer Protection",
         "impact_score": 40,
         "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Santa Cruz restaurant changes logo after flurry of negative reviews - SFGATE",
-        "url": "https://www.sfgate.com/food/article/santa-cruz-restaurant-ai-21955920.php",
-        "source": "SFGate",
-        "published_at": "2026-03-05T19:03:35Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The Salty Otter, a restaurant and sports bar that opened in downtown Santa Cruz last spring, has received criticism for using AI to generate its logo.",
-        "impact_score": 40,
-        "themes": [
-          "other"
+          "commercial"
         ]
       },
       {
@@ -1364,19 +1409,6 @@
         ]
       },
       {
-        "title": "Six Flags selling Great Escape, other amusement parks - Times Union",
-        "url": "https://www.timesunion.com/news/article/six-flags-selling-great-escape-owner-hunter-21956833.php",
-        "source": "Albany Times Union",
-        "published_at": "2026-03-05T17:48:45Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The Queensbury location that got its start as Storytown is among several amusement parks being sold to EPR Properties.",
-        "impact_score": 40,
-        "themes": [
-          "trade"
-        ]
-      },
-      {
         "title": "Breaking News: National radio giant files Chapter 11 bankruptcy - thestreet.com",
         "url": "https://www.thestreet.com/retail/breaking-news-national-radio-giant-files-chapter-11-bankruptcy",
         "source": "TheStreet",
@@ -1390,16 +1422,16 @@
         ]
       },
       {
-        "title": "Food Recall Expands to Include Ramen, Dumplings, and Other Asian Foods From Trader Joe’s, Costco, and More - Real Simple",
-        "url": "https://www.realsimple.com/food-recall-expands-to-include-ramen-dumplings-11920145",
-        "source": "Real Simple",
-        "published_at": "2026-03-05T17:29:57Z",
+        "title": "Mortgage rates hit 6% as Iran war spooks bond market traders - CNN",
+        "url": "https://www.cnn.com/2026/03/05/economy/mortgage-rates",
+        "source": "CNN",
+        "published_at": "2026-03-05T17:10:25Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The Ajinomoto Foods recall has expanded to include fried rice, ramen, and sui mai dumplings, sold at Trader Joe's, Costco, Kroger, and more. Learn which products have been recalled, and what to do if you have the recalled foods.",
-        "impact_score": 40,
+        "description": "The average 30-year fixed mortgage was 6% for the week ending March 5, according to Freddie Mac – after war with Iran has started to show signs of rattling financial markets.",
+        "impact_score": 65,
         "themes": [
-          "other"
+          "capital"
         ]
       },
       {
@@ -1416,45 +1448,6 @@
         ]
       },
       {
-        "title": "President Trump, Pam Bondi sued over sale of TikTok assets - NPR",
-        "url": "https://www.npr.org/2026/03/05/g-s1-112605/tiktok-deal-lawsuit-trump-bondi",
-        "source": "NPR",
-        "published_at": "2026-03-05T16:11:09Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The case accuses the Trump administration of ignoring legislation designed to stop the spread of Chinese propaganda — and instead helping to broker a partial sale to businessmen close to Trump.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Your morning can’t be as bad as the finance guys photographed for Interview. - readfeedme.com",
-        "url": "https://www.readfeedme.com/p/your-morning-cant-be-as-bad-as-the",
-        "source": "Readfeedme.com",
-        "published_at": "2026-03-05T16:09:54Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "I’ll gladly Venmo them for drinks this weekend.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "FDA Push for Fake Brain Surgery Trial Spurs Ethical Concerns - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-04/fda-push-for-10-hour-fake-brain-surgery-trial-raises-ethical-concerns",
-        "source": "Bloomberg",
-        "published_at": "2026-03-05T14:45:09Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Katie Jackson desperately wants a new treatment for Huntington’s disease. Her husband died from the devastating brain disorder. And because the disease runs in families, her three children have a 50% chance of inheriting the condition. She’s pinned her hopes …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Berkshire Hathaway Resumes Share Buybacks - WSJ",
         "url": "https://www.wsj.com/business/berkshire-hathaway-resumes-share-buybacks-c4b1bbce",
         "source": "The Wall Street Journal",
@@ -1462,19 +1455,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Greg Abel begins his run by taking a step Warren Buffett hadn’t since early 2024: repurchasing Berkshire shares",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Google Gemini was a deadly 'AI wife' for this 36-year-old who resisted its call for a 'mass casualty' event before his death, lawsuit says - Fortune",
-        "url": "https://fortune.com/2026/03/05/google-gemini-wrongful-death-lawsuit-mass-casualty-event-suicide-ai-wife/",
-        "source": "Fortune",
-        "published_at": "2026-03-05T13:33:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "“Our models generally perform well in these types of challenging conversations ... but unfortunately AI models are not perfect,” Google said.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1514,6 +1494,136 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Below is a curated list of fast payout casinos in the USA for 2026 that stand out for quick cashouts, strong bonuses, and a seamless gaming experience. Use the quick “best for” highlights to find the right platform and start playing in minutes.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Private credit's problems are going public. Here's why you should care. - Business Insider",
+        "url": "https://www.businessinsider.com/private-credit-wall-street-blackstone-apollo-blue-owl-investors-2026-3",
+        "source": "Business Insider",
+        "published_at": "2026-03-05T11:07:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Bill Gates’ nuclear company is the first to get approval to build next-gen reactor - The Verge",
+        "url": "https://www.theverge.com/science/889768/bill-gates-terrapower-nuclear-wyoming-reactor",
+        "source": "The Verge",
+        "published_at": "2026-03-05T10:16:58Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "﻿Construction on the advanced Wyoming nuclear power plant is set to finish by 2030.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Buildner and Kingspan Launch MICROHOME 2026 With €100K in Awards and Announce 10th Edition Winners",
+        "url": "https://www.archdaily.com/1039183/buildner-and-kingspan-launch-microhome-2026-with-eu100k-in-awards-and-announce-10th-edition-winners",
+        "source": "ArchDaily",
+        "published_at": "2026-03-06T06:45:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "In collaboration with building materials manufacturer Kingspan, Buildner has launched MICROHOME 2026, the eleventh edition of its annual competition, offering a €100,000 prize fund. This global competition invites architects, designers, and creative thinkers …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Paris’ Tour Montparnasse Observatory to Close in March 2026 as Redevelopment Plans Move Forward",
+        "url": "https://www.archdaily.com/1039384/paris-tour-montparnasse-observatory-to-close-in-march-2026-as-redevelopment-plans-move-forward",
+        "source": "ArchDaily",
+        "published_at": "2026-03-06T06:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The public observation deck at the top of the Tour Montparnasse, long considered one of the most debated additions to the Parisian skyline, is set to close on March 31, 2026, ahead of a major redevelopment of the tower and its surrounding complex. Completed i…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "ElvalHalcor: Energy costs and scrap prices key drivers of 2026 performance",
+        "url": "https://www.naftemporiki.gr/english/2081698/elvalhalcor-energy-costs-and-scrap-prices-key-drivers-of-2026-performance/",
+        "source": "Naftemporiki.gr",
+        "published_at": "2026-03-06T06:19:11Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "ElvalHalcor is focusing on the increased needs of data centers in Europe and the US for aluminum and copper, as well as on meeting the needs of energy network applications,…\nElvalHalcor: Energy costs and scrap prices key drivers of 2026 performance - Η ΝΑΥΤΕΜ…",
+        "impact_score": 40,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "Big railway PSU merger on the way? IRCON, RVNL shares rally up to 12% on merger reports",
+        "url": "https://economictimes.indiatimes.com/markets/stocks/news/big-railway-psu-merger-on-the-way-ircon-rvnl-shares-rally-up-to-12-on-merger-reports/articleshow/129135350.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-06T05:43:47Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "IRCON and RVNL shares surged significantly on Friday following reports of a proposed merger initiated by the Ministry of Railways. This consolidation aims to create a larger, more efficient railway entity by combining specialized expertise and enhancing execu…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "What does a hummingbird’s nest look like in a tree?",
+        "url": "https://www.lifesciencesworld.com/what-does-a-hummingbirds-nest-look-like-in-a-tree/",
+        "source": "Lifesciencesworld.com",
+        "published_at": "2026-03-06T05:13:42Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "What Does a Hummingbird’s Nest Look Like in a Tree? A hummingbird’s nest in a tree is a marvel of natural engineering: a tiny, meticulously crafted cup of soft plant down, spider silk, and lichen, perfectly camouflaged and often no larger than a thimble. It o…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "`It’s a fantastic moment for Ireland ... €275bn of investment in the next 10 years’",
+        "url": "https://www.irishtimes.com/business/2026/03/06/its-a-fantastic-moment-for-ireland275-billion-of-investment-in-the-next-10-years-in-every-bit-of-infrastructure-you-can-think-of/",
+        "source": "The Irish Times",
+        "published_at": "2026-03-06T05:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "As the State prepares to spend big on infrastructure, Arup boss Jerome Frost is keen to expand its activities here",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Global Market | Economic reality check: China sets lowest growth target in more than three decades",
+        "url": "https://economictimes.indiatimes.com/markets/us-stocks/news/global-market-economic-reality-check-china-sets-lowest-growth-target-in-more-than-three-decades/articleshow/129131723.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-06T04:19:04Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "China has set its lowest economic growth target in more than three decades, signalling rising economic pressures as the country grapples with a property slowdown, weak consumption and demographic decline. Beijing is focusing on technological self-reliance, hi…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Card-Based Electronic Access Control Systems Market Size to Hit USD 127.96 Billion by 2035 | SNS Insider",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3250798/0/en/Card-Based-Electronic-Access-Control-Systems-Market-Size-to-Hit-USD-127-96-Billion-by-2035-SNS-Insider.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T04:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Card-Based Electronic Access Control Systems Market is expanding as organizations adopt RFID, proximity, and smart card solutions for secure facility access, with the U.S. market growing from USD 16.52 billion in 2025 to USD 38.34 billion by 2035. The Car…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1741,19 +1851,6 @@
         ]
       },
       {
-        "title": "Southern Realty Trust Expands Revolving Credit Facility to $125 Million with Addition of Customers Bank",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250707/0/en/Southern-Realty-Trust-Expands-Revolving-Credit-Facility-to-125-Million-with-Addition-of-Customers-Bank.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Southern Realty Trust Inc. (“SRT” or the “Company”), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving credit facility…",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
         "title": "Methode Electronics, Inc. Reports Fiscal 2026 Third Quarter Financial Results",
         "url": "https://www.globenewswire.com/news-release/2026/03/05/3250709/0/en/Methode-Electronics-Inc-Reports-Fiscal-2026-Third-Quarter-Financial-Results.html",
         "source": "GlobeNewswire",
@@ -1764,6 +1861,19 @@
         "impact_score": 40,
         "themes": [
           "other"
+        ]
+      },
+      {
+        "title": "Southern Realty Trust Expands Revolving Credit Facility to $125 Million with Addition of Customers Bank",
+        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250707/0/en/Southern-Realty-Trust-Expands-Revolving-Credit-Facility-to-125-Million-with-Addition-of-Customers-Bank.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-05T21:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Southern Realty Trust Inc. (“SRT” or the “Company”), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving credit facility…",
+        "impact_score": 65,
+        "themes": [
+          "capital"
         ]
       },
       {
@@ -2289,19 +2399,6 @@
         ]
       },
       {
-        "title": "The Perfect Game for Nintendo Has Finally Released on Switch 2",
-        "url": "http://comicbook.com/gaming/feature/the-perfect-game-for-nintendo-has-finally-released-on-switch-2/",
-        "source": "ComicBook.com",
-        "published_at": "2026-03-05T16:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Courtesy of Dogubomb\n\nThe Nintendo Switch 2 has many different games coming to its platform in 2026, with a few indie titles and AAA mega-hits among the experiences being offered through its store. However, the handheld nature of the Switch 2 makes it perfect…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Stats Corner: Correlation of Transfer Portal and Success",
         "url": "https://www.mwcconnection.com/stats-corner/82510/stats-corner-correlation-of-transfer-portal-and-success",
         "source": "Mwcconnection.com",
@@ -2309,6 +2406,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "One of the most interesting things to talk about in math classes is the difference between correlation and causation. For example, there is a correlation between the number of movies Elijah Wood appears in and the number of orderlies in Oklahoma since 2012 an…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "The Perfect Game for Nintendo Has Finally Released on Switch 2",
+        "url": "http://comicbook.com/gaming/feature/the-perfect-game-for-nintendo-has-finally-released-on-switch-2/",
+        "source": "ComicBook.com",
+        "published_at": "2026-03-05T16:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Courtesy of Dogubomb\n\nThe Nintendo Switch 2 has many different games coming to its platform in 2026, with a few indie titles and AAA mega-hits among the experiences being offered through its store. However, the handheld nature of the Switch 2 makes it perfect…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2430,110 +2540,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "The Terrifying New Era of American Imperialism",
-        "url": "http://www.rollingstone.com/politics/political-commentary/trump-america-military-industrial-iran-war-1235524970/",
-        "source": "Rolling Stone",
-        "published_at": "2026-03-05T15:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Donald Trump's war against Iran is part of a terrifying new era of American imperialism, one in which the military budget never stops growing.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "$39k tiny house fits full-time living into 16 ft length",
-        "url": "https://newatlas.com/tiny-houses/genesis-16-dragon-tiny-homes/",
-        "source": "New Atlas",
-        "published_at": "2026-03-05T14:57:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "How much can you realistically fit into a tiny house measuring just 16 ft (4.9 m) in length? You might assume the answer is \"not much,\" but this model squeezes in a surprisingly effective space-saving layout – and does so at a low cost.Continue ReadingCategor…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Methodology",
-        "url": "http://www.pewresearch.org/religion/2026/03/05/methodology-international-morality/",
-        "source": "Pew Research Center",
-        "published_at": "2026-03-05T14:52:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "About Pew Research Center’s Spring 2025 Global Attitudes Survey Results for the survey are based on a mix of telephone, face-to-face and online interviews conducted under the direction of Gallup, Langer Research Associates and Social Research Centre. The resu…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Mount of Olives reclaimed in historic events",
-        "url": "https://www.israelnationalnews.com/news/423413",
-        "source": "Israelnationalnews.com",
-        "published_at": "2026-03-05T14:49:59Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Israei and world Jewry celebrate reclamation of Mt. of Olives with major ceremonies in Jerusalem in February.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Nashville opposes Elon Musk’s Loop tunnel — a decade later, still no proof it beats a subway",
-        "url": "http://electrek.co/2026/03/05/nashville-opposes-boring-company-loop-elon-musk-no-proof-better-than-subway/",
-        "source": "Electrek",
-        "published_at": "2026-03-05T14:47:27Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Nashville’s Metro Council voted 20-15 to formally oppose the Boring Company’s Music City Loop, a proposed 13-mile underground tunnel system that would shuttle passengers in Tesla vehicles between downtown Nashville and the airport.\n\n\n\nThe non-binding resoluti…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Arvig Interconnects with Eagan Data Center, Expands Twin Cities Network Presence",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250337/0/en/Arvig-Interconnects-with-Eagan-Data-Center-Expands-Twin-Cities-Network-Presence.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T14:45:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Arvig is expanding its Twin Cities network footprint after finalizing plans to interconnect with a new data center under construction in Eagan, Minn...",
-        "impact_score": 40,
-        "themes": [
-          "commercial"
-        ]
-      },
-      {
-        "title": "Is D.R. Horton Stock Underperforming the Nasdaq?",
-        "url": "https://www.barchart.com/story/news/584888/is-d-r-horton-stock-underperforming-the-nasdaq",
-        "source": "Barchart.com",
-        "published_at": "2026-03-05T14:31:48Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Due to D.R. Horton's weak performance relative to the broader Nasdaq Composite over the past year, Wall Street analysts remain cautious about the stock’s...",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Panel led by Trump allies to consider White House ballroom approval",
-        "url": "https://www.nbcnews.com/politics/white-house/trump-allies-planning-commission-white-house-ballrooom-approval-rcna261884",
-        "source": "NBC News",
-        "published_at": "2026-03-05T14:23:11Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The National Capital Planning Commission on Thursday will review and could vote on President Donald Trump's new White House ballroom plans, potentially paving the way for the massive architectural project to move forward.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2546,6 +2552,45 @@
         "feed": "top_headlines",
         "description": "The radio brand has a bankruptcy plan that would allow it to keep operating.",
         "impact_score": 85,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Goldman Junior Bankers’ Photo Shoot in Hermes, Tom Ford Sparks Blame Game - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-06/goldman-junior-banker-fashion-shoot-sets-off-blame-game-at-firm",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T00:34:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A magazine’s glossy photo shoot with young Wall Streeters, including a pair from Goldman Sachs Group Inc. who opined on their spending and dating, is setting off finger-pointing inside the famously restrained investment bank.",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Mortgage rates hit 6% as Iran war spooks bond market traders - CNN",
+        "url": "https://www.cnn.com/2026/03/05/economy/mortgage-rates",
+        "source": "CNN",
+        "published_at": "2026-03-05T17:10:25Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The average 30-year fixed mortgage was 6% for the week ending March 5, according to Freddie Mac – after war with Iran has started to show signs of rattling financial markets.",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Private credit's problems are going public. Here's why you should care. - Business Insider",
+        "url": "https://www.businessinsider.com/private-credit-wall-street-blackstone-apollo-blue-owl-investors-2026-3",
+        "source": "Business Insider",
+        "published_at": "2026-03-05T11:07:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 65,
         "themes": [
           "capital"
         ]
@@ -2591,6 +2636,19 @@
         ]
       },
       {
+        "title": "US Considers Requiring Permits for Nvidia, AMD Global AI Chip Sales - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-05/us-drafts-rules-for-sweeping-power-over-nvidia-s-global-sales",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T03:50:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Nvidia Corp. has long been the world’s AI kingmaker. Now, the Trump administration is considering taking a formal role in the industry that would include similarly sweeping powers.",
+        "impact_score": 60,
+        "themes": [
+          "pipeline"
+        ]
+      },
+      {
         "title": "Stock Market Today: Dow Drops More Than 1,000 Points, Oil Pushes Higher on Widening Iran Conflict— Live Updates - WSJ",
         "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-03-05-2026",
         "source": "The Wall Street Journal",
@@ -2615,63 +2673,24 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "CNBC Daily Open: Oil surges as Iran war enters seventh day - CNBC",
-        "url": "https://www.cnbc.com/2026/03/06/cnbc-daily-open-oil-iran-war-us-israel.html",
-        "source": "CNBC",
-        "published_at": "2026-03-06T01:08:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "U.S. crude oil hit as much as $80 per barrel Thursday, as the escalating Iran war enters its seventh day and continues disrupting global fuel supplies.",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "LNG Shipping Rates Soar 650% to $300,000 Per Day - Crude Oil Prices Today | OilPrice.com",
-        "url": "https://oilprice.com/Latest-Energy-News/World-News/LNG-Shipping-Rates-Soar-650-to-300000-Per-Day.html",
-        "source": "OilPrice.com",
-        "published_at": "2026-03-05T13:10:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The Iran-related conflict and a halt in Qatari production have caused global LNG shipping rates to surge to $300,000 per day and spot LNG prices to double as traders navigate disruptions in the Middle East and a stalled Strait of Hormuz.",
-        "impact_score": 55,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "Hybrid generative–ensemble approach for predicting recycled aggregate concrete strength properties",
-        "url": "https://www.nature.com/articles/s41598-026-42598-6",
-        "source": "Nature.com",
-        "published_at": "2026-03-06T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Scientific Reports - Hybrid generative–ensemble approach for predicting recycled aggregate concrete strength properties",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "Western automakers outsourced supply chains for decades — now Chinese rivals have the cost edge",
-        "url": "https://www.cnbc.com/2026/03/06/china-ev-cost-advantage-vertical-integration-byd-tesla-rhodium-report.html",
-        "source": "CNBC",
-        "published_at": "2026-03-05T23:11:11Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "A recent Rhodium Group report found that structural factors outweigh the effects of state subsidies on the profit margins of Chinese electric vehicle companies.",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
       }
     ],
-    "news_pressure_overlay": 0,
+    "news_pressure_overlay": 5,
     "news_clusters": {
       "capital": [
+        {
+          "title": "Goldman Junior Bankers’ Photo Shoot in Hermes, Tom Ford Sparks Blame Game - Bloomberg.com",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-06/goldman-junior-banker-fashion-shoot-sets-off-blame-game-at-firm",
+          "source": "Bloomberg",
+          "published_at": "2026-03-06T00:34:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "A magazine’s glossy photo shoot with young Wall Streeters, including a pair from Goldman Sachs Group Inc. who opined on their spending and dating, is setting off finger-pointing inside the famously restrained investment bank.",
+          "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
         {
           "title": "Breaking News: National radio giant files Chapter 11 bankruptcy - thestreet.com",
           "url": "https://www.thestreet.com/retail/breaking-news-national-radio-giant-files-chapter-11-bankruptcy",
@@ -2686,6 +2705,19 @@
           ]
         },
         {
+          "title": "Mortgage rates hit 6% as Iran war spooks bond market traders - CNN",
+          "url": "https://www.cnn.com/2026/03/05/economy/mortgage-rates",
+          "source": "CNN",
+          "published_at": "2026-03-05T17:10:25Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The average 30-year fixed mortgage was 6% for the week ending March 5, according to Freddie Mac – after war with Iran has started to show signs of rattling financial markets.",
+          "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
           "title": "LNG Shipping Rates Soar 650% to $300,000 Per Day - Crude Oil Prices Today | OilPrice.com",
           "url": "https://oilprice.com/Latest-Energy-News/World-News/LNG-Shipping-Rates-Soar-650-to-300000-Per-Day.html",
           "source": "OilPrice.com",
@@ -2694,6 +2726,19 @@
           "feed": "top_headlines",
           "description": "The Iran-related conflict and a halt in Qatari production have caused global LNG shipping rates to surge to $300,000 per day and spot LNG prices to double as traders navigate disruptions in the Middle East and a stalled Strait of Hormuz.",
           "impact_score": 55,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "Private credit's problems are going public. Here's why you should care. - Business Insider",
+          "url": "https://www.businessinsider.com/private-credit-wall-street-blackstone-apollo-blue-owl-investors-2026-3",
+          "source": "Business Insider",
+          "published_at": "2026-03-05T11:07:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 65,
           "themes": [
             "capital"
           ]
@@ -2793,6 +2838,19 @@
       ],
       "pipeline": [
         {
+          "title": "US Considers Requiring Permits for Nvidia, AMD Global AI Chip Sales - Bloomberg.com",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-05/us-drafts-rules-for-sweeping-power-over-nvidia-s-global-sales",
+          "source": "Bloomberg",
+          "published_at": "2026-03-06T03:50:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Nvidia Corp. has long been the world’s AI kingmaker. Now, the Trump administration is considering taking a formal role in the industry that would include similarly sweeping powers.",
+          "impact_score": 60,
+          "themes": [
+            "pipeline"
+          ]
+        },
+        {
           "title": "Open Thread: It’s All Fun & Games Until the Shooting Starts…",
           "url": "https://balloon-juice.com/2026/03/05/open-thread-its-all-fun-games-until-the-shooting-starts/",
           "source": "Balloon-juice.com",
@@ -2807,19 +2865,6 @@
         }
       ],
       "trade": [
-        {
-          "title": "Six Flags selling Great Escape, other amusement parks - Times Union",
-          "url": "https://www.timesunion.com/news/article/six-flags-selling-great-escape-owner-hunter-21956833.php",
-          "source": "Albany Times Union",
-          "published_at": "2026-03-05T17:48:45Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The Queensbury location that got its start as Storytown is among several amusement parks being sold to EPR Properties.",
-          "impact_score": 40,
-          "themes": [
-            "trade"
-          ]
-        },
         {
           "title": "Ms. Global: Iranian Girls’ School Hit in U.S.–Israeli Strikes, Taliban Legalize Domestic Violence and More",
           "url": "https://msmagazine.com/2026/03/05/ms-global-iranian-girls-school-taliban-domestic-violence/",
@@ -2848,6 +2893,19 @@
         }
       ],
       "materials": [
+        {
+          "title": "ElvalHalcor: Energy costs and scrap prices key drivers of 2026 performance",
+          "url": "https://www.naftemporiki.gr/english/2081698/elvalhalcor-energy-costs-and-scrap-prices-key-drivers-of-2026-performance/",
+          "source": "Naftemporiki.gr",
+          "published_at": "2026-03-06T06:19:11Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "ElvalHalcor is focusing on the increased needs of data centers in Europe and the US for aluminum and copper, as well as on meeting the needs of energy network applications,…\nElvalHalcor: Energy costs and scrap prices key drivers of 2026 performance - Η ΝΑΥΤΕΜ…",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
         {
           "title": "Hybrid generative–ensemble approach for predicting recycled aggregate concrete strength properties",
           "url": "https://www.nature.com/articles/s41598-026-42598-6",
@@ -3065,13 +3123,13 @@
           ]
         },
         {
-          "title": "US considers tying Nvidia and AMD AI chip exports to foreign investment pledges - Financial Times",
-          "url": "https://www.ft.com/content/30d0b1df-ad8c-42eb-852b-dad53acaecfc",
-          "source": "Financial Times",
-          "published_at": "2026-03-05T22:48:42Z",
+          "title": "Six Flags selling Great Escape and six other parks; Official says no change to guest experience - WNYT.com",
+          "url": "https://wnyt.com/top-stories/six-flags-selling-great-escape-and-six-other-parks/",
+          "source": "WNYT",
+          "published_at": "2026-03-05T21:41:26Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Draft rule would require countries to invest in America in exchange for advanced semiconductors",
+          "description": "Six Flags is selling the Great Escape and six other theme parks to EPR Properties, another theme park operator.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3104,19 +3162,6 @@
           ]
         },
         {
-          "title": "OpenAI's 'stunning admission': Maybe people don't want to book stuff inside ChatGPT - Business Insider",
-          "url": "https://www.businessinsider.com/openai-shifts-chatgpt-strategy-booking-expedia-surge-2026-3",
-          "source": "Business Insider",
-          "published_at": "2026-03-05T20:29:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "OpenAI changes course on ChatGPT bookings, raising Booking.com and Expedia shares. Analysts call it a major strategic shift.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
           "title": "California AG Cites Antitrust Concerns Over Paramount-WBD Merger: EXCLU - Deadline",
           "url": "http://deadline.com/2026/03/california-attorney-general-antitrust-paramount-warner-deal-1236745088/",
           "source": "Deadline",
@@ -3141,9 +3186,35 @@
           "themes": [
             "other"
           ]
+        },
+        {
+          "title": "Investors betting on international stocks trouncing the U.S. are getting a rude awakening from the Iran conflict - MarketWatch",
+          "url": "https://www.marketwatch.com/story/investors-betting-on-international-stocks-trouncing-the-u-s-are-getting-a-rude-awakening-from-the-iran-conflict-beff2b1e",
+          "source": "MarketWatch",
+          "published_at": "2026-03-05T19:53:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The outperformance of international stocks is faltering as oil prices climb to $80 barrel",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
         }
       ],
       "commercial": [
+        {
+          "title": "President Trump Secures Historic Commitment to Keep Electricity Costs Down Amid Data Center Boom - The White House (.gov)",
+          "url": "http://www.whitehouse.gov/articles/2026/03/president-trump-secures-historic-commitment-to-keep-electricity-costs-down-amid-data-center-boom/",
+          "source": "Whitehouse.gov",
+          "published_at": "2026-03-05T18:20:46Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Under President Donald J. Trump’s leadership, America’s leading AI and technology companies gathered at the White House to sign the Ratepayer Protection",
+          "impact_score": 40,
+          "themes": [
+            "commercial"
+          ]
+        },
         {
           "title": "Big Tech Promises to Pay for AI Data Center Power, but Who Will Enforce It?",
           "url": "https://www.cnet.com/tech/services-and-software/ai-data-center-electricity-costs-white-house-ratepayer-protection-pledge/",
@@ -3197,19 +3268,6 @@
             "macro",
             "commercial"
           ]
-        },
-        {
-          "title": "Arvig Interconnects with Eagan Data Center, Expands Twin Cities Network Presence",
-          "url": "https://www.globenewswire.com/news-release/2026/03/05/3250337/0/en/Arvig-Interconnects-with-Eagan-Data-Center-Expands-Twin-Cities-Network-Presence.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-05T14:45:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Arvig is expanding its Twin Cities network footprint after finalizing plans to interconnect with a new data center under construction in Eagan, Minn...",
-          "impact_score": 40,
-          "themes": [
-            "commercial"
-          ]
         }
       ]
     },
@@ -3237,10 +3295,10 @@
         "ticker": "PHM",
         "source": "stooq",
         "date": "2026-03-06",
-        "open": 127.0007,
+        "open": 127,
         "close": 127.84,
-        "change": 0.8393000000000086,
-        "change_pct": 0.6608624991830822
+        "change": 0.8400000000000034,
+        "change_pct": 0.6614173228346484
       },
       {
         "ticker": "LEN",
@@ -3264,19 +3322,19 @@
         "ticker": "TOL",
         "source": "stooq",
         "date": "2026-03-06",
-        "open": 148.365,
+        "open": 147.75,
         "close": 147.68,
-        "change": -0.6850000000000023,
-        "change_pct": -0.461699187813839
+        "change": -0.06999999999999318,
+        "change_pct": -0.04737732656513921
       },
       {
         "ticker": "HD",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-06",
-        "open": 357.31,
         "close": 357.92,
-        "change": 0.6100000000000136,
-        "change_pct": 0.17072010299180365
+        "prev_close": 361.68,
+        "change": -3.76,
+        "change_pct": -1.0396
       },
       {
         "ticker": "LOW",
@@ -3307,12 +3365,12 @@
       },
       {
         "ticker": "BLDR",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-06",
+        "open": 93.72,
         "close": 93.12,
-        "prev_close": 95.51,
-        "change": -2.39,
-        "change_pct": -2.5024
+        "change": -0.5999999999999943,
+        "change_pct": -0.6402048655569721
       },
       {
         "ticker": "FBIN",
@@ -3325,12 +3383,12 @@
       },
       {
         "ticker": "OC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-06",
-        "open": 109.32,
         "close": 109.75,
-        "change": 0.4300000000000068,
-        "change_pct": 0.3933406512989452
+        "prev_close": 111.52,
+        "change": -1.77,
+        "change_pct": -1.5872
       },
       {
         "ticker": "EXP",
@@ -3345,10 +3403,10 @@
         "ticker": "CAT",
         "source": "stooq",
         "date": "2026-03-06",
-        "open": 681.66,
+        "open": 682.47,
         "close": 680.9,
-        "change": -0.7599999999999909,
-        "change_pct": -0.1114925329343061
+        "change": -1.57000000000005,
+        "change_pct": -0.23004674198133984
       },
       {
         "ticker": "DE",
@@ -3372,10 +3430,10 @@
         "ticker": "TPC",
         "source": "stooq",
         "date": "2026-03-06",
-        "open": 71.12,
+        "open": 72.51,
         "close": 72.82,
-        "change": 1.6999999999999886,
-        "change_pct": 2.390326209223831
+        "change": 0.30999999999998806,
+        "change_pct": 0.4275272376223804
       },
       {
         "ticker": "CRH",
@@ -3390,23 +3448,23 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": -0.8850117197752565
+        "avg_change_pct": -0.8020363827952034
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -2.060929820894683
+        "avg_change_pct": -2.391019929444507
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": -2.5024
+        "avg_change_pct": -0.6402048655569721
       },
       "equipment": {
         "count": 3,
-        "avg_change_pct": -0.18813353349217346
+        "avg_change_pct": -0.22765160317451807
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 0.4049892815889927
+        "avg_change_pct": -0.20017076990690913
       }
     },
     "stock_pressure_overlay": 5,
@@ -3489,7 +3547,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-07T02:44:19.365Z",
+    "generated_at_utc": "2026-03-07T06:59:12.690Z",
     "regime_history": {
       "current_regime_duration_days": 4,
       "previous_regime": null,
@@ -3502,26 +3560,26 @@
       "confidence": "medium"
     },
     "cpi": {
-      "headline": 47,
+      "headline": 48,
       "zone": "Slowdown",
-      "delta_3m": 0,
+      "delta_3m": 1,
       "momentum": "Stable",
       "freeze_risk": false,
       "risk_thermometer_mode": false,
-      "r": 47,
+      "r": 48,
       "i": 48,
-      "sf": 47,
-      "mf": 47,
+      "sf": 49,
+      "mf": 48,
       "inst": 48,
       "infra": 48,
       "divergences": {
-        "r_minus_i": -1,
-        "sf_minus_mf": 0,
+        "r_minus_i": 0,
+        "sf_minus_mf": 1,
         "inst_minus_infra": 0
       }
     },
     "six_pillar": {
-      "capital": 45,
+      "capital": 50,
       "pipeline": 47,
       "trade": 50,
       "materials": 50,
@@ -3529,19 +3587,19 @@
       "macro_sentiment": 43,
       "materials_energy_overlay": 0,
       "stock_overlay": 5,
-      "news_pressure_overlay": 0
+      "news_pressure_overlay": 5
     },
     "ecosystem_pulse": {
       "builders": {
-        "score": 46,
+        "score": 49,
         "state": "🟢"
       },
       "architects": {
-        "score": 46,
+        "score": 48,
         "state": "🟢"
       },
       "general_contractors": {
-        "score": 47,
+        "score": 48,
         "state": "🟢"
       },
       "distributors": {

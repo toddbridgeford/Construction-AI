@@ -37,14 +37,14 @@
   },
   "indices": {
     "pressure_index": {
-      "value": 47,
-      "direction": "→",
+      "value": 48,
+      "direction": "↑",
       "zone": "Compression Phase",
-      "delta_3m": 0,
+      "delta_3m": 1,
       "momentum_band": "Stable",
       "risk_state": "🟢",
       "drivers": {
-        "capital": 45,
+        "capital": 50,
         "pipeline": 47,
         "trade": 50,
         "materials": 50,
@@ -60,19 +60,20 @@
         "cpi_i": null
       },
       "divergences": {
-        "r_minus_i": -1,
-        "sf_minus_mf": 0,
+        "r_minus_i": 0,
+        "sf_minus_mf": 1,
         "inst_minus_infra": 0
       }
     },
     "capital_stress_index": {
-      "value": 45,
+      "value": 50,
       "risk_state": "🟢",
       "overlays": {
         "active_triggers": [
-          "stock_overlay_5"
+          "stock_overlay_5",
+          "news_overlay_5"
         ],
-        "overlay_points": 5
+        "overlay_points": 10
       }
     },
     "residential_index": {
@@ -124,11 +125,11 @@
     "manufacturers": "🟡"
   },
   "ecosystem_power": {
-    "index": 61,
+    "index": 66,
     "risk_state": "🟡",
     "drivers": [
       "slowdown_band",
-      "overlay_points_5"
+      "overlay_points_10"
     ],
     "actors": [
       {
@@ -159,9 +160,9 @@
     "active": false,
     "trigger_reason": [],
     "display": {
-      "cpi_value": 47,
+      "cpi_value": 48,
       "zone": "Compression Phase",
-      "delta_3m": 0,
+      "delta_3m": 1,
       "risk_state": "🟢"
     }
   },
@@ -170,7 +171,7 @@
     "regions": [
       {
         "name": "National",
-        "velocity": "→",
+        "velocity": "↑",
         "pressure": "🟢",
         "capital": "🟢",
         "residential": "🟡",
@@ -205,6 +206,7 @@
   },
   "actions": {
     "strategic_posture": [
+      "Headline Drift: Signal Impact Engine overlay mild (+5). Monitor confirmation in rates/spreads/permits.",
       "Top Headlines Active: NewsAPI Top Headlines is active for executive signal strip."
     ],
     "decision_delta": []
