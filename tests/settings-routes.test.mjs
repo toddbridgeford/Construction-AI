@@ -757,6 +757,86 @@ test('liquidity endpoint renormalizes score when one liquidity input is unavaila
     globalThis.fetch = originalFetch;
   }
 });
+
+
+test('bundle endpoint accepts valid custom series list', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const originalFetch = globalThis.fetch;
+  const requested = [];
+
+  globalThis.fetch = async (url) => {
+    const parsed = new URL(String(url));
+    const seriesId = parsed.searchParams.get('series_id');
+    requested.push(seriesId);
+    return new Response(JSON.stringify({ observations: [{ date: '2025-01-01', value: '1.0' }] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  };
+
+  try {
+    const req = new Request('https://example.com/bundle?series=MORTGAGE30US,FEDFUNDS');
+    const res = await handleBundle(req, env);
+    const body = await json(res);
+
+    assert.equal(res.status, 200);
+    assert.deepEqual(requested, ['MORTGAGE30US', 'FEDFUNDS']);
+    assert.deepEqual(Object.keys(body.bundle.series), ['MORTGAGE30US', 'FEDFUNDS']);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('bundle endpoint deduplicates repeated custom series ids before fetch fan-out', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const originalFetch = globalThis.fetch;
+  const requested = [];
+
+  globalThis.fetch = async (url) => {
+    const parsed = new URL(String(url));
+    const seriesId = parsed.searchParams.get('series_id');
+    requested.push(seriesId);
+    return new Response(JSON.stringify({ observations: [{ date: '2025-01-01', value: '1.0' }] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  };
+
+  try {
+    const req = new Request('https://example.com/bundle?series=MORTGAGE30US,FEDFUNDS,MORTGAGE30US,FEDFUNDS');
+    const res = await handleBundle(req, env);
+
+    assert.equal(res.status, 200);
+    assert.deepEqual(requested, ['MORTGAGE30US', 'FEDFUNDS']);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('bundle endpoint rejects too many requested series ids', async () => {
+  const env = makeEnv();
+  const series = Array.from({ length: 11 }, (_, i) => `SERIES${i + 1}`).join(',');
+  const req = new Request(`https://example.com/bundle?series=${encodeURIComponent(series)}`);
+
+  const res = await handleBundle(req, env);
+  const body = await json(res);
+
+  assert.equal(res.status, 400);
+  assert.equal(body.error?.code, 'SERIES_INVALID');
+  assert.match(body.error?.details?.reason || '', /too many series requested/i);
+});
+
+test('bundle endpoint rejects malformed series identifiers', async () => {
+  const env = makeEnv();
+  const req = new Request('https://example.com/bundle?series=MORTGAGE30US,%20bad-id');
+
+  const res = await handleBundle(req, env);
+  const body = await json(res);
+
+  assert.equal(res.status, 400);
+  assert.equal(body.error?.code, 'SERIES_INVALID');
+  assert.match(body.error?.details?.reason || '', /invalid identifier present/i);
+});
 test('bundle endpoint rejects invalid limit query values to prevent unbounded upstream requests', async () => {
   const env = makeEnv();
   const badValues = ['abc', '-1', '0', '5001', '12.5'];
