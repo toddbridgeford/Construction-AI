@@ -959,6 +959,95 @@ test('fred observations endpoint rejects invalid limit query values before upstr
   assert.equal(body.error?.code, 'LIMIT_INVALID');
 });
 
+test('fred observations endpoint rejects malformed series_id values before upstream call', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  let fetchCalls = 0;
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => {
+    fetchCalls += 1;
+    return new Response(JSON.stringify({ observations: [] }), { status: 200, headers: { 'content-type': 'application/json' } });
+  };
+
+  try {
+    const badInputs = ['', '%20', 'bad-id'];
+
+    for (const bad of badInputs) {
+      const req = new Request(`https://example.com/fred/observations?series_id=${bad}`);
+      const res = await handleFredObservations(req, env);
+      const body = await json(res);
+
+      assert.equal(res.status, 400);
+      assert.equal(body.error?.code, 'SERIES_ID_INVALID');
+      assert.match(body.error?.details?.reason || '', /\^\[A-Z0-9_\]\+\$/);
+    }
+
+    assert.equal(fetchCalls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('fred observations endpoint defaults series_id to CPIAUCSL when omitted', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const originalFetch = globalThis.fetch;
+  const requested = [];
+  globalThis.fetch = async (input) => {
+    const url = new URL(typeof input === 'string' ? input : input.url);
+    requested.push(url.searchParams.get('series_id'));
+    return new Response(JSON.stringify({ observations: [{ date: '2024-01-01', value: '1.0' }] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  };
+
+  try {
+    const req = new Request('https://example.com/fred/observations');
+    const res = await handleFredObservations(req, env);
+    const body = await json(res);
+
+    assert.equal(res.status, 200);
+    assert.equal(body.series_id, 'CPIAUCSL');
+    assert.equal(body.source, 'fred');
+    assert.equal(body.limit, 24);
+    assert.equal(Array.isArray(body.data?.observations), true);
+    assert.deepEqual(requested, ['CPIAUCSL']);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('fred observations endpoint accepts valid series_id values with unchanged payload shape', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const originalFetch = globalThis.fetch;
+  const observed = [];
+  globalThis.fetch = async (input) => {
+    const url = new URL(typeof input === 'string' ? input : input.url);
+    observed.push({ series: url.searchParams.get('series_id'), limit: url.searchParams.get('limit') });
+    return new Response(JSON.stringify({ observations: [{ date: '2024-03-01', value: '3.14' }] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  };
+
+  try {
+    const req = new Request('https://example.com/fred/observations?series_id=FEDFUNDS&limit=5');
+    const res = await handleFredObservations(req, env);
+    const body = await json(res);
+
+    assert.equal(res.status, 200);
+    assert.equal(body.ok, true);
+    assert.equal(typeof body.service, 'string');
+    assert.equal(typeof body.ts, 'string');
+    assert.equal(body.series_id, 'FEDFUNDS');
+    assert.equal(body.limit, 5);
+    assert.equal(body.source, 'fred');
+    assert.equal(Array.isArray(body.data?.observations), true);
+    assert.deepEqual(observed, [{ series: 'FEDFUNDS', limit: '5' }]);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 
 test('market radar returns subsection error when markets index asset contains malformed JSON', async () => {
   const env = makeEnv({
