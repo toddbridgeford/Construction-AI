@@ -8,6 +8,7 @@ import {
   handleConstructionSettingsDefaults,
   handleConstructionSettingsReset,
   handleConstructionSettingsProfiles,
+  handleConstructionSettingsActiveProfile,
   handleConstructionSettingsProfilesActivate,
   handleConstructionSettingsProfilesCreate,
   handleConstructionSettingsProfilesDelete,
@@ -19,6 +20,7 @@ const REQUIRED_ROUTES = [
   '/construction/settings',
   '/construction/settings/reset',
   '/construction/settings/profiles',
+  '/construction/settings/active-profile',
   '/construction/settings/profiles/activate',
   '/construction/settings/profiles/delete',
   '/construction/watchlist/custom',
@@ -84,19 +86,45 @@ test('profiles list returns seeded defaults and balanced active when storage is 
   assert.equal(body.profiles.find((p) => p.profile_id === 'balanced-operator')?.is_active, true);
 });
 
-test('activate profile endpoint switches active profile', async () => {
+test('active profile endpoint switches active profile with resolved settings payload', async () => {
   const env = makeEnv();
-  const req = new Request('https://example.com/construction/settings/profiles/activate', {
+  const req = new Request('https://example.com/construction/settings/active-profile', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ profile_id: 'aggressive-growth' }),
   });
-  const res = await handleConstructionSettingsProfilesActivate(req, env);
+  const res = await handleConstructionSettingsActiveProfile(req, env);
   const body = await json(res);
 
   assert.equal(res.status, 200);
-  assert.equal(body.action, 'profile_activated');
   assert.equal(body.active_profile_id, 'aggressive-growth');
+  assert.equal(body.active_profile_name, 'Aggressive Growth');
+  assert.equal(body.settings.alert_sensitivity, 'aggressive');
+});
+
+
+
+test('active profile endpoint validates missing and unknown profile ids', async () => {
+  const env = makeEnv();
+
+  const missingRes = await handleConstructionSettingsActiveProfile(new Request('https://example.com/construction/settings/active-profile', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({}),
+  }), env);
+  const missingBody = await json(missingRes);
+  assert.equal(missingRes.status, 400);
+  assert.equal(missingBody.error.code, 'PROFILE_ID_REQUIRED');
+
+  const unknownRes = await handleConstructionSettingsActiveProfile(new Request('https://example.com/construction/settings/active-profile', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'missing-profile' }),
+  }), env);
+  const unknownBody = await json(unknownRes);
+  assert.equal(unknownRes.status, 404);
+  assert.equal(unknownBody.error.code, 'PROFILE_NOT_FOUND');
+  assert.equal(unknownBody.error.details.profile_id, 'missing-profile');
 });
 
 test('settings POST updates active profile with partial merge and validation', async () => {
@@ -176,6 +204,44 @@ test('custom watchlist and terminal include profile-aware metadata', async () =>
 });
 
 
+
+
+test('profile switch immediately updates settings, alerts, and terminal summaries', async () => {
+  const env = makeEnv();
+
+  const listRes = await handleConstructionSettingsProfiles(new Request('https://example.com/construction/settings/profiles'), env);
+  const listBody = await json(listRes);
+  assert.equal(listRes.status, 200);
+  assert.ok(listBody.profiles.some((p) => p.profile_id === 'gc-cash-protection'));
+
+  const switchRes = await handleConstructionSettingsActiveProfile(new Request('https://example.com/construction/settings/active-profile', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'gc-cash-protection' }),
+  }), env);
+  const switchBody = await json(switchRes);
+  assert.equal(switchRes.status, 200);
+  assert.equal(switchBody.active_profile_id, 'gc-cash-protection');
+  assert.equal(switchBody.active_profile_name, 'GC Cash Protection');
+
+  const settingsRes = await handleConstructionSettings(new Request('https://example.com/construction/settings'), env);
+  const settingsBody = await json(settingsRes);
+  assert.equal(settingsRes.status, 200);
+  assert.equal(settingsBody.settings.thresholds.collections_stress_severe_threshold, 66);
+
+  const alertsRes = await worker.fetch(new Request('https://example.com/construction/alerts'), env);
+  const alertsBody = await json(alertsRes);
+  assert.equal(alertsRes.status, 200);
+  assert.ok(Array.isArray(alertsBody.alerts));
+
+  const terminalRes = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
+  const terminalBody = await json(terminalRes);
+  assert.equal(terminalRes.status, 200);
+  assert.equal(terminalBody.terminal.active_settings_profile, 'GC Cash Protection');
+  assert.match(terminalBody.terminal.settings_summary, /^GC Cash Protection profile tracks /);
+  assert.match(terminalBody.terminal.saved_profiles_summary, /active profile is GC Cash Protection/);
+});
+
 test('settings profile routes are wired at router level and do not return NOT_FOUND', async () => {
   const env = makeEnv();
 
@@ -188,6 +254,13 @@ test('settings profile routes are wired at router level and do not return NOT_FO
     body: JSON.stringify({ profile_name: 'Router Test Profile' }),
   }), env);
   assert.equal(createRes.status, 200);
+
+  const activeProfileRes = await worker.fetch(new Request('https://example.com/construction/settings/active-profile', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'balanced-operator' }),
+  }), env);
+  assert.equal(activeProfileRes.status, 200);
 
   const activateRes = await worker.fetch(new Request('https://example.com/construction/settings/profiles/activate', {
     method: 'POST',

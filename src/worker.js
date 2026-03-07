@@ -44,6 +44,7 @@ import {
   handleConstructionSettingsDefaults,
   handleConstructionSettingsReset,
   handleConstructionSettingsProfiles,
+  handleConstructionSettingsActiveProfile,
   handleConstructionSettingsProfilesCreate,
   handleConstructionSettingsProfilesActivate,
   handleConstructionSettingsProfilesDelete,
@@ -81,6 +82,7 @@ export const CONSTRUCTION_ROUTE_HANDLERS = {
   "/construction/settings/profiles": (request, env) => request.method === "GET"
     ? handleConstructionSettingsProfiles(request, env)
     : handleConstructionSettingsProfilesCreate(request, env),
+  "/construction/settings/active-profile": handleConstructionSettingsActiveProfile,
   "/construction/settings/profiles/activate": handleConstructionSettingsProfilesActivate,
   "/construction/settings/profiles/delete": handleConstructionSettingsProfilesDelete,
   "/construction/morning-brief/v2": handleConstructionMorningBriefV2,
@@ -100,6 +102,7 @@ export default {
         "/construction/settings",
         "/construction/settings/reset",
         "/construction/settings/profiles",
+        "/construction/settings/active-profile",
         "/construction/settings/profiles/activate",
         "/construction/settings/profiles/delete",
       ].includes(pathname);

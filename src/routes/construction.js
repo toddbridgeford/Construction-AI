@@ -1352,8 +1352,10 @@ function buildConstructionAlerts(terminal) {
 
 const SCENARIO_SNAPSHOT_KEY = "construction:terminal:scenario-watchlist:v1";
 const CONSTRUCTION_SETTINGS_KEY = "construction:settings:profile:default:v1";
-const CONSTRUCTION_SETTINGS_PROFILES_KEY = "construction:settings_profiles";
-const CONSTRUCTION_ACTIVE_PROFILE_ID_KEY = "construction:active_settings_profile_id";
+const CONSTRUCTION_SETTINGS_PROFILES_KEY = "settings:profiles";
+const CONSTRUCTION_ACTIVE_PROFILE_ID_KEY = "settings:active_profile_id";
+const CONSTRUCTION_LEGACY_SETTINGS_PROFILES_KEY = "construction:settings_profiles";
+const CONSTRUCTION_LEGACY_ACTIVE_PROFILE_ID_KEY = "construction:active_settings_profile_id";
 
 const CONSTRUCTION_DEFAULT_SETTINGS = Object.freeze({
   metros_watchlist: ["Dallas", "Nashville", "Phoenix"],
@@ -1644,13 +1646,24 @@ function normalizeProfilesEnvelope(rawProfiles, rawActiveProfileId) {
 }
 
 async function readSettingsProfilesModel(env) {
-  const [savedProfilesRaw, activeProfileIdRaw, legacySettings] = await Promise.all([
+  const [savedProfilesRaw, activeProfileIdRaw, legacyProfilesRaw, legacyActiveProfileIdRaw, legacySettings] = await Promise.all([
     kvGetJson(env, CONSTRUCTION_SETTINGS_PROFILES_KEY),
     kvGetJson(env, CONSTRUCTION_ACTIVE_PROFILE_ID_KEY),
+    kvGetJson(env, CONSTRUCTION_LEGACY_SETTINGS_PROFILES_KEY),
+    kvGetJson(env, CONSTRUCTION_LEGACY_ACTIVE_PROFILE_ID_KEY),
     kvGetJson(env, CONSTRUCTION_SETTINGS_KEY),
   ]);
 
-  let envelope = normalizeProfilesEnvelope(savedProfilesRaw, typeof activeProfileIdRaw === "string" ? activeProfileIdRaw : null);
+  const sourceProfilesRaw = Array.isArray(savedProfilesRaw) && savedProfilesRaw.length > 0
+    ? savedProfilesRaw
+    : legacyProfilesRaw;
+  const sourceActiveProfileId = typeof activeProfileIdRaw === "string" && activeProfileIdRaw
+    ? activeProfileIdRaw
+    : typeof legacyActiveProfileIdRaw === "string"
+      ? legacyActiveProfileIdRaw
+      : null;
+
+  let envelope = normalizeProfilesEnvelope(sourceProfilesRaw, sourceActiveProfileId);
 
   if ((!Array.isArray(savedProfilesRaw) || savedProfilesRaw.length === 0) && legacySettings && typeof legacySettings === "object") {
     envelope = {
@@ -1675,8 +1688,48 @@ async function readSettingsProfilesModel(env) {
 async function persistSettingsProfilesModel(env, envelope) {
   await kvPutJson(env, CONSTRUCTION_SETTINGS_PROFILES_KEY, envelope.profiles, 60 * 60 * 24 * 365);
   await kvPutJson(env, CONSTRUCTION_ACTIVE_PROFILE_ID_KEY, envelope.active_profile_id, 60 * 60 * 24 * 365);
+  await kvPutJson(env, CONSTRUCTION_LEGACY_SETTINGS_PROFILES_KEY, envelope.profiles, 60 * 60 * 24 * 365);
+  await kvPutJson(env, CONSTRUCTION_LEGACY_ACTIVE_PROFILE_ID_KEY, envelope.active_profile_id, 60 * 60 * 24 * 365);
   const activeProfile = envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id);
   await kvPutJson(env, CONSTRUCTION_SETTINGS_KEY, activeProfile?.settings || cloneDefaultConstructionSettings(), 60 * 60 * 24 * 365);
+}
+
+async function getProfiles(env) {
+  const envelope = await readSettingsProfilesModel(env);
+  return envelope.profiles;
+}
+
+async function getActiveProfileId(env) {
+  const envelope = await readSettingsProfilesModel(env);
+  return envelope.active_profile_id || "";
+}
+
+async function setActiveProfileId(env, profileId) {
+  const envelope = await readSettingsProfilesModel(env);
+  const profile = envelope.profiles.find((entry) => entry.profile_id === profileId);
+  if (!profile) return null;
+
+  const nextEnvelope = {
+    ...envelope,
+    active_profile_id: profileId,
+    profiles: envelope.profiles.map((entry) => ({ ...entry, is_active: entry.profile_id === profileId })),
+  };
+  await persistSettingsProfilesModel(env, nextEnvelope);
+  return {
+    envelope: nextEnvelope,
+    profile: { ...profile, is_active: true },
+  };
+}
+
+async function getActiveProfile(env) {
+  const envelope = await readSettingsProfilesModel(env);
+  const activeProfile = envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id) || envelope.profiles[0] || null;
+  return activeProfile;
+}
+
+async function resolveActiveSettings(env) {
+  const activeProfile = await getActiveProfile(env);
+  return sanitizeConstructionSettings(activeProfile?.settings || {});
 }
 
 async function readActiveSettingsProfile(env) {
@@ -1689,8 +1742,7 @@ async function readActiveSettingsProfile(env) {
 }
 
 async function readConstructionSettings(env) {
-  const { activeProfile } = await readActiveSettingsProfile(env);
-  return sanitizeConstructionSettings(activeProfile?.settings || {});
+  return resolveActiveSettings(env);
 }
 
 async function saveConstructionSettings(env, partialSettings) {
@@ -1916,9 +1968,9 @@ function buildWatchlistAlerts(terminal, settings = cloneDefaultConstructionSetti
 }
 
 
-function buildSettingsSummary(settings) {
+function buildSettingsSummary(settings, profileName = "Balanced Operator") {
   const thresholdsCount = Object.keys(settings?.thresholds || {}).length;
-  return `Active settings profile tracks ${settings?.metros_watchlist?.length || 0} watched metros, ${settings?.risk_watchlist?.length || 0} risk factors, ${thresholdsCount} thresholds, and ${settings?.muted_alert_codes?.length || 0} muted alert codes at ${settings?.alert_sensitivity || "balanced"} sensitivity.`;
+  return `${profileName} profile tracks ${settings?.metros_watchlist?.length || 0} watched metros, ${settings?.risk_watchlist?.length || 0} risk factors, ${thresholdsCount} thresholds, and ${settings?.muted_alert_codes?.length || 0} muted alert codes at ${settings?.alert_sensitivity || "balanced"} sensitivity.`;
 }
 
 function buildCustomWatchlist(terminal, settings) {
@@ -2427,10 +2479,10 @@ async function buildTerminalPayload(request, env) {
   terminal.scenarios_summary = terminal.scenarios.headline;
   terminal.watchlist = buildWatchlistAlerts(terminal, settings);
   terminal.watchlist_summary = terminal.watchlist.summary;
-  terminal.settings_summary = buildSettingsSummary(settings);
+  terminal.active_settings_profile = activeProfile?.profile_name || "Balanced Operator";
+  terminal.settings_summary = buildSettingsSummary(settings, terminal.active_settings_profile);
   terminal.custom_watchlist = buildCustomWatchlist(terminal, settings);
   terminal.custom_watchlist_summary = terminal.custom_watchlist.summary;
-  terminal.active_settings_profile = activeProfile?.profile_name || "Balanced Operator";
   terminal.saved_profiles_summary = `${settingsEnvelope.profiles.length} saved profiles available; active profile is ${terminal.active_settings_profile}.`;
   terminal.morning_brief_v2 = await buildMorningBriefV2(terminal, env, settings);
   terminal.morning_brief_v2_summary = terminal.morning_brief_v2.operator_focus;
@@ -2953,8 +3005,14 @@ export async function handleConstructionSettingsProfiles(request, env) {
     if (request.method !== "GET") {
       return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     }
-    const envelope = await readSettingsProfilesModel(env);
-    return ok(env, envelope);
+    const [profiles, activeProfileId] = await Promise.all([
+      getProfiles(env),
+      getActiveProfileId(env),
+    ]);
+    return ok(env, {
+      active_profile_id: activeProfileId,
+      profiles,
+    });
   } catch (e) {
     return error(env, 500, "SETTINGS_PROFILES_FAILED", "Unable to read settings profiles", {
       message: e?.message || String(e),
@@ -3005,6 +3063,35 @@ export async function handleConstructionSettingsProfilesCreate(request, env) {
   }
 }
 
+export async function handleConstructionSettingsActiveProfile(request, env) {
+  try {
+    if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+    const body = await readJsonBody(request);
+    const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
+
+    if (!profileId) {
+      return error(env, 400, "PROFILE_ID_REQUIRED", "profile_id is required");
+    }
+
+    const resolved = await setActiveProfileId(env, profileId);
+    if (!resolved) {
+      return error(env, 404, "PROFILE_NOT_FOUND", "Profile not found", {
+        profile_id: profileId,
+      });
+    }
+
+    return ok(env, {
+      active_profile_id: resolved.envelope.active_profile_id,
+      active_profile_name: resolved.profile.profile_name,
+      settings: sanitizeConstructionSettings(resolved.profile.settings || {}),
+    });
+  } catch (e) {
+    return error(env, 500, "ACTIVE_PROFILE_SWITCH_FAILED", "Unable to switch active profile", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
 export async function handleConstructionSettingsProfilesActivate(request, env) {
   try {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
@@ -3012,16 +3099,10 @@ export async function handleConstructionSettingsProfilesActivate(request, env) {
     const profileId = typeof body?.profile_id === "string" ? body.profile_id : "";
     if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
 
-    const envelope = await readSettingsProfilesModel(env);
-    const profile = envelope.profiles.find((entry) => entry.profile_id === profileId);
-    if (!profile) return error(env, 404, "SETTINGS_PROFILE_NOT_FOUND", "Settings profile not found", { profile_id: profileId });
+    const resolved = await setActiveProfileId(env, profileId);
+    if (!resolved) return error(env, 404, "SETTINGS_PROFILE_NOT_FOUND", "Settings profile not found", { profile_id: profileId });
 
-    const nextEnvelope = {
-      active_profile_id: profileId,
-      profiles: envelope.profiles.map((entry) => ({ ...entry, is_active: entry.profile_id === profileId })),
-    };
-    await persistSettingsProfilesModel(env, nextEnvelope);
-    return ok(env, buildSettingsWriteResponse("profile_activated", profileId, { ...profile, is_active: true }));
+    return ok(env, buildSettingsWriteResponse("profile_activated", profileId, resolved.profile));
   } catch (e) {
     return error(env, 500, "SETTINGS_PROFILE_ACTIVATE_FAILED", "Unable to activate settings profile", {
       message: e?.message || String(e),
