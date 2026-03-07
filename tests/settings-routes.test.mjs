@@ -14,6 +14,7 @@ import {
   handleConstructionSettingsProfilesDelete,
   handleConstructionTerminal,
   handleConstructionMarketRadar,
+  handleConstructionMorningBriefV2,
 } from '../src/routes/construction.js';
 
 import { handleBundle, handleFredObservations, handleLiquidity } from '../src/routes/existing.js';
@@ -458,6 +459,62 @@ test('reset switches active profile to balanced-operator baseline', async () => 
   assert.equal(settingsBody.settings.alert_sensitivity, 'balanced');
 });
 
+
+
+test('terminal read path does not persist scenario snapshot in KV', async () => {
+  const kvWrites = [];
+  const store = new Map();
+  const env = makeEnv({
+    CPI_SNAPSHOTS: {
+      async get(key, opts = {}) {
+        if (!store.has(key)) return null;
+        const value = store.get(key);
+        if (opts.type === 'json') return JSON.parse(value);
+        return value;
+      },
+      async put(key, value) {
+        kvWrites.push({ key, value });
+        store.set(key, value);
+      },
+    },
+  });
+
+  const res = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.ok(body?.terminal?.morning_brief_v2);
+  assert.equal(kvWrites.some((entry) => entry.key === 'construction:terminal:scenario-watchlist:v1'), false);
+});
+
+test('morning brief v2 endpoint persists scenario snapshot in KV', async () => {
+  const kvWrites = [];
+  const store = new Map();
+  const env = makeEnv({
+    CPI_SNAPSHOTS: {
+      async get(key, opts = {}) {
+        if (!store.has(key)) return null;
+        const value = store.get(key);
+        if (opts.type === 'json') return JSON.parse(value);
+        return value;
+      },
+      async put(key, value) {
+        kvWrites.push({ key, value });
+        store.set(key, value);
+      },
+    },
+  });
+
+  const res = await handleConstructionMorningBriefV2(new Request('https://example.com/construction/morning-brief-v2'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.ok(Array.isArray(body?.brief?.changed_conditions));
+  const snapshotWrite = kvWrites.find((entry) => entry.key === 'construction:terminal:scenario-watchlist:v1');
+  assert.ok(snapshotWrite);
+  assert.ok(typeof snapshotWrite.value === 'string');
+  assert.doesNotThrow(() => JSON.parse(snapshotWrite.value));
+});
 test('custom watchlist and terminal include profile-aware metadata', async () => {
   const env = makeEnv();
   await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
