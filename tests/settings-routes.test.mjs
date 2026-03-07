@@ -463,6 +463,30 @@ test('activate and delete endpoints accept trimmed profile ids', async () => {
   assert.equal(deleteRes.status, 200);
 });
 
+test('activate and delete endpoints reject unknown fields to prevent false-success writes', async () => {
+  const env = makeEnv();
+
+  const activateRes = await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'balanced-operator', unsafe: true }),
+  }), env);
+  const activateBody = await json(activateRes);
+  assert.equal(activateRes.status, 400);
+  assert.equal(activateBody.error.code, 'SETTINGS_PROFILE_ACTIVATE_VALIDATION_FAILED');
+  assert.match(activateBody.error.details.errors[0], /unknown field: unsafe/);
+
+  const deleteRes = await handleConstructionSettingsProfilesDelete(new Request('https://example.com/construction/settings/profiles/delete', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'aggressive-growth', unsafe: true }),
+  }), env);
+  const deleteBody = await json(deleteRes);
+  assert.equal(deleteRes.status, 400);
+  assert.equal(deleteBody.error.code, 'SETTINGS_PROFILE_DELETE_VALIDATION_FAILED');
+  assert.match(deleteBody.error.details.errors[0], /unknown field: unsafe/);
+});
+
 test('stored profile ids and active profile id are normalized when reading settings profiles model', async () => {
   const env = makeEnv();
   await env.CPI_SNAPSHOTS.put('settings:profiles', JSON.stringify([
