@@ -43,7 +43,12 @@ REQUIRED_NEW_PATHS = [
   '/construction/settings/active-profile',
   '/construction/watchlist/custom'
 ]
-REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/construction/settings/reset', '/spending/ytd/summary']
+REQUIRED_POST_PATHS = [
+  '/construction/settings/reset',
+  '/construction/settings/profiles/activate',
+  '/construction/settings/profiles/delete'
+]
+REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/construction/settings/profiles', *REQUIRED_POST_PATHS, '/spending/ytd/summary']
 REQUIRED_SCHEMAS = [
   'ConstructionTerminalResponse',
   'ConstructionMarketRadarResponse',
@@ -135,6 +140,11 @@ errors << 'paths must not include /terminal' if paths.key?('/terminal')
 REQUIRED_NEW_PATHS.each do |path|
   schema = paths.dig(path, 'get', 'responses', '200', 'content', 'application/json', 'schema')
   errors << "#{path} must define GET 200 application/json schema" if schema.nil?
+end
+
+REQUIRED_POST_PATHS.each do |path|
+  schema = paths.dig(path, 'post', 'responses', '200', 'content', 'application/json', 'schema')
+  errors << "#{path} must define POST 200 application/json schema" if schema.nil?
 end
 
 components = doc.dig('components', 'schemas') || {}
@@ -287,4 +297,3 @@ if errors.any?
 end
 
 puts 'OpenAPI validation passed.'
-
