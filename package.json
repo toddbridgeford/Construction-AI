@@ -6,7 +6,8 @@
     "deploy": "npm run predeploy && wrangler deploy --assets ./.deploy-assets",
     "dev": "wrangler dev",
     "test:openapi": "ruby scripts/validate_openapi.rb",
-    "predeploy": "node scripts/prepare_deploy_assets.mjs"
+    "predeploy": "node scripts/prepare_deploy_assets.mjs",
+    "test": "node --test tests/*.test.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"
