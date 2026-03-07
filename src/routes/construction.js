@@ -3068,9 +3068,9 @@ export async function handleConstructionSettingsProfilesCreate(request, env) {
 
     const envelope = await readSettingsProfilesModel(env);
     const activeProfile = envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id) || envelope.profiles[0];
+    const activeSettings = sanitizeConstructionSettings(activeProfile?.settings || {});
     const hasSettingsOverride = Object.prototype.hasOwnProperty.call(body, "settings");
-    const baseSettings = hasSettingsOverride ? body.settings : activeProfile.settings;
-    const validation = validatePartialSettingsPayload(baseSettings);
+    const validation = validatePartialSettingsPayload(hasSettingsOverride ? body.settings : activeSettings);
     if (!validation.ok) {
       return error(env, 400, "SETTINGS_PROFILE_CREATE_VALIDATION_FAILED", "Invalid settings payload", { errors: validation.errors });
     }
@@ -3082,7 +3082,9 @@ export async function handleConstructionSettingsProfilesCreate(request, env) {
       profile_name: String(body.profile_name).trim(),
       description: typeof body.description === "string" ? body.description : "",
       is_active: false,
-      settings: sanitizeConstructionSettings({ ...baseSettings, updated_at: nowIso }),
+      settings: hasSettingsOverride
+        ? sanitizeConstructionSettings({ ...(body.settings || {}), updated_at: nowIso }, activeSettings)
+        : sanitizeConstructionSettings({ ...activeSettings, updated_at: nowIso }),
       updated_at: nowIso,
     };
 
