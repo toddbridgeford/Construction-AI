@@ -13,6 +13,7 @@ import {
   handleConstructionSettingsProfilesCreate,
   handleConstructionSettingsProfilesDelete,
   handleConstructionTerminal,
+  handleConstructionMarketRadar,
 } from '../src/routes/construction.js';
 
 import { handleBundle, handleFredObservations } from '../src/routes/existing.js';
@@ -716,4 +717,65 @@ test('fred observations endpoint rejects invalid limit query values before upstr
 
   assert.equal(res.status, 400);
   assert.equal(body.error?.code, 'LIMIT_INVALID');
+});
+
+
+test('market radar returns subsection error when markets index asset contains malformed JSON', async () => {
+  const env = makeEnv({
+    ASSETS: {
+      async fetch(url) {
+        if (url.endsWith('/markets/index.json')) {
+          return new Response('{', { status: 200, headers: { 'content-type': 'application/json' } });
+        }
+        return new Response('not-found', { status: 404 });
+      },
+    },
+  });
+
+  const res = await handleConstructionMarketRadar(env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(body.radar.ok, false);
+  assert.equal(body.radar.error.code, 'MARKETS_INDEX_INVALID');
+});
+
+test('market radar skips malformed market payloads and ranks valid markets', async () => {
+  const env = makeEnv({
+    ASSETS: {
+      async fetch(url) {
+        if (url.endsWith('/markets/index.json')) {
+          return new Response(JSON.stringify({
+            markets: [
+              { id: 'national', type: 'national', path: 'markets/national/signal_api_latest.json', label: 'United States' },
+              { id: 'austin', type: 'metro', path: 'markets/austin/signal_api_latest.json', label: 'Austin' },
+              { id: 'phoenix', type: 'metro', path: 'markets/phoenix/signal_api_latest.json', label: 'Phoenix' },
+            ],
+          }), { status: 200, headers: { 'content-type': 'application/json' } });
+        }
+        if (url.endsWith('/markets/national/signal_api_latest.json')) {
+          return new Response(JSON.stringify({ indices: { pressure_index: { value: 58 } }, meta: { region: { name: 'United States' } } }), { status: 200 });
+        }
+        if (url.endsWith('/markets/austin/signal_api_latest.json')) {
+          return new Response('{', { status: 200, headers: { 'content-type': 'application/json' } });
+        }
+        if (url.endsWith('/markets/phoenix/signal_api_latest.json')) {
+          return new Response(JSON.stringify({
+            meta: { region: { name: 'Phoenix' } },
+            indices: { pressure_index: { value: 67, zone: 'Hot', momentum_band: 'Accelerating', risk_state: '🔴' } },
+            regime: { cycle_state: 'Expansion' },
+          }), { status: 200, headers: { 'content-type': 'application/json' } });
+        }
+        return new Response('not-found', { status: 404 });
+      },
+    },
+  });
+
+  const res = await handleConstructionMarketRadar(env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(body.radar.hottest_markets.length, 1);
+  assert.equal(body.radar.hottest_markets[0].market, 'Phoenix');
+  assert.equal(body.radar.weakest_markets[0].market, 'Phoenix');
 });
