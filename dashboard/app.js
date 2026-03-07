@@ -9,6 +9,9 @@ const ENDPOINTS = {
   nowcast: `${API_BASE}/construction/nowcast`,
   alerts: `${API_BASE}/construction/alerts`,
   morningBrief: `${API_BASE}/construction/morning-brief`,
+  scenarios: `${API_BASE}/construction/scenarios`,
+  watchlist: `${API_BASE}/construction/watchlist`,
+  morningBriefV2: `${API_BASE}/construction/morning-brief/v2`,
   recessionProbability: `${API_BASE}/construction/recession-probability`,
   stressIndex: `${API_BASE}/construction/stress-index`,
   earlyWarning: `${API_BASE}/construction/early-warning`,
@@ -199,6 +202,9 @@ function modelFromSettled(results) {
       ? "Heatmap unavailable"
       : asText(heatmapTheme, "Heatmap unavailable"),
     morningBrief: settledValue(results.morningBrief, "brief") || null,
+    scenarios: settledValue(results.scenarios, "scenarios") || terminal.scenarios || null,
+    watchlist: settledValue(results.watchlist, "watchlist") || terminal.watchlist || null,
+    morningBriefV2: settledValue(results.morningBriefV2, "brief") || terminal.morning_brief_v2 || null,
     operatorActions: terminal.operator_actions || null,
     cycleInterpretation: asText(terminal.cycle_interpretation, "Neutral"),
     marketTape: marketTape || {
@@ -291,6 +297,7 @@ function renderPanels(vm) {
     <section class="row">${card("Receivables Risk", formatOneDecimal(vm.receivablesRisk?.score), vm.receivablesRisk?.explanation || vm.terminal?.receivables_risk_summary || "")}${card("Payment Delay Risk", formatOneDecimal(vm.paymentDelayRisk?.score), vm.paymentDelayRisk?.explanation || vm.terminal?.payment_delay_risk_summary || "")}${card("Collections Stress", formatOneDecimal(vm.collectionsStress?.score), vm.collectionsStress?.explanation || vm.terminal?.collections_stress_summary || "")}</section>
     <section class="row">${card("Owner Risk", formatOneDecimal(vm.ownerRisk?.score), vm.ownerRisk?.explanation || vm.terminal?.owner_risk_summary || "")}${card("Developer Fragility", formatOneDecimal(vm.developerFragility?.score), vm.developerFragility?.explanation || vm.terminal?.developer_fragility_summary || "")}${card("Lender Pullback Risk", formatOneDecimal(vm.lenderPullbackRisk?.score), vm.lenderPullbackRisk?.explanation || vm.terminal?.lender_pullback_risk_summary || "")}${card("Counterparty Quality", formatOneDecimal(vm.counterpartyQuality?.score), vm.counterpartyQuality?.explanation || vm.terminal?.counterparty_quality_summary || "")}</section>
     <section class="row">${card("Metro Concentration Risk", formatOneDecimal(vm.metroConcentrationRisk?.score), vm.metroConcentrationRisk?.explanation || vm.terminal?.metro_concentration_risk_summary || "")}${card("Counterparty Concentration Risk", formatOneDecimal(vm.counterpartyConcentrationRisk?.score), vm.counterpartyConcentrationRisk?.explanation || vm.terminal?.counterparty_concentration_risk_summary || "")}${card("Project Mix Exposure", formatOneDecimal(vm.projectMixExposure?.score), vm.projectMixExposure?.explanation || vm.terminal?.project_mix_exposure_summary || "")}${card("Portfolio Risk", formatOneDecimal(vm.portfolioRisk?.score), vm.portfolioRisk?.explanation || vm.terminal?.portfolio_risk_summary || "")}</section>
+    <section class="row">${card("Scenario Engine", vm.scenarios?.headline || vm.terminal?.scenarios_summary || "Unavailable", vm.scenarios?.base_case?.operator_implication || "")}${card("Watchlist Alerts", vm.watchlist?.summary || vm.terminal?.watchlist_summary || "No active watchlist alerts", vm.watchlist?.alerts?.[0]?.message || "")}${card("Morning Brief v2", vm.morningBriefV2?.operator_focus || vm.terminal?.morning_brief_v2_summary || "Unavailable", vm.morningBriefV2?.changed_conditions?.[0] || "")}</section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
 }

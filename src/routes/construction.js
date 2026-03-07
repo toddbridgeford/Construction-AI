@@ -1,5 +1,6 @@
 import { error, ok } from "../lib/http.js";
 import { MARKETS_INDEX_ASSET_PATH, validateAssetRootRelativePath } from "../lib/markets_assets.js";
+import { kvGetJson, kvPutJson } from "../lib/kv.js";
 import { buildConstructionDashboard } from "./existing.js";
 import { handleSpendingYtdSummary } from "./spending_ytd.js";
 
@@ -1349,6 +1350,214 @@ function buildConstructionAlerts(terminal) {
   return alerts;
 }
 
+const SCENARIO_SNAPSHOT_KEY = "construction:terminal:scenario-watchlist:v1";
+
+function compareDelta(current, prior) {
+  if (!Number.isFinite(current) || !Number.isFinite(prior)) return null;
+  return Number((current - prior).toFixed(1));
+}
+
+function changesEntry(label, current, prior, threshold = 4) {
+  const delta = compareDelta(current, prior);
+  if (delta === null || Math.abs(delta) < threshold) return null;
+  const direction = delta > 0 ? "increased" : "decreased";
+  return `${label} ${direction} by ${Math.abs(delta).toFixed(1)} points`;
+}
+
+function buildScenarioEngine(terminal) {
+  const metrics = extractTerminalInputs(terminal);
+  const topMetro = terminal?.migration_index?.inbound_markets?.[0]?.market || terminal?.forecast_summary?.strongest_market || "top metros";
+  const weakMetro = terminal?.migration_index?.outbound_markets?.[0]?.market || terminal?.forecast_summary?.weakest_market || "weaker metros";
+  const topMetroScore = Number.isFinite(terminal?.migration_index?.inbound_markets?.[0]?.score) ? terminal.migration_index.inbound_markets[0].score : null;
+  const weakMetroScore = Number.isFinite(terminal?.migration_index?.outbound_markets?.[0]?.score) ? terminal.migration_index.outbound_markets[0].score : null;
+
+  const common = {
+    signal: typeof terminal?.signal?.signal === "string" ? terminal.signal.signal : "unknown",
+    regime: typeof terminal?.regime?.regime === "string" ? terminal.regime.regime : "unknown",
+  };
+
+  const downsideStrength = [
+    terminal?.recession_probability?.next_12_months >= 55 ? 1 : 0,
+    ["elevated", "severe"].includes(terminal?.project_risk?.state) ? 1 : 0,
+    ["elevated", "severe"].includes(terminal?.collections_stress?.state) ? 1 : 0,
+    ["elevated", "severe"].includes(terminal?.owner_risk?.state) ? 1 : 0,
+    ["elevated", "severe"].includes(terminal?.developer_fragility?.state) ? 1 : 0,
+    ["elevated", "severe"].includes(terminal?.lender_pullback_risk?.state) ? 1 : 0,
+    Number.isFinite(weakMetroScore) && weakMetroScore < 45 ? 1 : 0,
+  ].reduce((sum, current) => sum + current, 0);
+
+  const upsideStrength = [
+    ["bullish", "constructive"].includes(String(common.signal).toLowerCase()) ? 1 : 0,
+    ["risk-on", "expansion"].includes(String(common.regime).toLowerCase()) ? 1 : 0,
+    Number.isFinite(topMetroScore) && topMetroScore >= 60 ? 1 : 0,
+    ["moderate", "low"].includes(terminal?.labor_shock?.state) ? 1 : 0,
+    ["moderate", "low"].includes(terminal?.materials_shock?.state) ? 1 : 0,
+    ["moderate", "low"].includes(terminal?.portfolio_risk?.state) ? 1 : 0,
+    ["strong", "mixed"].includes(terminal?.counterparty_quality?.state) ? 1 : 0,
+  ].reduce((sum, current) => sum + current, 0);
+
+  const baseCase = {
+    name: "base_case",
+    probability: 55,
+    signal: common.signal,
+    regime: common.regime,
+    risk_level: terminal?.risk?.risk_level || "unknown",
+    key_changes: [
+      `Assumes ${metrics.liquidity_state || "mixed"} liquidity persists over the next quarter`,
+      `Assumes ${topMetro} remains a relative strength market`,
+      `Assumes margin pressure stays ${terminal?.margin_pressure?.state || "moderate"}`,
+    ],
+    operator_implication: "Prioritize margin-selective pursuits, tighten customer underwriting, and keep contingency for labor and payment volatility.",
+  };
+
+  const downsideCase = {
+    name: "downside_case",
+    probability: Math.min(85, 22 + downsideStrength * 7),
+    signal: common.signal,
+    regime: common.regime,
+    risk_level: downsideStrength >= 5 ? "high" : downsideStrength >= 3 ? "elevated" : "moderate",
+    key_changes: [
+      `Recession probability remains ${terminal?.recession_probability?.next_12_months?.toFixed?.(1) || "n/a"}% and keeps financing selective`,
+      `${weakMetro} deterioration spills into backlog conversion and collections performance`,
+      "Owner/developer fragility and lender pullback compress starts and payment reliability",
+    ],
+    operator_implication: "Pause thin-bid pursuit in weak metros, shorten terms and billing cadence, and favor stronger counterparties.",
+  };
+
+  const upsideCase = {
+    name: "upside_case",
+    probability: Math.min(55, 12 + upsideStrength * 5),
+    signal: common.signal,
+    regime: common.regime,
+    risk_level: upsideStrength >= 5 ? "moderate" : "balanced",
+    key_changes: [
+      `${topMetro} resilience supports conversion and pricing discipline`,
+      `Labor/material pressure stabilizes at ${terminal?.labor_shock?.state || "moderate"} / ${terminal?.materials_shock?.state || "moderate"}`,
+      "Portfolio risk and counterparty quality improve enough to support selective growth",
+    ],
+    operator_implication: "Lean into high-quality backlog in resilient metros while capping concentration risk and preserving underwriting discipline.",
+  };
+
+  return {
+    base_case: baseCase,
+    downside_case: downsideCase,
+    upside_case: upsideCase,
+    headline: `Base case remains ${baseCase.risk_level}; downside pressure is ${downsideCase.risk_level} if ${weakMetro} continues to weaken, while upside depends on sustained ${topMetro} resilience.`,
+  };
+}
+
+function buildWatchlistAlerts(terminal) {
+  const alerts = [];
+  const weakest = terminal?.migration_index?.outbound_markets?.[0] || null;
+  const strongest = terminal?.migration_index?.inbound_markets?.[0] || null;
+
+  const addAlert = (code, severity, trigger, message, operatorAction) => {
+    alerts.push({ code, severity, trigger, message, operator_action: operatorAction });
+  };
+
+  if (["elevated", "severe"].includes(terminal?.labor_shock?.state)) {
+    addAlert("LABOR_SHOCK_ELEVATED", "medium", `Labor shock ${terminal.labor_shock.state}`, "Qualified labor availability is tightening and could disrupt execution timing.", "Lock critical crews early and avoid fixed labor assumptions on long-duration bids.");
+  }
+  if (terminal?.project_risk?.state === "severe") {
+    addAlert("PROJECT_RISK_SEVERE", "high", "Project risk severe", "Project-level risk is severe and threatens conversion quality and margin reliability.", "Pause low-quality pursuits and escalate deal gating for weak sponsors and weak metros.");
+  }
+  if (terminal?.collections_stress?.state === "severe") {
+    addAlert("COLLECTIONS_STRESS_SEVERE", "high", "Collections stress severe", "Collections stress is severe and may impair cash conversion.", "Shorten terms, tighten billing cadence, and trigger aging escalation playbooks.");
+  }
+  if (terminal?.owner_risk?.state === "severe") {
+    addAlert("OWNER_RISK_SEVERE", "high", "Owner risk severe", "Owner credit quality is deteriorating in active pipeline segments.", "Shift mix toward owners with stronger payment history and financing certainty.");
+  }
+  if (terminal?.developer_fragility?.state === "severe") {
+    addAlert("DEVELOPER_FRAGILITY_SEVERE", "high", "Developer fragility severe", "Developer fragility is severe, increasing deferral and cancellation risk.", "Rebalance away from fragile project mix and require additional safeguards pre-award.");
+  }
+  if (terminal?.portfolio_risk?.state === "severe") {
+    addAlert("PORTFOLIO_RISK_SEVERE", "high", "Portfolio risk severe", "Portfolio risk concentration is severe across metro and counterparty mix.", "Re-underwrite concentration caps and redirect pursuit toward resilient segments.");
+  }
+  if (Number.isFinite(weakest?.score) && weakest.score < 40) {
+    addAlert("WEAKEST_METRO_THRESHOLD", "medium", `${weakest.market} below resilience threshold`, `${weakest.market} score has fallen below resilience threshold, increasing downside spillover risk.`, "Reduce exposure to thin-margin pursuits in the weakest metro and track spillover into adjacent markets.");
+  }
+  if (Number.isFinite(strongest?.score) && strongest.score < 56) {
+    addAlert("STRONGEST_METRO_LOSING_MOMENTUM", "medium", `${strongest.market} momentum cooling`, `${strongest.market} remains a leader but momentum is cooling versus prior strength.`, "Watch concentration in current strongholds and avoid overcommitting capacity.");
+  }
+  if (terminal?.backlog_quality?.state === "weak") {
+    addAlert("BACKLOG_QUALITY_WEAK", "high", "Backlog quality weak", "Backlog quality is weak and future execution quality is at risk.", "Favor stronger counterparties and rebalance bid mix toward higher-certainty opportunities.");
+  }
+  if (["elevated", "severe"].includes(terminal?.bid_intensity?.state) && terminal?.backlog_quality?.state === "weak") {
+    addAlert("BID_INTENSITY_MISMATCH", "high", "Bid intensity elevated with weak backlog quality", "Pursuit intensity is high while backlog quality is weak, increasing win-at-any-cost risk.", "Pause thin-bid pursuit in weak metros and enforce minimum margin/quality gates.");
+  }
+
+  return {
+    alerts,
+    summary: alerts.length
+      ? `${alerts.filter((a) => a.severity === "high").length} high and ${alerts.filter((a) => a.severity === "medium").length} medium watchlist alerts active.`
+      : "No active watchlist alerts.",
+  };
+}
+
+function terminalSnapshotState(terminal) {
+  return {
+    recession_probability: terminal?.recession_probability?.next_12_months ?? null,
+    stress_index: terminal?.stress_index?.score ?? null,
+    early_warning: terminal?.early_warning?.score ?? null,
+    labor_shock: terminal?.labor_shock?.score ?? null,
+    materials_shock: terminal?.materials_shock?.score ?? null,
+    margin_pressure: terminal?.margin_pressure?.score ?? null,
+    project_risk: terminal?.project_risk?.score ?? null,
+    collections_stress: terminal?.collections_stress?.score ?? null,
+    portfolio_risk: terminal?.portfolio_risk?.score ?? null,
+    counterparty_quality: terminal?.counterparty_quality?.score ?? null,
+    strongest_market: terminal?.migration_index?.inbound_markets?.[0]?.market || null,
+    weakest_market: terminal?.migration_index?.outbound_markets?.[0]?.market || null,
+  };
+}
+
+async function buildMorningBriefV2(terminal, env) {
+  const current = terminalSnapshotState(terminal);
+  const prior = await kvGetJson(env, SCENARIO_SNAPSHOT_KEY);
+
+  const changed = [
+    changesEntry("Recession probability", current.recession_probability, prior?.recession_probability),
+    changesEntry("Stress index", current.stress_index, prior?.stress_index),
+    changesEntry("Early warning", current.early_warning, prior?.early_warning),
+    changesEntry("Labor shock", current.labor_shock, prior?.labor_shock),
+    changesEntry("Materials shock", current.materials_shock, prior?.materials_shock),
+    changesEntry("Project risk", current.project_risk, prior?.project_risk),
+    changesEntry("Collections stress", current.collections_stress, prior?.collections_stress),
+    changesEntry("Portfolio risk", current.portfolio_risk, prior?.portfolio_risk),
+    changesEntry("Counterparty quality", current.counterparty_quality, prior?.counterparty_quality),
+  ].filter(Boolean);
+
+  if (current.weakest_market && prior?.weakest_market && current.weakest_market !== prior.weakest_market) {
+    changed.push(`Weakest metro rotated from ${prior.weakest_market} to ${current.weakest_market}`);
+  }
+  if (current.strongest_market && prior?.strongest_market && current.strongest_market !== prior.strongest_market) {
+    changed.push(`Strongest metro rotated from ${prior.strongest_market} to ${current.strongest_market}`);
+  }
+
+  await kvPutJson(env, SCENARIO_SNAPSHOT_KEY, current, 60 * 60 * 24 * 14);
+
+  const watchlist = buildWatchlistAlerts(terminal);
+  const topRisk = watchlist.alerts.find((alert) => alert.severity === "high")?.message
+    || terminal?.portfolio_risk_summary
+    || "No urgent new risk detected.";
+
+  const topOpportunity = terminal?.scenarios?.upside_case?.operator_implication
+    || `${terminal?.migration_index?.inbound_markets?.[0]?.market || "top metros"} resilience supports selective expansion if underwriting discipline is preserved.`;
+
+  const operatorFocus = watchlist.alerts.length
+    ? watchlist.alerts[0].operator_action
+    : "Maintain selective bid discipline, watch concentration limits, and protect cash conversion quality.";
+
+  return {
+    title: "Construction Morning Brief v2",
+    changed_conditions: changed.length ? changed.slice(0, 8) : ["No material metric shifts crossed alert thresholds since the prior run."],
+    top_risks: [topRisk],
+    top_opportunities: [topOpportunity],
+    operator_focus: operatorFocus,
+    watchlist: watchlist.alerts,
+  };
+}
+
 function buildRecessionProbability(terminal) {
   const metrics = extractTerminalInputs(terminal);
   let probability = 20;
@@ -1747,6 +1956,12 @@ async function buildTerminalPayload(request, env) {
   terminal.project_mix_exposure_summary = terminal.project_mix_exposure.explanation;
   terminal.portfolio_risk = buildPortfolioRiskModel(terminal);
   terminal.portfolio_risk_summary = terminal.portfolio_risk.explanation;
+  terminal.scenarios = buildScenarioEngine(terminal);
+  terminal.scenarios_summary = terminal.scenarios.headline;
+  terminal.watchlist = buildWatchlistAlerts(terminal);
+  terminal.watchlist_summary = terminal.watchlist.summary;
+  terminal.morning_brief_v2 = await buildMorningBriefV2(terminal, env);
+  terminal.morning_brief_v2_summary = terminal.morning_brief_v2.operator_focus;
 
   if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated" || terminal.collections_stress.state === "elevated" || terminal.collections_stress.state === "severe" || terminal.owner_risk.state === "elevated" || terminal.owner_risk.state === "severe" || terminal.developer_fragility.state === "elevated" || terminal.developer_fragility.state === "severe" || terminal.lender_pullback_risk.state === "elevated" || terminal.lender_pullback_risk.state === "severe" || terminal.counterparty_quality.state === "weak" || terminal.metro_concentration_risk.state === "elevated" || terminal.metro_concentration_risk.state === "severe" || terminal.counterparty_concentration_risk.state === "elevated" || terminal.counterparty_concentration_risk.state === "severe" || terminal.project_mix_exposure.state === "elevated" || terminal.project_mix_exposure.state === "severe" || terminal.portfolio_risk.state === "elevated" || terminal.portfolio_risk.state === "severe") {
     terminal.operator_actions.gc = "Diversify metro exposure, tighten customer selection, and stress-test backlog conversion by metro and sponsor bucket.";
@@ -2239,6 +2454,40 @@ export async function handleConstructionMorningBrief(request, env) {
   }
 }
 
+
+export async function handleConstructionScenarios(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { scenarios: terminal.scenarios });
+  } catch (e) {
+    return error(env, 500, "SCENARIOS_FAILED", "Unable to build construction scenarios", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionWatchlist(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { watchlist: terminal.watchlist });
+  } catch (e) {
+    return error(env, 500, "WATCHLIST_FAILED", "Unable to build construction watchlist", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionMorningBriefV2(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { brief: terminal.morning_brief_v2 });
+  } catch (e) {
+    return error(env, 500, "MORNING_BRIEF_V2_FAILED", "Unable to build construction morning brief v2", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
 export async function handleConstructionPower(request, env) {
   try {
     const terminal = await buildTerminalPayload(request, env);
@@ -2624,5 +2873,8 @@ export function __test_only__() {
     buildCounterpartyConcentrationRiskModel,
     buildProjectMixExposureModel,
     buildPortfolioRiskModel,
+    buildScenarioEngine,
+    buildWatchlistAlerts,
+    buildMorningBriefV2,
   };
 }

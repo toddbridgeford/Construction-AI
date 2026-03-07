@@ -8,6 +8,9 @@ REQUIRED_NEW_PATHS = [
   '/construction/terminal',
   '/construction/market-radar',
   '/construction/morning-brief',
+  '/construction/scenarios',
+  '/construction/watchlist',
+  '/construction/morning-brief/v2',
   '/construction/alerts',
   '/construction/recession-probability',
   '/construction/power',
@@ -41,6 +44,14 @@ REQUIRED_SCHEMAS = [
   'ConstructionTerminalResponse',
   'ConstructionMarketRadarResponse',
   'ConstructionMorningBriefResponse',
+  'ScenarioCaseModel',
+  'ConstructionScenariosModel',
+  'WatchlistAlertModel',
+  'ConstructionWatchlistModel',
+  'MorningBriefV2Model',
+  'ConstructionScenariosResponse',
+  'ConstructionWatchlistResponse',
+  'ConstructionMorningBriefV2Response',
   'ConstructionAlertsResponse',
   'AlertCard',
   'RecessionProbabilityResponse',
@@ -128,6 +139,12 @@ errors << 'ConstructionTerminalResponse terminal schema must include power_summa
 errors << 'ConstructionTerminalResponse terminal schema must include nowcast' unless terminal_properties.key?('nowcast')
 errors << 'ConstructionTerminalResponse terminal schema must include forecast_summary' unless terminal_properties.key?('forecast_summary')
 
+errors << 'ConstructionTerminalResponse terminal schema must include scenarios' unless terminal_properties.key?('scenarios')
+errors << 'ConstructionTerminalResponse terminal schema must include scenarios_summary' unless terminal_properties.key?('scenarios_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include watchlist' unless terminal_properties.key?('watchlist')
+errors << 'ConstructionTerminalResponse terminal schema must include watchlist_summary' unless terminal_properties.key?('watchlist_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include morning_brief_v2' unless terminal_properties.key?('morning_brief_v2')
+errors << 'ConstructionTerminalResponse terminal schema must include morning_brief_v2_summary' unless terminal_properties.key?('morning_brief_v2_summary')
 errors << 'ConstructionTerminalResponse terminal schema must include stress_index' unless terminal_properties.key?('stress_index')
 errors << 'ConstructionTerminalResponse terminal schema must include early_warning' unless terminal_properties.key?('early_warning')
 errors << 'ConstructionTerminalResponse terminal schema must include capital_flows' unless terminal_properties.key?('capital_flows')

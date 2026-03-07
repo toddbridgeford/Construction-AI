@@ -37,6 +37,9 @@ import {
   handleConstructionReceivablesRisk,
   handleConstructionPaymentDelayRisk,
   handleConstructionCollectionsStress,
+  handleConstructionScenarios,
+  handleConstructionWatchlist,
+  handleConstructionMorningBriefV2,
   PORTFOLIO_LAYER_ROUTE_HANDLERS,
 } from "./routes/construction.js";
 
@@ -83,6 +86,9 @@ export default {
       if (pathname === "/construction/receivables-risk") return handleConstructionReceivablesRisk(request, env);
       if (pathname === "/construction/payment-delay-risk") return handleConstructionPaymentDelayRisk(request, env);
       if (pathname === "/construction/collections-stress") return handleConstructionCollectionsStress(request, env);
+      if (pathname === "/construction/scenarios") return handleConstructionScenarios(request, env);
+      if (pathname === "/construction/watchlist") return handleConstructionWatchlist(request, env);
+      if (pathname === "/construction/morning-brief/v2") return handleConstructionMorningBriefV2(request, env);
       const portfolioRouteHandler = PORTFOLIO_LAYER_ROUTE_HANDLERS[pathname];
       if (portfolioRouteHandler) return portfolioRouteHandler(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);

@@ -246,6 +246,39 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionMorningBriefResponse"
+  "/construction/scenarios":
+    get:
+      operationId: constructionScenarios
+      summary: Deterministic base/downside/upside scenario engine
+      responses:
+        '200':
+          description: Construction scenarios response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionScenariosResponse"
+  "/construction/watchlist":
+    get:
+      operationId: constructionWatchlist
+      summary: Deterministic operator watchlist alerts
+      responses:
+        '200':
+          description: Construction watchlist response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionWatchlistResponse"
+  "/construction/morning-brief/v2":
+    get:
+      operationId: constructionMorningBriefV2
+      summary: Changed-conditions morning brief with watchlist integration
+      responses:
+        '200':
+          description: Construction morning brief v2 response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionMorningBriefV2Response"
   "/construction/alerts":
     get:
       operationId: constructionAlerts
@@ -1079,6 +1112,18 @@ components:
               type: string
             market_tape:
               "$ref": "#/components/schemas/MarketTapeModel"
+            scenarios:
+              "$ref": "#/components/schemas/ConstructionScenariosModel"
+            scenarios_summary:
+              type: string
+            watchlist:
+              "$ref": "#/components/schemas/ConstructionWatchlistModel"
+            watchlist_summary:
+              type: string
+            morning_brief_v2:
+              "$ref": "#/components/schemas/MorningBriefV2Model"
+            morning_brief_v2_summary:
+              type: string
           required:
           - signal
           - regime
@@ -1466,6 +1511,131 @@ components:
       - ts
       - service
       - radar
+      additionalProperties: true
+    ScenarioCaseModel:
+      type: object
+      properties:
+        name:
+          type: string
+        probability:
+          type: number
+        signal:
+          type: string
+        regime:
+          type: string
+        risk_level:
+          type: string
+        key_changes:
+          type: array
+          items:
+            type: string
+        operator_implication:
+          type: string
+      required: [name, probability, signal, regime, risk_level, key_changes, operator_implication]
+      additionalProperties: false
+    ConstructionScenariosModel:
+      type: object
+      properties:
+        base_case:
+          "$ref": "#/components/schemas/ScenarioCaseModel"
+        downside_case:
+          "$ref": "#/components/schemas/ScenarioCaseModel"
+        upside_case:
+          "$ref": "#/components/schemas/ScenarioCaseModel"
+        headline:
+          type: string
+      required: [base_case, downside_case, upside_case, headline]
+      additionalProperties: false
+    WatchlistAlertModel:
+      type: object
+      properties:
+        code:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high]
+        trigger:
+          type: string
+        message:
+          type: string
+        operator_action:
+          type: string
+      required: [code, severity, trigger, message, operator_action]
+      additionalProperties: false
+    ConstructionWatchlistModel:
+      type: object
+      properties:
+        alerts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/WatchlistAlertModel"
+        summary:
+          type: string
+      required: [alerts, summary]
+      additionalProperties: false
+    MorningBriefV2Model:
+      type: object
+      properties:
+        title:
+          type: string
+        changed_conditions:
+          type: array
+          items:
+            type: string
+        top_risks:
+          type: array
+          items:
+            type: string
+        top_opportunities:
+          type: array
+          items:
+            type: string
+        operator_focus:
+          type: string
+        watchlist:
+          type: array
+          items:
+            "$ref": "#/components/schemas/WatchlistAlertModel"
+      required: [title, changed_conditions, top_risks, top_opportunities, operator_focus, watchlist]
+      additionalProperties: false
+    ConstructionScenariosResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        scenarios:
+          "$ref": "#/components/schemas/ConstructionScenariosModel"
+      required: [ok, ts, service, scenarios]
+      additionalProperties: true
+    ConstructionWatchlistResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        watchlist:
+          "$ref": "#/components/schemas/ConstructionWatchlistModel"
+      required: [ok, ts, service, watchlist]
+      additionalProperties: true
+    ConstructionMorningBriefV2Response:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        brief:
+          "$ref": "#/components/schemas/MorningBriefV2Model"
+      required: [ok, ts, service, brief]
       additionalProperties: true
     AlertCard:
       type: object
