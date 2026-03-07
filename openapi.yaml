@@ -499,6 +499,50 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionCounterpartyQualityResponse"
+  "/construction/metro-concentration-risk":
+    get:
+      operationId: constructionMetroConcentrationRisk
+      summary: Deterministic metro concentration risk model
+      responses:
+        '200':
+          description: Deterministic metro concentration risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionMetroConcentrationRiskResponse"
+  "/construction/counterparty-concentration-risk":
+    get:
+      operationId: constructionCounterpartyConcentrationRisk
+      summary: Deterministic counterparty concentration risk model
+      responses:
+        '200':
+          description: Deterministic counterparty concentration risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionCounterpartyConcentrationRiskResponse"
+  "/construction/project-mix-exposure":
+    get:
+      operationId: constructionProjectMixExposure
+      summary: Deterministic project mix exposure model
+      responses:
+        '200':
+          description: Deterministic project mix exposure model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionProjectMixExposureResponse"
+  "/construction/portfolio-risk":
+    get:
+      operationId: constructionPortfolioRisk
+      summary: Deterministic portfolio risk model
+      responses:
+        '200':
+          description: Deterministic portfolio risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionPortfolioRiskResponse"
 components:
   schemas:
     GenericOkObject:
@@ -1013,6 +1057,22 @@ components:
               "$ref": "#/components/schemas/CounterpartyQualityModel"
             counterparty_quality_summary:
               type: string
+            metro_concentration_risk:
+              "$ref": "#/components/schemas/MetroConcentrationRiskModel"
+            metro_concentration_risk_summary:
+              type: string
+            counterparty_concentration_risk:
+              "$ref": "#/components/schemas/CounterpartyConcentrationRiskModel"
+            counterparty_concentration_risk_summary:
+              type: string
+            project_mix_exposure:
+              "$ref": "#/components/schemas/ProjectMixExposureModel"
+            project_mix_exposure_summary:
+              type: string
+            portfolio_risk:
+              "$ref": "#/components/schemas/PortfolioRiskModel"
+            portfolio_risk_summary:
+              type: string
             migration_index:
               "$ref": "#/components/schemas/MigrationIndexModel"
             migration_summary:
@@ -1067,6 +1127,14 @@ components:
           - lender_pullback_risk_summary
           - counterparty_quality
           - counterparty_quality_summary
+          - metro_concentration_risk
+          - metro_concentration_risk_summary
+          - counterparty_concentration_risk
+          - counterparty_concentration_risk_summary
+          - project_mix_exposure
+          - project_mix_exposure_summary
+          - portfolio_risk
+          - portfolio_risk_summary
           - migration_index
           - migration_summary
           - market_tape
@@ -2130,6 +2198,82 @@ components:
       - drivers
       - explanation
       additionalProperties: false
+    MetroConcentrationRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    CounterpartyConcentrationRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    ProjectMixExposureModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    PortfolioRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
     ConstructionMaterialsShockResponse:
       type: object
       properties:
@@ -2350,6 +2494,74 @@ components:
       - ts
       - service
       - counterparty_quality
+      additionalProperties: true
+    ConstructionMetroConcentrationRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        metro_concentration_risk:
+          "$ref": "#/components/schemas/MetroConcentrationRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - metro_concentration_risk
+      additionalProperties: true
+    ConstructionCounterpartyConcentrationRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        counterparty_concentration_risk:
+          "$ref": "#/components/schemas/CounterpartyConcentrationRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - counterparty_concentration_risk
+      additionalProperties: true
+    ConstructionProjectMixExposureResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        project_mix_exposure:
+          "$ref": "#/components/schemas/ProjectMixExposureModel"
+      required:
+      - ok
+      - ts
+      - service
+      - project_mix_exposure
+      additionalProperties: true
+    ConstructionPortfolioRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        portfolio_risk:
+          "$ref": "#/components/schemas/PortfolioRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - portfolio_risk
       additionalProperties: true
     ConstructionStressIndexResponse:
       type: object
