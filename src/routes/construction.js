@@ -3112,6 +3112,7 @@ export async function handleConstructionSettingsProfilesActivate(request, env) {
   try {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
+    if (body === null) return error(env, 400, "SETTINGS_PROFILE_ACTIVATE_INVALID_JSON", "Malformed JSON body");
     const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
     if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
 
@@ -3130,6 +3131,7 @@ export async function handleConstructionSettingsProfilesDelete(request, env) {
   try {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
+    if (body === null) return error(env, 400, "SETTINGS_PROFILE_DELETE_INVALID_JSON", "Malformed JSON body");
     const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
     if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
 

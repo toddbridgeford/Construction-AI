@@ -323,6 +323,29 @@ test('/construction/watchlist/custom is wired and does not return NOT_FOUND at r
 });
 
 
+
+
+test('activate and delete endpoints reject malformed JSON with endpoint-specific error codes', async () => {
+  const env = makeEnv();
+
+  const activateRes = await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: '{',
+  }), env);
+  const activateBody = await json(activateRes);
+  assert.equal(activateRes.status, 400);
+  assert.equal(activateBody.error.code, 'SETTINGS_PROFILE_ACTIVATE_INVALID_JSON');
+
+  const deleteRes = await handleConstructionSettingsProfilesDelete(new Request('https://example.com/construction/settings/profiles/delete', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: '{',
+  }), env);
+  const deleteBody = await json(deleteRes);
+  assert.equal(deleteRes.status, 400);
+  assert.equal(deleteBody.error.code, 'SETTINGS_PROFILE_DELETE_INVALID_JSON');
+});
 test('activate and delete endpoints accept trimmed profile ids', async () => {
   const env = makeEnv();
 
