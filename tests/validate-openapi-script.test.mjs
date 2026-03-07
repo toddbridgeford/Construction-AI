@@ -6,6 +6,9 @@ test('OpenAPI validator enforces construction settings write endpoints and POST 
   const validator = await fs.readFile(new URL('../scripts/validate_openapi.rb', import.meta.url), 'utf8');
 
   assert.match(validator, /REQUIRED_POST_PATHS\s*=\s*\[/);
+  assert.match(validator, /'\/construction\/settings'/);
+  assert.match(validator, /'\/construction\/settings\/profiles'/);
+  assert.match(validator, /'\/construction\/settings\/active-profile'/);
   assert.match(validator, /'\/construction\/settings\/profiles\/activate'/);
   assert.match(validator, /'\/construction\/settings\/profiles\/delete'/);
   assert.match(validator, /paths\.dig\(path, 'post', 'responses', '200', 'content', 'application\/json', 'schema'\)/);
