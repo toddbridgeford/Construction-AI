@@ -1380,6 +1380,7 @@ const CONSTRUCTION_DEFAULT_SETTINGS = Object.freeze({
   },
   alert_sensitivity: "balanced",
   muted_alert_codes: [],
+  updated_at: "2024-01-01T00:00:00.000Z",
 });
 
 const ALLOWED_ALERT_SENSITIVITY = new Set(["conservative", "balanced", "aggressive"]);
@@ -1404,7 +1405,7 @@ function cloneDefaultConstructionSettings() {
     thresholds: { ...CONSTRUCTION_DEFAULT_SETTINGS.thresholds },
     alert_sensitivity: CONSTRUCTION_DEFAULT_SETTINGS.alert_sensitivity,
     muted_alert_codes: [...CONSTRUCTION_DEFAULT_SETTINGS.muted_alert_codes],
-    updated_at: new Date().toISOString(),
+    updated_at: CONSTRUCTION_DEFAULT_SETTINGS.updated_at,
   };
 }
 

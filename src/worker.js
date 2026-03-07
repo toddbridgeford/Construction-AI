@@ -47,6 +47,37 @@ import {
   PORTFOLIO_LAYER_ROUTE_HANDLERS,
 } from "./routes/construction.js";
 
+export const CONSTRUCTION_ROUTE_HANDLERS = {
+  "/construction/dashboard": (request, env) => handleConstructionDashboard(env),
+  "/construction/terminal": handleConstructionTerminal,
+  "/construction/market-radar": (_request, env) => handleConstructionMarketRadar(env),
+  "/construction/power": handleConstructionPower,
+  "/construction/heatmap": (_request, env) => handleConstructionHeatmap(env),
+  "/construction/nowcast": handleConstructionNowcast,
+  "/construction/forecast": handleConstructionForecast,
+  "/construction/stress-index": handleConstructionStressIndex,
+  "/construction/early-warning": handleConstructionEarlyWarning,
+  "/construction/capital-flows": handleConstructionCapitalFlows,
+  "/construction/migration-index": handleConstructionMigrationIndex,
+  "/construction/materials-shock": handleConstructionMaterialsShock,
+  "/construction/labor-shock": handleConstructionLaborShock,
+  "/construction/margin-pressure": handleConstructionMarginPressure,
+  "/construction/bid-intensity": handleConstructionBidIntensity,
+  "/construction/backlog-quality": handleConstructionBacklogQuality,
+  "/construction/project-risk": handleConstructionProjectRisk,
+  "/construction/receivables-risk": handleConstructionReceivablesRisk,
+  "/construction/payment-delay-risk": handleConstructionPaymentDelayRisk,
+  "/construction/collections-stress": handleConstructionCollectionsStress,
+  "/construction/scenarios": handleConstructionScenarios,
+  "/construction/watchlist": handleConstructionWatchlist,
+  "/construction/watchlist/custom": handleConstructionCustomWatchlist,
+  "/construction/settings": handleConstructionSettings,
+  "/construction/settings/defaults": handleConstructionSettingsDefaults,
+  "/construction/settings/reset": handleConstructionSettingsReset,
+  "/construction/morning-brief/v2": handleConstructionMorningBriefV2,
+  ...PORTFOLIO_LAYER_ROUTE_HANDLERS,
+};
+
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") {
@@ -72,35 +103,8 @@ export default {
       if (pathname === "/construction-index") return handleConstructionIndex(env);
       if (pathname === "/risk-score") return handleRiskScore(env);
 
-      if (pathname === "/construction/dashboard") return handleConstructionDashboard(env);
-      if (pathname === "/construction/terminal") return handleConstructionTerminal(request, env);
-      if (pathname === "/construction/market-radar") return handleConstructionMarketRadar(env);
-      if (pathname === "/construction/power") return handleConstructionPower(request, env);
-      if (pathname === "/construction/heatmap") return handleConstructionHeatmap(env);
-      if (pathname === "/construction/nowcast") return handleConstructionNowcast(request, env);
-      if (pathname === "/construction/forecast") return handleConstructionForecast(request, env);
-      if (pathname === "/construction/stress-index") return handleConstructionStressIndex(request, env);
-      if (pathname === "/construction/early-warning") return handleConstructionEarlyWarning(request, env);
-      if (pathname === "/construction/capital-flows") return handleConstructionCapitalFlows(request, env);
-      if (pathname === "/construction/migration-index") return handleConstructionMigrationIndex(request, env);
-      if (pathname === "/construction/materials-shock") return handleConstructionMaterialsShock(request, env);
-      if (pathname === "/construction/labor-shock") return handleConstructionLaborShock(request, env);
-      if (pathname === "/construction/margin-pressure") return handleConstructionMarginPressure(request, env);
-      if (pathname === "/construction/bid-intensity") return handleConstructionBidIntensity(request, env);
-      if (pathname === "/construction/backlog-quality") return handleConstructionBacklogQuality(request, env);
-      if (pathname === "/construction/project-risk") return handleConstructionProjectRisk(request, env);
-      if (pathname === "/construction/receivables-risk") return handleConstructionReceivablesRisk(request, env);
-      if (pathname === "/construction/payment-delay-risk") return handleConstructionPaymentDelayRisk(request, env);
-      if (pathname === "/construction/collections-stress") return handleConstructionCollectionsStress(request, env);
-      if (pathname === "/construction/scenarios") return handleConstructionScenarios(request, env);
-      if (pathname === "/construction/watchlist") return handleConstructionWatchlist(request, env);
-      if (pathname === "/construction/watchlist/custom") return handleConstructionCustomWatchlist(request, env);
-      if (pathname === "/construction/settings") return handleConstructionSettings(request, env);
-      if (pathname === "/construction/settings/defaults") return handleConstructionSettingsDefaults(request, env);
-      if (pathname === "/construction/settings/reset") return handleConstructionSettingsReset(request, env);
-      if (pathname === "/construction/morning-brief/v2") return handleConstructionMorningBriefV2(request, env);
-      const portfolioRouteHandler = PORTFOLIO_LAYER_ROUTE_HANDLERS[pathname];
-      if (portfolioRouteHandler) return portfolioRouteHandler(request, env);
+      const constructionRouteHandler = CONSTRUCTION_ROUTE_HANDLERS[pathname];
+      if (constructionRouteHandler) return constructionRouteHandler(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
       if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
       if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);
