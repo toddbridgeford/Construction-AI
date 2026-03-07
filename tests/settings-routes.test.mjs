@@ -4,6 +4,8 @@ import assert from 'node:assert/strict';
 import worker, { CONSTRUCTION_ROUTE_HANDLERS } from '../src/worker.js';
 import {
   handleConstructionCustomWatchlist,
+  handleConstructionForecast,
+  handleConstructionMorningBrief,
   handleConstructionSettings,
   handleConstructionSettingsDefaults,
   handleConstructionSettingsReset,
@@ -1052,4 +1054,89 @@ test('market radar tolerates malformed national baseline payload and still ranks
   assert.equal(body.radar.hottest_markets.length, 1);
   assert.equal(body.radar.hottest_markets[0].market, 'Phoenix');
   assert.match(body.radar.summary.top_strength_theme, /Phoenix|strength:/);
+});
+
+function makeCountingMarketAssetsEnv() {
+  let marketAssetFetchCount = 0;
+  const env = makeEnv({
+    ASSETS: {
+      async fetch(url) {
+        if (url.includes('/markets/')) {
+          marketAssetFetchCount += 1;
+        }
+
+        if (url.endsWith('/markets/index.json')) {
+          return new Response(JSON.stringify({
+            markets: [
+              { id: 'national', type: 'national', path: 'markets/national/signal_api_latest.json', label: 'United States' },
+              { id: 'phoenix', type: 'metro', path: 'markets/phoenix/signal_api_latest.json', label: 'Phoenix' },
+            ],
+          }), { status: 200, headers: { 'content-type': 'application/json' } });
+        }
+
+        if (url.endsWith('/markets/national/signal_api_latest.json')) {
+          return new Response(JSON.stringify({
+            meta: { region: { name: 'United States' } },
+            indices: { pressure_index: { value: 58, zone: 'Balanced', momentum_band: 'Stable', risk_state: '🟡' } },
+            regime: { cycle_state: 'Expansion' },
+          }), { status: 200, headers: { 'content-type': 'application/json' } });
+        }
+
+        if (url.endsWith('/markets/phoenix/signal_api_latest.json')) {
+          return new Response(JSON.stringify({
+            meta: { region: { name: 'Phoenix' } },
+            indices: { pressure_index: { value: 67, zone: 'Hot', momentum_band: 'Accelerating', risk_state: '🔴' } },
+            regime: { cycle_state: 'Expansion' },
+          }), { status: 200, headers: { 'content-type': 'application/json' } });
+        }
+
+        return new Response('not-found', { status: 404 });
+      },
+    },
+  });
+
+  return {
+    env,
+    getMarketAssetFetchCount: () => marketAssetFetchCount,
+  };
+}
+
+test('morning brief reuses terminal market data and avoids duplicate market asset reads', async () => {
+  const { env, getMarketAssetFetchCount } = makeCountingMarketAssetsEnv();
+  const res = await handleConstructionMorningBrief(new Request('https://example.com/construction/morning-brief'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(getMarketAssetFetchCount(), 8);
+  assert.equal(typeof body.brief, 'object');
+  assert.equal(typeof body.brief.market_radar, 'object');
+  assert.equal(typeof body.brief.heatmap_summary, 'object');
+  assert.ok(Array.isArray(body.brief.market_radar.hottest_markets));
+  assert.ok(Array.isArray(body.brief.market_radar.weakest_markets));
+});
+
+test('forecast handler reuses terminal forecast and avoids duplicate market asset reads', async () => {
+  const { env, getMarketAssetFetchCount } = makeCountingMarketAssetsEnv();
+  const res = await handleConstructionForecast(new Request('https://example.com/construction/forecast'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(getMarketAssetFetchCount(), 8);
+  assert.equal(typeof body.forecast, 'object');
+  assert.ok(Array.isArray(body.forecast.strongest_next_12_months));
+  assert.ok(Array.isArray(body.forecast.weakest_next_12_months));
+  assert.equal(typeof body.forecast.summary, 'object');
+});
+
+test('forecast handler preserves fallback payload when forecast cannot be built', async () => {
+  const env = makeEnv();
+  const res = await handleConstructionForecast(new Request('https://example.com/construction/forecast'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.deepEqual(body.forecast.strongest_next_12_months, []);
+  assert.deepEqual(body.forecast.weakest_next_12_months, []);
+  assert.equal(body.forecast.summary.top_strength_theme, 'Forecast unavailable');
+  assert.equal(body.forecast.summary.top_weakness_theme, 'Forecast unavailable');
+  assert.equal(typeof body.forecast.summary.headline, 'string');
 });
