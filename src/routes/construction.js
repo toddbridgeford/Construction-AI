@@ -2491,6 +2491,7 @@ async function buildTerminalPayload(request, env) {
   terminal.migration_summary = terminal.migration_index.headline;
 
   const marketRadar = await tryReadMarketRadar(env);
+  terminal.market_radar = marketRadar;
   if (!isSubsectionFailure(marketRadar) && marketRadar?.summary) {
     terminal.heatmap_summary = marketRadar.summary;
   } else {
@@ -3346,7 +3347,7 @@ export async function handleConstructionRecessionProbability(request, env) {
 export async function handleConstructionMorningBrief(request, env) {
   try {
     const terminal = await buildTerminalPayload(request, env);
-    const marketRadar = await tryReadMarketRadar(env);
+    const marketRadar = terminal?.market_radar || subsectionError("MARKET_RADAR_FAILED", "Unable to build market radar");
     const metrics = extractTerminalInputs(terminal);
     const settings = await readConstructionSettings(env);
     const customWatchlist = buildCustomWatchlist(terminal, settings);
@@ -3688,7 +3689,9 @@ export async function handleConstructionPortfolioRisk(request, env) {
 export async function handleConstructionForecast(request, env) {
   try {
     const terminal = await buildTerminalPayload(request, env);
-    const forecast = await tryBuildForecast(request, env, terminal);
+    const forecast = terminal?.forecast && !isSubsectionFailure(terminal.forecast)
+      ? terminal.forecast
+      : await tryBuildForecast(request, env, terminal);
 
     if (isSubsectionFailure(forecast)) {
       return ok(env, {
