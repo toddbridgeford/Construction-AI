@@ -2966,10 +2966,14 @@ async function loadScoredMarketsFromAssets(env) {
     if (nationalPathValidation.ok) {
       const nationalRes = await env.ASSETS.fetch(`${base}/${nationalPathValidation.normalizedPath}`);
       if (nationalRes.ok) {
-        const nationalPayload = await nationalRes.json();
-        const candidate = nationalPayload?.indices?.pressure_index?.value;
-        if (Number.isFinite(candidate)) {
-          nationalBaselineScore = candidate;
+        try {
+          const nationalPayload = await nationalRes.json();
+          const candidate = nationalPayload?.indices?.pressure_index?.value;
+          if (Number.isFinite(candidate)) {
+            nationalBaselineScore = candidate;
+          }
+        } catch {
+          nationalBaselineScore = null;
         }
       }
     }
