@@ -38,7 +38,7 @@
   "indices": {
     "pressure_index": {
       "value": 47,
-      "direction": "↓",
+      "direction": "→",
       "zone": "Compression Phase",
       "delta_3m": 0,
       "momentum_band": "Stable",
@@ -170,7 +170,7 @@
     "regions": [
       {
         "name": "National",
-        "velocity": "↓",
+        "velocity": "→",
         "pressure": "🟢",
         "capital": "🟢",
         "residential": "🟡",

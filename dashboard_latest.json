@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-07T13:09:21.418Z",
+  "generated_at": "2026-03-07T18:50:52.814Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -12,10 +12,6 @@
     "delta_3m": 0,
     "momentum": "Stable",
     "history": [
-      {
-        "date": "2026-03-04",
-        "value": 46
-      },
       {
         "date": "2026-03-04",
         "value": 46
@@ -55,6 +51,10 @@
       {
         "date": "2026-03-07",
         "value": 48
+      },
+      {
+        "date": "2026-03-07",
+        "value": 47
       },
       {
         "date": "2026-03-07",
@@ -122,8 +122,8 @@
     ],
     "trends": {
       "cpi": {
-        "arrow": "↓",
-        "symbol": "arrow.down.right"
+        "arrow": "→",
+        "symbol": "arrow.right"
       },
       "mortgage_30y": {
         "arrow": "↑",
@@ -152,7 +152,7 @@
         "title": "Construction Pressure",
         "subtitle": "Headline CPI • Slowdown",
         "value": 47,
-        "trend": "↓",
+        "trend": "→",
         "symbol": "gauge.with.dots",
         "severity": "NORMAL"
       },
@@ -195,10 +195,82 @@
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 27,
-      "newsapi:everything": 77
+      "newsapi:top_headlines": 28,
+      "newsapi:everything": 78
     },
     "news_unified": [
+      {
+        "title": "Dow Slides as Stagflation Worries Roil Markets - Barron's",
+        "url": "https://www.barrons.com/livecoverage/stock-market-news-today-030626",
+        "source": "Barron's",
+        "published_at": "2026-03-06T16:08:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The Dow, S&P 500, and Nasdaq are falling as the stock market digests disappointing jobs data and surging oil prices."
+      },
+      {
+        "title": "Dow falls 600 points after Trump comments spike oil, surprise job loss in February: Live updates - CNBC",
+        "url": "https://www.cnbc.com/2026/03/05/stock-market-today-live-updates.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T15:56:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Stocks fell Friday, adding to their weekly declines, as oil prices spiked and traders reacted to an unexpected drop in new U.S. jobs data."
+      },
+      {
+        "title": "United can remove and ban passengers who refuse to use headphones - Mashable",
+        "url": "https://mashable.com/article/united-airlines-headphone-policy",
+        "source": "Mashable",
+        "published_at": "2026-03-06T14:03:45Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Some more peace and quiet in the cabin."
+      },
+      {
+        "title": "Used vehicle prices jump ahead of spring selling season optimism - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/used-vehicle-prices.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T14:00:01Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A closely watched barometer for used vehicle pricing jumped last month as dealers sped to increase inventories amid optimism of a robust spring selling season."
+      },
+      {
+        "title": "Retail sales fell more than expected in January, biggest drop in eight months - CNN",
+        "url": "https://www.cnn.com/2026/03/06/economy/us-retail-sales-january",
+        "source": "CNN",
+        "published_at": "2026-03-06T13:35:26Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "One of the main pillars propping up the US economy — consumer spending — may be starting to crack."
+      },
+      {
+        "title": "United CEO Scott Kirby says higher airfare could be ahead after fuel price spike - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/united-airlines-ceo-scott-kirby.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T13:22:56Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "United CEO Scott Kirby said demand remains high but that fuel prices will hit first-quarter results."
+      },
+      {
+        "title": "The ‘everybody loses’ scenario: Why the Iran conflict is breaking this classic portfolio strategy - MarketWatch",
+        "url": "https://www.marketwatch.com/story/the-everybody-loses-scenario-why-the-iran-conflict-is-breaking-this-classic-portfolio-strategy-b47c298d",
+        "source": "MarketWatch",
+        "published_at": "2026-03-06T11:44:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
+      {
+        "title": "Oil hits 23-month high as Qatar minister warns prices could reach $150 - MarketWatch",
+        "url": "https://www.marketwatch.com/story/oil-at-20-month-high-as-qatar-minister-warns-of-halt-to-energy-shipments-ffd3f8f9",
+        "source": "MarketWatch",
+        "published_at": "2026-03-06T10:01:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Qatar energy minister warns that supplies from Persian Gulf could stop entirely"
+      },
       {
         "title": "The Kalshi and Polymarket CEO feud: They hate each other - NPR",
         "url": "https://www.npr.org/2026/03/06/nx-s1-5735893/iran-war-kalshi-polymarket-feud",
@@ -209,13 +281,31 @@
         "description": "The 20-something billionaires who run Kalshi and Polymarket are battling it out to be the top prediction market company. Observers and former insiders say the feud is just heating up."
       },
       {
-        "title": "Dow futures tick higher, but index heads for worst week since October on oil surge: Live updates - CNBC",
-        "url": "https://www.cnbc.com/2026/03/05/stock-market-today-live-updates.html",
-        "source": "CNBC",
-        "published_at": "2026-03-06T08:16:00Z",
+        "title": "OpenAI releases new ChatGPT model for working in Excel and Google Sheets - Axios",
+        "url": "https://www.axios.com/2026/03/05/openai-gpt-54-chatgpt-office",
+        "source": "Axios",
+        "published_at": "2026-03-06T08:13:22Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The Dow Industrials lost nearly 785 points in Thursday’s sell-off as oil prices leapt. The blue-chip index is on track for its worst week since October."
+        "description": "GPT-5.4 outperforms office workers 83% of the time, OpenAI says."
+      },
+      {
+        "title": "McDonald’s CEO did a burger taste test that became a cautionary tale for execs. But there’s a silver lining - Fortune",
+        "url": "https://fortune.com/2026/03/06/mcdonalds-ceo-did-a-burger-taste-test-that-became-a-cautionary-tale-for-execs-but-theres-a-silver-lining/",
+        "source": "Fortune",
+        "published_at": "2026-03-06T08:07:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "McDonald’s CEO Chris Kempczinski’s taste test turned into a viral meme war that shows how risky the CEO-influencer model has become."
+      },
+      {
+        "title": "Why oil at $200 a barrel is no longer unthinkable - Financial Times",
+        "url": "https://www.ft.com/content/8d8c337f-e3a7-4fa5-8e9f-749a24fe3eb9",
+        "source": "Financial Times",
+        "published_at": "2026-03-06T05:00:50Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "If supply disruptions persist, holders of stockpiled reserves can’t be relied on to fully cushion the impact"
       },
       {
         "title": "Anthropic launches AI job destruction detector - Axios",
@@ -227,40 +317,22 @@
         "description": "The AI giant's new measure shows \"limited evidence\" that AI has affected unemployment so far."
       },
       {
-        "title": "Beyond Meat drops the ‘Meat’ from its name as it expands to plant-based drinks and snacks - AP News",
-        "url": "https://apnews.com/article/beyond-meat-plantbased-protein-drinks-5cf4bd0e5711c062ae9dca52f8980e4c",
-        "source": "Associated Press",
-        "published_at": "2026-03-06T03:42:00Z",
+        "title": "Six Flags selling 7 parks, including 4 in the Midwest, in $331M deal - NBC 5 Chicago",
+        "url": "https://www.nbcchicago.com/news/local/six-flags-selling-7-parks-including-4-in-the-midwest-in-331m-deal/3903920/",
+        "source": "NBC Chicago",
+        "published_at": "2026-03-06T03:46:51Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Beyond Meat is dropping “meat” from its name as it moves beyond the struggling market for plant-based burgers, sausages and tenders and expands into new categories like protein drinks. The company now known as the Beyond The Plant Protein Co., or simply Beyon…"
+        "description": "Six Flags has agreed to sell seven of its theme parks, including four in the Midwest, the company announced Thursday."
       },
       {
-        "title": "OpenAI releases new ChatGPT model for working in Excel and Google Sheets - Axios",
-        "url": "https://www.axios.com/2026/03/05/openai-gpt-54-chatgpt-office",
-        "source": "Axios",
-        "published_at": "2026-03-06T01:54:27Z",
+        "title": "Amazon is back up after outage affecting tens of thousands of shoppers - Business Insider",
+        "url": "https://www.businessinsider.com/amazon-down-outage-payment-failure-shoppers-downdetector-2026-3",
+        "source": "Business Insider",
+        "published_at": "2026-03-06T02:47:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "GPT-5.4 outperforms office workers 83% of the time, OpenAI says."
-      },
-      {
-        "title": "CNBC Daily Open: Oil surges as Iran war enters seventh day - CNBC",
-        "url": "https://www.cnbc.com/2026/03/06/cnbc-daily-open-oil-iran-war-us-israel.html",
-        "source": "CNBC",
-        "published_at": "2026-03-06T01:08:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "U.S. crude oil hit as much as $80 per barrel Thursday, as the escalating Iran war enters its seventh day and continues disrupting global fuel supplies."
-      },
-      {
-        "title": "Six Flags selling Great Escape, other amusement parks - Times Union",
-        "url": "https://www.timesunion.com/news/article/six-flags-selling-great-escape-owner-hunter-21956833.php",
-        "source": "Albany Times Union",
-        "published_at": "2026-03-05T23:54:31Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The Queensbury location, which got its start as Storytown, is among several amusement parks being sold to EPR Properties."
+        "description": "Shoppers are reporting Amazon on Downdetector, saying the problems ranged from checkout and payment failures to incorrect or fluctuating prices."
       },
       {
         "title": "Workers report watching Ray-Ban Meta-shot footage of people using the bathroom - Ars Technica",
@@ -270,15 +342,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Meta accused of \"concealing the facts\" about smart glass users' privacy."
-      },
-      {
-        "title": "Block employee says the company dangled a 75% pay raise to get her to stay after layoffs — but she decided to quit - Business Insider",
-        "url": "https://www.businessinsider.com/block-employee-says-quit-retention-bonus-package-offer-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-05T23:36:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "\"I saw my company discard half of my peers and double my pay,\" the former Block employee wrote. \"That's not an honor. It feels shameful.\""
       },
       {
         "title": "US considers tying Nvidia and AMD AI chip exports to foreign investment pledges - Financial Times",
@@ -308,13 +371,22 @@
         "description": "Chipmaker Marvell narrowly beat analyst estimates for its fiscal Q4 and guided modestly higher for the current period. MRVL stock jumped."
       },
       {
-        "title": "Historic winter storms weigh on Gap, Old Navy performance after 800 temporary store closures - CNBC",
-        "url": "https://www.cnbc.com/2026/03/05/gap-gap-q4-2025-earnings.html",
-        "source": "CNBC",
-        "published_at": "2026-03-05T21:16:38Z",
+        "title": "Setting a new bar? Zealand touts 'placebo-like tolerability' for Roche-partnered weight loss drug - Fierce Biotech",
+        "url": "https://www.fiercebiotech.com/biotech/sets-new-bar-zealand-touts-placebo-tolerability-roche-partnered-weight-loss-drug",
+        "source": "FierceBiotech",
+        "published_at": "2026-03-05T21:44:23Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Gap has been on a steady upswing of growth but saw worse than expected results during its holiday quarter after historic winter storms led to store closures."
+        "description": "Zealand Pharma’s Roche-partnered amylin analog demonstrated “placebo-like tolerability” and up to 10.7% mean weight loss at 42 weeks in a phase 2 obesity trial. | Zealand Pharma’s Roche-partnered amylin analog demonstrated “placebo-like tolerability” and up t…"
+      },
+      {
+        "title": "Korean Stocks to Bounce, US Inflation Fears Ease: Markets Wrap - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-04/stock-market-today-dow-s-p-live-updates-",
+        "source": "Bloomberg",
+        "published_at": "2026-03-05T21:40:45Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A slide in chipmakers dragged down stocks while a bond selloff deepened amid a spike in oil as headlines continued to depict war escalating in Iran and the Middle East. Bitcoin slumped."
       },
       {
         "title": "Boston Is Ready to Fight RFK Jr. Over Dunkin’ - The Cut",
@@ -324,15 +396,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Massachusetts residents did not appreciate Robert F. Kennedy Jr. calling out the sugar content of their favorite Dunkin’ iced coffee."
-      },
-      {
-        "title": "Kalshi Owes Bettors $54 Million On Ayatollah Khamenei's Death, But Claims It Doesn't Have To Pay - OutKick",
-        "url": "https://www.outkick.com/betting/kalshi-owes-bettors-54-million-ayatollah-khameneis-death-claims-doesnt-have-pay",
-        "source": "Outkick.com",
-        "published_at": "2026-03-05T21:00:56Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The prediction market reportedly tried justifying not paying its winner by saying the site doesn’t allow transactions \"directly tied to death.\""
       },
       {
         "title": "Something on Wall Street 'Smells Like' 2008, Says Former Goldman Sachs Chief. Here's What It Is. - Investopedia",
@@ -389,58 +452,319 @@
         "description": "Job cuts at a Whirlpool factory in Iowa underscore the challenges in reviving American manufacturing. \"Every day, workers' jobs are still in jeopardy,\" a union official said."
       },
       {
-        "title": "Trump gets data center companies to pledge to pay for power generation - Ars Technica",
-        "url": "https://arstechnica.com/tech-policy/2026/03/leading-ai-datacenter-companies-sign-pledge-to-buy-their-own-power/",
-        "source": "Ars Technica",
-        "published_at": "2026-03-05T18:41:28Z",
+        "title": "Eric Schmidt: big tech should power its own AI ambitions",
+        "url": "https://fortune.com/2026/03/06/eric-schmidt-former-google-ceo-big-tech-data-centers-grid-ai-utility-bills/",
+        "source": "Fortune",
+        "published_at": "2026-03-06T18:48:49Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "With no enforcement and questionable economics, it may not make a difference."
+        "feed": "everything",
+        "description": "Tech leaders should respond to the momentum coming from the White House."
       },
       {
-        "title": "McDonald’s CEO Goes Viral for the ‘Incredibly Alien’ Way He Eats a Burger - TODAY.com",
-        "url": "https://www.today.com/food/trends/mcdonalds-ceo-eats-burger-video-rcna261776",
-        "source": "TODAY",
-        "published_at": "2026-03-05T18:18:52Z",
+        "title": "New Toll Brothers Luxury Townhome Community Coming Soon to Redondo Beach, California",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251223/1924/en/New-Toll-Brothers-Luxury-Townhome-Community-Coming-Soon-to-Redondo-Beach-California.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T18:16:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "McDonald’s CEO Chris Kempczinski is being roasted on social media, including by Burger King and Wendy's, for the way he ate a Big Arch burger in a viral video."
+        "feed": "everything",
+        "description": "Toll Brothers at Redondo Beach offers exclusive three-story residences in a prime coastal location Toll Brothers at Redondo Beach offers exclusive three-story residences in a prime coastal location"
       },
       {
-        "title": "What the Iran war market turmoil means for those nearing retirement - CNBC",
-        "url": "https://www.cnbc.com/2026/03/05/iran-war-market-volatility-retirement.html",
-        "source": "CNBC",
-        "published_at": "2026-03-05T17:00:00Z",
+        "title": "Gulf nations pessimistic about what Trump will leave behind",
+        "url": "https://www.abc.net.au/news/2026-03-07/gulf-states-pessimistic-about-what-trump-will-leave-behind/106418872",
+        "source": "ABC News (AU)",
+        "published_at": "2026-03-06T18:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Market shakiness may not concern long-term investors, but it could be a useful wake-up call for those on the precipice of retirement, experts say."
+        "feed": "everything",
+        "description": "While the cabaret of outlandish and contradictory statements and claims continues in Washington, there is considerable pragmatic pessimism in the Gulf about the mess Donald Trump will leave behind."
       },
       {
-        "title": "United Airlines says it will boot passengers who refuse to use headphones on planes - NBC News",
-        "url": "https://www.nbcnews.com/business/business-news/united-boot-passengers-dont-use-headphones-rcna261908",
-        "source": "NBC News",
-        "published_at": "2026-03-05T16:33:52Z",
+        "title": "When The Cloud Comes To Town: How Energy, Communities, And Accountability Need A Rethink",
+        "url": "https://www.forrester.com/blogs/when-the-cloud-comes-to-town-how-energy-communities-and-accountability-need-a-rethink/",
+        "source": "Forrester.com",
+        "published_at": "2026-03-06T17:53:07Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Listen up, flyers: United Airlines said it will start removing passengers from flights who refuse to wear headphones while listening to content on their personal devices, and such behavior could lead to a permanent ban"
+        "feed": "everything",
+        "description": "The rapid expansion of AI-driven data centers transforms what once seemed like invisible, back-end digital infrastructure into a highly visible, very localized challenge. According to Forrester’s US Tech Market Forecast, 2025 To 2030, AI could add 1.3 to 1.7 …"
       },
       {
-        "title": "ChatGPT Backlash Reveals New Pitfalls in Aligning With Trump - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-05/why-are-people-deleting-chatgpt-claude-has-the-answer",
-        "source": "Bloomberg",
-        "published_at": "2026-03-05T16:22:01Z",
+        "title": "When The Cloud Comes to Town: How Energy, Communities, and Accountability Need A Re-think",
+        "url": "https://www.forrester.com/blogs/when-the-cloud-comes-to-town-how-energy-communities-and-accountability-need-a-re-think/",
+        "source": "Forrester.com",
+        "published_at": "2026-03-06T17:53:07Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Downloads of rival AI tool Claude soar amid feud with the Pentagon."
+        "feed": "everything",
+        "description": "The rapid expansion of AI-driven data centers transforms what once seemed like invisible, back-end digital infrastructure into a highly visible, very localized challenge. According to Forrester’s US Tech Market Forecast, 2025 To 2030, AI could add 1.3 -1.7 gi…"
       },
       {
-        "title": "New CEO Buys $15 Million In Stock, Berkshire Restarts Buybacks - Investor's Business Daily",
-        "url": "https://www.investors.com/news/berkshire-hathaway-warren-buffett-greg-abel-stock-repurchase/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-05T14:25:00Z",
+        "title": "The war on Iran is forcing Gulf states to reconsider regional strategy as the U.S. and Israel lead the region into uncertainty",
+        "url": "https://mondoweiss.net/2026/03/the-war-on-iran-is-forcing-gulf-states-to-reconsider-regional-strategy-as-the-u-s-and-israel-lead-the-region-into-uncertainty/",
+        "source": "Mondoweiss",
+        "published_at": "2026-03-06T17:20:13Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Berkshire Hathaway resumed its long-standing practice of repurchasing company stock, as Greg Abel replaces Warren Buffett as CEO."
+        "feed": "everything",
+        "description": "Iran’s retaliatory attacks on its neighbors, and the U.S. failure to plan for them, are forcing the Gulf Cooperation Council states to reconsider their regional strategies and their relationship with Washington."
+      },
+      {
+        "title": "US job market stalls, unemployment rate rises before Fed decision",
+        "url": "https://www.aljazeera.com/economy/2026/3/6/us-job-market-stalls-unemployment-rate-rises-before-fed-decision",
+        "source": "Al Jazeera English",
+        "published_at": "2026-03-06T17:11:16Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The healthcare sector was hit the hardest , while tariff-exposed sectors remained stagnant ."
+      },
+      {
+        "title": "Spring Arts 2026: Black Panther Artist Emory Douglas, 'Macbeth' Reimagined, Ravi Shankar + More",
+        "url": "https://www.7x7.com/bay-area-arts-spring-2026-2675584737.html",
+        "source": "7x7.com",
+        "published_at": "2026-03-06T16:41:11Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "This spring brings a fantastic new season of arts to San Francisco with groundbreaking new exhibitions and performances in every genre.From U.S. debuts like Hong Kong political cartoonist and illustrator Justin Wong at the Chinese Culture Center to creative r…"
+      },
+      {
+        "title": "Architect: What’s Wrong With Trump’s Grandiose Ballroom Design",
+        "url": "https://apnews.com/article/trump-ballroom-white-house-east-wing-66753cd005193ac190e3702bd7353c0b",
+        "source": "Associated Press",
+        "published_at": "2026-03-06T16:31:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "President Donald Trump’s White House ballroom project is too big and should be scaled back. That's according to an architect and member of the board of the National Trust for Historic Preservation. David Scott Parker says the ballroom exceeds industry standar…"
+      },
+      {
+        "title": "Production design of “Psycho Killer” – interview with Roger Fires",
+        "url": "https://www.pushing-pixels.org/2026/03/06/production-design-of-psycho-killer-interview-with-roger-fires.html",
+        "source": "Pushing-pixels.org",
+        "published_at": "2026-03-06T16:25:37Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Continuing the ongoing series of interviews with creative artists working on various aspects of movie and episodic productions, it is my pleasure to welcome Roger Fires. In this interview, he talks about the role of the production designer, the changes that C…"
+      },
+      {
+        "title": "Disney’s Positive New Changes Aimed at Attracting More Middle Class Families",
+        "url": "https://www.disneytouristblog.com/disney-changes-attract-middle-class-families/",
+        "source": "Disneytouristblog.com",
+        "published_at": "2026-03-06T16:24:20Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "One of the hottest and most controversial topics over the last year-plus has been the claim that Walt Disney World and Disneyland are turning their backs on middle class families with young children. The company has heard these complaints, and is actively wor…"
+      },
+      {
+        "title": "Javier Palomarez, USHBC President & CEO, Comments on Secretary Noem’s Departure",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251144/0/en/Javier-Palomarez-USHBC-President-CEO-Comments-on-Secretary-Noem-s-Departure.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T16:18:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Javier Palomarez responds to Secretary Noem’s departure and calls for DHS leadership focused on balanced immigration enforcement and business reform...."
+      },
+      {
+        "title": "It's Officially Time to Worry About Trump's Economy",
+        "url": "https://www.jezebel.com/its-officially-time-to-worry-about-trumps-economy",
+        "source": "Jezebel",
+        "published_at": "2026-03-06T15:55:05Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "We are now staring down the stagflationary barrel while the threat of recession rises. The jobs market is bad to mediocre, and Trump and Israel’s war with Iran has guaranteed us more inflation thanks to the oil shock."
+      },
+      {
+        "title": "Iran war fallout, South Sudan village attack, and sea level data difficulty: The Cheat Sheet",
+        "url": "https://www.thenewhumanitarian.org/news/2026/03/06/iran-war-fallout-south-sudan-village-attack-sea-level-data-cheat-sheet",
+        "source": "The New Humanitarian",
+        "published_at": "2026-03-06T15:39:56Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Iran war fallout, South Sudan village attack, and sea level data difficulty: The Cheat Sheet\n\nsofia\n\nFri, 03/06/2026 - 15:39"
+      },
+      {
+        "title": "Developer seizes on castoff lots to tackle Miami’s housing crisis",
+        "url": "https://therealdeal.com/miami/2026/03/06/inside-overtowns-project-peach-affordable-rentals/",
+        "source": "The Real Deal",
+        "published_at": "2026-03-06T15:09:58Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "As Miami struggles to shake off its notorious reputation as the nationwide epicenter of the affordability crisis, development has been primarily restricted to two options: single-family homes or towers.  But perhaps it’s small- to mid-sized projects designed …"
+      },
+      {
+        "title": "China's largest provincial economy vows to reshape industry with AI",
+        "url": "https://economictimes.indiatimes.com/tech/artificial-intelligence/chinas-largest-provincial-economy-vows-to-reshape-industry-with-ai/articleshow/129162620.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-06T15:08:43Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Guangdong, China's economic powerhouse, is set to significantly boost artificial intelligence across its vast industries. This move aligns with Beijing's national strategy to integrate AI everywhere. The province aims for large-scale AI commercialization and …"
+      },
+      {
+        "title": "What Happened to Total Recall (1990)? The Chaotic Story Behind the Sci-Fi Classic",
+        "url": "https://www.joblo.com/total-recall-what-happened/",
+        "source": "JoBlo.com",
+        "published_at": "2026-03-06T15:07:56Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "How Total Recall survived bankruptcy, production chaos, and injuries to become one of the most unforgettable sci-fi action films\nThe post What Happened to Total Recall (1990)? The Chaotic Story Behind the Sci-Fi Classic appeared first on JoBlo."
+      },
+      {
+        "title": "Transboundary Water in MENA: Cooperation and Competition",
+        "url": "https://blogs.lse.ac.uk/mec/2026/03/06/transboundary-water-in-mena-cooperation-and-competition/",
+        "source": "Lse.ac.uk",
+        "published_at": "2026-03-06T15:04:07Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "by Greg Shapland Transboundary water resources are an important component of the water budget of many countries in the Middle East and North Africa (MENA) region. These resources exist in two forms: surface water (rivers, streams and lakes), and groundwater, …"
+      },
+      {
+        "title": "U.S. unexpectedly sheds 92,000 jobs, unemployment rate rises",
+        "url": "https://financialpost.com/news/economy/us-sheds-92000-jobs",
+        "source": "Financial Post",
+        "published_at": "2026-03-06T15:03:21Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "U.S. employers unexpectedly cut jobs in February and the unemployment rate rose, pointing to lingering fragility in a labour market. Read on"
+      },
+      {
+        "title": "U.S. lost 92,000 jobs last month and unemployment rate rises to 4.4%",
+        "url": "https://www.pbs.org/newshour/economy/u-s-lost-92000-jobs-last-month-and-unemployment-rate-rises-to-4-4",
+        "source": "PBS",
+        "published_at": "2026-03-06T14:57:01Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Labor Department reported Friday that hiring deteriorated from January, when companies, nonprofits and government agencies added 126,000 jobs."
+      },
+      {
+        "title": "U.S. aluminum buyers hunt for alternatives as Iran war upends global supply",
+        "url": "https://financialpost.com/commodities/us-aluminum-buyers-hunt-for-alternative-supply",
+        "source": "Financial Post",
+        "published_at": "2026-03-06T14:55:24Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Aluminum buyers in the U.S. are rushing to secure alternative supplies from Asia as the war on Iran disrupts a major foreign source. Read on"
+      },
+      {
+        "title": "'Immense stress' on power grid as Virginia refuses data center regulation",
+        "url": "https://www.rawstory.com/general-assembly-nixes-bills-that-required-data-centers-to-get-scc-certificate/",
+        "source": "Raw Story",
+        "published_at": "2026-03-06T14:54:33Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "For most of the industry’s existence in Virginia, approvals for data centers were largely seen as a local issue – with the state and federal governments giving the thumbs up on certain permits.But as the industry balloons across the commonwealth, those local …"
+      },
+      {
+        "title": "Jersey Hired Analysis: Garden State Labor Market Faces Uphill Climb as National Job Growth Hits February Slump",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251106/0/en/Jersey-Hired-Analysis-Garden-State-Labor-Market-Faces-Uphill-Climb-as-National-Job-Growth-Hits-February-Slump.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T14:50:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "February Jobs Report Shows a Loss of 92,000 Jobs Nationwide. How Does This Affect New Jersey?..."
+      },
+      {
+        "title": "Trump admits the hyperscalers ‘need some PR help’ because the American taxpayer is on the hook for their data centers",
+        "url": "https://fortune.com/2026/03/06/trump-data-centers-big-tech-hyperscalers-need-some-pr-help-affordability/",
+        "source": "Fortune",
+        "published_at": "2026-03-06T14:45:11Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "“Trump is trying to cover up his mistakes with a photo op,” said Lena Moffitt, executive director of Evergreen Action, an environmental group."
+      },
+      {
+        "title": "News brief: Strikes on Iran put cybersecurity teams on alert",
+        "url": "https://www.techtarget.com/searchsecurity/news/366639824/News-brief-Strikes-on-Iran-put-cybersecurity-teams-on-alert",
+        "source": "Techtarget.com",
+        "published_at": "2026-03-06T14:23:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Check out the latest security news from the Informa TechTarget team."
+      },
+      {
+        "title": "Climate Activist Despair: “Where’s the pushback?” Against President Trump",
+        "url": "https://wattsupwiththat.com/2026/03/06/climate-activist-despair-wheres-the-pushback-against-president-trump/",
+        "source": "Wattsupwiththat.com",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "\"... climate deniers have been privately celebrating what they claim is the “silent” acquiescence of billionaires, Democrats, climate activists and even reporters ...\""
+      },
+      {
+        "title": "Stanley Martin Homes Celebrates Grand Opening of Essence at Laurelbrook in Sherrills Ford, NC, its First ESSENCE BY STANLEY MARTIN™ Community in the Charlotte Market",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251066/0/en/Stanley-Martin-Homes-Celebrates-Grand-Opening-of-Essence-at-Laurelbrook-in-Sherrills-Ford-NC-its-First-ESSENCE-BY-STANLEY-MARTIN-Community-in-the-Charlotte-Market.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "RESTON, Virginia, March 06, 2026 (GLOBE NEWSWIRE) -- Stanley Martin Homes announces that Essence at Laurelbrook, a new 55+ active adult neighborhood in Sherrills Ford, North Carolina, is now open for sales. Located at 1032 Arundle Road, this highly anticipate…"
+      },
+      {
+        "title": "Study on the differentiated impact of climate change on plague epidemics in Northern and Southern China, 1912–1949",
+        "url": "https://journals.plos.org/plosntds/article?id=10.1371%2Fjournal.pntd.0014036",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Author summary The period from 1912 to 1949 coincided with the third major plague pandemic. Compared to the stringent control measures implemented by the Chinese government after the nation’s founding in 1949, the plague epidemics during this era more accurat…"
+      },
+      {
+        "title": "An integrative analysis reveals the mechanism of plastic stabilizers inducing breast cancer",
+        "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1014025",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Author summary Plastic stabilizers are ubiquitous chemical additives used to prevent plastic degradation, yet their potential role in cancer development has been largely overlooked. This study integrates computational network toxicology with biological valida…"
+      },
+      {
+        "title": "Predictive divergence in machine learning models for clinical mortality risk: A multicohort study of covid-19 patients",
+        "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0344354",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Background Machine learning (ML) algorithms are increasingly used in healthcare to support clinical decision-making. While models with similar overall performance are often considered interchangeable for deployment, they may produce divergent predictions, a p…"
+      },
+      {
+        "title": "Morphological determinants of glycosylation efficiency in Golgi cisternae",
+        "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1013993",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Author summary The Golgi apparatus is a universal feature of eukaryotic cells, playing a critical role in post-translational modification of secreted proteins. Its importance is demonstrated by the variety of disorders caused by errors in its function. A majo…"
+      },
+      {
+        "title": "Repurposing metformin as a dual-function agent to combat E. coli-induced mastitis: Mechanistic insights into biofilm dispersion and AMPK/SIRT1-mediated NF-κB inhibition",
+        "url": "https://journals.plos.org/plospathogens/article?id=10.1371%2Fjournal.ppat.1014012",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Author summary Bovine mastitis caused by drug-resistant E. coli is difficult to treat with conventional antibiotics. We explored repurposing metformin, a common diabetes drug, as a new strategy. We found that metformin fights mastitis in two ways at once. Fir…"
+      },
+      {
+        "title": "Wyoming Project Gets First Construction Permit for Nuclear Reactor in Years",
+        "url": "https://www.insurancejournal.com/news/west/2026/03/06/860828.htm",
+        "source": "Insurance Journal",
+        "published_at": "2026-03-06T13:59:05Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The U.S. Nuclear Regulatory Commission on Wednesday approved its first construction permit for a commercial nuclear reactor in eight years, one that will allow a Bill Gates-backed company to build a sodium-cooled reactor in western Wyoming. TerraPower filed f…"
+      },
+      {
+        "title": "When Washington and the states are in conflict, the ultimate winner is not always certain",
+        "url": "https://theconversation.com/when-washington-and-the-states-are-in-conflict-the-ultimate-winner-is-not-always-certain-276485",
+        "source": "The Conversation Africa",
+        "published_at": "2026-03-06T13:38:01Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Conflict between Washington and the states is perennial and by design. Lack of clarity about who’s in charge on what issue keeps power from becoming concentrated."
+      },
+      {
+        "title": "GoldHaven Files NI 43-101 Technical Report for the District-Scale Magno Polymetallic Project, Cassiar District, British Columbia",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251023/0/en/GoldHaven-Files-NI-43-101-Technical-Report-for-the-District-Scale-Magno-Polymetallic-Project-Cassiar-District-British-Columbia.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T13:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "VANCOUVER, British Columbia, March 06, 2026 (GLOBE NEWSWIRE) -- GoldHaven Resources Corp. (\"GoldHaven\" or the \"Company\") (CSE: GOH) (OTCQB: GHVNF) (FSE: 4QS) announces the filing of an independent technical report prepared in accordance with National Instrume…"
       },
       {
         "title": "US employers cut a surprising 92,000 jobs last month as unemployment rate rises to 4.4%",
@@ -828,315 +1152,113 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "(all amounts in US dollars, unless otherwise noted)  VANCOUVER, British Columbia, March  05, 2026  (GLOBE NEWSWIRE) -- Ero Copper Corp. (TSX: ERO, NYSE:..."
-      },
-      {
-        "title": "Methanex Reports Fourth Quarter 2025 Results",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250725/0/en/Methanex-Reports-Fourth-Quarter-2025-Results.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T22:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Except where otherwise noted, all currency amounts are stated in United States dollars.    Financial and Operational Highlights    Production in the fourth..."
-      },
-      {
-        "title": "ACA Connects Summit focuses on factors that raise the cost of business",
-        "url": "https://www.telecompetitor.com/aca-connects-summit-focuses-on-factors-that-raise-the-cost-of-business/",
-        "source": "Telecompetitor",
-        "published_at": "2026-03-05T21:45:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "ACA Connects Summit focuses on factors that raise the cost of business\nThere are several current business and regulatory issues that are raising the cost of doing internet and video business for small and medium-sized operators in Rural America. Members of AC…"
-      },
-      {
-        "title": "Rebuilding trust, housing, and public life at the 2026 Yale Innovation Summit",
-        "url": "https://ventures.yale.edu/news/civic-innovation-action-public-sector-innovation-2026-yale-innovation-summit",
-        "source": "Yale.edu",
-        "published_at": "2026-03-05T21:41:52Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "From zoning reform and housing construction to regulatory redesign and civic belonging, the Civic Track at the Yale Innovation Summit explores how bold ideas move beyond theory and into the systems that shape daily life.The 2026 Civic Track asks a direct ques…"
-      },
-      {
-        "title": "Methode Electronics, Inc. Reports Fiscal 2026 Third Quarter Financial Results",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250709/0/en/Methode-Electronics-Inc-Reports-Fiscal-2026-Third-Quarter-Financial-Results.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Progress on transformation amid mixed market conditions Progress on transformation amid mixed market conditions"
-      },
-      {
-        "title": "Southern Realty Trust Expands Revolving Credit Facility to $125 Million with Addition of Customers Bank",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250707/0/en/Southern-Realty-Trust-Expands-Revolving-Credit-Facility-to-125-Million-with-Addition-of-Customers-Bank.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Southern Realty Trust Inc. (“SRT” or the “Company”), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving credit facility…"
-      },
-      {
-        "title": "Sunrise Realty Trust Expands Revolving Credit Facility to $165 Million with Addition of Customers Bank",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250704/0/en/Sunrise-Realty-Trust-Expands-Revolving-Credit-Facility-to-165-Million-with-Addition-of-Customers-Bank.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Sunrise Realty Trust, Inc. (“SUNS” or the “Company”) (Nasdaq: SUNS), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving…"
-      },
-      {
-        "title": "Toll Brothers Announces Liberty Ridge Community Coming Soon to Boulder City, Nevada",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250695/1924/en/Toll-Brothers-Announces-Liberty-Ridge-Community-Coming-Soon-to-Boulder-City-Nevada.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:15:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Liberty Ridge offers stunning homes on expansive home sites in a premier location near Lake Mead Liberty Ridge offers stunning homes on expansive home sites in a premier location near Lake Mead"
-      },
-      {
-        "title": "Full House Resorts Announces Fourth Quarter and Full-Year Results",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250667/0/en/Full-House-Resorts-Announces-Fourth-Quarter-and-Full-Year-Results.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:05:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "- American Place Casino Continued Its Strong Growth, With Revenues Increasing 13.1% for the Year and 11.0% in the Fourth Quarter  - Colorado Operations..."
-      },
-      {
-        "title": "Doman Building Materials Group Ltd. Reports 2025 Financial Results",
-        "url": "https://financialpost.com/globe-newswire/doman-building-materials-group-ltd-reports-2025-financial-results",
-        "source": "Financial Post",
-        "published_at": "2026-03-05T21:03:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "THIS NEWS RELEASE IS INTENDED FOR DISTRIBUTION IN CANADA ONLY AND IS NOT INTENDED FOR DISTRIBUTION TO UNITED STATES NEWSWIRE SERVICES OR DISSEMINATION IN THE UNITED STATES. Full Year 2025 Financial Highlights(1): Revenues of $3.1 billion Gross Margin at 16.2%…"
-      },
-      {
-        "title": "Big Tech Promises to Pay for AI Data Center Power, but Who Will Enforce It?",
-        "url": "https://www.cnet.com/tech/services-and-software/ai-data-center-electricity-costs-white-house-ratepayer-protection-pledge/",
-        "source": "CNET",
-        "published_at": "2026-03-05T20:54:12Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Microsoft, Google, Amazon, Meta and others signed a nonbinding pledge agreeing to cover the cost of powering AI data centers."
-      },
-      {
-        "title": "TerraPower gets permission to build, not operate, sodium-cooled nuclear reactor",
-        "url": "https://www.theregister.com/2026/03/05/terrapower_sodium_cooled_nuclear_reactor/",
-        "source": "Theregister.com",
-        "published_at": "2026-03-05T20:44:41Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Don't flip the switch until the NRC says you can, okay? Bill Gates-backed nuclear outfit TerraPower finally has approval to build its Natrium reactor. However, it may still face issues finding a steady fuel supply. And, oh yeah, it hasn't built any reactors l…"
-      },
-      {
-        "title": "CleanSpark sells 553 BTC for $36.6M in February as miners offload Bitcoin",
-        "url": "https://cointelegraph.com/news/cleanspark-sells-most-february-bitcoin-output-generating-36-6m-in-proceeds",
-        "source": "Cointelegraph",
-        "published_at": "2026-03-05T20:28:55Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "CleanSpark sold 553 BTC for $36.6M in February while producing 568 BTC and expanding a Texas campus, as several Bitcoin miners liquidate holdings to fund infrastructure and AI projects."
-      },
-      {
-        "title": "Spotlight On Texas As Trump Makes Solar Power Great Again",
-        "url": "https://cleantechnica.com/2026/03/05/spotlight-on-texas-as-trump-makes-solar-power-great-again/",
-        "source": "CleanTechnica",
-        "published_at": "2026-03-05T20:10:48Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Oh the irony, it burns. US President Donald Trump swept into office with a vendetta against electric vehicles along with wind and solar power, only to upend the political calculation by launching a war against Iran. EVs are more attractive now that the price …"
-      },
-      {
-        "title": "How Donald Trump is using architecture to reshape Washington DC",
-        "url": "https://www.dezeen.com/2026/03/05/how-donald-trump-is-using-architecture-to-reshape-washington-dc/",
-        "source": "Dezeen",
-        "published_at": "2026-03-05T20:00:03Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "US president Donald Trump and his administration are using architecture to reshape the American capital at a pace unmatched in recent memory. We explore how the president is utilising design to cement his legacy. Read more"
-      },
-      {
-        "title": "The Race to Mine the Moon Is On—And It Urgently Needs Some Clear International Rules",
-        "url": "https://www.rand.org/pubs/commentary/2026/03/the-race-to-mine-the-moon-is-on-and-it-urgently-needs.html",
-        "source": "Rand.org",
-        "published_at": "2026-03-05T20:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Binding international agreements—particularly between the great space powers—which emphasise principles of stewardship, clarify access rights, and support common benefits from lunar development would ensure the Moon becomes a proving ground for the equitable …"
-      },
-      {
-        "title": "Spring Training for the Election Canceler",
-        "url": "http://prospect.org/2026/03/05/trump-senate-texas-republicans-election-canceler/",
-        "source": "The American Prospect",
-        "published_at": "2026-03-05T20:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Trump moves to preempt Texas Republicans’ upcoming Senate primary.\nThe post Spring Training for the Election Canceler appeared first on The American Prospect."
-      },
-      {
-        "title": "Acrow Solution Provides a Detour Route During Bridge Replacement Project in Rural Cherokee County, Alabama",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250588/0/en/Acrow-Solution-Provides-a-Detour-Route-During-Bridge-Replacement-Project-in-Rural-Cherokee-County-Alabama.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T19:43:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Temporary modular steel bridge enables safe and uninterrupted access for traffic north of Leesburg Temporary modular steel bridge enables safe and uninterrupted access for traffic north of Leesburg"
-      },
-      {
-        "title": "What are Labor and the Liberals offering for you this SA election?",
-        "url": "https://www.abc.net.au/news/2026-03-06/sa-election-promise-tracker-2026/106414866",
-        "source": "ABC News (AU)",
-        "published_at": "2026-03-05T19:27:28Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "We've gone through the major parties' promises ahead of the state election so you can compare what they have announced for you."
-      },
-      {
-        "title": "Miracle Sheets 2026: Claims Examined, Pricing Verified & What Consumers Should Confirm Before Buying",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250583/0/en/Miracle-Sheets-2026-Claims-Examined-Pricing-Verified-What-Consumers-Should-Confirm-Before-Buying.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T19:26:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Let's be real — most of us don't think twice about the sheets we're sleeping on. You toss them on the bed, crawl in at night, and that's about it. But here's the thing: your bedding could be quietly sabotaging your sleep, your skin, and even your overall heal…"
-      },
-      {
-        "title": "Babbles",
-        "url": "https://mypeoplesreview.com/2026/03/06/babbles-19/",
-        "source": "Mypeoplesreview.com",
-        "published_at": "2026-03-05T19:25:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "By Babbler Media Propaganda Western powers have often been accused of misusing influential media outlets to promote misleading narratives. For […]\nThe post Babbles appeared first on Peoples' Review."
-      },
-      {
-        "title": "The Best American-Made T-Shirts, Tested by Style Experts",
-        "url": "https://www.menshealth.com/style/g70610142/best-american-made-t-shirts/",
-        "source": "menshealth.com",
-        "published_at": "2026-03-05T19:16:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Upgrade your basics with the best American-made t-shirts. We tested top brands for comfort, durability, and the perfect fit."
-      },
-      {
-        "title": "Kristi Noem Out: Trump Picks Sen. Markwayne Mullin as Replacement",
-        "url": "https://www.breitbart.com/national-security/2026/03/05/kristi-noem-out-trump-picks-sen-markwayne-mullin-as-replacement/",
-        "source": "Breitbart News",
-        "published_at": "2026-03-05T19:14:02Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "President Donald Trump has announced that he will nominate Sen. Markwayne Mullin to replace Kristi Noem as chief of the Department of Homeland Security. \nThe post Kristi Noem Out: Trump Picks Sen. Markwayne Mullin as Replacement appeared first on Breitbart."
-      },
-      {
-        "title": "The 40 Best Movies on Netflix Right Now",
-        "url": "https://www.thewrap.com/creative-content/what-to-watch/best-movies-on-netflix/",
-        "source": "TheWrap",
-        "published_at": "2026-03-05T19:08:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "We've got your streaming plans sorted\nThe post The 40 Best Movies on Netflix Right Now appeared first on TheWrap."
-      },
-      {
-        "title": "Ripple CEO Slammed By Cardano's Hoskinson: 'A Bad Bill Is NOT Better'",
-        "url": "https://finance.yahoo.com/news/ripple-ceo-slammed-cardanos-hoskinson-190025813.html",
-        "source": "Yahoo Entertainment",
-        "published_at": "2026-03-05T19:00:25Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Cardano founder Charles Hoskinson rejected Ripple CEO Brad Garlinghouse’s “bad bill is better than no bill” stance, arguing the CLARITY Act makes new crypto ..."
-      },
-      {
-        "title": "From TV Repairman to Electromagnetic Compatibility Expert",
-        "url": "https://spectrum.ieee.org/from-tv-repairman-to-electromagnetic-compatibility-expert",
-        "source": "Ieee.org",
-        "published_at": "2026-03-05T19:00:03Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "No one had very high career aspirations for teenager David A. Weston—except for Weston himself. Growing up in London, he scored low on the U.K. national assessment test given to students finishing primary school. The result meant that his next path was either…"
-      },
-      {
-        "title": "Nasdaq Texas Launches with Inaugural Dual Listings",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250577/6948/en/Nasdaq-Texas-Launches-with-Inaugural-Dual-Listings.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T19:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Nasdaq Texas Celebrates Official Launch with the Nasdaq Stock Market Closing Bell at the Alamo with the First Cohort of Dual Listings  Nasdaq, Inc. to Dual..."
-      },
-      {
-        "title": "New construction moderates home prices",
-        "url": "https://www.ncspin.com/new-construction-moderates-home-prices",
-        "source": "Ncspin.com",
-        "published_at": "2026-03-05T18:55:06Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "North Carolina is about 800,000 units short of housing demand."
-      },
-      {
-        "title": "New Economic Study Identifies a $300 Billion Infrastructure Identity Gap in the Built Environment",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250574/0/en/New-Economic-Study-Identifies-a-300-Billion-Infrastructure-Identity-Gap-in-the-Built-Environment.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T18:55:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The Economic Impact of Persistent Infrastructure Identity by UMIP Inc., a financial model examining lifecycle efficiency and the $300B identity gap...."
-      },
-      {
-        "title": "Middle East war disrupts U.S. B2B ecommerce supply chains",
-        "url": "https://www.digitalcommerce360.com/2026/03/05/middle-east-war-us-b2b-ecommerce-supply-chains/",
-        "source": "DigitalCommerce360",
-        "published_at": "2026-03-05T18:42:58Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Escalating war in the Middle East is beginning to disrupt global logistics networks that underpin U.S. B2B ecommerce, raising concerns among distributors, manufacturers and online B2B sellers that rely on predictable international shipping, stable freight rat…"
-      },
-      {
-        "title": "The hidden potential of Trump’s critical minerals stockpile",
-        "url": "https://grist.org/climate-energy/the-hidden-potential-of-trumps-critical-minerals-stockpile/",
-        "source": "Grist",
-        "published_at": "2026-03-05T18:35:47Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The administration’s rush to secure the components for the military could benefit renewable energy — someday."
-      },
-      {
-        "title": "Powering the West’s future requires smart grid planning. A new report shows how.",
-        "url": "https://blogs.edf.org/climate411/2026/03/05/planning-western-transmission-lines/",
-        "source": "Environmental Defense Fund",
-        "published_at": "2026-03-05T18:19:41Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "It’s becoming all too common for families and businesses to experience the symptoms of a strained electricity grid—whether it’s rising bills or more frequent power outages. Between growing demand, aging infrastructure and extreme weather, the U.S. grid is und…"
-      },
-      {
-        "title": "I hope you like spreadsheets, because GPT-5.4 loves them",
-        "url": "https://slashdot.org/firehose.pl?op=view&amp%3Bid=180912706",
-        "source": "Slashdot.org",
-        "published_at": "2026-03-05T18:12:10Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "OpenAI is releasing a new model today, and like GPT-5.2 before it, GPT-5.4 is all about professional work. OpenAI is calling GPT-5.4 its most capable frontier model for tasks like coding and data analysis. OpenAI claims the new model produced presentations wi…"
-      },
-      {
-        "title": "GPT-5.4",
-        "url": "https://openai.com/index/introducing-gpt-5-4/",
-        "source": "Openai.com",
-        "published_at": "2026-03-05T18:05:16Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Introducing GPT-5.4, OpenAI’s most most capable and efficient frontier model for professional work, with state-of-the-art coding, computer use, tool search, and 1M-token context."
-      },
-      {
-        "title": "7 Major AI Companies Sign White House Pledge to Cover Data Center Power Costs",
-        "url": "https://www.breitbart.com/tech/2026/03/05/7-major-ai-companies-sign-white-house-pledge-to-cover-data-center-power-costs/",
-        "source": "Breitbart News",
-        "published_at": "2026-03-05T17:57:42Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Leaders from the leading companies in AI including Google, Microsoft, Meta, Oracle, xAI, OpenAI, and Amazon have signed a non-binding agreement at the White House committing to fund the electricity infrastructure needed for their data center operations.\nThe p…"
       }
     ],
     "news_with_impact": [
+      {
+        "title": "Dow Slides as Stagflation Worries Roil Markets - Barron's",
+        "url": "https://www.barrons.com/livecoverage/stock-market-news-today-030626",
+        "source": "Barron's",
+        "published_at": "2026-03-06T16:08:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The Dow, S&P 500, and Nasdaq are falling as the stock market digests disappointing jobs data and surging oil prices.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Dow falls 600 points after Trump comments spike oil, surprise job loss in February: Live updates - CNBC",
+        "url": "https://www.cnbc.com/2026/03/05/stock-market-today-live-updates.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T15:56:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Stocks fell Friday, adding to their weekly declines, as oil prices spiked and traders reacted to an unexpected drop in new U.S. jobs data.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "United can remove and ban passengers who refuse to use headphones - Mashable",
+        "url": "https://mashable.com/article/united-airlines-headphone-policy",
+        "source": "Mashable",
+        "published_at": "2026-03-06T14:03:45Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Some more peace and quiet in the cabin.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Used vehicle prices jump ahead of spring selling season optimism - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/used-vehicle-prices.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T14:00:01Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A closely watched barometer for used vehicle pricing jumped last month as dealers sped to increase inventories amid optimism of a robust spring selling season.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Retail sales fell more than expected in January, biggest drop in eight months - CNN",
+        "url": "https://www.cnn.com/2026/03/06/economy/us-retail-sales-january",
+        "source": "CNN",
+        "published_at": "2026-03-06T13:35:26Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "One of the main pillars propping up the US economy — consumer spending — may be starting to crack.",
+        "impact_score": 40,
+        "themes": [
+          "commercial"
+        ]
+      },
+      {
+        "title": "United CEO Scott Kirby says higher airfare could be ahead after fuel price spike - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/united-airlines-ceo-scott-kirby.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T13:22:56Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "United CEO Scott Kirby said demand remains high but that fuel prices will hit first-quarter results.",
+        "impact_score": 40,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "The ‘everybody loses’ scenario: Why the Iran conflict is breaking this classic portfolio strategy - MarketWatch",
+        "url": "https://www.marketwatch.com/story/the-everybody-loses-scenario-why-the-iran-conflict-is-breaking-this-classic-portfolio-strategy-b47c298d",
+        "source": "MarketWatch",
+        "published_at": "2026-03-06T11:44:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Oil hits 23-month high as Qatar minister warns prices could reach $150 - MarketWatch",
+        "url": "https://www.marketwatch.com/story/oil-at-20-month-high-as-qatar-minister-warns-of-halt-to-energy-shipments-ffd3f8f9",
+        "source": "MarketWatch",
+        "published_at": "2026-03-06T10:01:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Qatar energy minister warns that supplies from Persian Gulf could stop entirely",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
       {
         "title": "The Kalshi and Polymarket CEO feud: They hate each other - NPR",
         "url": "https://www.npr.org/2026/03/06/nx-s1-5735893/iran-war-kalshi-polymarket-feud",
@@ -1151,13 +1273,39 @@
         ]
       },
       {
-        "title": "Dow futures tick higher, but index heads for worst week since October on oil surge: Live updates - CNBC",
-        "url": "https://www.cnbc.com/2026/03/05/stock-market-today-live-updates.html",
-        "source": "CNBC",
-        "published_at": "2026-03-06T08:16:00Z",
+        "title": "OpenAI releases new ChatGPT model for working in Excel and Google Sheets - Axios",
+        "url": "https://www.axios.com/2026/03/05/openai-gpt-54-chatgpt-office",
+        "source": "Axios",
+        "published_at": "2026-03-06T08:13:22Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The Dow Industrials lost nearly 785 points in Thursday’s sell-off as oil prices leapt. The blue-chip index is on track for its worst week since October.",
+        "description": "GPT-5.4 outperforms office workers 83% of the time, OpenAI says.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "McDonald’s CEO did a burger taste test that became a cautionary tale for execs. But there’s a silver lining - Fortune",
+        "url": "https://fortune.com/2026/03/06/mcdonalds-ceo-did-a-burger-taste-test-that-became-a-cautionary-tale-for-execs-but-theres-a-silver-lining/",
+        "source": "Fortune",
+        "published_at": "2026-03-06T08:07:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "McDonald’s CEO Chris Kempczinski’s taste test turned into a viral meme war that shows how risky the CEO-influencer model has become.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Why oil at $200 a barrel is no longer unthinkable - Financial Times",
+        "url": "https://www.ft.com/content/8d8c337f-e3a7-4fa5-8e9f-749a24fe3eb9",
+        "source": "Financial Times",
+        "published_at": "2026-03-06T05:00:50Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "If supply disruptions persist, holders of stockpiled reserves can’t be relied on to fully cushion the impact",
         "impact_score": 55,
         "themes": [
           "other"
@@ -1177,55 +1325,29 @@
         ]
       },
       {
-        "title": "Beyond Meat drops the ‘Meat’ from its name as it expands to plant-based drinks and snacks - AP News",
-        "url": "https://apnews.com/article/beyond-meat-plantbased-protein-drinks-5cf4bd0e5711c062ae9dca52f8980e4c",
-        "source": "Associated Press",
-        "published_at": "2026-03-06T03:42:00Z",
+        "title": "Six Flags selling 7 parks, including 4 in the Midwest, in $331M deal - NBC 5 Chicago",
+        "url": "https://www.nbcchicago.com/news/local/six-flags-selling-7-parks-including-4-in-the-midwest-in-331m-deal/3903920/",
+        "source": "NBC Chicago",
+        "published_at": "2026-03-06T03:46:51Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Beyond Meat is dropping “meat” from its name as it moves beyond the struggling market for plant-based burgers, sausages and tenders and expands into new categories like protein drinks. The company now known as the Beyond The Plant Protein Co., or simply Beyon…",
+        "description": "Six Flags has agreed to sell seven of its theme parks, including four in the Midwest, the company announced Thursday.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "OpenAI releases new ChatGPT model for working in Excel and Google Sheets - Axios",
-        "url": "https://www.axios.com/2026/03/05/openai-gpt-54-chatgpt-office",
-        "source": "Axios",
-        "published_at": "2026-03-06T01:54:27Z",
+        "title": "Amazon is back up after outage affecting tens of thousands of shoppers - Business Insider",
+        "url": "https://www.businessinsider.com/amazon-down-outage-payment-failure-shoppers-downdetector-2026-3",
+        "source": "Business Insider",
+        "published_at": "2026-03-06T02:47:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "GPT-5.4 outperforms office workers 83% of the time, OpenAI says.",
+        "description": "Shoppers are reporting Amazon on Downdetector, saying the problems ranged from checkout and payment failures to incorrect or fluctuating prices.",
         "impact_score": 40,
         "themes": [
           "other"
-        ]
-      },
-      {
-        "title": "CNBC Daily Open: Oil surges as Iran war enters seventh day - CNBC",
-        "url": "https://www.cnbc.com/2026/03/06/cnbc-daily-open-oil-iran-war-us-israel.html",
-        "source": "CNBC",
-        "published_at": "2026-03-06T01:08:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "U.S. crude oil hit as much as $80 per barrel Thursday, as the escalating Iran war enters its seventh day and continues disrupting global fuel supplies.",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Six Flags selling Great Escape, other amusement parks - Times Union",
-        "url": "https://www.timesunion.com/news/article/six-flags-selling-great-escape-owner-hunter-21956833.php",
-        "source": "Albany Times Union",
-        "published_at": "2026-03-05T23:54:31Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The Queensbury location, which got its start as Storytown, is among several amusement parks being sold to EPR Properties.",
-        "impact_score": 40,
-        "themes": [
-          "trade"
         ]
       },
       {
@@ -1236,19 +1358,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Meta accused of \"concealing the facts\" about smart glass users' privacy.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Block employee says the company dangled a 75% pay raise to get her to stay after layoffs — but she decided to quit - Business Insider",
-        "url": "https://www.businessinsider.com/block-employee-says-quit-retention-bonus-package-offer-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-05T23:36:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "\"I saw my company discard half of my peers and double my pay,\" the former Block employee wrote. \"That's not an honor. It feels shameful.\"",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1294,16 +1403,29 @@
         ]
       },
       {
-        "title": "Historic winter storms weigh on Gap, Old Navy performance after 800 temporary store closures - CNBC",
-        "url": "https://www.cnbc.com/2026/03/05/gap-gap-q4-2025-earnings.html",
-        "source": "CNBC",
-        "published_at": "2026-03-05T21:16:38Z",
+        "title": "Setting a new bar? Zealand touts 'placebo-like tolerability' for Roche-partnered weight loss drug - Fierce Biotech",
+        "url": "https://www.fiercebiotech.com/biotech/sets-new-bar-zealand-touts-placebo-tolerability-roche-partnered-weight-loss-drug",
+        "source": "FierceBiotech",
+        "published_at": "2026-03-05T21:44:23Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Gap has been on a steady upswing of growth but saw worse than expected results during its holiday quarter after historic winter storms led to store closures.",
+        "description": "Zealand Pharma’s Roche-partnered amylin analog demonstrated “placebo-like tolerability” and up to 10.7% mean weight loss at 42 weeks in a phase 2 obesity trial. | Zealand Pharma’s Roche-partnered amylin analog demonstrated “placebo-like tolerability” and up t…",
         "impact_score": 40,
         "themes": [
           "other"
+        ]
+      },
+      {
+        "title": "Korean Stocks to Bounce, US Inflation Fears Ease: Markets Wrap - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-04/stock-market-today-dow-s-p-live-updates-",
+        "source": "Bloomberg",
+        "published_at": "2026-03-05T21:40:45Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A slide in chipmakers dragged down stocks while a bond selloff deepened amid a spike in oil as headlines continued to depict war escalating in Iran and the Middle East. Bitcoin slumped.",
+        "impact_score": 40,
+        "themes": [
+          "macro"
         ]
       },
       {
@@ -1314,19 +1436,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Massachusetts residents did not appreciate Robert F. Kennedy Jr. calling out the sugar content of their favorite Dunkin’ iced coffee.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Kalshi Owes Bettors $54 Million On Ayatollah Khamenei's Death, But Claims It Doesn't Have To Pay - OutKick",
-        "url": "https://www.outkick.com/betting/kalshi-owes-bettors-54-million-ayatollah-khameneis-death-claims-doesnt-have-pay",
-        "source": "Outkick.com",
-        "published_at": "2026-03-05T21:00:56Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The prediction market reportedly tried justifying not paying its winner by saying the site doesn’t allow transactions \"directly tied to death.\"",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1411,81 +1520,459 @@
         ]
       },
       {
-        "title": "Trump gets data center companies to pledge to pay for power generation - Ars Technica",
-        "url": "https://arstechnica.com/tech-policy/2026/03/leading-ai-datacenter-companies-sign-pledge-to-buy-their-own-power/",
-        "source": "Ars Technica",
-        "published_at": "2026-03-05T18:41:28Z",
+        "title": "Eric Schmidt: big tech should power its own AI ambitions",
+        "url": "https://fortune.com/2026/03/06/eric-schmidt-former-google-ceo-big-tech-data-centers-grid-ai-utility-bills/",
+        "source": "Fortune",
+        "published_at": "2026-03-06T18:48:49Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "With no enforcement and questionable economics, it may not make a difference.",
+        "feed": "everything",
+        "description": "Tech leaders should respond to the momentum coming from the White House.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "New Toll Brothers Luxury Townhome Community Coming Soon to Redondo Beach, California",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251223/1924/en/New-Toll-Brothers-Luxury-Townhome-Community-Coming-Soon-to-Redondo-Beach-California.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T18:16:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Toll Brothers at Redondo Beach offers exclusive three-story residences in a prime coastal location Toll Brothers at Redondo Beach offers exclusive three-story residences in a prime coastal location",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Gulf nations pessimistic about what Trump will leave behind",
+        "url": "https://www.abc.net.au/news/2026-03-07/gulf-states-pessimistic-about-what-trump-will-leave-behind/106418872",
+        "source": "ABC News (AU)",
+        "published_at": "2026-03-06T18:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "While the cabaret of outlandish and contradictory statements and claims continues in Washington, there is considerable pragmatic pessimism in the Gulf about the mess Donald Trump will leave behind.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "When The Cloud Comes To Town: How Energy, Communities, And Accountability Need A Rethink",
+        "url": "https://www.forrester.com/blogs/when-the-cloud-comes-to-town-how-energy-communities-and-accountability-need-a-rethink/",
+        "source": "Forrester.com",
+        "published_at": "2026-03-06T17:53:07Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The rapid expansion of AI-driven data centers transforms what once seemed like invisible, back-end digital infrastructure into a highly visible, very localized challenge. According to Forrester’s US Tech Market Forecast, 2025 To 2030, AI could add 1.3 to 1.7 …",
+        "impact_score": 40,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "When The Cloud Comes to Town: How Energy, Communities, and Accountability Need A Re-think",
+        "url": "https://www.forrester.com/blogs/when-the-cloud-comes-to-town-how-energy-communities-and-accountability-need-a-re-think/",
+        "source": "Forrester.com",
+        "published_at": "2026-03-06T17:53:07Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The rapid expansion of AI-driven data centers transforms what once seemed like invisible, back-end digital infrastructure into a highly visible, very localized challenge. According to Forrester’s US Tech Market Forecast, 2025 To 2030, AI could add 1.3 -1.7 gi…",
+        "impact_score": 40,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "The war on Iran is forcing Gulf states to reconsider regional strategy as the U.S. and Israel lead the region into uncertainty",
+        "url": "https://mondoweiss.net/2026/03/the-war-on-iran-is-forcing-gulf-states-to-reconsider-regional-strategy-as-the-u-s-and-israel-lead-the-region-into-uncertainty/",
+        "source": "Mondoweiss",
+        "published_at": "2026-03-06T17:20:13Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Iran’s retaliatory attacks on its neighbors, and the U.S. failure to plan for them, are forcing the Gulf Cooperation Council states to reconsider their regional strategies and their relationship with Washington.",
+        "impact_score": 40,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "US job market stalls, unemployment rate rises before Fed decision",
+        "url": "https://www.aljazeera.com/economy/2026/3/6/us-job-market-stalls-unemployment-rate-rises-before-fed-decision",
+        "source": "Al Jazeera English",
+        "published_at": "2026-03-06T17:11:16Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The healthcare sector was hit the hardest , while tariff-exposed sectors remained stagnant .",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Spring Arts 2026: Black Panther Artist Emory Douglas, 'Macbeth' Reimagined, Ravi Shankar + More",
+        "url": "https://www.7x7.com/bay-area-arts-spring-2026-2675584737.html",
+        "source": "7x7.com",
+        "published_at": "2026-03-06T16:41:11Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "This spring brings a fantastic new season of arts to San Francisco with groundbreaking new exhibitions and performances in every genre.From U.S. debuts like Hong Kong political cartoonist and illustrator Justin Wong at the Chinese Culture Center to creative r…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Architect: What’s Wrong With Trump’s Grandiose Ballroom Design",
+        "url": "https://apnews.com/article/trump-ballroom-white-house-east-wing-66753cd005193ac190e3702bd7353c0b",
+        "source": "Associated Press",
+        "published_at": "2026-03-06T16:31:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "President Donald Trump’s White House ballroom project is too big and should be scaled back. That's according to an architect and member of the board of the National Trust for Historic Preservation. David Scott Parker says the ballroom exceeds industry standar…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Production design of “Psycho Killer” – interview with Roger Fires",
+        "url": "https://www.pushing-pixels.org/2026/03/06/production-design-of-psycho-killer-interview-with-roger-fires.html",
+        "source": "Pushing-pixels.org",
+        "published_at": "2026-03-06T16:25:37Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Continuing the ongoing series of interviews with creative artists working on various aspects of movie and episodic productions, it is my pleasure to welcome Roger Fires. In this interview, he talks about the role of the production designer, the changes that C…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Disney’s Positive New Changes Aimed at Attracting More Middle Class Families",
+        "url": "https://www.disneytouristblog.com/disney-changes-attract-middle-class-families/",
+        "source": "Disneytouristblog.com",
+        "published_at": "2026-03-06T16:24:20Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "One of the hottest and most controversial topics over the last year-plus has been the claim that Walt Disney World and Disneyland are turning their backs on middle class families with young children. The company has heard these complaints, and is actively wor…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Javier Palomarez, USHBC President & CEO, Comments on Secretary Noem’s Departure",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251144/0/en/Javier-Palomarez-USHBC-President-CEO-Comments-on-Secretary-Noem-s-Departure.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T16:18:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Javier Palomarez responds to Secretary Noem’s departure and calls for DHS leadership focused on balanced immigration enforcement and business reform....",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "It's Officially Time to Worry About Trump's Economy",
+        "url": "https://www.jezebel.com/its-officially-time-to-worry-about-trumps-economy",
+        "source": "Jezebel",
+        "published_at": "2026-03-06T15:55:05Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "We are now staring down the stagflationary barrel while the threat of recession rises. The jobs market is bad to mediocre, and Trump and Israel’s war with Iran has guaranteed us more inflation thanks to the oil shock.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Iran war fallout, South Sudan village attack, and sea level data difficulty: The Cheat Sheet",
+        "url": "https://www.thenewhumanitarian.org/news/2026/03/06/iran-war-fallout-south-sudan-village-attack-sea-level-data-cheat-sheet",
+        "source": "The New Humanitarian",
+        "published_at": "2026-03-06T15:39:56Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Iran war fallout, South Sudan village attack, and sea level data difficulty: The Cheat Sheet\n\nsofia\n\nFri, 03/06/2026 - 15:39",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Developer seizes on castoff lots to tackle Miami’s housing crisis",
+        "url": "https://therealdeal.com/miami/2026/03/06/inside-overtowns-project-peach-affordable-rentals/",
+        "source": "The Real Deal",
+        "published_at": "2026-03-06T15:09:58Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "As Miami struggles to shake off its notorious reputation as the nationwide epicenter of the affordability crisis, development has been primarily restricted to two options: single-family homes or towers.  But perhaps it’s small- to mid-sized projects designed …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "China's largest provincial economy vows to reshape industry with AI",
+        "url": "https://economictimes.indiatimes.com/tech/artificial-intelligence/chinas-largest-provincial-economy-vows-to-reshape-industry-with-ai/articleshow/129162620.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-06T15:08:43Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Guangdong, China's economic powerhouse, is set to significantly boost artificial intelligence across its vast industries. This move aligns with Beijing's national strategy to integrate AI everywhere. The province aims for large-scale AI commercialization and …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "What Happened to Total Recall (1990)? The Chaotic Story Behind the Sci-Fi Classic",
+        "url": "https://www.joblo.com/total-recall-what-happened/",
+        "source": "JoBlo.com",
+        "published_at": "2026-03-06T15:07:56Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "How Total Recall survived bankruptcy, production chaos, and injuries to become one of the most unforgettable sci-fi action films\nThe post What Happened to Total Recall (1990)? The Chaotic Story Behind the Sci-Fi Classic appeared first on JoBlo.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Transboundary Water in MENA: Cooperation and Competition",
+        "url": "https://blogs.lse.ac.uk/mec/2026/03/06/transboundary-water-in-mena-cooperation-and-competition/",
+        "source": "Lse.ac.uk",
+        "published_at": "2026-03-06T15:04:07Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "by Greg Shapland Transboundary water resources are an important component of the water budget of many countries in the Middle East and North Africa (MENA) region. These resources exist in two forms: surface water (rivers, streams and lakes), and groundwater, …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "U.S. unexpectedly sheds 92,000 jobs, unemployment rate rises",
+        "url": "https://financialpost.com/news/economy/us-sheds-92000-jobs",
+        "source": "Financial Post",
+        "published_at": "2026-03-06T15:03:21Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "U.S. employers unexpectedly cut jobs in February and the unemployment rate rose, pointing to lingering fragility in a labour market. Read on",
+        "impact_score": 40,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "U.S. lost 92,000 jobs last month and unemployment rate rises to 4.4%",
+        "url": "https://www.pbs.org/newshour/economy/u-s-lost-92000-jobs-last-month-and-unemployment-rate-rises-to-4-4",
+        "source": "PBS",
+        "published_at": "2026-03-06T14:57:01Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The Labor Department reported Friday that hiring deteriorated from January, when companies, nonprofits and government agencies added 126,000 jobs.",
+        "impact_score": 40,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "U.S. aluminum buyers hunt for alternatives as Iran war upends global supply",
+        "url": "https://financialpost.com/commodities/us-aluminum-buyers-hunt-for-alternative-supply",
+        "source": "Financial Post",
+        "published_at": "2026-03-06T14:55:24Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Aluminum buyers in the U.S. are rushing to secure alternative supplies from Asia as the war on Iran disrupts a major foreign source. Read on",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "'Immense stress' on power grid as Virginia refuses data center regulation",
+        "url": "https://www.rawstory.com/general-assembly-nixes-bills-that-required-data-centers-to-get-scc-certificate/",
+        "source": "Raw Story",
+        "published_at": "2026-03-06T14:54:33Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "For most of the industry’s existence in Virginia, approvals for data centers were largely seen as a local issue – with the state and federal governments giving the thumbs up on certain permits.But as the industry balloons across the commonwealth, those local …",
+        "impact_score": 50,
+        "themes": [
+          "regulatory",
+          "commercial"
+        ]
+      },
+      {
+        "title": "Jersey Hired Analysis: Garden State Labor Market Faces Uphill Climb as National Job Growth Hits February Slump",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251106/0/en/Jersey-Hired-Analysis-Garden-State-Labor-Market-Faces-Uphill-Climb-as-National-Job-Growth-Hits-February-Slump.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T14:50:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "February Jobs Report Shows a Loss of 92,000 Jobs Nationwide. How Does This Affect New Jersey?...",
+        "impact_score": 40,
+        "themes": [
+          "trade"
+        ]
+      },
+      {
+        "title": "Trump admits the hyperscalers ‘need some PR help’ because the American taxpayer is on the hook for their data centers",
+        "url": "https://fortune.com/2026/03/06/trump-data-centers-big-tech-hyperscalers-need-some-pr-help-affordability/",
+        "source": "Fortune",
+        "published_at": "2026-03-06T14:45:11Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "“Trump is trying to cover up his mistakes with a photo op,” said Lena Moffitt, executive director of Evergreen Action, an environmental group.",
         "impact_score": 40,
         "themes": [
           "commercial"
         ]
       },
       {
-        "title": "McDonald’s CEO Goes Viral for the ‘Incredibly Alien’ Way He Eats a Burger - TODAY.com",
-        "url": "https://www.today.com/food/trends/mcdonalds-ceo-eats-burger-video-rcna261776",
-        "source": "TODAY",
-        "published_at": "2026-03-05T18:18:52Z",
+        "title": "News brief: Strikes on Iran put cybersecurity teams on alert",
+        "url": "https://www.techtarget.com/searchsecurity/news/366639824/News-brief-Strikes-on-Iran-put-cybersecurity-teams-on-alert",
+        "source": "Techtarget.com",
+        "published_at": "2026-03-06T14:23:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "McDonald’s CEO Chris Kempczinski is being roasted on social media, including by Burger King and Wendy's, for the way he ate a Big Arch burger in a viral video.",
+        "feed": "everything",
+        "description": "Check out the latest security news from the Informa TechTarget team.",
+        "impact_score": 40,
+        "themes": [
+          "trade"
+        ]
+      },
+      {
+        "title": "Climate Activist Despair: “Where’s the pushback?” Against President Trump",
+        "url": "https://wattsupwiththat.com/2026/03/06/climate-activist-despair-wheres-the-pushback-against-president-trump/",
+        "source": "Wattsupwiththat.com",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "\"... climate deniers have been privately celebrating what they claim is the “silent” acquiescence of billionaires, Democrats, climate activists and even reporters ...\"",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "What the Iran war market turmoil means for those nearing retirement - CNBC",
-        "url": "https://www.cnbc.com/2026/03/05/iran-war-market-volatility-retirement.html",
-        "source": "CNBC",
-        "published_at": "2026-03-05T17:00:00Z",
+        "title": "Stanley Martin Homes Celebrates Grand Opening of Essence at Laurelbrook in Sherrills Ford, NC, its First ESSENCE BY STANLEY MARTIN™ Community in the Charlotte Market",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251066/0/en/Stanley-Martin-Homes-Celebrates-Grand-Opening-of-Essence-at-Laurelbrook-in-Sherrills-Ford-NC-its-First-ESSENCE-BY-STANLEY-MARTIN-Community-in-the-Charlotte-Market.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T14:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Market shakiness may not concern long-term investors, but it could be a useful wake-up call for those on the precipice of retirement, experts say.",
-        "impact_score": 55,
+        "feed": "everything",
+        "description": "RESTON, Virginia, March 06, 2026 (GLOBE NEWSWIRE) -- Stanley Martin Homes announces that Essence at Laurelbrook, a new 55+ active adult neighborhood in Sherrills Ford, North Carolina, is now open for sales. Located at 1032 Arundle Road, this highly anticipate…",
+        "impact_score": 40,
         "themes": [
-          "other"
+          "capital"
         ]
       },
       {
-        "title": "United Airlines says it will boot passengers who refuse to use headphones on planes - NBC News",
-        "url": "https://www.nbcnews.com/business/business-news/united-boot-passengers-dont-use-headphones-rcna261908",
-        "source": "NBC News",
-        "published_at": "2026-03-05T16:33:52Z",
+        "title": "Study on the differentiated impact of climate change on plague epidemics in Northern and Southern China, 1912–1949",
+        "url": "https://journals.plos.org/plosntds/article?id=10.1371%2Fjournal.pntd.0014036",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Listen up, flyers: United Airlines said it will start removing passengers from flights who refuse to wear headphones while listening to content on their personal devices, and such behavior could lead to a permanent ban",
+        "feed": "everything",
+        "description": "Author summary The period from 1912 to 1949 coincided with the third major plague pandemic. Compared to the stringent control measures implemented by the Chinese government after the nation’s founding in 1949, the plague epidemics during this era more accurat…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "ChatGPT Backlash Reveals New Pitfalls in Aligning With Trump - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-05/why-are-people-deleting-chatgpt-claude-has-the-answer",
-        "source": "Bloomberg",
-        "published_at": "2026-03-05T16:22:01Z",
+        "title": "An integrative analysis reveals the mechanism of plastic stabilizers inducing breast cancer",
+        "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1014025",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Downloads of rival AI tool Claude soar amid feud with the Pentagon.",
+        "feed": "everything",
+        "description": "Author summary Plastic stabilizers are ubiquitous chemical additives used to prevent plastic degradation, yet their potential role in cancer development has been largely overlooked. This study integrates computational network toxicology with biological valida…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "New CEO Buys $15 Million In Stock, Berkshire Restarts Buybacks - Investor's Business Daily",
-        "url": "https://www.investors.com/news/berkshire-hathaway-warren-buffett-greg-abel-stock-repurchase/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-05T14:25:00Z",
+        "title": "Predictive divergence in machine learning models for clinical mortality risk: A multicohort study of covid-19 patients",
+        "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0344354",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Berkshire Hathaway resumed its long-standing practice of repurchasing company stock, as Greg Abel replaces Warren Buffett as CEO.",
+        "feed": "everything",
+        "description": "Background Machine learning (ML) algorithms are increasingly used in healthcare to support clinical decision-making. While models with similar overall performance are often considered interchangeable for deployment, they may produce divergent predictions, a p…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Morphological determinants of glycosylation efficiency in Golgi cisternae",
+        "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1013993",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Author summary The Golgi apparatus is a universal feature of eukaryotic cells, playing a critical role in post-translational modification of secreted proteins. Its importance is demonstrated by the variety of disorders caused by errors in its function. A majo…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Repurposing metformin as a dual-function agent to combat E. coli-induced mastitis: Mechanistic insights into biofilm dispersion and AMPK/SIRT1-mediated NF-κB inhibition",
+        "url": "https://journals.plos.org/plospathogens/article?id=10.1371%2Fjournal.ppat.1014012",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Author summary Bovine mastitis caused by drug-resistant E. coli is difficult to treat with conventional antibiotics. We explored repurposing metformin, a common diabetes drug, as a new strategy. We found that metformin fights mastitis in two ways at once. Fir…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Wyoming Project Gets First Construction Permit for Nuclear Reactor in Years",
+        "url": "https://www.insurancejournal.com/news/west/2026/03/06/860828.htm",
+        "source": "Insurance Journal",
+        "published_at": "2026-03-06T13:59:05Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The U.S. Nuclear Regulatory Commission on Wednesday approved its first construction permit for a commercial nuclear reactor in eight years, one that will allow a Bill Gates-backed company to build a sodium-cooled reactor in western Wyoming. TerraPower filed f…",
         "impact_score": 40,
         "themes": [
           "pipeline"
+        ]
+      },
+      {
+        "title": "When Washington and the states are in conflict, the ultimate winner is not always certain",
+        "url": "https://theconversation.com/when-washington-and-the-states-are-in-conflict-the-ultimate-winner-is-not-always-certain-276485",
+        "source": "The Conversation Africa",
+        "published_at": "2026-03-06T13:38:01Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Conflict between Washington and the states is perennial and by design. Lack of clarity about who’s in charge on what issue keeps power from becoming concentrated.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "GoldHaven Files NI 43-101 Technical Report for the District-Scale Magno Polymetallic Project, Cassiar District, British Columbia",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251023/0/en/GoldHaven-Files-NI-43-101-Technical-Report-for-the-District-Scale-Magno-Polymetallic-Project-Cassiar-District-British-Columbia.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T13:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "VANCOUVER, British Columbia, March 06, 2026 (GLOBE NEWSWIRE) -- GoldHaven Resources Corp. (\"GoldHaven\" or the \"Company\") (CSE: GOH) (OTCQB: GHVNF) (FSE: 4QS) announces the filing of an independent technical report prepared in accordance with National Instrume…",
+        "impact_score": 40,
+        "themes": [
+          "other"
         ]
       },
       {
@@ -2046,448 +2533,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "Methanex Reports Fourth Quarter 2025 Results",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250725/0/en/Methanex-Reports-Fourth-Quarter-2025-Results.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T22:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Except where otherwise noted, all currency amounts are stated in United States dollars.    Financial and Operational Highlights    Production in the fourth...",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "ACA Connects Summit focuses on factors that raise the cost of business",
-        "url": "https://www.telecompetitor.com/aca-connects-summit-focuses-on-factors-that-raise-the-cost-of-business/",
-        "source": "Telecompetitor",
-        "published_at": "2026-03-05T21:45:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "ACA Connects Summit focuses on factors that raise the cost of business\nThere are several current business and regulatory issues that are raising the cost of doing internet and video business for small and medium-sized operators in Rural America. Members of AC…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Rebuilding trust, housing, and public life at the 2026 Yale Innovation Summit",
-        "url": "https://ventures.yale.edu/news/civic-innovation-action-public-sector-innovation-2026-yale-innovation-summit",
-        "source": "Yale.edu",
-        "published_at": "2026-03-05T21:41:52Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "From zoning reform and housing construction to regulatory redesign and civic belonging, the Civic Track at the Yale Innovation Summit explores how bold ideas move beyond theory and into the systems that shape daily life.The 2026 Civic Track asks a direct ques…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Methode Electronics, Inc. Reports Fiscal 2026 Third Quarter Financial Results",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250709/0/en/Methode-Electronics-Inc-Reports-Fiscal-2026-Third-Quarter-Financial-Results.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Progress on transformation amid mixed market conditions Progress on transformation amid mixed market conditions",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Southern Realty Trust Expands Revolving Credit Facility to $125 Million with Addition of Customers Bank",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250707/0/en/Southern-Realty-Trust-Expands-Revolving-Credit-Facility-to-125-Million-with-Addition-of-Customers-Bank.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Southern Realty Trust Inc. (“SRT” or the “Company”), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving credit facility…",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "Sunrise Realty Trust Expands Revolving Credit Facility to $165 Million with Addition of Customers Bank",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250704/0/en/Sunrise-Realty-Trust-Expands-Revolving-Credit-Facility-to-165-Million-with-Addition-of-Customers-Bank.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Sunrise Realty Trust, Inc. (“SUNS” or the “Company”) (Nasdaq: SUNS), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving…",
-        "impact_score": 65,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "Toll Brothers Announces Liberty Ridge Community Coming Soon to Boulder City, Nevada",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250695/1924/en/Toll-Brothers-Announces-Liberty-Ridge-Community-Coming-Soon-to-Boulder-City-Nevada.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:15:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Liberty Ridge offers stunning homes on expansive home sites in a premier location near Lake Mead Liberty Ridge offers stunning homes on expansive home sites in a premier location near Lake Mead",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Full House Resorts Announces Fourth Quarter and Full-Year Results",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250667/0/en/Full-House-Resorts-Announces-Fourth-Quarter-and-Full-Year-Results.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:05:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "- American Place Casino Continued Its Strong Growth, With Revenues Increasing 13.1% for the Year and 11.0% in the Fourth Quarter  - Colorado Operations...",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Doman Building Materials Group Ltd. Reports 2025 Financial Results",
-        "url": "https://financialpost.com/globe-newswire/doman-building-materials-group-ltd-reports-2025-financial-results",
-        "source": "Financial Post",
-        "published_at": "2026-03-05T21:03:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "THIS NEWS RELEASE IS INTENDED FOR DISTRIBUTION IN CANADA ONLY AND IS NOT INTENDED FOR DISTRIBUTION TO UNITED STATES NEWSWIRE SERVICES OR DISSEMINATION IN THE UNITED STATES. Full Year 2025 Financial Highlights(1): Revenues of $3.1 billion Gross Margin at 16.2%…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Big Tech Promises to Pay for AI Data Center Power, but Who Will Enforce It?",
-        "url": "https://www.cnet.com/tech/services-and-software/ai-data-center-electricity-costs-white-house-ratepayer-protection-pledge/",
-        "source": "CNET",
-        "published_at": "2026-03-05T20:54:12Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Microsoft, Google, Amazon, Meta and others signed a nonbinding pledge agreeing to cover the cost of powering AI data centers.",
-        "impact_score": 40,
-        "themes": [
-          "commercial"
-        ]
-      },
-      {
-        "title": "TerraPower gets permission to build, not operate, sodium-cooled nuclear reactor",
-        "url": "https://www.theregister.com/2026/03/05/terrapower_sodium_cooled_nuclear_reactor/",
-        "source": "Theregister.com",
-        "published_at": "2026-03-05T20:44:41Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Don't flip the switch until the NRC says you can, okay? Bill Gates-backed nuclear outfit TerraPower finally has approval to build its Natrium reactor. However, it may still face issues finding a steady fuel supply. And, oh yeah, it hasn't built any reactors l…",
-        "impact_score": 40,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "CleanSpark sells 553 BTC for $36.6M in February as miners offload Bitcoin",
-        "url": "https://cointelegraph.com/news/cleanspark-sells-most-february-bitcoin-output-generating-36-6m-in-proceeds",
-        "source": "Cointelegraph",
-        "published_at": "2026-03-05T20:28:55Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "CleanSpark sold 553 BTC for $36.6M in February while producing 568 BTC and expanding a Texas campus, as several Bitcoin miners liquidate holdings to fund infrastructure and AI projects.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Spotlight On Texas As Trump Makes Solar Power Great Again",
-        "url": "https://cleantechnica.com/2026/03/05/spotlight-on-texas-as-trump-makes-solar-power-great-again/",
-        "source": "CleanTechnica",
-        "published_at": "2026-03-05T20:10:48Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Oh the irony, it burns. US President Donald Trump swept into office with a vendetta against electric vehicles along with wind and solar power, only to upend the political calculation by launching a war against Iran. EVs are more attractive now that the price …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "How Donald Trump is using architecture to reshape Washington DC",
-        "url": "https://www.dezeen.com/2026/03/05/how-donald-trump-is-using-architecture-to-reshape-washington-dc/",
-        "source": "Dezeen",
-        "published_at": "2026-03-05T20:00:03Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "US president Donald Trump and his administration are using architecture to reshape the American capital at a pace unmatched in recent memory. We explore how the president is utilising design to cement his legacy. Read more",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "The Race to Mine the Moon Is On—And It Urgently Needs Some Clear International Rules",
-        "url": "https://www.rand.org/pubs/commentary/2026/03/the-race-to-mine-the-moon-is-on-and-it-urgently-needs.html",
-        "source": "Rand.org",
-        "published_at": "2026-03-05T20:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Binding international agreements—particularly between the great space powers—which emphasise principles of stewardship, clarify access rights, and support common benefits from lunar development would ensure the Moon becomes a proving ground for the equitable …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Spring Training for the Election Canceler",
-        "url": "http://prospect.org/2026/03/05/trump-senate-texas-republicans-election-canceler/",
-        "source": "The American Prospect",
-        "published_at": "2026-03-05T20:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Trump moves to preempt Texas Republicans’ upcoming Senate primary.\nThe post Spring Training for the Election Canceler appeared first on The American Prospect.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Acrow Solution Provides a Detour Route During Bridge Replacement Project in Rural Cherokee County, Alabama",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250588/0/en/Acrow-Solution-Provides-a-Detour-Route-During-Bridge-Replacement-Project-in-Rural-Cherokee-County-Alabama.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T19:43:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Temporary modular steel bridge enables safe and uninterrupted access for traffic north of Leesburg Temporary modular steel bridge enables safe and uninterrupted access for traffic north of Leesburg",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "What are Labor and the Liberals offering for you this SA election?",
-        "url": "https://www.abc.net.au/news/2026-03-06/sa-election-promise-tracker-2026/106414866",
-        "source": "ABC News (AU)",
-        "published_at": "2026-03-05T19:27:28Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "We've gone through the major parties' promises ahead of the state election so you can compare what they have announced for you.",
-        "impact_score": 40,
-        "themes": [
-          "trade"
-        ]
-      },
-      {
-        "title": "Miracle Sheets 2026: Claims Examined, Pricing Verified & What Consumers Should Confirm Before Buying",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250583/0/en/Miracle-Sheets-2026-Claims-Examined-Pricing-Verified-What-Consumers-Should-Confirm-Before-Buying.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T19:26:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Let's be real — most of us don't think twice about the sheets we're sleeping on. You toss them on the bed, crawl in at night, and that's about it. But here's the thing: your bedding could be quietly sabotaging your sleep, your skin, and even your overall heal…",
-        "impact_score": 40,
-        "themes": [
-          "macro"
-        ]
-      },
-      {
-        "title": "Babbles",
-        "url": "https://mypeoplesreview.com/2026/03/06/babbles-19/",
-        "source": "Mypeoplesreview.com",
-        "published_at": "2026-03-05T19:25:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "By Babbler Media Propaganda Western powers have often been accused of misusing influential media outlets to promote misleading narratives. For […]\nThe post Babbles appeared first on Peoples' Review.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "The Best American-Made T-Shirts, Tested by Style Experts",
-        "url": "https://www.menshealth.com/style/g70610142/best-american-made-t-shirts/",
-        "source": "menshealth.com",
-        "published_at": "2026-03-05T19:16:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Upgrade your basics with the best American-made t-shirts. We tested top brands for comfort, durability, and the perfect fit.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Kristi Noem Out: Trump Picks Sen. Markwayne Mullin as Replacement",
-        "url": "https://www.breitbart.com/national-security/2026/03/05/kristi-noem-out-trump-picks-sen-markwayne-mullin-as-replacement/",
-        "source": "Breitbart News",
-        "published_at": "2026-03-05T19:14:02Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "President Donald Trump has announced that he will nominate Sen. Markwayne Mullin to replace Kristi Noem as chief of the Department of Homeland Security. \nThe post Kristi Noem Out: Trump Picks Sen. Markwayne Mullin as Replacement appeared first on Breitbart.",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "The 40 Best Movies on Netflix Right Now",
-        "url": "https://www.thewrap.com/creative-content/what-to-watch/best-movies-on-netflix/",
-        "source": "TheWrap",
-        "published_at": "2026-03-05T19:08:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "We've got your streaming plans sorted\nThe post The 40 Best Movies on Netflix Right Now appeared first on TheWrap.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Ripple CEO Slammed By Cardano's Hoskinson: 'A Bad Bill Is NOT Better'",
-        "url": "https://finance.yahoo.com/news/ripple-ceo-slammed-cardanos-hoskinson-190025813.html",
-        "source": "Yahoo Entertainment",
-        "published_at": "2026-03-05T19:00:25Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Cardano founder Charles Hoskinson rejected Ripple CEO Brad Garlinghouse’s “bad bill is better than no bill” stance, arguing the CLARITY Act makes new crypto ...",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "From TV Repairman to Electromagnetic Compatibility Expert",
-        "url": "https://spectrum.ieee.org/from-tv-repairman-to-electromagnetic-compatibility-expert",
-        "source": "Ieee.org",
-        "published_at": "2026-03-05T19:00:03Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "No one had very high career aspirations for teenager David A. Weston—except for Weston himself. Growing up in London, he scored low on the U.K. national assessment test given to students finishing primary school. The result meant that his next path was either…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Nasdaq Texas Launches with Inaugural Dual Listings",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250577/6948/en/Nasdaq-Texas-Launches-with-Inaugural-Dual-Listings.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T19:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Nasdaq Texas Celebrates Official Launch with the Nasdaq Stock Market Closing Bell at the Alamo with the First Cohort of Dual Listings  Nasdaq, Inc. to Dual...",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "New construction moderates home prices",
-        "url": "https://www.ncspin.com/new-construction-moderates-home-prices",
-        "source": "Ncspin.com",
-        "published_at": "2026-03-05T18:55:06Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "North Carolina is about 800,000 units short of housing demand.",
-        "impact_score": 40,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "New Economic Study Identifies a $300 Billion Infrastructure Identity Gap in the Built Environment",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250574/0/en/New-Economic-Study-Identifies-a-300-Billion-Infrastructure-Identity-Gap-in-the-Built-Environment.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T18:55:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The Economic Impact of Persistent Infrastructure Identity by UMIP Inc., a financial model examining lifecycle efficiency and the $300B identity gap....",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Middle East war disrupts U.S. B2B ecommerce supply chains",
-        "url": "https://www.digitalcommerce360.com/2026/03/05/middle-east-war-us-b2b-ecommerce-supply-chains/",
-        "source": "DigitalCommerce360",
-        "published_at": "2026-03-05T18:42:58Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Escalating war in the Middle East is beginning to disrupt global logistics networks that underpin U.S. B2B ecommerce, raising concerns among distributors, manufacturers and online B2B sellers that rely on predictable international shipping, stable freight rat…",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "The hidden potential of Trump’s critical minerals stockpile",
-        "url": "https://grist.org/climate-energy/the-hidden-potential-of-trumps-critical-minerals-stockpile/",
-        "source": "Grist",
-        "published_at": "2026-03-05T18:35:47Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The administration’s rush to secure the components for the military could benefit renewable energy — someday.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Powering the West’s future requires smart grid planning. A new report shows how.",
-        "url": "https://blogs.edf.org/climate411/2026/03/05/planning-western-transmission-lines/",
-        "source": "Environmental Defense Fund",
-        "published_at": "2026-03-05T18:19:41Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "It’s becoming all too common for families and businesses to experience the symptoms of a strained electricity grid—whether it’s rising bills or more frequent power outages. Between growing demand, aging infrastructure and extreme weather, the U.S. grid is und…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "I hope you like spreadsheets, because GPT-5.4 loves them",
-        "url": "https://slashdot.org/firehose.pl?op=view&amp%3Bid=180912706",
-        "source": "Slashdot.org",
-        "published_at": "2026-03-05T18:12:10Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "OpenAI is releasing a new model today, and like GPT-5.2 before it, GPT-5.4 is all about professional work. OpenAI is calling GPT-5.4 its most capable frontier model for tasks like coding and data analysis. OpenAI claims the new model produced presentations wi…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "GPT-5.4",
-        "url": "https://openai.com/index/introducing-gpt-5-4/",
-        "source": "Openai.com",
-        "published_at": "2026-03-05T18:05:16Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Introducing GPT-5.4, OpenAI’s most most capable and efficient frontier model for professional work, with state-of-the-art coding, computer use, tool search, and 1M-token context.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "7 Major AI Companies Sign White House Pledge to Cover Data Center Power Costs",
-        "url": "https://www.breitbart.com/tech/2026/03/05/7-major-ai-companies-sign-white-house-pledge-to-cover-data-center-power-costs/",
-        "source": "Breitbart News",
-        "published_at": "2026-03-05T17:57:42Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Leaders from the leading companies in AI including Google, Microsoft, Meta, Oracle, xAI, OpenAI, and Amazon have signed a non-binding agreement at the White House committing to fund the electricity infrastructure needed for their data center operations.\nThe p…",
-        "impact_score": 40,
-        "themes": [
-          "commercial"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2505,65 +2550,65 @@
         ]
       },
       {
-        "title": "Southern Realty Trust Expands Revolving Credit Facility to $125 Million with Addition of Customers Bank",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250707/0/en/Southern-Realty-Trust-Expands-Revolving-Credit-Facility-to-125-Million-with-Addition-of-Customers-Bank.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
+        "title": "US job market stalls, unemployment rate rises before Fed decision",
+        "url": "https://www.aljazeera.com/economy/2026/3/6/us-job-market-stalls-unemployment-rate-rises-before-fed-decision",
+        "source": "Al Jazeera English",
+        "published_at": "2026-03-06T17:11:16Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Southern Realty Trust Inc. (“SRT” or the “Company”), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving credit facility…",
+        "description": "The healthcare sector was hit the hardest , while tariff-exposed sectors remained stagnant .",
         "impact_score": 65,
         "themes": [
           "capital"
         ]
       },
       {
-        "title": "Sunrise Realty Trust Expands Revolving Credit Facility to $165 Million with Addition of Customers Bank",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250704/0/en/Sunrise-Realty-Trust-Expands-Revolving-Credit-Facility-to-165-Million-with-Addition-of-Customers-Bank.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T21:30:00Z",
+        "title": "Dow Slides as Stagflation Worries Roil Markets - Barron's",
+        "url": "https://www.barrons.com/livecoverage/stock-market-news-today-030626",
+        "source": "Barron's",
+        "published_at": "2026-03-06T16:08:00Z",
         "provider": "newsapi",
-        "feed": "everything",
-        "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Sunrise Realty Trust, Inc. (“SUNS” or the “Company”) (Nasdaq: SUNS), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving…",
-        "impact_score": 65,
+        "feed": "top_headlines",
+        "description": "The Dow, S&P 500, and Nasdaq are falling as the stock market digests disappointing jobs data and surging oil prices.",
+        "impact_score": 55,
         "themes": [
-          "capital"
+          "other"
         ]
       },
       {
-        "title": "Dow futures tick higher, but index heads for worst week since October on oil surge: Live updates - CNBC",
+        "title": "Dow falls 600 points after Trump comments spike oil, surprise job loss in February: Live updates - CNBC",
         "url": "https://www.cnbc.com/2026/03/05/stock-market-today-live-updates.html",
         "source": "CNBC",
-        "published_at": "2026-03-06T08:16:00Z",
+        "published_at": "2026-03-06T15:56:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The Dow Industrials lost nearly 785 points in Thursday’s sell-off as oil prices leapt. The blue-chip index is on track for its worst week since October.",
+        "description": "Stocks fell Friday, adding to their weekly declines, as oil prices spiked and traders reacted to an unexpected drop in new U.S. jobs data.",
         "impact_score": 55,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "CNBC Daily Open: Oil surges as Iran war enters seventh day - CNBC",
-        "url": "https://www.cnbc.com/2026/03/06/cnbc-daily-open-oil-iran-war-us-israel.html",
-        "source": "CNBC",
-        "published_at": "2026-03-06T01:08:00Z",
+        "title": "Oil hits 23-month high as Qatar minister warns prices could reach $150 - MarketWatch",
+        "url": "https://www.marketwatch.com/story/oil-at-20-month-high-as-qatar-minister-warns-of-halt-to-energy-shipments-ffd3f8f9",
+        "source": "MarketWatch",
+        "published_at": "2026-03-06T10:01:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "U.S. crude oil hit as much as $80 per barrel Thursday, as the escalating Iran war enters its seventh day and continues disrupting global fuel supplies.",
+        "description": "Qatar energy minister warns that supplies from Persian Gulf could stop entirely",
         "impact_score": 55,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "What the Iran war market turmoil means for those nearing retirement - CNBC",
-        "url": "https://www.cnbc.com/2026/03/05/iran-war-market-volatility-retirement.html",
-        "source": "CNBC",
-        "published_at": "2026-03-05T17:00:00Z",
+        "title": "Why oil at $200 a barrel is no longer unthinkable - Financial Times",
+        "url": "https://www.ft.com/content/8d8c337f-e3a7-4fa5-8e9f-749a24fe3eb9",
+        "source": "Financial Times",
+        "published_at": "2026-03-06T05:00:50Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Market shakiness may not concern long-term investors, but it could be a useful wake-up call for those on the precipice of retirement, experts say.",
+        "description": "If supply disruptions persist, holders of stockpiled reserves can’t be relied on to fully cushion the impact",
         "impact_score": 55,
         "themes": [
           "other"
@@ -2596,35 +2641,49 @@
         ]
       },
       {
-        "title": "Acrow Solution Provides a Detour Route During Bridge Replacement Project in Rural Cherokee County, Alabama",
-        "url": "https://www.globenewswire.com/news-release/2026/03/05/3250588/0/en/Acrow-Solution-Provides-a-Detour-Route-During-Bridge-Replacement-Project-in-Rural-Cherokee-County-Alabama.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-05T19:43:00Z",
+        "title": "'Immense stress' on power grid as Virginia refuses data center regulation",
+        "url": "https://www.rawstory.com/general-assembly-nixes-bills-that-required-data-centers-to-get-scc-certificate/",
+        "source": "Raw Story",
+        "published_at": "2026-03-06T14:54:33Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Temporary modular steel bridge enables safe and uninterrupted access for traffic north of Leesburg Temporary modular steel bridge enables safe and uninterrupted access for traffic north of Leesburg",
-        "impact_score": 55,
+        "description": "For most of the industry’s existence in Virginia, approvals for data centers were largely seen as a local issue – with the state and federal governments giving the thumbs up on certain permits.But as the industry balloons across the commonwealth, those local …",
+        "impact_score": 50,
         "themes": [
-          "materials"
+          "regulatory",
+          "commercial"
         ]
       },
       {
-        "title": "Kristi Noem Out: Trump Picks Sen. Markwayne Mullin as Replacement",
-        "url": "https://www.breitbart.com/national-security/2026/03/05/kristi-noem-out-trump-picks-sen-markwayne-mullin-as-replacement/",
-        "source": "Breitbart News",
-        "published_at": "2026-03-05T19:14:02Z",
+        "title": "Economic Digest: Nepal’s Business News in a Snap",
+        "url": "https://english.khabarhub.com/2026/06/537890/",
+        "source": "Khabarhub.com",
+        "published_at": "2026-03-06T02:15:14Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "President Donald Trump has announced that he will nominate Sen. Markwayne Mullin to replace Kristi Noem as chief of the Department of Homeland Security. \nThe post Kristi Noem Out: Trump Picks Sen. Markwayne Mullin as Replacement appeared first on Breitbart.",
-        "impact_score": 55,
+        "description": "KATHMANDU: Economic Digest offers a concise yet comprehensive overview of significant business happenings in Nepal, presented in easily digestible summaries. The developments highlight how escalating geopolitical tensions in the Middle East are creating wide-…",
+        "impact_score": 50,
         "themes": [
-          "materials"
+          "regulatory"
         ]
       }
     ],
     "news_pressure_overlay": 0,
     "news_clusters": {
       "capital": [
+        {
+          "title": "The ‘everybody loses’ scenario: Why the Iran conflict is breaking this classic portfolio strategy - MarketWatch",
+          "url": "https://www.marketwatch.com/story/the-everybody-loses-scenario-why-the-iran-conflict-is-breaking-this-classic-portfolio-strategy-b47c298d",
+          "source": "MarketWatch",
+          "published_at": "2026-03-06T11:44:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 40,
+          "themes": [
+            "capital"
+          ]
+        },
         {
           "title": "Agencies clarify the capital treatment of tokenized securities - Federal Reserve Board (.gov)",
           "url": "https://www.federalreserve.gov/newsevents/pressreleases/bcreg20260305a.htm",
@@ -2634,6 +2693,71 @@
           "feed": "top_headlines",
           "description": "The federal bank regulatory agencies today jointly issued answers to frequently asked questions to clarify the capital treatment of tokenized securities.  A se",
           "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "The war on Iran is forcing Gulf states to reconsider regional strategy as the U.S. and Israel lead the region into uncertainty",
+          "url": "https://mondoweiss.net/2026/03/the-war-on-iran-is-forcing-gulf-states-to-reconsider-regional-strategy-as-the-u-s-and-israel-lead-the-region-into-uncertainty/",
+          "source": "Mondoweiss",
+          "published_at": "2026-03-06T17:20:13Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Iran’s retaliatory attacks on its neighbors, and the U.S. failure to plan for them, are forcing the Gulf Cooperation Council states to reconsider their regional strategies and their relationship with Washington.",
+          "impact_score": 40,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "US job market stalls, unemployment rate rises before Fed decision",
+          "url": "https://www.aljazeera.com/economy/2026/3/6/us-job-market-stalls-unemployment-rate-rises-before-fed-decision",
+          "source": "Al Jazeera English",
+          "published_at": "2026-03-06T17:11:16Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "The healthcare sector was hit the hardest , while tariff-exposed sectors remained stagnant .",
+          "impact_score": 65,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "U.S. unexpectedly sheds 92,000 jobs, unemployment rate rises",
+          "url": "https://financialpost.com/news/economy/us-sheds-92000-jobs",
+          "source": "Financial Post",
+          "published_at": "2026-03-06T15:03:21Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "U.S. employers unexpectedly cut jobs in February and the unemployment rate rose, pointing to lingering fragility in a labour market. Read on",
+          "impact_score": 40,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "U.S. lost 92,000 jobs last month and unemployment rate rises to 4.4%",
+          "url": "https://www.pbs.org/newshour/economy/u-s-lost-92000-jobs-last-month-and-unemployment-rate-rises-to-4-4",
+          "source": "PBS",
+          "published_at": "2026-03-06T14:57:01Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "The Labor Department reported Friday that hiring deteriorated from January, when companies, nonprofits and government agencies added 126,000 jobs.",
+          "impact_score": 40,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "Stanley Martin Homes Celebrates Grand Opening of Essence at Laurelbrook in Sherrills Ford, NC, its First ESSENCE BY STANLEY MARTIN™ Community in the Charlotte Market",
+          "url": "https://www.globenewswire.com/news-release/2026/03/06/3251066/0/en/Stanley-Martin-Homes-Celebrates-Grand-Opening-of-Essence-at-Laurelbrook-in-Sherrills-Ford-NC-its-First-ESSENCE-BY-STANLEY-MARTIN-Community-in-the-Charlotte-Market.html",
+          "source": "GlobeNewswire",
+          "published_at": "2026-03-06T14:00:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "RESTON, Virginia, March 06, 2026 (GLOBE NEWSWIRE) -- Stanley Martin Homes announces that Essence at Laurelbrook, a new 55+ active adult neighborhood in Sherrills Ford, North Carolina, is now open for sales. Located at 1032 Arundle Road, this highly anticipate…",
+          "impact_score": 40,
           "themes": [
             "capital"
           ]
@@ -2663,69 +2787,17 @@
           "themes": [
             "capital"
           ]
-        },
-        {
-          "title": "Southern Realty Trust Expands Revolving Credit Facility to $125 Million with Addition of Customers Bank",
-          "url": "https://www.globenewswire.com/news-release/2026/03/05/3250707/0/en/Southern-Realty-Trust-Expands-Revolving-Credit-Facility-to-125-Million-with-Addition-of-Customers-Bank.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-05T21:30:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Southern Realty Trust Inc. (“SRT” or the “Company”), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving credit facility…",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "Sunrise Realty Trust Expands Revolving Credit Facility to $165 Million with Addition of Customers Bank",
-          "url": "https://www.globenewswire.com/news-release/2026/03/05/3250704/0/en/Sunrise-Realty-Trust-Expands-Revolving-Credit-Facility-to-165-Million-with-Addition-of-Customers-Bank.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-05T21:30:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "WEST PALM BEACH, Fla., March 05, 2026 (GLOBE NEWSWIRE) -- Sunrise Realty Trust, Inc. (“SUNS” or the “Company”) (Nasdaq: SUNS), a lender on the Tannenbaum Capital Group (“TCG”) Real Estate platform, today announced the expansion of its senior secured revolving…",
-          "impact_score": 65,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "TerraPower gets permission to build, not operate, sodium-cooled nuclear reactor",
-          "url": "https://www.theregister.com/2026/03/05/terrapower_sodium_cooled_nuclear_reactor/",
-          "source": "Theregister.com",
-          "published_at": "2026-03-05T20:44:41Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Don't flip the switch until the NRC says you can, okay? Bill Gates-backed nuclear outfit TerraPower finally has approval to build its Natrium reactor. However, it may still face issues finding a steady fuel supply. And, oh yeah, it hasn't built any reactors l…",
-          "impact_score": 40,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "New construction moderates home prices",
-          "url": "https://www.ncspin.com/new-construction-moderates-home-prices",
-          "source": "Ncspin.com",
-          "published_at": "2026-03-05T18:55:06Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "North Carolina is about 800,000 units short of housing demand.",
-          "impact_score": 40,
-          "themes": [
-            "capital"
-          ]
         }
       ],
       "pipeline": [
         {
-          "title": "New CEO Buys $15 Million In Stock, Berkshire Restarts Buybacks - Investor's Business Daily",
-          "url": "https://www.investors.com/news/berkshire-hathaway-warren-buffett-greg-abel-stock-repurchase/",
-          "source": "Investor's Business Daily",
-          "published_at": "2026-03-05T14:25:00Z",
+          "title": "Wyoming Project Gets First Construction Permit for Nuclear Reactor in Years",
+          "url": "https://www.insurancejournal.com/news/west/2026/03/06/860828.htm",
+          "source": "Insurance Journal",
+          "published_at": "2026-03-06T13:59:05Z",
           "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Berkshire Hathaway resumed its long-standing practice of repurchasing company stock, as Greg Abel replaces Warren Buffett as CEO.",
+          "feed": "everything",
+          "description": "The U.S. Nuclear Regulatory Commission on Wednesday approved its first construction permit for a commercial nuclear reactor in eight years, one that will allow a Bill Gates-backed company to build a sodium-cooled reactor in western Wyoming. TerraPower filed f…",
           "impact_score": 40,
           "themes": [
             "pipeline"
@@ -2747,13 +2819,26 @@
       ],
       "trade": [
         {
-          "title": "Six Flags selling Great Escape, other amusement parks - Times Union",
-          "url": "https://www.timesunion.com/news/article/six-flags-selling-great-escape-owner-hunter-21956833.php",
-          "source": "Albany Times Union",
-          "published_at": "2026-03-05T23:54:31Z",
+          "title": "Jersey Hired Analysis: Garden State Labor Market Faces Uphill Climb as National Job Growth Hits February Slump",
+          "url": "https://www.globenewswire.com/news-release/2026/03/06/3251106/0/en/Jersey-Hired-Analysis-Garden-State-Labor-Market-Faces-Uphill-Climb-as-National-Job-Growth-Hits-February-Slump.html",
+          "source": "GlobeNewswire",
+          "published_at": "2026-03-06T14:50:00Z",
           "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The Queensbury location, which got its start as Storytown, is among several amusement parks being sold to EPR Properties.",
+          "feed": "everything",
+          "description": "February Jobs Report Shows a Loss of 92,000 Jobs Nationwide. How Does This Affect New Jersey?...",
+          "impact_score": 40,
+          "themes": [
+            "trade"
+          ]
+        },
+        {
+          "title": "News brief: Strikes on Iran put cybersecurity teams on alert",
+          "url": "https://www.techtarget.com/searchsecurity/news/366639824/News-brief-Strikes-on-Iran-put-cybersecurity-teams-on-alert",
+          "source": "Techtarget.com",
+          "published_at": "2026-03-06T14:23:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Check out the latest security news from the Informa TechTarget team.",
           "impact_score": 40,
           "themes": [
             "trade"
@@ -2771,22 +2856,48 @@
           "themes": [
             "trade"
           ]
-        },
-        {
-          "title": "What are Labor and the Liberals offering for you this SA election?",
-          "url": "https://www.abc.net.au/news/2026-03-06/sa-election-promise-tracker-2026/106414866",
-          "source": "ABC News (AU)",
-          "published_at": "2026-03-05T19:27:28Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "We've gone through the major parties' promises ahead of the state election so you can compare what they have announced for you.",
-          "impact_score": 40,
-          "themes": [
-            "trade"
-          ]
         }
       ],
       "materials": [
+        {
+          "title": "United CEO Scott Kirby says higher airfare could be ahead after fuel price spike - CNBC",
+          "url": "https://www.cnbc.com/2026/03/06/united-airlines-ceo-scott-kirby.html",
+          "source": "CNBC",
+          "published_at": "2026-03-06T13:22:56Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "United CEO Scott Kirby said demand remains high but that fuel prices will hit first-quarter results.",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
+          "title": "When The Cloud Comes To Town: How Energy, Communities, And Accountability Need A Rethink",
+          "url": "https://www.forrester.com/blogs/when-the-cloud-comes-to-town-how-energy-communities-and-accountability-need-a-rethink/",
+          "source": "Forrester.com",
+          "published_at": "2026-03-06T17:53:07Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "The rapid expansion of AI-driven data centers transforms what once seemed like invisible, back-end digital infrastructure into a highly visible, very localized challenge. According to Forrester’s US Tech Market Forecast, 2025 To 2030, AI could add 1.3 to 1.7 …",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
+          "title": "When The Cloud Comes to Town: How Energy, Communities, and Accountability Need A Re-think",
+          "url": "https://www.forrester.com/blogs/when-the-cloud-comes-to-town-how-energy-communities-and-accountability-need-a-re-think/",
+          "source": "Forrester.com",
+          "published_at": "2026-03-06T17:53:07Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "The rapid expansion of AI-driven data centers transforms what once seemed like invisible, back-end digital infrastructure into a highly visible, very localized challenge. According to Forrester’s US Tech Market Forecast, 2025 To 2030, AI could add 1.3 -1.7 gi…",
+          "impact_score": 40,
+          "themes": [
+            "materials"
+          ]
+        },
         {
           "title": "Aerogel Market to Hit USD 1.59 Billion by 2031 as Energy, Construction, and Mobility Sectors Increase Adoption of Advanced Insulation Materials, Says Mordor Intelligence",
           "url": "https://www.globenewswire.com/news-release/2026/03/06/3250974/0/en/Aerogel-Market-to-Hit-USD-1-59-Billion-by-2031-as-Energy-Construction-and-Mobility-Sectors-Increase-Adoption-of-Advanced-Insulation-Materials-Says-Mordor-Intelligence.html",
@@ -2825,35 +2936,23 @@
           "themes": [
             "materials"
           ]
-        },
-        {
-          "title": "Acrow Solution Provides a Detour Route During Bridge Replacement Project in Rural Cherokee County, Alabama",
-          "url": "https://www.globenewswire.com/news-release/2026/03/05/3250588/0/en/Acrow-Solution-Provides-a-Detour-Route-During-Bridge-Replacement-Project-in-Rural-Cherokee-County-Alabama.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-05T19:43:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Temporary modular steel bridge enables safe and uninterrupted access for traffic north of Leesburg Temporary modular steel bridge enables safe and uninterrupted access for traffic north of Leesburg",
-          "impact_score": 55,
-          "themes": [
-            "materials"
-          ]
-        },
-        {
-          "title": "Kristi Noem Out: Trump Picks Sen. Markwayne Mullin as Replacement",
-          "url": "https://www.breitbart.com/national-security/2026/03/05/kristi-noem-out-trump-picks-sen-markwayne-mullin-as-replacement/",
-          "source": "Breitbart News",
-          "published_at": "2026-03-05T19:14:02Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "President Donald Trump has announced that he will nominate Sen. Markwayne Mullin to replace Kristi Noem as chief of the Department of Homeland Security. \nThe post Kristi Noem Out: Trump Picks Sen. Markwayne Mullin as Replacement appeared first on Breitbart.",
-          "impact_score": 55,
-          "themes": [
-            "materials"
-          ]
         }
       ],
       "regulatory": [
+        {
+          "title": "'Immense stress' on power grid as Virginia refuses data center regulation",
+          "url": "https://www.rawstory.com/general-assembly-nixes-bills-that-required-data-centers-to-get-scc-certificate/",
+          "source": "Raw Story",
+          "published_at": "2026-03-06T14:54:33Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "For most of the industry’s existence in Virginia, approvals for data centers were largely seen as a local issue – with the state and federal governments giving the thumbs up on certain permits.But as the industry balloons across the commonwealth, those local …",
+          "impact_score": 50,
+          "themes": [
+            "regulatory",
+            "commercial"
+          ]
+        },
         {
           "title": "Economic Digest: Nepal’s Business News in a Snap",
           "url": "https://english.khabarhub.com/2026/06/537890/",
@@ -2870,6 +2969,19 @@
       ],
       "macro": [
         {
+          "title": "Korean Stocks to Bounce, US Inflation Fears Ease: Markets Wrap - Bloomberg.com",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-04/stock-market-today-dow-s-p-live-updates-",
+          "source": "Bloomberg",
+          "published_at": "2026-03-05T21:40:45Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "A slide in chipmakers dragged down stocks while a bond selloff deepened amid a spike in oil as headlines continued to depict war escalating in Iran and the Middle East. Bitcoin slumped.",
+          "impact_score": 40,
+          "themes": [
+            "macro"
+          ]
+        },
+        {
           "title": "Aqua Tower Atmospheric Water Generator Claims Evaluated: 2026 Consumer Report Examines Off-Grid Water Technology, DIY Water Generation Systems, and What Consumers Should Verify",
           "url": "https://www.globenewswire.com/news-release/2026/03/05/3250744/0/en/Aqua-Tower-Atmospheric-Water-Generator-Claims-Evaluated-2026-Consumer-Report-Examines-Off-Grid-Water-Technology-DIY-Water-Generation-Systems-and-What-Consumers-Should-Verify.html",
           "source": "GlobeNewswire",
@@ -2881,23 +2993,75 @@
           "themes": [
             "macro"
           ]
-        },
-        {
-          "title": "Miracle Sheets 2026: Claims Examined, Pricing Verified & What Consumers Should Confirm Before Buying",
-          "url": "https://www.globenewswire.com/news-release/2026/03/05/3250583/0/en/Miracle-Sheets-2026-Claims-Examined-Pricing-Verified-What-Consumers-Should-Confirm-Before-Buying.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-05T19:26:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Let's be real — most of us don't think twice about the sheets we're sleeping on. You toss them on the bed, crawl in at night, and that's about it. But here's the thing: your bedding could be quietly sabotaging your sleep, your skin, and even your overall heal…",
-          "impact_score": 40,
-          "themes": [
-            "macro"
-          ]
         }
       ],
       "land": [],
       "other": [
+        {
+          "title": "Dow Slides as Stagflation Worries Roil Markets - Barron's",
+          "url": "https://www.barrons.com/livecoverage/stock-market-news-today-030626",
+          "source": "Barron's",
+          "published_at": "2026-03-06T16:08:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The Dow, S&P 500, and Nasdaq are falling as the stock market digests disappointing jobs data and surging oil prices.",
+          "impact_score": 55,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Dow falls 600 points after Trump comments spike oil, surprise job loss in February: Live updates - CNBC",
+          "url": "https://www.cnbc.com/2026/03/05/stock-market-today-live-updates.html",
+          "source": "CNBC",
+          "published_at": "2026-03-06T15:56:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Stocks fell Friday, adding to their weekly declines, as oil prices spiked and traders reacted to an unexpected drop in new U.S. jobs data.",
+          "impact_score": 55,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "United can remove and ban passengers who refuse to use headphones - Mashable",
+          "url": "https://mashable.com/article/united-airlines-headphone-policy",
+          "source": "Mashable",
+          "published_at": "2026-03-06T14:03:45Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Some more peace and quiet in the cabin.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Used vehicle prices jump ahead of spring selling season optimism - CNBC",
+          "url": "https://www.cnbc.com/2026/03/06/used-vehicle-prices.html",
+          "source": "CNBC",
+          "published_at": "2026-03-06T14:00:01Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "A closely watched barometer for used vehicle pricing jumped last month as dealers sped to increase inventories amid optimism of a robust spring selling season.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Oil hits 23-month high as Qatar minister warns prices could reach $150 - MarketWatch",
+          "url": "https://www.marketwatch.com/story/oil-at-20-month-high-as-qatar-minister-warns-of-halt-to-energy-shipments-ffd3f8f9",
+          "source": "MarketWatch",
+          "published_at": "2026-03-06T10:01:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Qatar energy minister warns that supplies from Persian Gulf could stop entirely",
+          "impact_score": 55,
+          "themes": [
+            "other"
+          ]
+        },
         {
           "title": "The Kalshi and Polymarket CEO feud: They hate each other - NPR",
           "url": "https://www.npr.org/2026/03/06/nx-s1-5735893/iran-war-kalshi-polymarket-feud",
@@ -2912,13 +3076,39 @@
           ]
         },
         {
-          "title": "Dow futures tick higher, but index heads for worst week since October on oil surge: Live updates - CNBC",
-          "url": "https://www.cnbc.com/2026/03/05/stock-market-today-live-updates.html",
-          "source": "CNBC",
-          "published_at": "2026-03-06T08:16:00Z",
+          "title": "OpenAI releases new ChatGPT model for working in Excel and Google Sheets - Axios",
+          "url": "https://www.axios.com/2026/03/05/openai-gpt-54-chatgpt-office",
+          "source": "Axios",
+          "published_at": "2026-03-06T08:13:22Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "The Dow Industrials lost nearly 785 points in Thursday’s sell-off as oil prices leapt. The blue-chip index is on track for its worst week since October.",
+          "description": "GPT-5.4 outperforms office workers 83% of the time, OpenAI says.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "McDonald’s CEO did a burger taste test that became a cautionary tale for execs. But there’s a silver lining - Fortune",
+          "url": "https://fortune.com/2026/03/06/mcdonalds-ceo-did-a-burger-taste-test-that-became-a-cautionary-tale-for-execs-but-theres-a-silver-lining/",
+          "source": "Fortune",
+          "published_at": "2026-03-06T08:07:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "McDonald’s CEO Chris Kempczinski’s taste test turned into a viral meme war that shows how risky the CEO-influencer model has become.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Why oil at $200 a barrel is no longer unthinkable - Financial Times",
+          "url": "https://www.ft.com/content/8d8c337f-e3a7-4fa5-8e9f-749a24fe3eb9",
+          "source": "Financial Times",
+          "published_at": "2026-03-06T05:00:50Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "If supply disruptions persist, holders of stockpiled reserves can’t be relied on to fully cushion the impact",
           "impact_score": 55,
           "themes": [
             "other"
@@ -2938,117 +3128,26 @@
           ]
         },
         {
-          "title": "Beyond Meat drops the ‘Meat’ from its name as it expands to plant-based drinks and snacks - AP News",
-          "url": "https://apnews.com/article/beyond-meat-plantbased-protein-drinks-5cf4bd0e5711c062ae9dca52f8980e4c",
-          "source": "Associated Press",
-          "published_at": "2026-03-06T03:42:00Z",
+          "title": "Six Flags selling 7 parks, including 4 in the Midwest, in $331M deal - NBC 5 Chicago",
+          "url": "https://www.nbcchicago.com/news/local/six-flags-selling-7-parks-including-4-in-the-midwest-in-331m-deal/3903920/",
+          "source": "NBC Chicago",
+          "published_at": "2026-03-06T03:46:51Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Beyond Meat is dropping “meat” from its name as it moves beyond the struggling market for plant-based burgers, sausages and tenders and expands into new categories like protein drinks. The company now known as the Beyond The Plant Protein Co., or simply Beyon…",
+          "description": "Six Flags has agreed to sell seven of its theme parks, including four in the Midwest, the company announced Thursday.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "OpenAI releases new ChatGPT model for working in Excel and Google Sheets - Axios",
-          "url": "https://www.axios.com/2026/03/05/openai-gpt-54-chatgpt-office",
-          "source": "Axios",
-          "published_at": "2026-03-06T01:54:27Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "GPT-5.4 outperforms office workers 83% of the time, OpenAI says.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "CNBC Daily Open: Oil surges as Iran war enters seventh day - CNBC",
-          "url": "https://www.cnbc.com/2026/03/06/cnbc-daily-open-oil-iran-war-us-israel.html",
-          "source": "CNBC",
-          "published_at": "2026-03-06T01:08:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "U.S. crude oil hit as much as $80 per barrel Thursday, as the escalating Iran war enters its seventh day and continues disrupting global fuel supplies.",
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Workers report watching Ray-Ban Meta-shot footage of people using the bathroom - Ars Technica",
-          "url": "https://arstechnica.com/gadgets/2026/03/workers-report-watching-ray-ban-meta-shot-footage-of-people-using-the-bathroom/",
-          "source": "Ars Technica",
-          "published_at": "2026-03-05T23:36:04Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Meta accused of \"concealing the facts\" about smart glass users' privacy.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Block employee says the company dangled a 75% pay raise to get her to stay after layoffs — but she decided to quit - Business Insider",
-          "url": "https://www.businessinsider.com/block-employee-says-quit-retention-bonus-package-offer-2026-3",
+          "title": "Amazon is back up after outage affecting tens of thousands of shoppers - Business Insider",
+          "url": "https://www.businessinsider.com/amazon-down-outage-payment-failure-shoppers-downdetector-2026-3",
           "source": "Business Insider",
-          "published_at": "2026-03-05T23:36:00Z",
+          "published_at": "2026-03-06T02:47:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "\"I saw my company discard half of my peers and double my pay,\" the former Block employee wrote. \"That's not an honor. It feels shameful.\"",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "US considers tying Nvidia and AMD AI chip exports to foreign investment pledges - Financial Times",
-          "url": "https://www.ft.com/content/30d0b1df-ad8c-42eb-852b-dad53acaecfc",
-          "source": "Financial Times",
-          "published_at": "2026-03-05T22:48:42Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Draft rule would require countries to invest in America in exchange for advanced semiconductors",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Elon Musk defends tweets in lawsuit alleging they caused Twitter stock to fall before acquisition - AP News",
-          "url": "https://apnews.com/article/elon-musk-twitter-shareholders-court-class-action-a5ce0d4a3e5488545c6adc870e746274",
-          "source": "Associated Press",
-          "published_at": "2026-03-05T22:46:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Elon Musk continued to defend his actions in the months leading up to his 2022 purchase of Twitter in court Thursday. He faces a class action lawsuit claiming he misled investors. The civil trial in San Francisco centers on a class-action lawsuit filed just b…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Marvell Gets AI Sales Boost In Fiscal Q4. Stock Rises. - Investor's Business Daily",
-          "url": "https://www.investors.com/news/technology/mrvl-stock-marvell-technology-fiscal-q4-2026-earnings/",
-          "source": "Investor's Business Daily",
-          "published_at": "2026-03-05T21:46:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Chipmaker Marvell narrowly beat analyst estimates for its fiscal Q4 and guided modestly higher for the current period. MRVL stock jumped.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Historic winter storms weigh on Gap, Old Navy performance after 800 temporary store closures - CNBC",
-          "url": "https://www.cnbc.com/2026/03/05/gap-gap-q4-2025-earnings.html",
-          "source": "CNBC",
-          "published_at": "2026-03-05T21:16:38Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Gap has been on a steady upswing of growth but saw worse than expected results during its holiday quarter after historic winter storms led to store closures.",
+          "description": "Shoppers are reporting Amazon on Downdetector, saying the problems ranged from checkout and payment failures to incorrect or fluctuating prices.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3057,39 +3156,40 @@
       ],
       "commercial": [
         {
-          "title": "Trump gets data center companies to pledge to pay for power generation - Ars Technica",
-          "url": "https://arstechnica.com/tech-policy/2026/03/leading-ai-datacenter-companies-sign-pledge-to-buy-their-own-power/",
-          "source": "Ars Technica",
-          "published_at": "2026-03-05T18:41:28Z",
+          "title": "Retail sales fell more than expected in January, biggest drop in eight months - CNN",
+          "url": "https://www.cnn.com/2026/03/06/economy/us-retail-sales-january",
+          "source": "CNN",
+          "published_at": "2026-03-06T13:35:26Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "With no enforcement and questionable economics, it may not make a difference.",
+          "description": "One of the main pillars propping up the US economy — consumer spending — may be starting to crack.",
           "impact_score": 40,
           "themes": [
             "commercial"
           ]
         },
         {
-          "title": "Big Tech Promises to Pay for AI Data Center Power, but Who Will Enforce It?",
-          "url": "https://www.cnet.com/tech/services-and-software/ai-data-center-electricity-costs-white-house-ratepayer-protection-pledge/",
-          "source": "CNET",
-          "published_at": "2026-03-05T20:54:12Z",
+          "title": "'Immense stress' on power grid as Virginia refuses data center regulation",
+          "url": "https://www.rawstory.com/general-assembly-nixes-bills-that-required-data-centers-to-get-scc-certificate/",
+          "source": "Raw Story",
+          "published_at": "2026-03-06T14:54:33Z",
           "provider": "newsapi",
           "feed": "everything",
-          "description": "Microsoft, Google, Amazon, Meta and others signed a nonbinding pledge agreeing to cover the cost of powering AI data centers.",
-          "impact_score": 40,
+          "description": "For most of the industry’s existence in Virginia, approvals for data centers were largely seen as a local issue – with the state and federal governments giving the thumbs up on certain permits.But as the industry balloons across the commonwealth, those local …",
+          "impact_score": 50,
           "themes": [
+            "regulatory",
             "commercial"
           ]
         },
         {
-          "title": "7 Major AI Companies Sign White House Pledge to Cover Data Center Power Costs",
-          "url": "https://www.breitbart.com/tech/2026/03/05/7-major-ai-companies-sign-white-house-pledge-to-cover-data-center-power-costs/",
-          "source": "Breitbart News",
-          "published_at": "2026-03-05T17:57:42Z",
+          "title": "Trump admits the hyperscalers ‘need some PR help’ because the American taxpayer is on the hook for their data centers",
+          "url": "https://fortune.com/2026/03/06/trump-data-centers-big-tech-hyperscalers-need-some-pr-help-affordability/",
+          "source": "Fortune",
+          "published_at": "2026-03-06T14:45:11Z",
           "provider": "newsapi",
           "feed": "everything",
-          "description": "Leaders from the leading companies in AI including Google, Microsoft, Meta, Oracle, xAI, OpenAI, and Amazon have signed a non-binding agreement at the White House committing to fund the electricity infrastructure needed for their data center operations.\nThe p…",
+          "description": "“Trump is trying to cover up his mistakes with a photo op,” said Lena Moffitt, executive director of Evergreen Action, an environmental group.",
           "impact_score": 40,
           "themes": [
             "commercial"
@@ -3155,21 +3255,21 @@
       },
       {
         "ticker": "HD",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-06",
+        "open": 357.625,
         "close": 357.92,
-        "prev_close": 361.68,
-        "change": -3.76,
-        "change_pct": -1.0396
+        "change": 0.2950000000000159,
+        "change_pct": 0.08248864033555146
       },
       {
         "ticker": "LOW",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-06",
-        "open": 250.29,
         "close": 251.89,
-        "change": 1.5999999999999943,
-        "change_pct": 0.6392584601861818
+        "prev_close": 254.71,
+        "change": -2.82,
+        "change_pct": -1.1071
       },
       {
         "ticker": "VMC",
@@ -3290,7 +3390,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": -0.20017076990690913
+        "avg_change_pct": -0.5123056798322243
       }
     },
     "stock_pressure_overlay": 5,
@@ -3373,7 +3473,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-07T13:09:21.418Z",
+    "generated_at_utc": "2026-03-07T18:50:52.814Z",
     "regime_history": {
       "current_regime_duration_days": 4,
       "previous_regime": null,
