@@ -12,6 +12,9 @@ export const DEFAULT_SERIES = [
   "TTLCONS",
 ];
 
+const MAX_BUNDLE_SERIES = 10;
+const FRED_SERIES_ID_PATTERN = /^[A-Z0-9_]+$/;
+
 function parseLimitParam(rawLimit, fallback, min, max) {
   if (rawLimit === null) return { ok: true, value: fallback };
 
@@ -316,7 +319,19 @@ export async function handleBundle(request, env) {
 
   const limit = parsedLimit.value;
   const use = (url.searchParams.get("series") || "").trim();
-  const seriesList = use ? use.split(",").map((s) => s.trim()).filter(Boolean) : DEFAULT_SERIES;
+  const seriesList = use ? Array.from(new Set(use.split(",").map((s) => s.trim()).filter(Boolean))) : DEFAULT_SERIES;
+
+  if (use && seriesList.length > MAX_BUNDLE_SERIES) {
+    return error(env, 400, "SERIES_INVALID", "Invalid series query parameter", {
+      reason: `too many series requested (max ${MAX_BUNDLE_SERIES})`,
+    });
+  }
+
+  if (use && seriesList.some((id) => !FRED_SERIES_ID_PATTERN.test(id))) {
+    return error(env, 400, "SERIES_INVALID", "Invalid series query parameter", {
+      reason: "invalid identifier present",
+    });
+  }
 
   if (!use) {
     const { snapshot, source } = await buildMacroSnapshot(env, limit);
