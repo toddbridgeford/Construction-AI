@@ -5,7 +5,7 @@ import Combine
 final class DashboardStore: ObservableObject {
     @Published var payload: DashboardPayload?
     @Published var statusText: String = "Loading…"
-    @Published var isLoading: Bool = false
+    @Published var isLoading: Bool = true
     @Published var lastRefresh: Date?
     @Published var errorMessage: String?
     @Published var searchText: String = ""
