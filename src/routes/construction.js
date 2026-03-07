@@ -3156,6 +3156,19 @@ export async function handleConstructionSettingsProfilesActivate(request, env) {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
     if (body === null) return error(env, 400, "SETTINGS_PROFILE_ACTIVATE_INVALID_JSON", "Malformed JSON body");
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+      return error(env, 400, "SETTINGS_PROFILE_ACTIVATE_VALIDATION_FAILED", "Invalid settings profile payload", {
+        errors: ["payload must be an object"],
+      });
+    }
+
+    const unknownFields = Object.keys(body).filter((key) => key !== "profile_id");
+    if (unknownFields.length > 0) {
+      return error(env, 400, "SETTINGS_PROFILE_ACTIVATE_VALIDATION_FAILED", "Invalid settings profile payload", {
+        errors: unknownFields.map((key) => `unknown field: ${key}`),
+      });
+    }
+
     const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
     if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
 
@@ -3175,6 +3188,19 @@ export async function handleConstructionSettingsProfilesDelete(request, env) {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
     if (body === null) return error(env, 400, "SETTINGS_PROFILE_DELETE_INVALID_JSON", "Malformed JSON body");
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+      return error(env, 400, "SETTINGS_PROFILE_DELETE_VALIDATION_FAILED", "Invalid settings profile payload", {
+        errors: ["payload must be an object"],
+      });
+    }
+
+    const unknownFields = Object.keys(body).filter((key) => key !== "profile_id");
+    if (unknownFields.length > 0) {
+      return error(env, 400, "SETTINGS_PROFILE_DELETE_VALIDATION_FAILED", "Invalid settings profile payload", {
+        errors: unknownFields.map((key) => `unknown field: ${key}`),
+      });
+    }
+
     const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
     if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
 
