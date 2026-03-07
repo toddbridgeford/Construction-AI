@@ -29,3 +29,11 @@ test('OpenAPI custom watchlist response schema includes profile-aware fields ret
   assert.match(raw, /ConstructionCustomWatchlistResponse:[\s\S]*?saved_profiles_summary:\s*\n\s*type:\s*string/);
   assert.match(raw, /ConstructionCustomWatchlistResponse:[\s\S]*?required:\s*\[ok, ts, service, alerts, summary, active_settings, active_profile_id, active_profile_name, settings_summary, saved_profiles_summary\]/);
 });
+
+
+test('OpenAPI settings write request schemas allow runtime partial payloads', async () => {
+  const raw = await fs.readFile(new URL('../openapi.yaml', import.meta.url), 'utf8');
+  assert.match(raw, /"\/construction\/settings":[\s\S]*?post:[\s\S]*?ConstructionSettingsPatchModel/);
+  assert.match(raw, /ConstructionSettingsProfileCreateRequest:[\s\S]*?settings:[\s\S]*?ConstructionSettingsPatchModel/);
+  assert.match(raw, /ConstructionSettingsPatchModel:[\s\S]*?additionalProperties:\s*false/);
+});

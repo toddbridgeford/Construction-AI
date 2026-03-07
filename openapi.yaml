@@ -298,7 +298,7 @@ paths:
         content:
           application/json:
             schema:
-              "$ref": "#/components/schemas/ConstructionSettingsModel"
+              "$ref": "#/components/schemas/ConstructionSettingsPatchModel"
       responses:
         '200':
           description: Construction settings write response
@@ -1769,6 +1769,26 @@ components:
           type: string
       required: [metros_watchlist, risk_watchlist, thresholds, alert_sensitivity, muted_alert_codes, updated_at]
       additionalProperties: false
+    ConstructionSettingsPatchModel:
+      type: object
+      properties:
+        metros_watchlist:
+          type: array
+          items: { type: string }
+        risk_watchlist:
+          type: array
+          items: { type: string }
+        thresholds:
+          type: object
+          additionalProperties:
+            type: number
+        alert_sensitivity:
+          type: string
+          enum: [conservative, balanced, aggressive]
+        muted_alert_codes:
+          type: array
+          items: { type: string }
+      additionalProperties: false
     ConstructionSettingsProfileModel:
       type: object
       properties:
@@ -1803,7 +1823,7 @@ components:
         profile_name: { type: string }
         description: { type: string }
         settings:
-          "$ref": "#/components/schemas/ConstructionSettingsModel"
+          "$ref": "#/components/schemas/ConstructionSettingsPatchModel"
       required: [profile_name]
       additionalProperties: false
     ConstructionSettingsWriteResponse:
