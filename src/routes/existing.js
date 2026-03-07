@@ -14,6 +14,7 @@ export const DEFAULT_SERIES = [
 
 const MAX_BUNDLE_SERIES = 10;
 const FRED_SERIES_ID_PATTERN = /^[A-Z0-9_]+$/;
+const CUSTOM_BUNDLE_TTL_SECONDS = 5 * 60;
 
 function parseLimitParam(rawLimit, fallback, min, max) {
   if (rawLimit === null) return { ok: true, value: fallback };
@@ -228,6 +229,11 @@ async function buildMacroSnapshot(env, limit = 12) {
   return { snapshot, source: "live" };
 }
 
+function buildCustomBundleCacheKey(seriesList, limit) {
+  const normalizedSeries = Array.from(new Set(seriesList)).sort();
+  return `macro:custom-bundle:${limit}:${normalizedSeries.join(",")}`;
+}
+
 function computeLiquidity(series) {
   const mort = series?.MORTGAGE30US?.latest;
   const ffr = series?.FEDFUNDS?.latest;
@@ -338,6 +344,12 @@ export async function handleBundle(request, env) {
     return ok(env, { source, bundle: snapshot });
   }
 
+  const cacheKey = buildCustomBundleCacheKey(seriesList, limit);
+  const cached = await kvGetJson(env, cacheKey);
+  if (cached) {
+    return ok(env, { source: "kv", bundle: cached });
+  }
+
   const series = {};
   for (const id of seriesList) {
     try {
@@ -348,7 +360,10 @@ export async function handleBundle(request, env) {
       series[id] = { error: { message: e.message, status: e.status || 0 } };
     }
   }
-  return ok(env, { source: "live", bundle: { series } });
+
+  const bundle = { series };
+  await kvPutJson(env, cacheKey, bundle, CUSTOM_BUNDLE_TTL_SECONDS);
+  return ok(env, { source: "live", bundle });
 }
 
 export async function buildMacroEndpointData(env, limit = 12) {

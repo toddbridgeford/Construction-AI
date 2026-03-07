@@ -870,6 +870,44 @@ test('bundle endpoint deduplicates repeated custom series ids before fetch fan-o
   }
 });
 
+test('bundle endpoint caches normalized custom series requests and avoids repeated upstream fan-out', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const originalFetch = globalThis.fetch;
+  const requested = [];
+
+  globalThis.fetch = async (url) => {
+    const parsed = new URL(String(url));
+    const seriesId = parsed.searchParams.get('series_id');
+    requested.push(seriesId);
+    return new Response(JSON.stringify({ observations: [{ date: '2025-01-01', value: '1.0' }] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  };
+
+  try {
+    const firstReq = new Request('https://example.com/bundle?series=MORTGAGE30US,FEDFUNDS&limit=8');
+    const firstRes = await handleBundle(firstReq, env);
+    const firstBody = await json(firstRes);
+
+    assert.equal(firstRes.status, 200);
+    assert.equal(firstBody.source, 'live');
+    assert.deepEqual(requested, ['MORTGAGE30US', 'FEDFUNDS']);
+    assert.deepEqual(Object.keys(firstBody.bundle.series), ['MORTGAGE30US', 'FEDFUNDS']);
+
+    const secondReq = new Request('https://example.com/bundle?series=FEDFUNDS,MORTGAGE30US,FEDFUNDS&limit=8');
+    const secondRes = await handleBundle(secondReq, env);
+    const secondBody = await json(secondRes);
+
+    assert.equal(secondRes.status, 200);
+    assert.equal(secondBody.source, 'kv');
+    assert.deepEqual(secondBody.bundle, firstBody.bundle);
+    assert.deepEqual(requested, ['MORTGAGE30US', 'FEDFUNDS']);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test('bundle endpoint rejects too many requested series ids', async () => {
   const env = makeEnv();
   const series = Array.from({ length: 11 }, (_, i) => `SERIES${i + 1}`).join(',');
