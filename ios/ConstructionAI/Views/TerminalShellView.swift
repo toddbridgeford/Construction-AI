@@ -172,26 +172,45 @@ private struct ErrorBannerView: View {
     let retry: () -> Void
 
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
+        ViewThatFits {
+            HStack(alignment: .top, spacing: TerminalTheme.Spacing.small) {
+                warningCopy
+                Spacer(minLength: TerminalTheme.Spacing.xSmall)
+                retryButton
+            }
+
+            VStack(alignment: .leading, spacing: TerminalTheme.Spacing.small) {
+                warningCopy
+                retryButton
+            }
+        }
+        .padding(TerminalTheme.Spacing.small)
+        .background(Color.red.opacity(0.1), in: RoundedRectangle(cornerRadius: TerminalTheme.Radius.row))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Connection warning. \(message)")
+    }
+
+    private var warningCopy: some View {
+        HStack(alignment: .top, spacing: TerminalTheme.Spacing.small) {
             Image(systemName: "wifi.exclamationmark")
                 .foregroundStyle(.red)
                 .padding(.top, 1)
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
                 TerminalSectionHeader(title: "Connection warning")
                 Text(message)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            Spacer()
-            Button("Retry", action: retry)
-                .buttonStyle(TerminalButtonStyle(intent: .destructive))
-                .accessibilityHint("Attempts to reconnect and reload dashboard data")
         }
-        .padding(10)
-        .background(Color.red.opacity(0.1), in: RoundedRectangle(cornerRadius: TerminalTheme.Radius.row))
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel("Connection warning. \(message)")
+    }
+
+    private var retryButton: some View {
+        Button("Retry", action: retry)
+            .buttonStyle(TerminalButtonStyle(intent: .destructive))
+            .accessibilityHint("Attempts to reconnect and reload dashboard data")
     }
 }
 

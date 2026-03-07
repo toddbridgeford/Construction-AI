@@ -75,11 +75,13 @@ struct OverviewView: View {
                         HStack(alignment: .top, spacing: TerminalTheme.Spacing.xSmall) {
                             SeverityChipView(severity: alert.severity)
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(alert.title).lineLimit(1)
+                                Text(alert.title)
+                                    .lineLimit(2)
+                                    .fixedSize(horizontal: false, vertical: true)
                                 Text(alert.message)
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
-                                    .lineLimit(1)
+                                    .lineLimit(2)
                             }
                             Spacer(minLength: TerminalTheme.Spacing.xSmall)
                         }
@@ -185,6 +187,7 @@ struct OverviewView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(2)
+                        .padding(.bottom, TerminalTheme.Spacing.xSmall)
                 }
             }
         }

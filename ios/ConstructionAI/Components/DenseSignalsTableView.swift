@@ -10,13 +10,14 @@ struct DenseSignalsTableView: View {
         VStack(alignment: .leading, spacing: TerminalTheme.Spacing.small) {
             TerminalSectionHeader(title: "Top signals", subtitle: "Priority market indicators")
             ForEach(Array(signals.enumerated()), id: \.element.id) { index, signal in
-                HStack(spacing: TerminalTheme.Spacing.xSmall) {
+                HStack(alignment: .top, spacing: TerminalTheme.Spacing.xSmall) {
                     Button {
                         onSelect(signal)
                     } label: {
-                        HStack(spacing: TerminalTheme.Spacing.xSmall) {
+                        HStack(alignment: .firstTextBaseline, spacing: TerminalTheme.Spacing.xSmall) {
                             Text(signal.key)
                                 .lineLimit(1)
+                                .minimumScaleFactor(0.88)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             TrendArrowView(direction: Trend.from(arrow: signal.arrow))
                             SeverityChipView(severity: signal.severity)
@@ -24,6 +25,7 @@ struct DenseSignalsTableView: View {
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)
                                 .truncationMode(.tail)
+                                .frame(minWidth: 96, alignment: .leading)
                         }
                         .font(.footnote)
                     }
@@ -37,6 +39,7 @@ struct DenseSignalsTableView: View {
                     } label: {
                         Image(systemName: pinned.contains(signal.id) ? "pin.fill" : "pin")
                             .font(.body.weight(.semibold))
+                            .frame(width: 18, height: 18)
                     }
                     .buttonStyle(TerminalButtonStyle(intent: pinned.contains(signal.id) ? .selected : .neutral))
                     .accessibilityLabel(pinned.contains(signal.id) ? "Unpin \(signal.key)" : "Pin \(signal.key)")
