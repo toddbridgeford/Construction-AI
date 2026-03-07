@@ -78,6 +78,19 @@ test('OPTIONS preflight advertises POST for settings write routes', async () => 
   assert.equal(res.headers.get('access-control-allow-methods'), 'GET,POST,OPTIONS');
 });
 
+test('HEAD requests are treated as GET for read endpoints and return no body', async () => {
+  const env = makeEnv();
+
+  const healthRes = await worker.fetch(new Request('https://example.com/health', { method: 'HEAD' }), env);
+  assert.equal(healthRes.status, 200);
+  assert.equal(await healthRes.text(), '');
+
+  const settingsRes = await worker.fetch(new Request('https://example.com/construction/settings', { method: 'HEAD' }), env);
+  assert.equal(settingsRes.status, 200);
+  assert.equal(await settingsRes.text(), '');
+  assert.equal(settingsRes.headers.get('content-type'), 'application/json; charset=utf-8');
+});
+
 test('/construction/settings/defaults returns deterministic fallback payload', async () => {
   const env = makeEnv();
   const req = new Request('https://example.com/construction/settings/defaults');
