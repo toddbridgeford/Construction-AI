@@ -3048,6 +3048,20 @@ export async function handleConstructionSettingsProfilesCreate(request, env) {
     }
     const body = await readJsonBody(request);
     if (body === null) return error(env, 400, "SETTINGS_PROFILE_CREATE_INVALID_JSON", "Malformed JSON body");
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+      return error(env, 400, "SETTINGS_PROFILE_CREATE_VALIDATION_FAILED", "Invalid settings profile payload", {
+        errors: ["payload must be an object"],
+      });
+    }
+
+    const allowedFields = new Set(["profile_name", "description", "settings"]);
+    const unknownFields = Object.keys(body).filter((key) => !allowedFields.has(key));
+    if (unknownFields.length > 0) {
+      return error(env, 400, "SETTINGS_PROFILE_CREATE_VALIDATION_FAILED", "Invalid settings profile payload", {
+        errors: unknownFields.map((key) => `unknown field: ${key}`),
+      });
+    }
+
     if (!validateProfileName(body.profile_name)) {
       return error(env, 400, "SETTINGS_PROFILE_NAME_REQUIRED", "profile_name must be a non-empty string");
     }

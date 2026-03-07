@@ -241,6 +241,22 @@ test('profile create generates unique ids even when created in same millisecond'
   }
 });
 
+
+test('profile create rejects unknown top-level fields to prevent false-success writes', async () => {
+  const env = makeEnv();
+  const res = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_name: 'Unknown Field Profile', unexpected_toggle: true }),
+  }), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 400);
+  assert.equal(body.error.code, 'SETTINGS_PROFILE_CREATE_VALIDATION_FAILED');
+  assert.ok(Array.isArray(body.error.details.errors));
+  assert.match(body.error.details.errors[0], /unknown field: unexpected_toggle/);
+});
+
 test('profile create rejects invalid settings payload when settings key is provided', async () => {
   const env = makeEnv();
   const createRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
