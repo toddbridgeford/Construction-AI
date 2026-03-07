@@ -355,6 +355,33 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionSettingsWriteResponse"
+  "/construction/settings/active-profile":
+    get:
+      operationId: constructionSettingsActiveProfileGet
+      summary: Read the active settings profile metadata and resolved settings
+      responses:
+        '200':
+          description: Active settings profile response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsResponse"
+    post:
+      operationId: constructionSettingsActiveProfileSet
+      summary: Set active settings profile by profile_id (backward-compatible endpoint)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ConstructionSettingsProfileActionRequest"
+      responses:
+        '200':
+          description: Active settings profile response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsResponse"
   "/construction/settings/profiles/activate":
     post:
       operationId: constructionSettingsProfilesActivate
