@@ -11,6 +11,8 @@ struct TerminalTopBarView: View {
                 Text("CONSTRUCTION AI // TERMINAL")
                     .font(.system(.headline, design: .monospaced).weight(.bold))
                     .foregroundStyle(Color.orange)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                 Spacer()
                 StatusPillView(text: statusText)
                 VStack(alignment: .trailing, spacing: 2) {
@@ -21,11 +23,14 @@ struct TerminalTopBarView: View {
                         .font(.system(.caption, design: .monospaced))
                         .foregroundStyle(.secondary)
                 }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Last refresh: \(lastRefresh.map { DateFormatting.shortDateTime.string(from: $0) } ?? "Never")")
             }
 
             TextField("Search alerts, signals, regions", text: $searchText)
                 .textFieldStyle(.roundedBorder)
                 .accessibilityLabel("Search terminal data")
+                .accessibilityHint("Filters signals, alerts, and regions")
         }
         .padding(.horizontal, TerminalTheme.Spacing.medium)
         .padding(.vertical, TerminalTheme.Spacing.small)

@@ -58,18 +58,23 @@ struct OverviewView: View {
         VStack(alignment: .leading, spacing: 8) {
             TerminalSectionHeader(title: "Alerts", subtitle: "Highest-priority changes")
             ForEach(store.filteredAlerts.prefix(4)) { alert in
-                HStack {
-                    SeverityChipView(severity: alert.severity)
-                    VStack(alignment: .leading) {
-                        Text(alert.title).lineLimit(1)
-                        Text(alert.message).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                Button {
+                    store.selectedAlert = alert
+                } label: {
+                    HStack {
+                        SeverityChipView(severity: alert.severity)
+                        VStack(alignment: .leading) {
+                            Text(alert.title).lineLimit(1)
+                            Text(alert.message).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                        }
+                        Spacer()
                     }
-                    Spacer()
                 }
+                .buttonStyle(.plain)
                 .terminalRowBackground()
-                .contentShape(Rectangle())
-                .onTapGesture { store.selectedAlert = alert }
+                .terminalTapTarget()
                 .accessibilityLabel("\(alert.severity.rawValue) alert \(alert.title)")
+                .accessibilityHint("Opens alert details in inspector")
             }
         }
         .terminalPanel()
@@ -167,6 +172,8 @@ struct OverviewView: View {
                     Spacer()
                     Text(source.status).font(.caption).foregroundStyle(source.status == "error" ? .red : .secondary)
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(source.source): \(source.status)")
             }
         }
         .terminalPanel()
@@ -180,6 +187,7 @@ struct OverviewView: View {
                 .font(.caption)
         }
         .terminalPanel()
+        .accessibilityElement(children: .combine)
     }
 }
 

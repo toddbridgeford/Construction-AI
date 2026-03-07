@@ -17,8 +17,12 @@ struct InspectorView: View {
                         TerminalSectionHeader(title: "What changed")
                         HStack {
                             Image(systemName: Trend.from(arrow: signal.arrow).symbol)
-                            Text(signal.value.map { String(format: "%.2f", $0) } ?? "—").font(TerminalTheme.mono(size: 16))
+                                .accessibilityHidden(true)
+                            Text(signal.value.map { String(format: "%.2f", $0) } ?? "—")
+                                .font(TerminalTheme.mono(size: 16))
                         }
+                        .accessibilityElement(children: .combine)
+                        .accessibilityLabel("Value \(signal.value.map { String(format: "%.2f", $0) } ?? "not available")")
                     }
                     .terminalPanel()
 
@@ -53,15 +57,23 @@ struct InspectorView: View {
                 #endif
             }
             .buttonStyle(.bordered)
+            .terminalTapTarget()
             .accessibilityHint("Copies summary text to clipboard")
 
             ShareLink(item: summary) {
                 Label("Share", systemImage: "square.and.arrow.up")
             }
             .buttonStyle(.bordered)
+            .terminalTapTarget()
 
-            Toggle("Pin", isOn: $isPinned).toggleStyle(.button)
-            Toggle("Watch", isOn: $isWatched).toggleStyle(.button)
+            Toggle("Pin", isOn: $isPinned)
+                .toggleStyle(.button)
+                .terminalTapTarget()
+                .accessibilityHint("Marks this inspector item as pinned in this session")
+            Toggle("Watch", isOn: $isWatched)
+                .toggleStyle(.button)
+                .terminalTapTarget()
+                .accessibilityHint("Marks this inspector item as watched in this session")
         }
         .controlSize(.large)
         .terminalPanel()

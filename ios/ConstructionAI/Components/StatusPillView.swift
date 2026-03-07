@@ -9,6 +9,7 @@ struct StatusPillView: View {
             .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .background(.thinMaterial, in: Capsule())
-            .accessibilityLabel("Status \(text)")
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("System status: \(text)")
     }
 }

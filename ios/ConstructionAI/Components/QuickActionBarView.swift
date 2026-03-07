@@ -8,8 +8,14 @@ struct QuickActionBarView: View {
     var body: some View {
         HStack(spacing: 12) {
             Button("Explain", action: onExplain)
+                .terminalTapTarget()
+                .accessibilityHint("Explains why this alert is important")
             Button("Drivers", action: onDrivers)
+                .terminalTapTarget()
+                .accessibilityHint("Shows the underlying market drivers")
             Button("Watch / Pin", action: onWatch)
+                .terminalTapTarget()
+                .accessibilityHint("Pins this item to your watch list")
         }
         .buttonStyle(.bordered)
         .font(.caption)

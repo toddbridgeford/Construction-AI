@@ -159,9 +159,13 @@ private struct ErrorBannerView: View {
             Button("Retry", action: retry)
                 .buttonStyle(.bordered)
                 .font(.caption)
+                .terminalTapTarget()
+                .accessibilityHint("Attempts to reconnect and reload dashboard data")
         }
         .padding(10)
         .background(Color.red.opacity(0.1), in: RoundedRectangle(cornerRadius: TerminalTheme.Radius.row))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Connection warning. \(message)")
     }
 }
 
