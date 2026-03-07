@@ -246,6 +246,39 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionMorningBriefResponse"
+  "/construction/scenarios":
+    get:
+      operationId: constructionScenarios
+      summary: Deterministic base/downside/upside scenario engine
+      responses:
+        '200':
+          description: Construction scenarios response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionScenariosResponse"
+  "/construction/watchlist":
+    get:
+      operationId: constructionWatchlist
+      summary: Deterministic operator watchlist alerts
+      responses:
+        '200':
+          description: Construction watchlist response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionWatchlistResponse"
+  "/construction/morning-brief/v2":
+    get:
+      operationId: constructionMorningBriefV2
+      summary: Changed-conditions morning brief with watchlist integration
+      responses:
+        '200':
+          description: Construction morning brief v2 response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionMorningBriefV2Response"
   "/construction/alerts":
     get:
       operationId: constructionAlerts
@@ -455,6 +488,94 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionCollectionsStressResponse"
+  "/construction/owner-risk":
+    get:
+      operationId: constructionOwnerRisk
+      summary: Deterministic owner counterparty risk model
+      responses:
+        '200':
+          description: Deterministic owner risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionOwnerRiskResponse"
+  "/construction/developer-fragility":
+    get:
+      operationId: constructionDeveloperFragility
+      summary: Deterministic developer fragility model
+      responses:
+        '200':
+          description: Deterministic developer fragility model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionDeveloperFragilityResponse"
+  "/construction/lender-pullback-risk":
+    get:
+      operationId: constructionLenderPullbackRisk
+      summary: Deterministic lender pullback risk model
+      responses:
+        '200':
+          description: Deterministic lender pullback risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionLenderPullbackRiskResponse"
+  "/construction/counterparty-quality":
+    get:
+      operationId: constructionCounterpartyQuality
+      summary: Deterministic counterparty quality model
+      responses:
+        '200':
+          description: Deterministic counterparty quality model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionCounterpartyQualityResponse"
+  "/construction/metro-concentration-risk":
+    get:
+      operationId: constructionMetroConcentrationRisk
+      summary: Deterministic metro concentration risk model
+      responses:
+        '200':
+          description: Deterministic metro concentration risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionMetroConcentrationRiskResponse"
+  "/construction/counterparty-concentration-risk":
+    get:
+      operationId: constructionCounterpartyConcentrationRisk
+      summary: Deterministic counterparty concentration risk model
+      responses:
+        '200':
+          description: Deterministic counterparty concentration risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionCounterpartyConcentrationRiskResponse"
+  "/construction/project-mix-exposure":
+    get:
+      operationId: constructionProjectMixExposure
+      summary: Deterministic project mix exposure model
+      responses:
+        '200':
+          description: Deterministic project mix exposure model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionProjectMixExposureResponse"
+  "/construction/portfolio-risk":
+    get:
+      operationId: constructionPortfolioRisk
+      summary: Deterministic portfolio risk model
+      responses:
+        '200':
+          description: Deterministic portfolio risk model response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionPortfolioRiskResponse"
 components:
   schemas:
     GenericOkObject:
@@ -953,12 +1074,56 @@ components:
               "$ref": "#/components/schemas/CollectionsStressModel"
             collections_stress_summary:
               type: string
+            owner_risk:
+              "$ref": "#/components/schemas/OwnerRiskModel"
+            owner_risk_summary:
+              type: string
+            developer_fragility:
+              "$ref": "#/components/schemas/DeveloperFragilityModel"
+            developer_fragility_summary:
+              type: string
+            lender_pullback_risk:
+              "$ref": "#/components/schemas/LenderPullbackRiskModel"
+            lender_pullback_risk_summary:
+              type: string
+            counterparty_quality:
+              "$ref": "#/components/schemas/CounterpartyQualityModel"
+            counterparty_quality_summary:
+              type: string
+            metro_concentration_risk:
+              "$ref": "#/components/schemas/MetroConcentrationRiskModel"
+            metro_concentration_risk_summary:
+              type: string
+            counterparty_concentration_risk:
+              "$ref": "#/components/schemas/CounterpartyConcentrationRiskModel"
+            counterparty_concentration_risk_summary:
+              type: string
+            project_mix_exposure:
+              "$ref": "#/components/schemas/ProjectMixExposureModel"
+            project_mix_exposure_summary:
+              type: string
+            portfolio_risk:
+              "$ref": "#/components/schemas/PortfolioRiskModel"
+            portfolio_risk_summary:
+              type: string
             migration_index:
               "$ref": "#/components/schemas/MigrationIndexModel"
             migration_summary:
               type: string
             market_tape:
               "$ref": "#/components/schemas/MarketTapeModel"
+            scenarios:
+              "$ref": "#/components/schemas/ConstructionScenariosModel"
+            scenarios_summary:
+              type: string
+            watchlist:
+              "$ref": "#/components/schemas/ConstructionWatchlistModel"
+            watchlist_summary:
+              type: string
+            morning_brief_v2:
+              "$ref": "#/components/schemas/MorningBriefV2Model"
+            morning_brief_v2_summary:
+              type: string
           required:
           - signal
           - regime
@@ -999,6 +1164,22 @@ components:
           - payment_delay_risk_summary
           - collections_stress
           - collections_stress_summary
+          - owner_risk
+          - owner_risk_summary
+          - developer_fragility
+          - developer_fragility_summary
+          - lender_pullback_risk
+          - lender_pullback_risk_summary
+          - counterparty_quality
+          - counterparty_quality_summary
+          - metro_concentration_risk
+          - metro_concentration_risk_summary
+          - counterparty_concentration_risk
+          - counterparty_concentration_risk_summary
+          - project_mix_exposure
+          - project_mix_exposure_summary
+          - portfolio_risk
+          - portfolio_risk_summary
           - migration_index
           - migration_summary
           - market_tape
@@ -1330,6 +1511,131 @@ components:
       - ts
       - service
       - radar
+      additionalProperties: true
+    ScenarioCaseModel:
+      type: object
+      properties:
+        name:
+          type: string
+        probability:
+          type: number
+        signal:
+          type: string
+        regime:
+          type: string
+        risk_level:
+          type: string
+        key_changes:
+          type: array
+          items:
+            type: string
+        operator_implication:
+          type: string
+      required: [name, probability, signal, regime, risk_level, key_changes, operator_implication]
+      additionalProperties: false
+    ConstructionScenariosModel:
+      type: object
+      properties:
+        base_case:
+          "$ref": "#/components/schemas/ScenarioCaseModel"
+        downside_case:
+          "$ref": "#/components/schemas/ScenarioCaseModel"
+        upside_case:
+          "$ref": "#/components/schemas/ScenarioCaseModel"
+        headline:
+          type: string
+      required: [base_case, downside_case, upside_case, headline]
+      additionalProperties: false
+    WatchlistAlertModel:
+      type: object
+      properties:
+        code:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high]
+        trigger:
+          type: string
+        message:
+          type: string
+        operator_action:
+          type: string
+      required: [code, severity, trigger, message, operator_action]
+      additionalProperties: false
+    ConstructionWatchlistModel:
+      type: object
+      properties:
+        alerts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/WatchlistAlertModel"
+        summary:
+          type: string
+      required: [alerts, summary]
+      additionalProperties: false
+    MorningBriefV2Model:
+      type: object
+      properties:
+        title:
+          type: string
+        changed_conditions:
+          type: array
+          items:
+            type: string
+        top_risks:
+          type: array
+          items:
+            type: string
+        top_opportunities:
+          type: array
+          items:
+            type: string
+        operator_focus:
+          type: string
+        watchlist:
+          type: array
+          items:
+            "$ref": "#/components/schemas/WatchlistAlertModel"
+      required: [title, changed_conditions, top_risks, top_opportunities, operator_focus, watchlist]
+      additionalProperties: false
+    ConstructionScenariosResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        scenarios:
+          "$ref": "#/components/schemas/ConstructionScenariosModel"
+      required: [ok, ts, service, scenarios]
+      additionalProperties: true
+    ConstructionWatchlistResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        watchlist:
+          "$ref": "#/components/schemas/ConstructionWatchlistModel"
+      required: [ok, ts, service, watchlist]
+      additionalProperties: true
+    ConstructionMorningBriefV2Response:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        brief:
+          "$ref": "#/components/schemas/MorningBriefV2Model"
+      required: [ok, ts, service, brief]
       additionalProperties: true
     AlertCard:
       type: object
@@ -1980,6 +2286,164 @@ components:
       - drivers
       - explanation
       additionalProperties: false
+    OwnerRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    DeveloperFragilityModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    LenderPullbackRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    CounterpartyQualityStateEnum:
+      type: string
+      enum:
+      - weak
+      - mixed
+      - strong
+    CounterpartyQualityModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/CounterpartyQualityStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    MetroConcentrationRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    CounterpartyConcentrationRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    ProjectMixExposureModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
+    PortfolioRiskModel:
+      type: object
+      properties:
+        score:
+          type: number
+        state:
+          "$ref": "#/components/schemas/ShockStateEnum"
+        drivers:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+      required:
+      - score
+      - state
+      - drivers
+      - explanation
+      additionalProperties: false
     ConstructionMaterialsShockResponse:
       type: object
       properties:
@@ -2132,6 +2596,142 @@ components:
       - ts
       - service
       - collections_stress
+      additionalProperties: true
+    ConstructionOwnerRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        owner_risk:
+          "$ref": "#/components/schemas/OwnerRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - owner_risk
+      additionalProperties: true
+    ConstructionDeveloperFragilityResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        developer_fragility:
+          "$ref": "#/components/schemas/DeveloperFragilityModel"
+      required:
+      - ok
+      - ts
+      - service
+      - developer_fragility
+      additionalProperties: true
+    ConstructionLenderPullbackRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        lender_pullback_risk:
+          "$ref": "#/components/schemas/LenderPullbackRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - lender_pullback_risk
+      additionalProperties: true
+    ConstructionCounterpartyQualityResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        counterparty_quality:
+          "$ref": "#/components/schemas/CounterpartyQualityModel"
+      required:
+      - ok
+      - ts
+      - service
+      - counterparty_quality
+      additionalProperties: true
+    ConstructionMetroConcentrationRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        metro_concentration_risk:
+          "$ref": "#/components/schemas/MetroConcentrationRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - metro_concentration_risk
+      additionalProperties: true
+    ConstructionCounterpartyConcentrationRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        counterparty_concentration_risk:
+          "$ref": "#/components/schemas/CounterpartyConcentrationRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - counterparty_concentration_risk
+      additionalProperties: true
+    ConstructionProjectMixExposureResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        project_mix_exposure:
+          "$ref": "#/components/schemas/ProjectMixExposureModel"
+      required:
+      - ok
+      - ts
+      - service
+      - project_mix_exposure
+      additionalProperties: true
+    ConstructionPortfolioRiskResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        portfolio_risk:
+          "$ref": "#/components/schemas/PortfolioRiskModel"
+      required:
+      - ok
+      - ts
+      - service
+      - portfolio_risk
       additionalProperties: true
     ConstructionStressIndexResponse:
       type: object
