@@ -334,6 +334,29 @@ test('reset returns balanced baseline and keeps endpoint compatibility', async (
   assert.equal(body.settings.alert_sensitivity, 'balanced');
 });
 
+test('reset switches active profile to balanced-operator baseline', async () => {
+  const env = makeEnv();
+
+  const activateRes = await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'aggressive-growth' }),
+  }), env);
+  assert.equal(activateRes.status, 200);
+
+  const resetRes = await handleConstructionSettingsReset(new Request('https://example.com/construction/settings/reset', { method: 'POST' }), env);
+  const resetBody = await json(resetRes);
+  assert.equal(resetRes.status, 200);
+  assert.equal(resetBody.baseline, 'balanced-operator');
+
+  const settingsRes = await handleConstructionSettings(new Request('https://example.com/construction/settings'), env);
+  const settingsBody = await json(settingsRes);
+  assert.equal(settingsRes.status, 200);
+  assert.equal(settingsBody.active_profile_id, 'balanced-operator');
+  assert.equal(settingsBody.active_profile_name, 'Balanced Operator');
+  assert.equal(settingsBody.settings.alert_sensitivity, 'balanced');
+});
+
 test('custom watchlist and terminal include profile-aware metadata', async () => {
   const env = makeEnv();
   await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
