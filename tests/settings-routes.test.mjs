@@ -580,6 +580,35 @@ test('stored profile ids and active profile id are normalized when reading setti
   assert.equal(settingsBody.active_profile_name, 'Aggressive Growth');
 });
 
+test('profiles list preserves legacy active profile marker when active profile id key is missing', async () => {
+  const env = makeEnv();
+  await env.CPI_SNAPSHOTS.put('settings:profiles', JSON.stringify([
+    {
+      profile_id: 'balanced-operator',
+      profile_name: 'Balanced Operator',
+      description: 'default',
+      is_active: false,
+      settings: { alert_sensitivity: 'balanced' },
+      updated_at: '2025-01-01T00:00:00.000Z',
+    },
+    {
+      profile_id: 'aggressive-growth',
+      profile_name: 'Aggressive Growth',
+      description: 'legacy active marker',
+      is_active: true,
+      settings: { alert_sensitivity: 'aggressive' },
+      updated_at: '2025-01-01T00:00:00.000Z',
+    },
+  ]));
+
+  const settingsRes = await handleConstructionSettings(new Request('https://example.com/construction/settings'), env);
+  const settingsBody = await json(settingsRes);
+  assert.equal(settingsRes.status, 200);
+  assert.equal(settingsBody.active_profile_id, 'aggressive-growth');
+  assert.equal(settingsBody.active_profile_name, 'Aggressive Growth');
+  assert.equal(settingsBody.settings.alert_sensitivity, 'aggressive');
+});
+
 test('active profile endpoint returns endpoint-specific malformed JSON error', async () => {
   const env = makeEnv();
   const res = await worker.fetch(new Request('https://example.com/construction/settings/active-profile', {
