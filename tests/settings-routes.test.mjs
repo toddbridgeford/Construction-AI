@@ -267,6 +267,32 @@ test('profile create rejects unknown top-level fields to prevent false-success w
   assert.match(body.error.details.errors[0], /unknown field: unexpected_toggle/);
 });
 
+
+
+test('profile create settings override is merged with active profile defaults', async () => {
+  const env = makeEnv();
+
+  const activateRes = await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'aggressive-growth' }),
+  }), env);
+  assert.equal(activateRes.status, 200);
+
+  const createRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      profile_name: 'Merged Override Profile',
+      settings: { thresholds: { labor_shock_elevated_threshold: 81 } },
+    }),
+  }), env);
+  const created = await json(createRes);
+
+  assert.equal(createRes.status, 200);
+  assert.equal(created.settings.thresholds.labor_shock_elevated_threshold, 81);
+  assert.equal(created.settings.alert_sensitivity, 'aggressive');
+});
 test('profile create rejects invalid settings payload when settings key is provided', async () => {
   const env = makeEnv();
   const createRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
