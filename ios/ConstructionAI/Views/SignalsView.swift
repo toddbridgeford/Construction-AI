@@ -6,7 +6,11 @@ struct SignalsView: View {
     var body: some View {
         Group {
             if store.filteredSignals.isEmpty {
-                ContentUnavailableView("No matching signals", systemImage: "waveform.path.ecg", description: Text("Try broadening your search to see more market signals."))
+                ContentUnavailableView(
+                    "No matching signals",
+                    systemImage: "waveform.path.ecg",
+                    description: Text("Try broadening your search to see more market signals.")
+                )
             } else {
                 List(store.filteredSignals) { signal in
                     Button {
@@ -16,8 +20,7 @@ struct SignalsView: View {
                     }
                     .buttonStyle(.plain)
                     .terminalTapTarget()
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                    .terminalListRowStyle()
                 }
                 .listStyle(.plain)
             }

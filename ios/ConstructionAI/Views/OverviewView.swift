@@ -1,18 +1,16 @@
 import SwiftUI
-#if canImport(UIKit)
-import UIKit
-#endif
 
 struct OverviewView: View {
     @ObservedObject var store: DashboardStore
     @ObservedObject var prefs: TerminalPreferencesStore
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: TerminalTheme.Spacing.medium) {
                 TickerStripView(store: store)
 
-                if !store.searchText.isEmpty {
+                if isFiltering {
                     searchResultsPanel
                 }
 
@@ -32,14 +30,17 @@ struct OverviewView: View {
         .searchable(text: $store.searchText)
     }
 
+    private var isFiltering: Bool {
+        !store.searchText.isEmpty
+    }
+
     private var columns: [GridItem] {
-        #if canImport(UIKit)
-        let idiom = UIDevice.current.userInterfaceIdiom
-        if idiom == .pad {
-            let landscape = UIScreen.main.bounds.width > UIScreen.main.bounds.height
-            return Array(repeating: GridItem(.flexible(), spacing: TerminalTheme.Spacing.medium), count: landscape ? 3 : 2)
+        if horizontalSizeClass == .regular {
+            return [
+                GridItem(.flexible(), spacing: TerminalTheme.Spacing.medium),
+                GridItem(.flexible(), spacing: TerminalTheme.Spacing.medium)
+            ]
         }
-        #endif
         return [GridItem(.flexible())]
     }
 
@@ -47,6 +48,8 @@ struct OverviewView: View {
         VStack(alignment: .leading, spacing: 8) {
             TerminalSectionHeader(title: "Executive Summary")
             Text(store.payload?.executiveHeadline ?? "No executive headline")
+                .font(.body.weight(.semibold))
+                .lineLimit(2)
             Text(store.payload?.executiveSummary ?? "Summary unavailable")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -61,13 +64,13 @@ struct OverviewView: View {
                 Button {
                     store.selectedAlert = alert
                 } label: {
-                    HStack {
+                    HStack(alignment: .top, spacing: TerminalTheme.Spacing.xSmall) {
                         SeverityChipView(severity: alert.severity)
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 2) {
                             Text(alert.title).lineLimit(1)
                             Text(alert.message).font(.caption).foregroundStyle(.secondary).lineLimit(1)
                         }
-                        Spacer()
+                        Spacer(minLength: TerminalTheme.Spacing.xSmall)
                     }
                 }
                 .buttonStyle(.plain)
@@ -83,8 +86,13 @@ struct OverviewView: View {
     private var kpiPanel: some View {
         VStack(alignment: .leading, spacing: 10) {
             TerminalSectionHeader(title: "KPIs")
-            ForEach(Array((store.payload?.cards ?? []).prefix(3))) { card in
-                KPIStatCardView(title: card.title, value: card.value.map { String(format: "%.0f", $0) } ?? "—", direction: Trend.from(arrow: card.trend), subtitle: card.subtitle ?? "")
+            ForEach(topCards) { card in
+                KPIStatCardView(
+                    title: card.title,
+                    value: metricString(card.value, precision: 0),
+                    direction: Trend.from(arrow: card.trend),
+                    subtitle: card.subtitle ?? ""
+                )
             }
         }
         .terminalPanel()
@@ -100,8 +108,9 @@ struct OverviewView: View {
             ForEach(Array(store.forecast.strongest.prefix(3).enumerated()), id: \.element.id) { index, item in
                 HStack {
                     Text("\(index + 1) \(item.market)")
+                        .lineLimit(1)
                     Spacer()
-                    Text(String(format: "%.0f", item.forecastScore)).font(TerminalTheme.Typography.denseMono)
+                    Text(metricString(item.forecastScore, precision: 0)).font(TerminalTheme.Typography.denseMono)
                 }
             }
 
@@ -113,8 +122,9 @@ struct OverviewView: View {
             ForEach(Array(store.forecast.weakest.prefix(3).enumerated()), id: \.element.id) { index, item in
                 HStack {
                     Text("\(index + 1) \(item.market)")
+                        .lineLimit(1)
                     Spacer()
-                    Text(String(format: "%.0f", item.forecastScore)).font(TerminalTheme.Typography.denseMono)
+                    Text(metricString(item.forecastScore, precision: 0)).font(TerminalTheme.Typography.denseMono)
                 }
             }
 
@@ -152,12 +162,14 @@ struct OverviewView: View {
             ForEach(store.filteredRegions.prefix(5)) { region in
                 HStack {
                     Text(region.name)
+                        .lineLimit(1)
                     Spacer()
-                    Text(region.value.map { String(format: "%.1f", $0) } ?? "—").font(TerminalTheme.Typography.denseMono)
+                    Text(metricString(region.value, precision: 1)).font(TerminalTheme.Typography.denseMono)
                 }
                 Text(region.summary ?? "No region summary")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .lineLimit(2)
             }
         }
         .terminalPanel()
@@ -169,6 +181,7 @@ struct OverviewView: View {
             ForEach(store.sourceHealth.prefix(6)) { source in
                 HStack {
                     Text(source.source)
+                        .lineLimit(1)
                     Spacer()
                     Text(source.status).font(.caption).foregroundStyle(source.status == "error" ? .red : .secondary)
                 }
@@ -188,6 +201,19 @@ struct OverviewView: View {
         }
         .terminalPanel()
         .accessibilityElement(children: .combine)
+    }
+
+    private var topCards: ArraySlice<CardItem> {
+        (store.payload?.cards ?? []).prefix(3)
+    }
+
+    private func metricString(_ value: Double?, precision: Int, fallback: String = "—") -> String {
+        guard let value else { return fallback }
+        return String(format: "%.*f", precision, value)
+    }
+
+    private func metricString(_ value: Double, precision: Int) -> String {
+        String(format: "%.*f", precision, value)
     }
 }
 
