@@ -282,7 +282,7 @@ paths:
   "/construction/settings":
     get:
       operationId: constructionSettingsGet
-      summary: Read app-level construction alert settings profile
+      summary: Read active construction alert settings profile
       responses:
         '200':
           description: Construction settings response
@@ -292,7 +292,7 @@ paths:
                 "$ref": "#/components/schemas/ConstructionSettingsResponse"
     post:
       operationId: constructionSettingsSave
-      summary: Save app-level construction alert settings profile
+      summary: Update active construction alert settings profile
       requestBody:
         required: false
         content:
@@ -301,11 +301,11 @@ paths:
               "$ref": "#/components/schemas/ConstructionSettingsModel"
       responses:
         '200':
-          description: Construction settings response
+          description: Construction settings write response
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ConstructionSettingsResponse"
+                "$ref": "#/components/schemas/ConstructionSettingsWriteResponse"
   "/construction/settings/defaults":
     get:
       operationId: constructionSettingsDefaults
@@ -328,6 +328,67 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionSettingsResetResponse"
+  "/construction/settings/profiles":
+    get:
+      operationId: constructionSettingsProfiles
+      summary: List saved settings profiles and active profile
+      responses:
+        '200':
+          description: Construction settings profiles response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsProfilesResponse"
+    post:
+      operationId: constructionSettingsProfilesCreate
+      summary: Create a new settings profile (from provided settings or clone active)
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ConstructionSettingsProfileCreateRequest"
+      responses:
+        '200':
+          description: Construction settings write response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsWriteResponse"
+  "/construction/settings/profiles/activate":
+    post:
+      operationId: constructionSettingsProfilesActivate
+      summary: Activate a settings profile by profile_id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ConstructionSettingsProfileActionRequest"
+      responses:
+        '200':
+          description: Construction settings write response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsWriteResponse"
+  "/construction/settings/profiles/delete":
+    post:
+      operationId: constructionSettingsProfilesDelete
+      summary: Delete a non-active settings profile by profile_id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ConstructionSettingsProfileActionRequest"
+      responses:
+        '200':
+          description: Construction settings write response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsWriteResponse"
   "/construction/morning-brief/v2":
     get:
       operationId: constructionMorningBriefV2
@@ -1186,6 +1247,10 @@ components:
               "$ref": "#/components/schemas/ConstructionCustomWatchlistModel"
             custom_watchlist_summary:
               type: string
+            active_settings_profile:
+              type: string
+            saved_profiles_summary:
+              type: string
             morning_brief_v2:
               "$ref": "#/components/schemas/MorningBriefV2Model"
             morning_brief_v2_summary:
@@ -1252,6 +1317,8 @@ components:
           - settings_summary
           - custom_watchlist
           - custom_watchlist_summary
+          - active_settings_profile
+          - saved_profiles_summary
           additionalProperties: true
       required:
       - ok
@@ -1675,6 +1742,70 @@ components:
           type: string
       required: [metros_watchlist, risk_watchlist, thresholds, alert_sensitivity, muted_alert_codes, updated_at]
       additionalProperties: false
+    ConstructionSettingsProfileModel:
+      type: object
+      properties:
+        profile_id: { type: string }
+        profile_name: { type: string }
+        description: { type: string }
+        is_active: { type: boolean }
+        settings:
+          "$ref": "#/components/schemas/ConstructionSettingsModel"
+        updated_at: { type: string }
+      required: [profile_id, profile_name, description, is_active, settings, updated_at]
+      additionalProperties: false
+    ConstructionSettingsProfilesModel:
+      type: object
+      properties:
+        active_profile_id: { type: string }
+        profiles:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ConstructionSettingsProfileModel"
+      required: [active_profile_id, profiles]
+      additionalProperties: false
+    ConstructionSettingsProfileActionRequest:
+      type: object
+      properties:
+        profile_id: { type: string }
+      required: [profile_id]
+      additionalProperties: false
+    ConstructionSettingsProfileCreateRequest:
+      type: object
+      properties:
+        profile_name: { type: string }
+        description: { type: string }
+        settings:
+          "$ref": "#/components/schemas/ConstructionSettingsModel"
+      required: [profile_name]
+      additionalProperties: false
+    ConstructionSettingsWriteResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        ts: { type: string }
+        service: { type: string }
+        action: { type: string }
+        active_profile_id: { type: string }
+        profile_id: { type: string }
+        profile_name: { type: string }
+        settings:
+          "$ref": "#/components/schemas/ConstructionSettingsModel"
+      required: [ok, ts, service, action, active_profile_id, profile_id, profile_name, settings]
+      additionalProperties: true
+    ConstructionSettingsProfilesResponse:
+      type: object
+      properties:
+        ok: { type: boolean }
+        ts: { type: string }
+        service: { type: string }
+        active_profile_id: { type: string }
+        profiles:
+          type: array
+          items:
+            "$ref": "#/components/schemas/ConstructionSettingsProfileModel"
+      required: [ok, ts, service, active_profile_id, profiles]
+      additionalProperties: true
     ConstructionSettingsDefaultsModel:
       type: object
       properties:

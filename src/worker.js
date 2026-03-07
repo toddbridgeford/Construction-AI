@@ -43,6 +43,10 @@ import {
   handleConstructionSettings,
   handleConstructionSettingsDefaults,
   handleConstructionSettingsReset,
+  handleConstructionSettingsProfiles,
+  handleConstructionSettingsProfilesCreate,
+  handleConstructionSettingsProfilesActivate,
+  handleConstructionSettingsProfilesDelete,
   handleConstructionCustomWatchlist,
   PORTFOLIO_LAYER_ROUTE_HANDLERS,
 } from "./routes/construction.js";
@@ -74,6 +78,11 @@ export const CONSTRUCTION_ROUTE_HANDLERS = {
   "/construction/settings": handleConstructionSettings,
   "/construction/settings/defaults": handleConstructionSettingsDefaults,
   "/construction/settings/reset": handleConstructionSettingsReset,
+  "/construction/settings/profiles": (request, env) => request.method === "GET"
+    ? handleConstructionSettingsProfiles(request, env)
+    : handleConstructionSettingsProfilesCreate(request, env),
+  "/construction/settings/profiles/activate": handleConstructionSettingsProfilesActivate,
+  "/construction/settings/profiles/delete": handleConstructionSettingsProfilesDelete,
   "/construction/morning-brief/v2": handleConstructionMorningBriefV2,
   ...PORTFOLIO_LAYER_ROUTE_HANDLERS,
 };
@@ -87,7 +96,13 @@ export default {
     const { pathname } = new URL(request.url);
 
     try {
-      const isSettingsWriteRoute = pathname === "/construction/settings" || pathname === "/construction/settings/reset";
+      const isSettingsWriteRoute = [
+        "/construction/settings",
+        "/construction/settings/reset",
+        "/construction/settings/profiles",
+        "/construction/settings/profiles/activate",
+        "/construction/settings/profiles/delete",
+      ].includes(pathname);
       if (!(["GET", "POST"].includes(request.method))) return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
       if (request.method === "POST" && !isSettingsWriteRoute) return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
 

@@ -38,6 +38,9 @@ const ENDPOINTS = {
   settings: `${API_BASE}/construction/settings`,
   settingsDefaults: `${API_BASE}/construction/settings/defaults`,
   settingsReset: `${API_BASE}/construction/settings/reset`,
+  settingsProfiles: `${API_BASE}/construction/settings/profiles`,
+  settingsProfilesActivate: `${API_BASE}/construction/settings/profiles/activate`,
+  settingsProfilesDelete: `${API_BASE}/construction/settings/profiles/delete`,
   customWatchlist: `${API_BASE}/construction/watchlist/custom`,
 };
 
@@ -221,6 +224,8 @@ function modelFromSettled(results) {
     morningBriefV2: settledValue(results.morningBriefV2, "brief") || terminal.morning_brief_v2 || null,
     settings: settledValue(results.settings, "settings") || null,
     settingsDefaults: settledValue(results.settingsDefaults, "defaults") || null,
+    settingsProfiles: settledValue(results.settingsProfiles, "profiles") || [],
+    activeSettingsProfileId: settledValue(results.settingsProfiles, "active_profile_id") || null,
     customWatchlist: settledValue(results.customWatchlist, "alerts") ? settledValue(results.customWatchlist, "alerts") : terminal?.custom_watchlist?.alerts || [],
     customWatchlistSummary: settledValue(results.customWatchlist, "summary") || terminal?.custom_watchlist_summary || "No custom watchlist summary.",
     operatorActions: terminal.operator_actions || null,
@@ -320,6 +325,13 @@ function renderPanels(vm) {
       <article class="card settings-card">
         <h3>Alert Settings</h3>
         <div class="settings-grid">
+          <label>Active profile
+            <select id="settingsActiveProfile">
+              ${(vm.settingsProfiles || []).map((profile) => `<option value="${profile.profile_id}" ${profile.profile_id === vm.activeSettingsProfileId ? "selected" : ""}>${profile.profile_name}</option>`).join("")}
+            </select>
+          </label>
+          <label>New profile name<input id="newProfileName" placeholder="Create profile" /></label>
+          <label>New profile description<input id="newProfileDescription" placeholder="Optional description" /></label>
           <label>Sensitivity
             <select id="settingsSensitivity">
               <option value="conservative" ${vm.settings?.alert_sensitivity === "conservative" ? "selected" : ""}>conservative</option>
@@ -332,8 +344,9 @@ function renderPanels(vm) {
           <label>Muted alert codes (comma-separated)<input id="settingsMuted" value="${(vm.settings?.muted_alert_codes || []).join(", ")}" /></label>
           <label>Threshold JSON<textarea id="settingsThresholds">${JSON.stringify(vm.settings?.thresholds || vm.settingsDefaults?.thresholds || {}, null, 2)}</textarea></label>
         </div>
-        <div class="settings-actions"><button id="saveSettingsBtn" type="button">Save Settings</button><button id="resetSettingsBtn" type="button">Reset Defaults</button></div>
-        <p>${vm.terminal?.settings_summary || "App-level settings profile (single default profile)."}</p>
+        <div class="settings-actions"><button id="saveSettingsBtn" type="button">Save Settings</button><button id="activateSettingsProfileBtn" type="button">Activate Profile</button><button id="createSettingsProfileBtn" type="button">Create Profile</button><button id="deleteSettingsProfileBtn" type="button">Delete Selected (non-active only)</button><button id="resetSettingsBtn" type="button">Reset Defaults</button></div>
+        <p>${vm.terminal?.settings_summary || "Active settings profile."}</p>
+        <p>${vm.terminal?.saved_profiles_summary || "Saved profiles unavailable."}</p>
       </article>
     </section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
@@ -404,11 +417,68 @@ async function resetSettingsFromUI() {
   }
 }
 
+
+async function activateSettingsProfileFromUI() {
+  try {
+    const profile_id = document.getElementById("settingsActiveProfile")?.value || "";
+    if (!profile_id) return;
+    setStatus("Activating profile...");
+    await postJson(ENDPOINTS.settingsProfilesActivate, { profile_id });
+    await loadDashboard();
+    setStatus(`Profile activated ${new Date().toLocaleTimeString()}`);
+  } catch (error) {
+    setStatus(`Profile activation error: ${error.message}`);
+  }
+}
+
+async function createSettingsProfileFromUI() {
+  try {
+    const profile_name = (document.getElementById("newProfileName")?.value || "").trim();
+    if (!profile_name) {
+      setStatus("Profile name required.");
+      return;
+    }
+    const description = (document.getElementById("newProfileDescription")?.value || "").trim();
+    const thresholdsRaw = document.getElementById("settingsThresholds")?.value || "{}";
+    let thresholds = {};
+    try { thresholds = JSON.parse(thresholdsRaw); } catch { setStatus("Settings JSON invalid. Use valid threshold JSON."); return; }
+    const settings = {
+      alert_sensitivity: document.getElementById("settingsSensitivity")?.value || "balanced",
+      metros_watchlist: (document.getElementById("settingsMetros")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
+      risk_watchlist: (document.getElementById("settingsRisks")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
+      muted_alert_codes: (document.getElementById("settingsMuted")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
+      thresholds,
+    };
+    setStatus("Creating profile...");
+    await postJson(ENDPOINTS.settingsProfiles, { profile_name, description, settings });
+    await loadDashboard();
+    setStatus(`Profile created ${new Date().toLocaleTimeString()}`);
+  } catch (error) {
+    setStatus(`Profile create error: ${error.message}`);
+  }
+}
+
+async function deleteSettingsProfileFromUI() {
+  try {
+    const profile_id = document.getElementById("settingsActiveProfile")?.value || "";
+    if (!profile_id) return;
+    setStatus("Deleting profile...");
+    await postJson(ENDPOINTS.settingsProfilesDelete, { profile_id });
+    await loadDashboard();
+    setStatus(`Profile deleted ${new Date().toLocaleTimeString()}`);
+  } catch (error) {
+    setStatus(`Profile delete error: ${error.message}`);
+  }
+}
+
 refreshBtn.addEventListener("click", loadDashboard);
 loadDashboard();
 refreshHandle = setInterval(loadDashboard, REFRESH_MS);
 document.addEventListener("click", (event) => {
   if (event.target?.id === "saveSettingsBtn") saveSettingsFromUI();
+  if (event.target?.id === "activateSettingsProfileBtn") activateSettingsProfileFromUI();
+  if (event.target?.id === "createSettingsProfileBtn") createSettingsProfileFromUI();
+  if (event.target?.id === "deleteSettingsProfileBtn") deleteSettingsProfileFromUI();
   if (event.target?.id === "resetSettingsBtn") resetSettingsFromUI();
 });
 

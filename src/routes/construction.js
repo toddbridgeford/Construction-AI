@@ -1352,6 +1352,8 @@ function buildConstructionAlerts(terminal) {
 
 const SCENARIO_SNAPSHOT_KEY = "construction:terminal:scenario-watchlist:v1";
 const CONSTRUCTION_SETTINGS_KEY = "construction:settings:profile:default:v1";
+const CONSTRUCTION_SETTINGS_PROFILES_KEY = "construction:settings_profiles";
+const CONSTRUCTION_ACTIVE_PROFILE_ID_KEY = "construction:active_settings_profile_id";
 
 const CONSTRUCTION_DEFAULT_SETTINGS = Object.freeze({
   metros_watchlist: ["Dallas", "Nashville", "Phoenix"],
@@ -1382,6 +1384,98 @@ const CONSTRUCTION_DEFAULT_SETTINGS = Object.freeze({
   muted_alert_codes: [],
   updated_at: "2024-01-01T00:00:00.000Z",
 });
+
+const CONSTRUCTION_SEEDED_PROFILE_PRESETS = Object.freeze([
+  {
+    profile_id: "conservative-lender",
+    profile_name: "Conservative Lender",
+    description: "Earlier warnings with tighter risk thresholds focused on credit and weakest metros.",
+    alert_sensitivity: "conservative",
+    metros_watchlist: ["Phoenix", "Dallas", "Nashville"],
+    risk_watchlist: ["liquidity", "owner_risk", "developer_fragility", "collections_stress", "metro_momentum"],
+    thresholds: {
+      weakest_metro_threshold: 44,
+      strongest_metro_momentum_cooloff_threshold: 60,
+      labor_shock_elevated_threshold: 56,
+      collections_stress_severe_threshold: 68,
+      project_risk_severe_threshold: 68,
+      portfolio_risk_severe_threshold: 70,
+      owner_risk_severe_threshold: 66,
+      developer_fragility_severe_threshold: 66,
+      backlog_quality_weak_threshold: 50,
+      bid_intensity_mismatch_threshold: 56,
+    },
+  },
+  {
+    profile_id: "balanced-operator",
+    profile_name: "Balanced Operator",
+    description: "Current default operating behavior.",
+    alert_sensitivity: "balanced",
+    metros_watchlist: ["Dallas", "Nashville", "Phoenix"],
+    risk_watchlist: ["labor_shock", "collections_stress", "project_risk", "portfolio_risk", "owner_risk", "developer_fragility", "backlog_quality", "bid_intensity", "metro_momentum"],
+    thresholds: { ...CONSTRUCTION_DEFAULT_SETTINGS.thresholds },
+  },
+  {
+    profile_id: "aggressive-growth",
+    profile_name: "Aggressive Growth",
+    description: "Later warnings with higher tolerance for expansion volatility while still protecting collections and owner risk.",
+    alert_sensitivity: "aggressive",
+    metros_watchlist: ["Austin", "Miami", "Charlotte"],
+    risk_watchlist: ["labor_shock", "portfolio_risk", "metro_momentum", "collections_stress", "owner_risk"],
+    thresholds: {
+      weakest_metro_threshold: 36,
+      strongest_metro_momentum_cooloff_threshold: 52,
+      labor_shock_elevated_threshold: 68,
+      collections_stress_severe_threshold: 72,
+      project_risk_severe_threshold: 80,
+      portfolio_risk_severe_threshold: 82,
+      owner_risk_severe_threshold: 72,
+      developer_fragility_severe_threshold: 80,
+      backlog_quality_weak_threshold: 40,
+      bid_intensity_mismatch_threshold: 66,
+    },
+  },
+  {
+    profile_id: "gc-cash-protection",
+    profile_name: "GC Cash Protection",
+    description: "Emphasizes collections, delay, owner quality, backlog quality, and bid intensity mismatch.",
+    alert_sensitivity: "conservative",
+    metros_watchlist: ["Dallas", "Atlanta", "Denver"],
+    risk_watchlist: ["collections_stress", "payment_delay_risk", "owner_risk", "backlog_quality", "bid_intensity"],
+    thresholds: {
+      weakest_metro_threshold: 42,
+      strongest_metro_momentum_cooloff_threshold: 58,
+      labor_shock_elevated_threshold: 60,
+      collections_stress_severe_threshold: 66,
+      project_risk_severe_threshold: 70,
+      portfolio_risk_severe_threshold: 74,
+      owner_risk_severe_threshold: 64,
+      developer_fragility_severe_threshold: 70,
+      backlog_quality_weak_threshold: 52,
+      bid_intensity_mismatch_threshold: 54,
+    },
+  },
+  {
+    profile_id: "supplier-collections-protection",
+    profile_name: "Supplier Collections Protection",
+    description: "Emphasizes receivables, collections, counterparty quality, owner risk, and soft metros.",
+    alert_sensitivity: "conservative",
+    metros_watchlist: ["Phoenix", "Tampa", "Raleigh"],
+    risk_watchlist: ["receivables_risk", "collections_stress", "counterparty_quality", "owner_risk", "metro_momentum"],
+    thresholds: {
+      weakest_metro_threshold: 43,
+      strongest_metro_momentum_cooloff_threshold: 58,
+      labor_shock_elevated_threshold: 60,
+      collections_stress_severe_threshold: 65,
+      project_risk_severe_threshold: 72,
+      portfolio_risk_severe_threshold: 76,
+      owner_risk_severe_threshold: 65,
+      developer_fragility_severe_threshold: 72,
+      backlog_quality_weak_threshold: 48,
+      bid_intensity_mismatch_threshold: 58,
+    },
+  },
+]);
 
 const ALLOWED_ALERT_SENSITIVITY = new Set(["conservative", "balanced", "aggressive"]);
 
@@ -1442,26 +1536,197 @@ function sanitizeConstructionSettings(input = {}, base = cloneDefaultConstructio
   };
 }
 
-async function readConstructionSettings(env) {
-  const defaults = cloneDefaultConstructionSettings();
-  const saved = await kvGetJson(env, CONSTRUCTION_SETTINGS_KEY);
-  if (!saved || typeof saved !== "object") {
-    return defaults;
+function validatePartialSettingsPayload(input = {}) {
+  const errors = [];
+  if (input === null || typeof input !== "object" || Array.isArray(input)) {
+    return { ok: false, errors: ["payload must be an object"] };
   }
-  return sanitizeConstructionSettings(saved, defaults);
+
+  if (input.thresholds !== undefined) {
+    if (input.thresholds === null || typeof input.thresholds !== "object" || Array.isArray(input.thresholds)) {
+      errors.push("thresholds must be an object with numeric values");
+    } else {
+      for (const [key, value] of Object.entries(input.thresholds)) {
+        if (!Number.isFinite(value)) errors.push(`thresholds.${key} must be numeric`);
+      }
+    }
+  }
+
+  if (input.alert_sensitivity !== undefined) {
+    const candidate = String(input.alert_sensitivity || "").toLowerCase();
+    if (!ALLOWED_ALERT_SENSITIVITY.has(candidate)) {
+      errors.push("alert_sensitivity must be one of conservative, balanced, aggressive");
+    }
+  }
+
+  for (const [field, label] of [["metros_watchlist", "metros_watchlist"], ["risk_watchlist", "risk_watchlist"], ["muted_alert_codes", "muted_alert_codes"]]) {
+    if (input[field] !== undefined) {
+      if (!Array.isArray(input[field]) || input[field].some((item) => typeof item !== "string")) {
+        errors.push(`${label} must be a string array`);
+      }
+    }
+  }
+
+  return { ok: errors.length === 0, errors };
+}
+
+function validateProfileName(name) {
+  return typeof name === "string" && name.trim().length > 0;
+}
+
+function profileModelFromPreset(preset, isActive = false) {
+  const nowIso = CONSTRUCTION_DEFAULT_SETTINGS.updated_at;
+  return {
+    profile_id: preset.profile_id,
+    profile_name: preset.profile_name,
+    description: preset.description || "",
+    is_active: isActive,
+    settings: sanitizeConstructionSettings({
+      metros_watchlist: preset.metros_watchlist,
+      risk_watchlist: preset.risk_watchlist,
+      thresholds: preset.thresholds,
+      alert_sensitivity: preset.alert_sensitivity,
+      muted_alert_codes: [],
+      updated_at: nowIso,
+    }),
+    updated_at: nowIso,
+  };
+}
+
+function cloneProfile(profile, isActive = profile?.is_active === true) {
+  if (!profile || typeof profile !== "object") return null;
+  return {
+    profile_id: String(profile.profile_id || ""),
+    profile_name: String(profile.profile_name || ""),
+    description: String(profile.description || ""),
+    is_active: isActive,
+    settings: sanitizeConstructionSettings(profile.settings || {}),
+    updated_at: typeof profile.updated_at === "string" ? profile.updated_at : new Date().toISOString(),
+  };
+}
+
+function normalizeProfilesEnvelope(rawProfiles, rawActiveProfileId) {
+  const seededProfiles = CONSTRUCTION_SEEDED_PROFILE_PRESETS.map((preset) => profileModelFromPreset(preset));
+  const savedProfiles = Array.isArray(rawProfiles)
+    ? rawProfiles.map((entry) => cloneProfile(entry)).filter(Boolean).filter((entry) => entry.profile_id && validateProfileName(entry.profile_name))
+    : [];
+  const source = savedProfiles.length ? savedProfiles : seededProfiles;
+
+  const uniqueProfiles = [];
+  const seen = new Set();
+  for (const profile of source) {
+    if (seen.has(profile.profile_id)) continue;
+    seen.add(profile.profile_id);
+    uniqueProfiles.push(profile);
+  }
+
+  const resolvedActiveProfileId = uniqueProfiles.find((profile) => profile.profile_id === rawActiveProfileId)
+    ? rawActiveProfileId
+    : uniqueProfiles.find((profile) => profile.profile_id === "balanced-operator")?.profile_id || uniqueProfiles[0]?.profile_id || "";
+
+  const nowIso = new Date().toISOString();
+  const profiles = uniqueProfiles.map((profile) => ({
+    ...profile,
+    is_active: profile.profile_id === resolvedActiveProfileId,
+    settings: sanitizeConstructionSettings(profile.settings || {}, cloneDefaultConstructionSettings()),
+    updated_at: typeof profile.updated_at === "string" ? profile.updated_at : nowIso,
+  }));
+
+  return {
+    active_profile_id: resolvedActiveProfileId,
+    profiles,
+  };
+}
+
+async function readSettingsProfilesModel(env) {
+  const [savedProfilesRaw, activeProfileIdRaw, legacySettings] = await Promise.all([
+    kvGetJson(env, CONSTRUCTION_SETTINGS_PROFILES_KEY),
+    kvGetJson(env, CONSTRUCTION_ACTIVE_PROFILE_ID_KEY),
+    kvGetJson(env, CONSTRUCTION_SETTINGS_KEY),
+  ]);
+
+  let envelope = normalizeProfilesEnvelope(savedProfilesRaw, typeof activeProfileIdRaw === "string" ? activeProfileIdRaw : null);
+
+  if ((!Array.isArray(savedProfilesRaw) || savedProfilesRaw.length === 0) && legacySettings && typeof legacySettings === "object") {
+    envelope = {
+      ...envelope,
+      profiles: envelope.profiles.map((profile) => (profile.profile_id === envelope.active_profile_id
+        ? {
+          ...profile,
+          settings: sanitizeConstructionSettings(legacySettings, profile.settings),
+          updated_at: new Date().toISOString(),
+        }
+        : profile)),
+    };
+  }
+
+  await kvPutJson(env, CONSTRUCTION_SETTINGS_PROFILES_KEY, envelope.profiles, 60 * 60 * 24 * 365);
+  await kvPutJson(env, CONSTRUCTION_ACTIVE_PROFILE_ID_KEY, envelope.active_profile_id, 60 * 60 * 24 * 365);
+  await kvPutJson(env, CONSTRUCTION_SETTINGS_KEY, envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id)?.settings || cloneDefaultConstructionSettings(), 60 * 60 * 24 * 365);
+
+  return envelope;
+}
+
+async function persistSettingsProfilesModel(env, envelope) {
+  await kvPutJson(env, CONSTRUCTION_SETTINGS_PROFILES_KEY, envelope.profiles, 60 * 60 * 24 * 365);
+  await kvPutJson(env, CONSTRUCTION_ACTIVE_PROFILE_ID_KEY, envelope.active_profile_id, 60 * 60 * 24 * 365);
+  const activeProfile = envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id);
+  await kvPutJson(env, CONSTRUCTION_SETTINGS_KEY, activeProfile?.settings || cloneDefaultConstructionSettings(), 60 * 60 * 24 * 365);
+}
+
+async function readActiveSettingsProfile(env) {
+  const envelope = await readSettingsProfilesModel(env);
+  const activeProfile = envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id) || envelope.profiles[0];
+  return {
+    envelope,
+    activeProfile,
+  };
+}
+
+async function readConstructionSettings(env) {
+  const { activeProfile } = await readActiveSettingsProfile(env);
+  return sanitizeConstructionSettings(activeProfile?.settings || {});
 }
 
 async function saveConstructionSettings(env, partialSettings) {
-  const current = await readConstructionSettings(env);
+  const { envelope, activeProfile } = await readActiveSettingsProfile(env);
+  const current = sanitizeConstructionSettings(activeProfile?.settings || {});
   const merged = sanitizeConstructionSettings({ ...current, ...partialSettings, updated_at: new Date().toISOString() }, current);
-  await kvPutJson(env, CONSTRUCTION_SETTINGS_KEY, merged, 60 * 60 * 24 * 365);
+  const nextProfiles = envelope.profiles.map((profile) => (profile.profile_id === envelope.active_profile_id
+    ? { ...profile, settings: merged, updated_at: merged.updated_at }
+    : profile));
+  const nextEnvelope = {
+    ...envelope,
+    profiles: nextProfiles,
+  };
+  await persistSettingsProfilesModel(env, nextEnvelope);
   return merged;
 }
 
 async function resetConstructionSettings(env) {
-  const reset = cloneDefaultConstructionSettings();
-  await kvPutJson(env, CONSTRUCTION_SETTINGS_KEY, reset, 60 * 60 * 24 * 365);
-  return reset;
+  const { envelope } = await readActiveSettingsProfile(env);
+  const balancedPreset = CONSTRUCTION_SEEDED_PROFILE_PRESETS.find((preset) => preset.profile_id === "balanced-operator");
+  const baseline = sanitizeConstructionSettings({
+    ...(balancedPreset || {}),
+    updated_at: new Date().toISOString(),
+  });
+  const nextProfiles = envelope.profiles.map((profile) => (profile.profile_id === envelope.active_profile_id
+    ? { ...profile, settings: baseline, updated_at: baseline.updated_at }
+    : profile));
+  await persistSettingsProfilesModel(env, { ...envelope, profiles: nextProfiles });
+  return baseline;
+}
+
+
+function buildSettingsWriteResponse(action, activeProfileId, profile) {
+  return {
+    ok: true,
+    action,
+    active_profile_id: activeProfileId,
+    profile_id: profile.profile_id,
+    profile_name: profile.profile_name,
+    settings: sanitizeConstructionSettings(profile.settings || {}),
+  };
 }
 
 function toSensitivityDelta(alertSensitivity) {
@@ -1648,7 +1913,7 @@ function buildWatchlistAlerts(terminal, settings = cloneDefaultConstructionSetti
 
 function buildSettingsSummary(settings) {
   const thresholdsCount = Object.keys(settings?.thresholds || {}).length;
-  return `App-level settings profile (single default profile) tracks ${settings?.metros_watchlist?.length || 0} watched metros, ${settings?.risk_watchlist?.length || 0} risk factors, ${thresholdsCount} thresholds, and ${settings?.muted_alert_codes?.length || 0} muted alert codes at ${settings?.alert_sensitivity || "balanced"} sensitivity.`;
+  return `Active settings profile tracks ${settings?.metros_watchlist?.length || 0} watched metros, ${settings?.risk_watchlist?.length || 0} risk factors, ${thresholdsCount} thresholds, and ${settings?.muted_alert_codes?.length || 0} muted alert codes at ${settings?.alert_sensitivity || "balanced"} sensitivity.`;
 }
 
 function buildCustomWatchlist(terminal, settings) {
@@ -2003,7 +2268,8 @@ async function tryBuildForecast(request, env, terminal = null) {
 }
 
 async function buildTerminalPayload(request, env) {
-  const settings = await readConstructionSettings(env);
+  const { envelope: settingsEnvelope, activeProfile } = await readActiveSettingsProfile(env);
+  const settings = sanitizeConstructionSettings(activeProfile?.settings || {});
   const dashboardResult = await buildConstructionDashboard(env);
   const spending = await readSpendingSummary(request, env);
 
@@ -2159,6 +2425,8 @@ async function buildTerminalPayload(request, env) {
   terminal.settings_summary = buildSettingsSummary(settings);
   terminal.custom_watchlist = buildCustomWatchlist(terminal, settings);
   terminal.custom_watchlist_summary = terminal.custom_watchlist.summary;
+  terminal.active_settings_profile = activeProfile?.profile_name || "Balanced Operator";
+  terminal.saved_profiles_summary = `${settingsEnvelope.profiles.length} saved profiles available; active profile is ${terminal.active_settings_profile}.`;
   terminal.morning_brief_v2 = await buildMorningBriefV2(terminal, env, settings);
   terminal.morning_brief_v2_summary = terminal.morning_brief_v2.operator_focus;
 
@@ -2627,8 +2895,20 @@ export async function handleConstructionSettings(request, env) {
 
     if (request.method === "POST") {
       const body = await readJsonBody(request);
-      const settings = await saveConstructionSettings(env, body && typeof body === "object" ? body : {});
-      return ok(env, { settings });
+      if (body === null) {
+        return error(env, 400, "SETTINGS_WRITE_INVALID_JSON", "Malformed JSON body");
+      }
+      const validation = validatePartialSettingsPayload(body);
+      if (!validation.ok) {
+        return error(env, 400, "SETTINGS_WRITE_VALIDATION_FAILED", "Invalid settings payload", { errors: validation.errors });
+      }
+
+      const settings = await saveConstructionSettings(env, body);
+      const { activeProfile, envelope } = await readActiveSettingsProfile(env);
+      return ok(env, buildSettingsWriteResponse("settings_updated", envelope.active_profile_id, {
+        ...activeProfile,
+        settings,
+      }));
     }
 
     return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
@@ -2655,9 +2935,118 @@ export async function handleConstructionSettingsReset(request, env) {
       return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     }
     const settings = await resetConstructionSettings(env);
-    return ok(env, { settings, reset: true });
+    return ok(env, { settings, reset: true, baseline: "balanced-operator" });
   } catch (e) {
     return error(env, 500, "SETTINGS_RESET_FAILED", "Unable to reset construction settings", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionSettingsProfiles(request, env) {
+  try {
+    if (request.method !== "GET") {
+      return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+    }
+    const envelope = await readSettingsProfilesModel(env);
+    return ok(env, envelope);
+  } catch (e) {
+    return error(env, 500, "SETTINGS_PROFILES_FAILED", "Unable to read settings profiles", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionSettingsProfilesCreate(request, env) {
+  try {
+    if (request.method !== "POST") {
+      return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+    }
+    const body = await readJsonBody(request);
+    if (body === null) return error(env, 400, "SETTINGS_PROFILE_CREATE_INVALID_JSON", "Malformed JSON body");
+    if (!validateProfileName(body.profile_name)) {
+      return error(env, 400, "SETTINGS_PROFILE_NAME_REQUIRED", "profile_name must be a non-empty string");
+    }
+
+    const envelope = await readSettingsProfilesModel(env);
+    const activeProfile = envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id) || envelope.profiles[0];
+    const baseSettings = body.settings && typeof body.settings === "object" ? body.settings : activeProfile.settings;
+    const validation = validatePartialSettingsPayload(baseSettings);
+    if (!validation.ok) {
+      return error(env, 400, "SETTINGS_PROFILE_CREATE_VALIDATION_FAILED", "Invalid settings payload", { errors: validation.errors });
+    }
+
+    const nowIso = new Date().toISOString();
+    const profileId = `custom-${Date.now().toString(36)}`;
+    const profile = {
+      profile_id: profileId,
+      profile_name: String(body.profile_name).trim(),
+      description: typeof body.description === "string" ? body.description : "",
+      is_active: false,
+      settings: sanitizeConstructionSettings({ ...baseSettings, updated_at: nowIso }),
+      updated_at: nowIso,
+    };
+
+    const nextEnvelope = {
+      ...envelope,
+      profiles: [...envelope.profiles, profile],
+    };
+    await persistSettingsProfilesModel(env, nextEnvelope);
+    return ok(env, buildSettingsWriteResponse("profile_created", nextEnvelope.active_profile_id, profile));
+  } catch (e) {
+    return error(env, 500, "SETTINGS_PROFILE_CREATE_FAILED", "Unable to create settings profile", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionSettingsProfilesActivate(request, env) {
+  try {
+    if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+    const body = await readJsonBody(request);
+    const profileId = typeof body?.profile_id === "string" ? body.profile_id : "";
+    if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
+
+    const envelope = await readSettingsProfilesModel(env);
+    const profile = envelope.profiles.find((entry) => entry.profile_id === profileId);
+    if (!profile) return error(env, 404, "SETTINGS_PROFILE_NOT_FOUND", "Settings profile not found", { profile_id: profileId });
+
+    const nextEnvelope = {
+      active_profile_id: profileId,
+      profiles: envelope.profiles.map((entry) => ({ ...entry, is_active: entry.profile_id === profileId })),
+    };
+    await persistSettingsProfilesModel(env, nextEnvelope);
+    return ok(env, buildSettingsWriteResponse("profile_activated", profileId, { ...profile, is_active: true }));
+  } catch (e) {
+    return error(env, 500, "SETTINGS_PROFILE_ACTIVATE_FAILED", "Unable to activate settings profile", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionSettingsProfilesDelete(request, env) {
+  try {
+    if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+    const body = await readJsonBody(request);
+    const profileId = typeof body?.profile_id === "string" ? body.profile_id : "";
+    if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
+
+    const envelope = await readSettingsProfilesModel(env);
+    if (profileId === envelope.active_profile_id) {
+      return error(env, 400, "SETTINGS_PROFILE_DELETE_ACTIVE_FORBIDDEN", "Cannot delete active profile. Activate another profile first.", { profile_id: profileId });
+    }
+
+    const target = envelope.profiles.find((entry) => entry.profile_id === profileId);
+    if (!target) return error(env, 404, "SETTINGS_PROFILE_NOT_FOUND", "Settings profile not found", { profile_id: profileId });
+
+    const nextEnvelope = {
+      ...envelope,
+      profiles: envelope.profiles.filter((entry) => entry.profile_id !== profileId),
+    };
+    await persistSettingsProfilesModel(env, nextEnvelope);
+    return ok(env, buildSettingsWriteResponse("profile_deleted", nextEnvelope.active_profile_id, target));
+  } catch (e) {
+    return error(env, 500, "SETTINGS_PROFILE_DELETE_FAILED", "Unable to delete settings profile", {
       message: e?.message || String(e),
     });
   }
