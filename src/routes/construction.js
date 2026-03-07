@@ -2179,22 +2179,52 @@ function buildForecastFromMarkets(scoredMarkets, terminal) {
 
   const forecasted = scoredMarkets.map((market) => scoreForecastMarket(market, context));
   const rankingUniverse = filterMetroOnlyWhenAvailable(forecasted);
-  const strongest = [...rankingUniverse]
+  const maxListCount = Math.min(10, rankingUniverse.length);
+  const rankedStrongest = [...rankingUniverse]
     .sort((a, b) => (b.forecast_score - a.forecast_score) || a.market.localeCompare(b.market))
-    .slice(0, Math.min(10, forecasted.length))
+    .slice(0, maxListCount)
     .map((item) => ({
       ...item,
       direction: "strengthening",
       explanation: toRankPositionExplanation(item.market, "strengthening", item.drivers),
     }));
-  const weakest = [...rankingUniverse]
+  const rankedWeakest = [...rankingUniverse]
     .sort((a, b) => (a.forecast_score - b.forecast_score) || a.market.localeCompare(b.market))
-    .slice(0, Math.min(10, forecasted.length))
+    .slice(0, maxListCount)
     .map((item) => ({
       ...item,
       direction: "softening",
       explanation: toRankPositionExplanation(item.market, "softening", item.drivers),
     }));
+
+  const strengtheningMarkets = rankedStrongest.filter((item) => item.forecast_score >= item.current_score);
+  const softeningMarkets = rankedWeakest.filter((item) => item.forecast_score <= item.current_score);
+
+  const strongestBase = strengtheningMarkets.length > 0
+    ? strengtheningMarkets
+    : rankedStrongest;
+  const weakestBase = softeningMarkets.length > 0
+    ? softeningMarkets
+    : rankedWeakest;
+
+  const strongest = strongestBase.slice(0, maxListCount);
+  const strongestSet = new Set(strongest.map((item) => item.market));
+
+  const weakest = [];
+  for (const item of weakestBase) {
+    if (weakest.length >= maxListCount) break;
+    if (strongestSet.has(item.market)) continue;
+    weakest.push(item);
+  }
+
+  if (weakest.length < maxListCount) {
+    for (const item of rankedWeakest) {
+      if (weakest.length >= maxListCount) break;
+      if (strongestSet.has(item.market)) continue;
+      if (weakest.find((existing) => existing.market === item.market)) continue;
+      weakest.push(item);
+    }
+  }
 
   return {
     strongest_next_12_months: strongest,
