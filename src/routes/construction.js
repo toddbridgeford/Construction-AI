@@ -1544,7 +1544,7 @@ function validatePartialSettingsPayload(input = {}) {
     return { ok: false, errors: ["payload must be an object"] };
   }
 
-  const allowedFields = new Set(["metros_watchlist", "risk_watchlist", "thresholds", "alert_sensitivity", "muted_alert_codes", "updated_at"]);
+  const allowedFields = new Set(["metros_watchlist", "risk_watchlist", "thresholds", "alert_sensitivity", "muted_alert_codes"]);
   for (const key of Object.keys(input)) {
     if (!allowedFields.has(key)) {
       errors.push(`unknown field: ${key}`);
@@ -3070,7 +3070,9 @@ export async function handleConstructionSettingsProfilesCreate(request, env) {
     const activeProfile = envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id) || envelope.profiles[0];
     const activeSettings = sanitizeConstructionSettings(activeProfile?.settings || {});
     const hasSettingsOverride = Object.prototype.hasOwnProperty.call(body, "settings");
-    const validation = validatePartialSettingsPayload(hasSettingsOverride ? body.settings : activeSettings);
+    const validation = hasSettingsOverride
+      ? validatePartialSettingsPayload(body.settings)
+      : { ok: true, errors: [] };
     if (!validation.ok) {
       return error(env, 400, "SETTINGS_PROFILE_CREATE_VALIDATION_FAILED", "Invalid settings payload", { errors: validation.errors });
     }
