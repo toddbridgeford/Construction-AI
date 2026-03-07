@@ -126,6 +126,12 @@ extension View {
             .frame(minWidth: 44, minHeight: 44)
             .contentShape(Rectangle())
     }
+
+    func terminalListRowStyle() -> some View {
+        self
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+    }
 }
 
 struct TerminalSectionHeader: View {

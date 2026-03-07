@@ -3,7 +3,7 @@ import SwiftUI
 struct TerminalShellView: View {
     @StateObject private var store = DashboardStore()
     @StateObject private var prefs = TerminalPreferencesStore()
-    @State private var selection: String? = "overview"
+    @State private var selection: WorkspaceDestination? = .overview
     @State private var isPalettePresented = false
     @State private var paletteQuery = ""
     @State private var paletteSelection = PaletteSelectionState()
@@ -12,20 +12,10 @@ struct TerminalShellView: View {
         NavigationSplitView {
             List(selection: $selection) {
                 Section("Workspace") {
-                    NavigationLink(value: "overview") {
-                        Label("Overview", systemImage: "square.grid.3x3")
-                    }
-                    NavigationLink(value: "signals") {
-                        Label("Signals", systemImage: "waveform.path.ecg")
-                    }
-                    NavigationLink(value: "regions") {
-                        Label("Regions", systemImage: "map")
-                    }
-                    NavigationLink(value: "briefings") {
-                        Label("Briefings", systemImage: "doc.text")
-                    }
-                    NavigationLink(value: "settings") {
-                        Label("Settings", systemImage: "gearshape")
+                    ForEach(WorkspaceDestination.allCases) { destination in
+                        NavigationLink(value: destination) {
+                            Label(destination.title, systemImage: destination.systemImage)
+                        }
                     }
                 }
             }
@@ -50,12 +40,12 @@ struct TerminalShellView: View {
                     } else if store.isLoading && store.payload == nil {
                         LoadingSkeletonView()
                     } else {
-                        switch selection {
-                        case "signals": SignalsView(store: store)
-                        case "regions": RegionsView(store: store)
-                        case "briefings": BriefingsView(store: store)
-                        case "settings": SettingsView(store: store)
-                        default: OverviewView(store: store, prefs: prefs)
+                        switch selection ?? .overview {
+                        case .signals: SignalsView(store: store)
+                        case .regions: RegionsView(store: store)
+                        case .briefings: BriefingsView(store: store)
+                        case .settings: SettingsView(store: store)
+                        case .overview: OverviewView(store: store, prefs: prefs)
                         }
                     }
                 }
@@ -97,10 +87,9 @@ struct TerminalShellView: View {
         case .refresh:
             Task { await store.refreshFromGitHub() }
         case .focusSearch:
-            selection = "overview"
+            selection = .overview
         case .navigate(let index):
-            let map = [1: "overview", 2: "signals", 3: "regions", 4: "briefings", 5: "settings"]
-            selection = map[index] ?? selection
+            selection = WorkspaceDestination.commandMap[index] ?? selection
         case .dismiss:
             isPalettePresented = false
         case .up:
@@ -116,7 +105,7 @@ struct TerminalShellView: View {
     private func executePaletteAction(action: PaletteAction) {
         switch action {
         case .navigate(let target):
-            selection = target
+            selection = WorkspaceDestination(rawValue: target)
         case .refresh:
             Task { await store.refreshFromGitHub() }
         case .clearCache:
@@ -130,13 +119,51 @@ struct TerminalShellView: View {
         case .selectAlert(let id):
             store.selectedAlert = store.payload?.alerts.first(where: { $0.id == id })
         case .showRegion(let id):
-            selection = "regions"
+            selection = .regions
             if let region = store.regions.first(where: { $0.id == id }) {
                 AppLogger.ui.info("Region selected from palette: \(region.name)")
             }
         }
         isPalettePresented = false
     }
+}
+
+private enum WorkspaceDestination: String, CaseIterable, Identifiable {
+    case overview
+    case signals
+    case regions
+    case briefings
+    case settings
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .overview: return "Overview"
+        case .signals: return "Signals"
+        case .regions: return "Regions"
+        case .briefings: return "Briefings"
+        case .settings: return "Settings"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .overview: return "square.grid.3x3"
+        case .signals: return "waveform.path.ecg"
+        case .regions: return "map"
+        case .briefings: return "doc.text"
+        case .settings: return "gearshape"
+        }
+    }
+
+    static let commandMap: [Int: WorkspaceDestination] = [
+        1: .overview,
+        2: .signals,
+        3: .regions,
+        4: .briefings,
+        5: .settings
+    ]
 }
 
 private struct ErrorBannerView: View {

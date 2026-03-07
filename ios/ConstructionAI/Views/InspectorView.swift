@@ -11,6 +11,7 @@ struct InspectorView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 if let signal {
+                    let valueText = metricValue(signal.value, precision: 2)
                     InspectorHeaderView(title: signal.key, severity: signal.severity, lastUpdated: DateFormatting.display(generatedAt))
 
                     VStack(alignment: .leading, spacing: 8) {
@@ -18,11 +19,11 @@ struct InspectorView: View {
                         HStack {
                             Image(systemName: Trend.from(arrow: signal.arrow).symbol)
                                 .accessibilityHidden(true)
-                            Text(signal.value.map { String(format: "%.2f", $0) } ?? "—")
+                            Text(valueText)
                                 .font(TerminalTheme.mono(size: 16))
                         }
                         .accessibilityElement(children: .combine)
-                        .accessibilityLabel("Value \(signal.value.map { String(format: "%.2f", $0) } ?? "not available")")
+                        .accessibilityLabel("Value \(valueText)")
                     }
                     .terminalPanel()
 
@@ -50,32 +51,61 @@ struct InspectorView: View {
     }
 
     private func actionButtons(summary: String) -> some View {
-        HStack(spacing: TerminalTheme.Spacing.small) {
-            Button("Copy summary") {
-                #if canImport(UIKit)
-                UIPasteboard.general.string = summary
-                #endif
+        ViewThatFits {
+            HStack(spacing: TerminalTheme.Spacing.small) {
+                copyButton(summary)
+                shareButton(summary)
+                pinButton
+                watchButton
             }
-            .buttonStyle(TerminalButtonStyle(intent: .neutral))
-            .accessibilityHint("Copies summary text to clipboard")
 
-            ShareLink(item: summary) {
-                Label("Share", systemImage: "square.and.arrow.up")
+            VStack(alignment: .leading, spacing: TerminalTheme.Spacing.small) {
+                copyButton(summary)
+                shareButton(summary)
+                HStack(spacing: TerminalTheme.Spacing.small) {
+                    pinButton
+                    watchButton
+                }
             }
-            .buttonStyle(TerminalButtonStyle(intent: .neutral))
-
-            Button(isPinned ? "Pinned" : "Pin") {
-                isPinned.toggle()
-            }
-            .buttonStyle(TerminalButtonStyle(intent: isPinned ? .selected : .neutral))
-            .accessibilityHint("Marks this inspector item as pinned in this session")
-
-            Button(isWatched ? "Watching" : "Watch") {
-                isWatched.toggle()
-            }
-            .buttonStyle(TerminalButtonStyle(intent: isWatched ? .primary : .neutral))
-            .accessibilityHint("Marks this inspector item as watched in this session")
         }
         .terminalPanel()
+    }
+
+    private func copyButton(_ summary: String) -> some View {
+        Button("Copy summary") {
+            #if canImport(UIKit)
+            UIPasteboard.general.string = summary
+            #endif
+        }
+        .buttonStyle(TerminalButtonStyle(intent: .neutral))
+        .accessibilityHint("Copies summary text to clipboard")
+    }
+
+    private func shareButton(_ summary: String) -> some View {
+        ShareLink(item: summary) {
+            Label("Share", systemImage: "square.and.arrow.up")
+        }
+        .buttonStyle(TerminalButtonStyle(intent: .neutral))
+    }
+
+    private var pinButton: some View {
+        Button(isPinned ? "Pinned" : "Pin") {
+            isPinned.toggle()
+        }
+        .buttonStyle(TerminalButtonStyle(intent: isPinned ? .selected : .neutral))
+        .accessibilityHint("Marks this inspector item as pinned in this session")
+    }
+
+    private var watchButton: some View {
+        Button(isWatched ? "Watching" : "Watch") {
+            isWatched.toggle()
+        }
+        .buttonStyle(TerminalButtonStyle(intent: isWatched ? .primary : .neutral))
+        .accessibilityHint("Marks this inspector item as watched in this session")
+    }
+
+    private func metricValue(_ value: Double?, precision: Int, fallback: String = "—") -> String {
+        guard let value else { return fallback }
+        return String(format: "%.*f", precision, value)
     }
 }
