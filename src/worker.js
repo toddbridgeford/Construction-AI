@@ -37,14 +37,7 @@ import {
   handleConstructionReceivablesRisk,
   handleConstructionPaymentDelayRisk,
   handleConstructionCollectionsStress,
-  handleConstructionOwnerRisk,
-  handleConstructionDeveloperFragility,
-  handleConstructionLenderPullbackRisk,
-  handleConstructionCounterpartyQuality,
-  handleConstructionMetroConcentrationRisk,
-  handleConstructionCounterpartyConcentrationRisk,
-  handleConstructionProjectMixExposure,
-  handleConstructionPortfolioRisk,
+  PORTFOLIO_LAYER_ROUTE_HANDLERS,
 } from "./routes/construction.js";
 
 export default {
@@ -90,14 +83,8 @@ export default {
       if (pathname === "/construction/receivables-risk") return handleConstructionReceivablesRisk(request, env);
       if (pathname === "/construction/payment-delay-risk") return handleConstructionPaymentDelayRisk(request, env);
       if (pathname === "/construction/collections-stress") return handleConstructionCollectionsStress(request, env);
-      if (pathname === "/construction/owner-risk") return handleConstructionOwnerRisk(request, env);
-      if (pathname === "/construction/developer-fragility") return handleConstructionDeveloperFragility(request, env);
-      if (pathname === "/construction/lender-pullback-risk") return handleConstructionLenderPullbackRisk(request, env);
-      if (pathname === "/construction/counterparty-quality") return handleConstructionCounterpartyQuality(request, env);
-      if (pathname === "/construction/metro-concentration-risk") return handleConstructionMetroConcentrationRisk(request, env);
-      if (pathname === "/construction/counterparty-concentration-risk") return handleConstructionCounterpartyConcentrationRisk(request, env);
-      if (pathname === "/construction/project-mix-exposure") return handleConstructionProjectMixExposure(request, env);
-      if (pathname === "/construction/portfolio-risk") return handleConstructionPortfolioRisk(request, env);
+      const portfolioRouteHandler = PORTFOLIO_LAYER_ROUTE_HANDLERS[pathname];
+      if (portfolioRouteHandler) return portfolioRouteHandler(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
       if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
       if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);

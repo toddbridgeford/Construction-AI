@@ -30,7 +30,11 @@ REQUIRED_NEW_PATHS = [
   '/construction/owner-risk',
   '/construction/developer-fragility',
   '/construction/lender-pullback-risk',
-  '/construction/counterparty-quality'
+  '/construction/counterparty-quality',
+  '/construction/metro-concentration-risk',
+  '/construction/counterparty-concentration-risk',
+  '/construction/project-mix-exposure',
+  '/construction/portfolio-risk'
 ]
 REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/spending/ytd/summary']
 REQUIRED_SCHEMAS = [
@@ -80,7 +84,15 @@ REQUIRED_SCHEMAS = [
   'ConstructionOwnerRiskResponse',
   'ConstructionDeveloperFragilityResponse',
   'ConstructionLenderPullbackRiskResponse',
-  'ConstructionCounterpartyQualityResponse'
+  'ConstructionCounterpartyQualityResponse',
+  'MetroConcentrationRiskModel',
+  'CounterpartyConcentrationRiskModel',
+  'ProjectMixExposureModel',
+  'PortfolioRiskModel',
+  'ConstructionMetroConcentrationRiskResponse',
+  'ConstructionCounterpartyConcentrationRiskResponse',
+  'ConstructionProjectMixExposureResponse',
+  'ConstructionPortfolioRiskResponse'
 ]
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
@@ -144,6 +156,14 @@ errors << 'ConstructionTerminalResponse terminal schema must include lender_pull
 errors << 'ConstructionTerminalResponse terminal schema must include lender_pullback_risk_summary' unless terminal_properties.key?('lender_pullback_risk_summary')
 errors << 'ConstructionTerminalResponse terminal schema must include counterparty_quality' unless terminal_properties.key?('counterparty_quality')
 errors << 'ConstructionTerminalResponse terminal schema must include counterparty_quality_summary' unless terminal_properties.key?('counterparty_quality_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include metro_concentration_risk' unless terminal_properties.key?('metro_concentration_risk')
+errors << 'ConstructionTerminalResponse terminal schema must include metro_concentration_risk_summary' unless terminal_properties.key?('metro_concentration_risk_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include counterparty_concentration_risk' unless terminal_properties.key?('counterparty_concentration_risk')
+errors << 'ConstructionTerminalResponse terminal schema must include counterparty_concentration_risk_summary' unless terminal_properties.key?('counterparty_concentration_risk_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include project_mix_exposure' unless terminal_properties.key?('project_mix_exposure')
+errors << 'ConstructionTerminalResponse terminal schema must include project_mix_exposure_summary' unless terminal_properties.key?('project_mix_exposure_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include portfolio_risk' unless terminal_properties.key?('portfolio_risk')
+errors << 'ConstructionTerminalResponse terminal schema must include portfolio_risk_summary' unless terminal_properties.key?('portfolio_risk_summary')
 
 forecast_items = components.dig('ConstructionForecastResponse', 'properties', 'forecast', 'properties', 'strongest_next_12_months', 'items')
 errors << 'ConstructionForecastResponse strongest_next_12_months must reference ForecastMarketItem' unless forecast_items&.dig('$ref') == '#/components/schemas/ForecastMarketItem'
