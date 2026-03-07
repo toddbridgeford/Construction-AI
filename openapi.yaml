@@ -1966,7 +1966,15 @@ components:
           type: string
         active_settings:
           "$ref": "#/components/schemas/ConstructionSettingsModel"
-      required: [ok, ts, service, alerts, summary, active_settings]
+        active_profile_id:
+          type: string
+        active_profile_name:
+          type: string
+        settings_summary:
+          type: string
+        saved_profiles_summary:
+          type: string
+      required: [ok, ts, service, alerts, summary, active_settings, active_profile_id, active_profile_name, settings_summary, saved_profiles_summary]
       additionalProperties: true
     ConstructionMorningBriefV2Response:
       type: object
