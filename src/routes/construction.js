@@ -1598,7 +1598,7 @@ function profileModelFromPreset(preset, isActive = false) {
 function cloneProfile(profile, isActive = profile?.is_active === true) {
   if (!profile || typeof profile !== "object") return null;
   return {
-    profile_id: String(profile.profile_id || ""),
+    profile_id: String(profile.profile_id || "").trim(),
     profile_name: String(profile.profile_name || ""),
     description: String(profile.description || ""),
     is_active: isActive,
@@ -1627,8 +1627,9 @@ function normalizeProfilesEnvelope(rawProfiles, rawActiveProfileId) {
     uniqueProfiles.push(profile);
   }
 
-  const resolvedActiveProfileId = uniqueProfiles.find((profile) => profile.profile_id === rawActiveProfileId)
-    ? rawActiveProfileId
+  const normalizedActiveProfileId = typeof rawActiveProfileId === "string" ? rawActiveProfileId.trim() : "";
+  const resolvedActiveProfileId = uniqueProfiles.find((profile) => profile.profile_id === normalizedActiveProfileId)
+    ? normalizedActiveProfileId
     : uniqueProfiles.find((profile) => profile.profile_id === "balanced-operator")?.profile_id || uniqueProfiles[0]?.profile_id || "";
 
   const nowIso = new Date().toISOString();
@@ -1705,14 +1706,16 @@ async function getActiveProfileId(env) {
 }
 
 async function setActiveProfileId(env, profileId) {
+  const normalizedProfileId = typeof profileId === "string" ? profileId.trim() : "";
+  if (!normalizedProfileId) return null;
   const envelope = await readSettingsProfilesModel(env);
-  const profile = envelope.profiles.find((entry) => entry.profile_id === profileId);
+  const profile = envelope.profiles.find((entry) => entry.profile_id === normalizedProfileId);
   if (!profile) return null;
 
   const nextEnvelope = {
     ...envelope,
-    active_profile_id: profileId,
-    profiles: envelope.profiles.map((entry) => ({ ...entry, is_active: entry.profile_id === profileId })),
+    active_profile_id: normalizedProfileId,
+    profiles: envelope.profiles.map((entry) => ({ ...entry, is_active: entry.profile_id === normalizedProfileId })),
   };
   await persistSettingsProfilesModel(env, nextEnvelope);
   return {
