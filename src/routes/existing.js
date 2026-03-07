@@ -16,6 +16,10 @@ const MAX_BUNDLE_SERIES = 10;
 const FRED_SERIES_ID_PATTERN = /^[A-Z0-9_]+$/;
 const CUSTOM_BUNDLE_TTL_SECONDS = 5 * 60;
 
+function isValidFredSeriesId(seriesId) {
+  return FRED_SERIES_ID_PATTERN.test(seriesId);
+}
+
 function parseLimitParam(rawLimit, fallback, min, max) {
   if (rawLimit === null) return { ok: true, value: fallback };
 
@@ -111,7 +115,14 @@ export async function handleFredObservations(request, env) {
   if (missing.length) return error(env, 500, "MISSING_ENV", "Missing required env vars", { missing });
 
   const url = new URL(request.url);
-  const seriesId = url.searchParams.get("series_id") || "CPIAUCSL";
+  const rawSeriesId = url.searchParams.get("series_id");
+  const seriesId = rawSeriesId === null ? "CPIAUCSL" : rawSeriesId.trim();
+  if (!isValidFredSeriesId(seriesId)) {
+    return error(env, 400, "SERIES_ID_INVALID", "Invalid series_id query parameter", {
+      reason: "series_id must match /^[A-Z0-9_]+$/",
+    });
+  }
+
   const parsedLimit = parseLimitParam(url.searchParams.get("limit"), 24, 1, 5000);
   if (!parsedLimit.ok) {
     return error(env, 400, "LIMIT_INVALID", "Invalid limit query parameter", {
@@ -333,7 +344,7 @@ export async function handleBundle(request, env) {
     });
   }
 
-  if (use && seriesList.some((id) => !FRED_SERIES_ID_PATTERN.test(id))) {
+  if (use && seriesList.some((id) => !isValidFredSeriesId(id))) {
     return error(env, 400, "SERIES_INVALID", "Invalid series query parameter", {
       reason: "invalid identifier present",
     });
