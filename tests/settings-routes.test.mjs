@@ -192,6 +192,39 @@ test('profile create and delete enforce active profile delete protection', async
   assert.equal(deleteRes.status, 200);
 });
 
+test('profile create generates unique ids even when created in same millisecond', async () => {
+  const env = makeEnv();
+  const originalNow = Date.now;
+  const originalRandomUuid = globalThis.crypto.randomUUID;
+  let counter = 0;
+
+  Date.now = () => 1700000000000;
+  globalThis.crypto.randomUUID = () => (counter++ === 0 ? '11111111-0000-4000-8000-000000000000' : '22222222-0000-4000-8000-000000000000');
+
+  try {
+    const firstRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ profile_name: 'Custom Profile A' }),
+    }), env);
+    const secondRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ profile_name: 'Custom Profile B' }),
+    }), env);
+
+    const firstBody = await json(firstRes);
+    const secondBody = await json(secondRes);
+
+    assert.equal(firstRes.status, 200);
+    assert.equal(secondRes.status, 200);
+    assert.notEqual(firstBody.profile_id, secondBody.profile_id);
+  } finally {
+    Date.now = originalNow;
+    globalThis.crypto.randomUUID = originalRandomUuid;
+  }
+});
+
 test('profile create rejects invalid settings payload when settings key is provided', async () => {
   const env = makeEnv();
   const createRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
