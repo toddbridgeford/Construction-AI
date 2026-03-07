@@ -1913,9 +1913,13 @@ components:
           type: string
         service:
           type: string
+        active_profile_id:
+          type: string
+        active_profile_name:
+          type: string
         settings:
           "$ref": "#/components/schemas/ConstructionSettingsModel"
-      required: [ok, ts, service, settings]
+      required: [ok, ts, service, active_profile_id, active_profile_name, settings]
       additionalProperties: true
     ConstructionSettingsDefaultsResponse:
       type: object
