@@ -196,6 +196,22 @@ test('settings POST updates active profile with partial merge and validation', a
   assert.match(unknownThresholdFieldBody.error.details.errors[0], /unknown thresholds field: made_up_threshold/);
 });
 
+
+test('settings POST rejects unknown updated_at field to prevent false-success writes', async () => {
+  const env = makeEnv();
+  const res = await handleConstructionSettings(new Request('https://example.com/construction/settings', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ updated_at: '2026-01-01T00:00:00.000Z' }),
+  }), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 400);
+  assert.equal(body.error.code, 'SETTINGS_WRITE_VALIDATION_FAILED');
+  assert.ok(Array.isArray(body.error.details.errors));
+  assert.match(body.error.details.errors[0], /unknown field: updated_at/);
+});
+
 test('profile create and delete enforce active profile delete protection', async () => {
   const env = makeEnv();
   const createRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
