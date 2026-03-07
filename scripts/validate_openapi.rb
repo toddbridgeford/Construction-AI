@@ -40,6 +40,7 @@ REQUIRED_NEW_PATHS = [
   '/construction/portfolio-risk',
   '/construction/settings',
   '/construction/settings/defaults',
+  '/construction/settings/active-profile',
   '/construction/watchlist/custom'
 ]
 REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/construction/settings/reset', '/spending/ytd/summary']
