@@ -361,15 +361,34 @@ export async function handleBundle(request, env) {
     return ok(env, { source: "kv", bundle: cached });
   }
 
+  const missing = requireEnv(env, ["FRED_API_KEY"]);
+  if (missing.length) {
+    return error(env, 500, "MISSING_ENV", "Missing required env vars", { missing });
+  }
+
   const series = {};
+  let successfulSeriesCount = 0;
+  let firstFailure = null;
   for (const id of seriesList) {
     try {
       const data = await fetchFredSeries(env, id, limit);
       const obs = data?.observations || [];
       series[id] = { latest: safeLatest(obs), trend_pct: safeTrendPct(obs), observations: obs.slice(0, 12) };
+      successfulSeriesCount += 1;
     } catch (e) {
       series[id] = { error: { message: e.message, status: e.status || 0 } };
+      if (!firstFailure) firstFailure = e;
     }
+  }
+
+  if (successfulSeriesCount === 0 && firstFailure) {
+    return error(
+      env,
+      firstFailure?.code === "UPSTREAM_FRED" ? 502 : 500,
+      firstFailure?.code || "ERROR",
+      firstFailure?.message || "Unable to fetch requested bundle series",
+      firstFailure?.details || null
+    );
   }
 
   const bundle = { series };
