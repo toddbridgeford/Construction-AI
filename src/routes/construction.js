@@ -2946,7 +2946,12 @@ async function loadScoredMarketsFromAssets(env) {
     return subsectionError("MARKETS_INDEX_MISSING", `Unable to read ${MARKETS_INDEX_ASSET_PATH}`, { status: marketsIndexRes.status });
   }
 
-  const marketsIndex = await marketsIndexRes.json();
+  let marketsIndex;
+  try {
+    marketsIndex = await marketsIndexRes.json();
+  } catch {
+    return subsectionError("MARKETS_INDEX_INVALID", `${MARKETS_INDEX_ASSET_PATH} must contain valid JSON`);
+  }
   const entries = Array.isArray(marketsIndex?.markets) ? marketsIndex.markets : [];
   if (entries.length === 0) {
     return subsectionError("MARKETS_INDEX_EMPTY", `No market entries found in ${MARKETS_INDEX_ASSET_PATH}`);
@@ -2979,7 +2984,12 @@ async function loadScoredMarketsFromAssets(env) {
     const normalizedMarketPath = marketPathValidation.normalizedPath;
     const res = await env.ASSETS.fetch(`${base}/${normalizedMarketPath}`);
     if (!res.ok) continue;
-    const payload = await res.json();
+    let payload;
+    try {
+      payload = await res.json();
+    } catch {
+      continue;
+    }
     const scored = scoreMarketPayload(payload, entry?.label || entry?.id || "unknown", entry, nationalBaselineScore);
     if (scored) scoredMarkets.push(scored);
   }
