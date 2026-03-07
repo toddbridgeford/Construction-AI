@@ -91,6 +91,7 @@ export const CONSTRUCTION_ROUTE_HANDLERS = {
 
 export default {
   async fetch(request, env) {
+    const isHeadRequest = request.method === "HEAD";
     if (request.method === "OPTIONS") {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
@@ -106,35 +107,42 @@ export default {
         "/construction/settings/profiles/activate",
         "/construction/settings/profiles/delete",
       ].includes(pathname);
-      if (!(["GET", "POST"].includes(request.method))) return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+      if (!(["GET", "POST", "HEAD"].includes(request.method))) return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
       if (request.method === "POST" && !isSettingsWriteRoute) return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
 
-      if (pathname === "/" || pathname === "/health") return handleHealth(env);
-      if (pathname === "/fred/observations") return handleFredObservations(request, env);
-      if (pathname === "/cpi") return handleCpi(env);
-      if (pathname === "/notion/series") return handleNotionSeries(env);
+      const dispatchRequest = isHeadRequest
+        ? new Request(request.url, { method: "GET", headers: request.headers })
+        : request;
+      const finalizeResponse = (response) => isHeadRequest
+        ? new Response(null, { status: response.status, headers: response.headers })
+        : response;
 
-      if (pathname === "/bundle") return handleBundle(request, env);
-      if (pathname === "/signal") return handleSignal(env);
-      if (pathname === "/regime") return handleRegime(env);
-      if (pathname === "/liquidity") return handleLiquidity(env);
-      if (pathname === "/construction-index") return handleConstructionIndex(env);
-      if (pathname === "/risk-score") return handleRiskScore(env);
+      if (pathname === "/" || pathname === "/health") return finalizeResponse(await handleHealth(env));
+      if (pathname === "/fred/observations") return finalizeResponse(await handleFredObservations(dispatchRequest, env));
+      if (pathname === "/cpi") return finalizeResponse(await handleCpi(env));
+      if (pathname === "/notion/series") return finalizeResponse(await handleNotionSeries(env));
+
+      if (pathname === "/bundle") return finalizeResponse(await handleBundle(dispatchRequest, env));
+      if (pathname === "/signal") return finalizeResponse(await handleSignal(env));
+      if (pathname === "/regime") return finalizeResponse(await handleRegime(env));
+      if (pathname === "/liquidity") return finalizeResponse(await handleLiquidity(env));
+      if (pathname === "/construction-index") return finalizeResponse(await handleConstructionIndex(env));
+      if (pathname === "/risk-score") return finalizeResponse(await handleRiskScore(env));
 
       const constructionRouteHandler = CONSTRUCTION_ROUTE_HANDLERS[pathname];
-      if (constructionRouteHandler) return constructionRouteHandler(request, env);
-      if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
-      if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
-      if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);
+      if (constructionRouteHandler) return finalizeResponse(await constructionRouteHandler(dispatchRequest, env));
+      if (pathname === "/construction/morning-brief") return finalizeResponse(await handleConstructionMorningBrief(dispatchRequest, env));
+      if (pathname === "/construction/alerts") return finalizeResponse(await handleConstructionAlerts(dispatchRequest, env));
+      if (pathname === "/construction/recession-probability") return finalizeResponse(await handleConstructionRecessionProbability(dispatchRequest, env));
 
-      if (pathname === "/spending/ytd") return handleSpendingYtd(request, env);
-      if (pathname === "/spending/ytd/summary") return handleSpendingYtdSummary(request, env);
+      if (pathname === "/spending/ytd") return finalizeResponse(await handleSpendingYtd(dispatchRequest, env));
+      if (pathname === "/spending/ytd/summary") return finalizeResponse(await handleSpendingYtdSummary(dispatchRequest, env));
 
-      if (pathname === "/ytd/commercial") return handleYtdSegment(request, env, "commercial");
-      if (pathname === "/ytd/housing") return handleYtdSegment(request, env, "housing");
-      if (pathname === "/ytd/summary") return handleYtdSummary(request, env);
+      if (pathname === "/ytd/commercial") return finalizeResponse(await handleYtdSegment(dispatchRequest, env, "commercial"));
+      if (pathname === "/ytd/housing") return finalizeResponse(await handleYtdSegment(dispatchRequest, env, "housing"));
+      if (pathname === "/ytd/summary") return finalizeResponse(await handleYtdSummary(dispatchRequest, env));
 
-      return error(env, 404, "NOT_FOUND", "Not found", { path: pathname });
+      return finalizeResponse(error(env, 404, "NOT_FOUND", "Not found", { path: pathname }));
     } catch (e) {
       return error(env, 500, "UNHANDLED", "Unhandled exception", { message: e?.message || String(e) });
     }
