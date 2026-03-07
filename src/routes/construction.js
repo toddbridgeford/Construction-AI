@@ -1544,6 +1544,13 @@ function validatePartialSettingsPayload(input = {}) {
     return { ok: false, errors: ["payload must be an object"] };
   }
 
+  const allowedFields = new Set(["metros_watchlist", "risk_watchlist", "thresholds", "alert_sensitivity", "muted_alert_codes", "updated_at"]);
+  for (const key of Object.keys(input)) {
+    if (!allowedFields.has(key)) {
+      errors.push(`unknown field: ${key}`);
+    }
+  }
+
   if (input.thresholds !== undefined) {
     if (input.thresholds === null || typeof input.thresholds !== "object" || Array.isArray(input.thresholds)) {
       errors.push("thresholds must be an object with numeric values");
