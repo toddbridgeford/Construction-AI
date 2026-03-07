@@ -16,7 +16,7 @@ import {
   handleConstructionMarketRadar,
 } from '../src/routes/construction.js';
 
-import { handleBundle, handleFredObservations } from '../src/routes/existing.js';
+import { handleBundle, handleFredObservations, handleLiquidity } from '../src/routes/existing.js';
 
 const REQUIRED_ROUTES = [
   '/construction/settings/defaults',
@@ -723,6 +723,40 @@ test('active profile endpoint returns endpoint-specific malformed JSON error', a
 });
 
 
+test('liquidity endpoint renormalizes score when one liquidity input is unavailable', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const originalFetch = globalThis.fetch;
+
+  globalThis.fetch = async (url) => {
+    const parsed = new URL(String(url));
+    const seriesId = parsed.searchParams.get('series_id');
+
+    if (seriesId === 'FEDFUNDS') {
+      return new Response(JSON.stringify({ observations: [{ date: '2025-01-01', value: '3.0' }] }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    }
+
+    return new Response(JSON.stringify({ observations: [{ date: '2025-01-01', value: '.' }] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  };
+
+  try {
+    const res = await handleLiquidity(env);
+    const body = await json(res);
+
+    assert.equal(res.status, 200);
+    assert.equal(body.liquidity.mortgage_rate, null);
+    assert.equal(body.liquidity.fed_funds, 3);
+    assert.equal(body.liquidity.liquidity_score, 50);
+    assert.equal(body.liquidity.liquidity_state, 'neutral');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
 test('bundle endpoint rejects invalid limit query values to prevent unbounded upstream requests', async () => {
   const env = makeEnv();
   const badValues = ['abc', '-1', '0', '5001', '12.5'];
