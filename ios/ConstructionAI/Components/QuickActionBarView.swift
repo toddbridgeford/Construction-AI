@@ -6,19 +6,16 @@ struct QuickActionBarView: View {
     let onWatch: () -> Void
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: TerminalTheme.Spacing.small) {
             Button("Explain", action: onExplain)
-                .terminalTapTarget()
+                .buttonStyle(TerminalButtonStyle(intent: .neutral))
                 .accessibilityHint("Explains why this alert is important")
             Button("Drivers", action: onDrivers)
-                .terminalTapTarget()
+                .buttonStyle(TerminalButtonStyle(intent: .neutral))
                 .accessibilityHint("Shows the underlying market drivers")
             Button("Watch / Pin", action: onWatch)
-                .terminalTapTarget()
+                .buttonStyle(TerminalButtonStyle(intent: .primary))
                 .accessibilityHint("Pins this item to your watch list")
         }
-        .buttonStyle(.bordered)
-        .font(.caption)
-        .controlSize(.large)
     }
 }

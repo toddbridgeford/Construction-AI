@@ -7,21 +7,23 @@ struct DenseSignalsTableView: View {
     let onPin: (SignalItem) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: TerminalTheme.Spacing.small) {
             TerminalSectionHeader(title: "Top signals", subtitle: "Priority market indicators")
-            ForEach(signals) { signal in
+            ForEach(Array(signals.enumerated()), id: \.element.id) { index, signal in
                 HStack(spacing: TerminalTheme.Spacing.xSmall) {
                     Button {
                         onSelect(signal)
                     } label: {
                         HStack(spacing: TerminalTheme.Spacing.xSmall) {
                             Text(signal.key)
+                                .lineLimit(1)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             TrendArrowView(direction: Trend.from(arrow: signal.arrow))
                             SeverityChipView(severity: signal.severity)
                             Text(signal.interpretation ?? "—")
                                 .foregroundStyle(.secondary)
                                 .lineLimit(1)
+                                .truncationMode(.tail)
                         }
                         .font(.footnote)
                     }
@@ -35,13 +37,13 @@ struct DenseSignalsTableView: View {
                     } label: {
                         Image(systemName: pinned.contains(signal.id) ? "pin.fill" : "pin")
                             .font(.body.weight(.semibold))
-                            .frame(width: 32, height: 32)
                     }
-                    .buttonStyle(.plain)
-                    .terminalTapTarget()
+                    .buttonStyle(TerminalButtonStyle(intent: pinned.contains(signal.id) ? .selected : .neutral))
                     .accessibilityLabel(pinned.contains(signal.id) ? "Unpin \(signal.key)" : "Pin \(signal.key)")
                 }
-                Divider()
+                if index < signals.count - 1 {
+                    Divider()
+                }
             }
         }
         .padding(TerminalTheme.Spacing.small)

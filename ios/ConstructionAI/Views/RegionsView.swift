@@ -22,6 +22,8 @@ struct RegionsView: View {
                         Spacer()
                         Text(region.value.map { String(format: "%.0f", $0) } ?? "—")
                             .font(.system(.title3, design: .monospaced).weight(.semibold))
+                            .monospacedDigit()
+                            .frame(minWidth: 56, alignment: .trailing)
                             .foregroundStyle(.orange)
                     }
                     .terminalRowBackground()

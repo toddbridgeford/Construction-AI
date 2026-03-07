@@ -7,6 +7,7 @@ struct SignalRowView: View {
         HStack(alignment: .top, spacing: TerminalTheme.Spacing.small) {
             VStack(alignment: .leading, spacing: 2) {
                 Text(signal.key)
+                    .lineLimit(1)
                 Text(signal.interpretation ?? "No interpretation")
                     .font(.caption)
                     .foregroundStyle(.secondary)

@@ -47,6 +47,65 @@ struct TerminalPanelModifier: ViewModifier {
     }
 }
 
+enum TerminalButtonIntent {
+    case neutral
+    case primary
+    case destructive
+    case selected
+}
+
+struct TerminalButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+    let intent: TerminalButtonIntent
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, TerminalTheme.Spacing.small)
+            .padding(.vertical, TerminalTheme.Spacing.xSmall)
+            .frame(minWidth: 44, minHeight: 36)
+            .foregroundStyle(foregroundColor(isEnabled: isEnabled))
+            .background(backgroundColor(pressed: configuration.isPressed), in: RoundedRectangle(cornerRadius: TerminalTheme.Radius.chip, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: TerminalTheme.Radius.chip, style: .continuous)
+                    .stroke(borderColor, lineWidth: 1)
+            )
+            .contentShape(RoundedRectangle(cornerRadius: TerminalTheme.Radius.chip, style: .continuous))
+            .opacity(configuration.isPressed ? 0.88 : 1)
+            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+    }
+
+    private func backgroundColor(pressed: Bool) -> Color {
+        let base: Color
+        switch intent {
+        case .neutral: base = Color(uiColor: .tertiarySystemFill)
+        case .primary: base = Color.orange.opacity(0.2)
+        case .destructive: base = Color.red.opacity(0.16)
+        case .selected: base = Color.accentColor.opacity(0.2)
+        }
+        return pressed ? base.opacity(0.75) : base
+    }
+
+    private func foregroundColor(isEnabled: Bool) -> Color {
+        if !isEnabled { return .secondary }
+        switch intent {
+        case .neutral: return .primary
+        case .primary: return .orange
+        case .destructive: return .red
+        case .selected: return .accentColor
+        }
+    }
+
+    private var borderColor: Color {
+        switch intent {
+        case .neutral: return TerminalTheme.ColorSet.panelBorder.opacity(0.3)
+        case .primary: return Color.orange.opacity(0.45)
+        case .destructive: return Color.red.opacity(0.35)
+        case .selected: return Color.accentColor.opacity(0.5)
+        }
+    }
+}
+
 extension View {
     func terminalPanel() -> some View {
         modifier(TerminalPanelModifier())

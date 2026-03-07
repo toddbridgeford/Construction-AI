@@ -5,10 +5,10 @@ struct SeverityChipView: View {
 
     private var color: Color {
         switch severity {
-        case .critical: return .red
-        case .monitor: return .orange
+        case .critical: return TerminalTheme.ColorSet.critical
+        case .monitor: return TerminalTheme.ColorSet.warning
         case .watch: return .yellow
-        case .normal: return .green
+        case .normal: return TerminalTheme.ColorSet.positive
         case .unknown: return .gray
         }
     }
@@ -16,6 +16,7 @@ struct SeverityChipView: View {
     var body: some View {
         Text(severity.rawValue)
             .font(.caption2.weight(.bold))
+            .lineLimit(1)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(color.opacity(0.2), in: Capsule())
