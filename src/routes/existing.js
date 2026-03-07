@@ -230,7 +230,13 @@ function computeLiquidity(series) {
   const ffr = series?.FEDFUNDS?.latest;
   const mortTight = mort === null ? null : clamp(((mort - 3) / (9 - 3)) * 100, 0, 100);
   const ffrTight = ffr === null ? null : clamp((ffr / 6) * 100, 0, 100);
-  const score = mortTight === null && ffrTight === null ? null : Number(mortTight ?? 0) * 0.6 + Number(ffrTight ?? 0) * 0.4;
+  const parts = [
+    { v: mortTight, w: 0.6 },
+    { v: ffrTight, w: 0.4 },
+  ].filter((p) => p.v !== null);
+
+  const score =
+    parts.length === 0 ? null : parts.reduce((acc, part) => acc + part.v * part.w, 0) / parts.reduce((acc, part) => acc + part.w, 0);
   const state = score === null ? "unknown" : score >= 70 ? "tight" : score >= 45 ? "neutral" : "easy";
   return { liquidity_score: score, liquidity_state: state, mortgage_rate: mort, fed_funds: ffr };
 }
