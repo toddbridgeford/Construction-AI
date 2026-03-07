@@ -1640,8 +1640,11 @@ function normalizeProfilesEnvelope(rawProfiles, rawActiveProfileId) {
   }
 
   const normalizedActiveProfileId = typeof rawActiveProfileId === "string" ? rawActiveProfileId.trim() : "";
+  const flaggedActiveProfileId = uniqueProfiles.find((profile) => profile.is_active)?.profile_id || "";
   const resolvedActiveProfileId = uniqueProfiles.find((profile) => profile.profile_id === normalizedActiveProfileId)
     ? normalizedActiveProfileId
+    : uniqueProfiles.find((profile) => profile.profile_id === flaggedActiveProfileId)?.profile_id
+      ? flaggedActiveProfileId
     : uniqueProfiles.find((profile) => profile.profile_id === "balanced-operator")?.profile_id || uniqueProfiles[0]?.profile_id || "";
 
   const nowIso = new Date().toISOString();
