@@ -44,7 +44,10 @@ REQUIRED_NEW_PATHS = [
   '/construction/watchlist/custom'
 ]
 REQUIRED_POST_PATHS = [
+  '/construction/settings',
   '/construction/settings/reset',
+  '/construction/settings/profiles',
+  '/construction/settings/active-profile',
   '/construction/settings/profiles/activate',
   '/construction/settings/profiles/delete'
 ]
