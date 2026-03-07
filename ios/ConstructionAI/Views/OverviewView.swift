@@ -45,7 +45,7 @@ struct OverviewView: View {
 
     private var executivePanel: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Executive Summary").font(.headline)
+            TerminalSectionHeader(title: "Executive Summary")
             Text(store.payload?.executiveHeadline ?? "No executive headline")
             Text(store.payload?.executiveSummary ?? "Summary unavailable")
                 .font(.subheadline)
@@ -56,7 +56,7 @@ struct OverviewView: View {
 
     private var alertsPanel: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Alerts").font(.headline)
+            TerminalSectionHeader(title: "Alerts", subtitle: "Highest-priority changes")
             ForEach(store.filteredAlerts.prefix(4)) { alert in
                 HStack {
                     SeverityChipView(severity: alert.severity)
@@ -66,6 +66,7 @@ struct OverviewView: View {
                     }
                     Spacer()
                 }
+                .terminalRowBackground()
                 .contentShape(Rectangle())
                 .onTapGesture { store.selectedAlert = alert }
                 .accessibilityLabel("\(alert.severity.rawValue) alert \(alert.title)")
@@ -76,7 +77,7 @@ struct OverviewView: View {
 
     private var kpiPanel: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("KPIs").font(.headline)
+            TerminalSectionHeader(title: "KPIs")
             ForEach(Array((store.payload?.cards ?? []).prefix(3))) { card in
                 KPIStatCardView(title: card.title, value: card.value.map { String(format: "%.0f", $0) } ?? "—", direction: Trend.from(arrow: card.trend), subtitle: card.subtitle ?? "")
             }
@@ -86,7 +87,7 @@ struct OverviewView: View {
 
     private var forecastPanel: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Market Forecast").font(.headline)
+            TerminalSectionHeader(title: "Market Forecast")
 
             Text("Strongest Next 12 Months")
                 .font(.caption)
@@ -95,7 +96,7 @@ struct OverviewView: View {
                 HStack {
                     Text("\(index + 1) \(item.market)")
                     Spacer()
-                    Text(String(format: "%.0f", item.forecastScore)).font(TerminalTheme.mono(size: 13))
+                    Text(String(format: "%.0f", item.forecastScore)).font(TerminalTheme.Typography.denseMono)
                 }
             }
 
@@ -108,7 +109,7 @@ struct OverviewView: View {
                 HStack {
                     Text("\(index + 1) \(item.market)")
                     Spacer()
-                    Text(String(format: "%.0f", item.forecastScore)).font(TerminalTheme.mono(size: 13))
+                    Text(String(format: "%.0f", item.forecastScore)).font(TerminalTheme.Typography.denseMono)
                 }
             }
 
@@ -129,7 +130,7 @@ struct OverviewView: View {
 
     private var signalsPanel: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Signals").font(.headline)
+            TerminalSectionHeader(title: "Signals")
             DenseSignalsTableView(signals: store.filteredSignals, pinned: prefs.pinnedSignalIDs) { signal in
                 store.selectedSignal = signal
             } onPin: { signal in
@@ -142,12 +143,12 @@ struct OverviewView: View {
 
     private var regionsPanel: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Regions").font(.headline)
+            TerminalSectionHeader(title: "Regions")
             ForEach(store.filteredRegions.prefix(5)) { region in
                 HStack {
                     Text(region.name)
                     Spacer()
-                    Text(region.value.map { String(format: "%.1f", $0) } ?? "—").font(TerminalTheme.mono(size: 13))
+                    Text(region.value.map { String(format: "%.1f", $0) } ?? "—").font(TerminalTheme.Typography.denseMono)
                 }
                 Text(region.summary ?? "No region summary")
                     .font(.caption)
@@ -159,7 +160,7 @@ struct OverviewView: View {
 
     private var sourceHealthPanel: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Source Health").font(.headline)
+            TerminalSectionHeader(title: "Source Health")
             ForEach(store.sourceHealth.prefix(6)) { source in
                 HStack {
                     Text(source.source)
@@ -173,8 +174,7 @@ struct OverviewView: View {
 
     private var searchResultsPanel: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Search Results")
-                .font(.headline)
+            TerminalSectionHeader(title: "Search Results")
             Text("\(store.filteredSignals.count) signals • \(store.filteredAlerts.count) alerts • \(store.filteredRegions.count) regions")
                 .foregroundStyle(.secondary)
                 .font(.caption)

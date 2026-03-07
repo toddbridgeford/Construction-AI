@@ -24,7 +24,9 @@ struct RegionsView: View {
                             .font(.system(.title3, design: .monospaced).weight(.semibold))
                             .foregroundStyle(.orange)
                     }
-                    .padding(.vertical, 6)
+                    .terminalRowBackground()
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                 }
             }
         }

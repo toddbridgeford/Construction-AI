@@ -12,31 +12,33 @@ struct InspectorView: View {
             VStack(alignment: .leading, spacing: 12) {
                 if let signal {
                     InspectorHeaderView(title: signal.key, severity: signal.severity, lastUpdated: DateFormatting.display(generatedAt))
-                    HStack {
-                        SeverityChipView(severity: signal.severity)
-                        Text(DateFormatting.display(generatedAt)).font(.caption).foregroundStyle(.secondary)
-                    }
 
-                    Text("What changed").font(.headline)
-                    HStack {
-                        Image(systemName: Trend.from(arrow: signal.arrow).symbol)
-                        Text(signal.value.map { String(format: "%.2f", $0) } ?? "—").font(TerminalTheme.mono(size: 16))
+                    VStack(alignment: .leading, spacing: 8) {
+                        TerminalSectionHeader(title: "What changed")
+                        HStack {
+                            Image(systemName: Trend.from(arrow: signal.arrow).symbol)
+                            Text(signal.value.map { String(format: "%.2f", $0) } ?? "—").font(TerminalTheme.mono(size: 16))
+                        }
                     }
+                    .terminalPanel()
 
-                    Text("Why it matters").font(.headline)
-                    Text(signal.interpretation ?? "No interpretation provided.")
+                    VStack(alignment: .leading, spacing: 8) {
+                        TerminalSectionHeader(title: "Why it matters")
+                        Text(signal.interpretation ?? "No interpretation provided.")
+                    }
+                    .terminalPanel()
 
                     actionButtons(summary: "\(signal.key): \(signal.interpretation ?? "No interpretation")")
                 } else if let alert {
                     InspectorHeaderView(title: alert.title, severity: alert.severity, lastUpdated: DateFormatting.display(generatedAt))
-                    HStack {
-                        SeverityChipView(severity: alert.severity)
-                        Text(DateFormatting.display(generatedAt)).font(.caption).foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 8) {
+                        TerminalSectionHeader(title: "Alert details")
+                        Text(alert.message)
                     }
-                    Text(alert.message)
+                    .terminalPanel()
                     actionButtons(summary: "\(alert.title): \(alert.message)")
                 } else {
-                    Text("Select an item to inspect").foregroundStyle(.secondary)
+                    ContentUnavailableView("Select an item", systemImage: "sidebar.right", description: Text("Choose a signal or alert to inspect detailed context."))
                 }
             }
             .padding(16)
@@ -61,5 +63,7 @@ struct InspectorView: View {
             Toggle("Pin", isOn: $isPinned).toggleStyle(.button)
             Toggle("Watch", isOn: $isWatched).toggleStyle(.button)
         }
+        .controlSize(.large)
+        .terminalPanel()
     }
 }

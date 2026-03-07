@@ -6,8 +6,8 @@ struct TerminalTopBarView: View {
     let lastRefresh: Date?
 
     var body: some View {
-        VStack(spacing: 6) {
-            HStack(spacing: 12) {
+        VStack(spacing: TerminalTheme.Spacing.xSmall) {
+            HStack(spacing: TerminalTheme.Spacing.small) {
                 Text("CONSTRUCTION AI // TERMINAL")
                     .font(.system(.headline, design: .monospaced).weight(.bold))
                     .foregroundStyle(Color.orange)
@@ -25,14 +25,12 @@ struct TerminalTopBarView: View {
 
             TextField("Search alerts, signals, regions", text: $searchText)
                 .textFieldStyle(.roundedBorder)
+                .accessibilityLabel("Search terminal data")
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(uiColor: .secondarySystemBackground).opacity(0.9))
-        )
-        .padding(.horizontal, 8)
-        .padding(.top, 8)
+        .padding(.horizontal, TerminalTheme.Spacing.medium)
+        .padding(.vertical, TerminalTheme.Spacing.small)
+        .terminalPanel()
+        .padding(.horizontal, TerminalTheme.Spacing.small)
+        .padding(.top, TerminalTheme.Spacing.small)
     }
 }

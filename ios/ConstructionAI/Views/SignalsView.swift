@@ -12,6 +12,8 @@ struct SignalsView: View {
                     SignalRowView(signal: signal)
                         .contentShape(Rectangle())
                         .onTapGesture { store.selectedSignal = signal }
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                 }
                 .listStyle(.plain)
             }
