@@ -7,20 +7,48 @@ import {
   handleConstructionSettings,
   handleConstructionSettingsDefaults,
   handleConstructionSettingsReset,
+  handleConstructionSettingsProfiles,
+  handleConstructionSettingsProfilesActivate,
+  handleConstructionSettingsProfilesCreate,
+  handleConstructionSettingsProfilesDelete,
+  handleConstructionTerminal,
 } from '../src/routes/construction.js';
 
 const REQUIRED_ROUTES = [
   '/construction/settings/defaults',
   '/construction/settings',
   '/construction/settings/reset',
+  '/construction/settings/profiles',
+  '/construction/settings/profiles/activate',
+  '/construction/settings/profiles/delete',
   '/construction/watchlist/custom',
 ];
+
+function createKvStore() {
+  const store = new Map();
+  return {
+    async get(key, opts = {}) {
+      if (!store.has(key)) return null;
+      const value = store.get(key);
+      if (opts.type === 'json') return JSON.parse(value);
+      return value;
+    },
+    async put(key, value) {
+      store.set(key, value);
+    },
+  };
+}
 
 function makeEnv(overrides = {}) {
   return {
     SERVICE_NAME: 'construction-ai-test',
+    CPI_SNAPSHOTS: createKvStore(),
     ...overrides,
   };
+}
+
+async function json(res) {
+  return await res.json();
 }
 
 test('construction settings routes are explicitly registered in worker route table', () => {
@@ -36,58 +64,120 @@ test('/construction/settings/defaults returns deterministic fallback payload', a
   const first = await handleConstructionSettingsDefaults(req, env);
   const second = await handleConstructionSettingsDefaults(req, env);
 
-  const bodyA = await first.json();
-  const bodyB = await second.json();
+  const bodyA = await json(first);
+  const bodyB = await json(second);
 
   assert.equal(first.status, 200);
   assert.deepEqual(bodyA.defaults, bodyB.defaults);
   assert.equal(bodyA.defaults.updated_at, '2024-01-01T00:00:00.000Z');
 });
 
-test('/construction/settings GET falls back to defaults when storage is unavailable', async () => {
-  const env = makeEnv({ CPI_SNAPSHOTS: null });
-  const req = new Request('https://example.com/construction/settings');
-
-  const res = await handleConstructionSettings(req, env);
-  const body = await res.json();
+test('profiles list returns seeded defaults and balanced active when storage is empty', async () => {
+  const env = makeEnv();
+  const req = new Request('https://example.com/construction/settings/profiles');
+  const res = await handleConstructionSettingsProfiles(req, env);
+  const body = await json(res);
 
   assert.equal(res.status, 200);
-  assert.equal(body.ok, true);
-  assert.deepEqual(body.settings.metros_watchlist, ['Dallas', 'Nashville', 'Phoenix']);
-  assert.equal(body.settings.updated_at, '2024-01-01T00:00:00.000Z');
+  assert.equal(body.profiles.length, 5);
+  assert.equal(body.active_profile_id, 'balanced-operator');
+  assert.equal(body.profiles.find((p) => p.profile_id === 'balanced-operator')?.is_active, true);
 });
 
-test('/construction/settings/reset keeps settings endpoint backwards compatible', async () => {
-  const env = makeEnv({ CPI_SNAPSHOTS: null });
-  const req = new Request('https://example.com/construction/settings/reset', { method: 'POST' });
-
-  const res = await handleConstructionSettingsReset(req, env);
-  const body = await res.json();
+test('activate profile endpoint switches active profile', async () => {
+  const env = makeEnv();
+  const req = new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'aggressive-growth' }),
+  });
+  const res = await handleConstructionSettingsProfilesActivate(req, env);
+  const body = await json(res);
 
   assert.equal(res.status, 200);
+  assert.equal(body.action, 'profile_activated');
+  assert.equal(body.active_profile_id, 'aggressive-growth');
+});
+
+test('settings POST updates active profile with partial merge and validation', async () => {
+  const env = makeEnv();
+  await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_id: 'conservative-lender' }),
+  }), env);
+
+  const writeReq = new Request('https://example.com/construction/settings', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ thresholds: { labor_shock_elevated_threshold: 57 }, alert_sensitivity: 'conservative' }),
+  });
+  const res = await handleConstructionSettings(writeReq, env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(body.action, 'settings_updated');
+  assert.equal(body.settings.thresholds.labor_shock_elevated_threshold, 57);
+  assert.equal(body.settings.alert_sensitivity, 'conservative');
+
+  const badRes = await handleConstructionSettings(new Request('https://example.com/construction/settings', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ thresholds: { labor_shock_elevated_threshold: 'bad' } }),
+  }), env);
+  assert.equal(badRes.status, 400);
+});
+
+test('profile create and delete enforce active profile delete protection', async () => {
+  const env = makeEnv();
+  const createRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_name: 'Ops Tilt', description: 'custom' }),
+  }), env);
+  const created = await json(createRes);
+  assert.equal(createRes.status, 200);
+  const newId = created.profile_id;
+
+  const denyDeleteRes = await handleConstructionSettingsProfilesDelete(new Request('https://example.com/construction/settings/profiles/delete', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_id: 'balanced-operator' }),
+  }), env);
+  assert.equal(denyDeleteRes.status, 400);
+
+  const deleteRes = await handleConstructionSettingsProfilesDelete(new Request('https://example.com/construction/settings/profiles/delete', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_id: newId }),
+  }), env);
+  assert.equal(deleteRes.status, 200);
+});
+
+test('reset returns balanced baseline and keeps endpoint compatibility', async () => {
+  const env = makeEnv();
+  const res = await handleConstructionSettingsReset(new Request('https://example.com/construction/settings/reset', { method: 'POST' }), env);
+  const body = await json(res);
+  assert.equal(res.status, 200);
   assert.equal(body.reset, true);
-  assert.equal(body.settings.updated_at, '2024-01-01T00:00:00.000Z');
+  assert.equal(body.baseline, 'balanced-operator');
+  assert.equal(body.settings.alert_sensitivity, 'balanced');
+});
+
+test('custom watchlist and terminal include profile-aware metadata', async () => {
+  const env = makeEnv();
+  await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_id: 'gc-cash-protection' }),
+  }), env);
+
+  const watchlistRes = await handleConstructionCustomWatchlist(new Request('https://example.com/construction/watchlist/custom'), env);
+  const watchlistBody = await json(watchlistRes);
+  assert.equal(watchlistRes.status, 200);
+  assert.ok(Array.isArray(watchlistBody.alerts));
+  assert.equal(typeof watchlistBody.summary, 'string');
+
+  const terminalRes = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
+  const terminalBody = await json(terminalRes);
+  assert.equal(terminalRes.status, 200);
+  assert.equal(typeof terminalBody.terminal.active_settings_profile, 'string');
+  assert.equal(typeof terminalBody.terminal.saved_profiles_summary, 'string');
 });
 
 test('/construction/watchlist/custom is wired and does not return NOT_FOUND at router level', async () => {
   const env = makeEnv();
   const req = new Request('https://example.com/construction/watchlist/custom');
-
   const res = await worker.fetch(req, env);
-
   assert.notEqual(res.status, 404);
-});
-
-test('/construction/watchlist/custom builds with active settings fallback defaults', async () => {
-  const env = makeEnv();
-  const req = new Request('https://example.com/construction/watchlist/custom');
-
-  const res = await handleConstructionCustomWatchlist(req, env);
-  const body = await res.json();
-
-  assert.equal(res.status, 200);
-  assert.equal(body.ok, true);
-  assert.ok(Array.isArray(body.alerts));
-  assert.equal(typeof body.summary, 'string');
-  assert.deepEqual(body.active_settings.metros_watchlist, ['Dallas', 'Nashville', 'Phoenix']);
 });
