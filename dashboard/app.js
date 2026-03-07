@@ -27,6 +27,10 @@ const ENDPOINTS = {
   developerFragility: `${API_BASE}/construction/developer-fragility`,
   lenderPullbackRisk: `${API_BASE}/construction/lender-pullback-risk`,
   counterpartyQuality: `${API_BASE}/construction/counterparty-quality`,
+  metroConcentrationRisk: `${API_BASE}/construction/metro-concentration-risk`,
+  counterpartyConcentrationRisk: `${API_BASE}/construction/counterparty-concentration-risk`,
+  projectMixExposure: `${API_BASE}/construction/project-mix-exposure`,
+  portfolioRisk: `${API_BASE}/construction/portfolio-risk`,
   spendingSummary: `${API_BASE}/spending/ytd/summary`,
 };
 
@@ -109,6 +113,10 @@ function modelFromSettled(results) {
   const developerFragility = settledValue(results.developerFragility, "developer_fragility") || terminal.developer_fragility || null;
   const lenderPullbackRisk = settledValue(results.lenderPullbackRisk, "lender_pullback_risk") || terminal.lender_pullback_risk || null;
   const counterpartyQuality = settledValue(results.counterpartyQuality, "counterparty_quality") || terminal.counterparty_quality || null;
+  const metroConcentrationRisk = settledValue(results.metroConcentrationRisk, "metro_concentration_risk") || terminal.metro_concentration_risk || null;
+  const counterpartyConcentrationRisk = settledValue(results.counterpartyConcentrationRisk, "counterparty_concentration_risk") || terminal.counterparty_concentration_risk || null;
+  const projectMixExposure = settledValue(results.projectMixExposure, "project_mix_exposure") || terminal.project_mix_exposure || null;
+  const portfolioRisk = settledValue(results.portfolioRisk, "portfolio_risk") || terminal.portfolio_risk || null;
   const powerIndex = power?.power_index || terminal.power_index || null;
   const subcontractors = powerIndex?.subcontractors || null;
 
@@ -169,6 +177,10 @@ function modelFromSettled(results) {
     developerFragility,
     lenderPullbackRisk,
     counterpartyQuality,
+    metroConcentrationRisk,
+    counterpartyConcentrationRisk,
+    projectMixExposure,
+    portfolioRisk,
     migrationIndex,
     projectPipeline,
     bidEnvironment,
@@ -278,6 +290,7 @@ function renderPanels(vm) {
     <section class="row">${card("Bid Activity / Intensity", formatOneDecimal(vm.bidIntensity?.score), vm.bidIntensity?.explanation || vm.terminal?.bid_intensity_summary || "")}${card("Backlog Quality", formatOneDecimal(vm.backlogQuality?.score), vm.backlogQuality?.explanation || vm.terminal?.backlog_quality_summary || "")}${card("Project Risk", formatOneDecimal(vm.projectRisk?.score), vm.projectRisk?.explanation || vm.terminal?.project_risk_summary || "")}</section>
     <section class="row">${card("Receivables Risk", formatOneDecimal(vm.receivablesRisk?.score), vm.receivablesRisk?.explanation || vm.terminal?.receivables_risk_summary || "")}${card("Payment Delay Risk", formatOneDecimal(vm.paymentDelayRisk?.score), vm.paymentDelayRisk?.explanation || vm.terminal?.payment_delay_risk_summary || "")}${card("Collections Stress", formatOneDecimal(vm.collectionsStress?.score), vm.collectionsStress?.explanation || vm.terminal?.collections_stress_summary || "")}</section>
     <section class="row">${card("Owner Risk", formatOneDecimal(vm.ownerRisk?.score), vm.ownerRisk?.explanation || vm.terminal?.owner_risk_summary || "")}${card("Developer Fragility", formatOneDecimal(vm.developerFragility?.score), vm.developerFragility?.explanation || vm.terminal?.developer_fragility_summary || "")}${card("Lender Pullback Risk", formatOneDecimal(vm.lenderPullbackRisk?.score), vm.lenderPullbackRisk?.explanation || vm.terminal?.lender_pullback_risk_summary || "")}${card("Counterparty Quality", formatOneDecimal(vm.counterpartyQuality?.score), vm.counterpartyQuality?.explanation || vm.terminal?.counterparty_quality_summary || "")}</section>
+    <section class="row">${card("Metro Concentration Risk", formatOneDecimal(vm.metroConcentrationRisk?.score), vm.metroConcentrationRisk?.explanation || vm.terminal?.metro_concentration_risk_summary || "")}${card("Counterparty Concentration Risk", formatOneDecimal(vm.counterpartyConcentrationRisk?.score), vm.counterpartyConcentrationRisk?.explanation || vm.terminal?.counterparty_concentration_risk_summary || "")}${card("Project Mix Exposure", formatOneDecimal(vm.projectMixExposure?.score), vm.projectMixExposure?.explanation || vm.terminal?.project_mix_exposure_summary || "")}${card("Portfolio Risk", formatOneDecimal(vm.portfolioRisk?.score), vm.portfolioRisk?.explanation || vm.terminal?.portfolio_risk_summary || "")}</section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
 }

@@ -41,6 +41,10 @@ import {
   handleConstructionDeveloperFragility,
   handleConstructionLenderPullbackRisk,
   handleConstructionCounterpartyQuality,
+  handleConstructionMetroConcentrationRisk,
+  handleConstructionCounterpartyConcentrationRisk,
+  handleConstructionProjectMixExposure,
+  handleConstructionPortfolioRisk,
 } from "./routes/construction.js";
 
 export default {
@@ -90,6 +94,10 @@ export default {
       if (pathname === "/construction/developer-fragility") return handleConstructionDeveloperFragility(request, env);
       if (pathname === "/construction/lender-pullback-risk") return handleConstructionLenderPullbackRisk(request, env);
       if (pathname === "/construction/counterparty-quality") return handleConstructionCounterpartyQuality(request, env);
+      if (pathname === "/construction/metro-concentration-risk") return handleConstructionMetroConcentrationRisk(request, env);
+      if (pathname === "/construction/counterparty-concentration-risk") return handleConstructionCounterpartyConcentrationRisk(request, env);
+      if (pathname === "/construction/project-mix-exposure") return handleConstructionProjectMixExposure(request, env);
+      if (pathname === "/construction/portfolio-risk") return handleConstructionPortfolioRisk(request, env);
       if (pathname === "/construction/morning-brief") return handleConstructionMorningBrief(request, env);
       if (pathname === "/construction/alerts") return handleConstructionAlerts(request, env);
       if (pathname === "/construction/recession-probability") return handleConstructionRecessionProbability(request, env);

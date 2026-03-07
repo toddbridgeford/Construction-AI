@@ -637,6 +637,196 @@ function buildCounterpartyQualityModel(terminal) {
   };
 }
 
+function buildMetroConcentrationRiskModel(terminal) {
+  const migrationIndex = terminal?.migration_index || {};
+  const inbound = Array.isArray(migrationIndex.inbound_markets) ? migrationIndex.inbound_markets : [];
+  const outbound = Array.isArray(migrationIndex.outbound_markets) ? migrationIndex.outbound_markets : [];
+
+  const topInboundScore = Number.isFinite(inbound[0]?.score) ? inbound[0].score : null;
+  const secondInboundScore = Number.isFinite(inbound[1]?.score) ? inbound[1].score : null;
+  const weakestOutboundScore = Number.isFinite(outbound[0]?.score) ? outbound[0].score : null;
+  const strongest = terminal?.forecast?.strongest_next_12_months?.[0]
+    || (terminal?.forecast_summary?.strongest_market ? { market: terminal.forecast_summary.strongest_market, forecast_score: topInboundScore } : null);
+  const weakest = terminal?.forecast?.weakest_next_12_months?.[0]
+    || (terminal?.forecast_summary?.weakest_market ? { market: terminal.forecast_summary.weakest_market, forecast_score: weakestOutboundScore } : null);
+  const strongestScore = Number.isFinite(strongest?.forecast_score) ? strongest.forecast_score : null;
+  const weakestScore = Number.isFinite(weakest?.forecast_score) ? weakest.forecast_score : null;
+
+  let score = 28;
+  const drivers = [];
+
+  if (strongestScore !== null && weakestScore !== null) {
+    const spread = strongestScore - weakestScore;
+    if (spread >= 28) {
+      score += 24;
+      drivers.push(`metro spread is wide (${spread.toFixed(1)} points)`);
+    } else if (spread >= 18) {
+      score += 14;
+      drivers.push(`metro spread is elevated (${spread.toFixed(1)} points)`);
+    }
+  }
+
+  if (topInboundScore !== null && secondInboundScore !== null) {
+    const inboundGap = topInboundScore - secondInboundScore;
+    if (inboundGap >= 12) {
+      score += 18;
+      drivers.push(`migration leadership is narrow (top inbound gap ${inboundGap.toFixed(1)})`);
+    } else if (inboundGap >= 6) {
+      score += 10;
+      drivers.push(`top inbound metros are concentrated (gap ${inboundGap.toFixed(1)})`);
+    }
+  }
+
+  if (weakestOutboundScore !== null && weakestOutboundScore <= 42) {
+    score += 16;
+    drivers.push(`weak metro cohort is deteriorating (${weakestOutboundScore.toFixed(1)})`);
+  }
+
+  if (topInboundScore !== null && topInboundScore >= 67 && weakestOutboundScore !== null && weakestOutboundScore <= 45) {
+    score += 10;
+    drivers.push("portfolio narrative is dependent on one strong metro lane while weak metros soften");
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Metro concentration risk is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
+function buildCounterpartyConcentrationRiskModel(terminal) {
+  const ownerRisk = terminal?.owner_risk || buildOwnerRiskModel(terminal);
+  const developerFragility = terminal?.developer_fragility || buildDeveloperFragilityModel(terminal);
+  const lenderPullbackRisk = terminal?.lender_pullback_risk || buildLenderPullbackRiskModel(terminal);
+  const counterpartyQuality = terminal?.counterparty_quality || buildCounterpartyQualityModel(terminal);
+  const receivablesRisk = terminal?.receivables_risk || buildReceivablesRiskModel(terminal);
+  const collectionsStress = terminal?.collections_stress || buildCollectionsStressModel(terminal);
+
+  let score = 24;
+  const drivers = [];
+
+  if (ownerRisk.score >= 60) {
+    score += 20;
+    drivers.push(`owner risk is elevated (${ownerRisk.score.toFixed(1)})`);
+  }
+
+  if (developerFragility.score >= 60) {
+    score += 18;
+    drivers.push(`developer fragility is elevated (${developerFragility.score.toFixed(1)})`);
+  }
+
+  if (lenderPullbackRisk.score >= 60) {
+    score += 12;
+    drivers.push(`lender pullback risk is elevated (${lenderPullbackRisk.score.toFixed(1)})`);
+  }
+
+  if (counterpartyQuality.state === "weak") {
+    score += 16;
+    drivers.push(`counterparty quality is weak (${counterpartyQuality.score.toFixed(1)})`);
+  }
+
+  if (receivablesRisk.score >= 60 || collectionsStress.score >= 60) {
+    score += 12;
+    drivers.push("collections and receivables stress indicate concentration in weaker counterparties");
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Counterparty concentration risk is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
+function buildProjectMixExposureModel(terminal) {
+  const backlogQuality = terminal?.backlog_quality || buildBacklogQualityModel(terminal);
+  const projectRisk = terminal?.project_risk || buildProjectRiskModel(terminal);
+  const marginPressure = terminal?.margin_pressure || buildMarginPressureModel(terminal);
+  const metrics = extractTerminalInputs(terminal);
+  const bidIntensity = terminal?.bid_intensity || buildBidIntensityModel(terminal);
+
+  let score = 22;
+  const drivers = [];
+
+  if (backlogQuality.state === "weak") {
+    score += 22;
+    drivers.push(`backlog quality is weak (${backlogQuality.score.toFixed(1)})`);
+  } else if (backlogQuality.state === "mixed") {
+    score += 12;
+    drivers.push(`backlog quality is mixed (${backlogQuality.score.toFixed(1)})`);
+  }
+
+  if (projectRisk.score >= 60) {
+    score += 22;
+    drivers.push(`project risk is elevated (${projectRisk.score.toFixed(1)})`);
+  }
+
+  if (metrics.commercial_pct_change !== null && metrics.housing_pct_change !== null
+      && metrics.commercial_pct_change < 0 && metrics.housing_pct_change < 0) {
+    score += 18;
+    drivers.push(`commercial and housing demand are both soft (${metrics.commercial_pct_change.toFixed(2)}%, ${metrics.housing_pct_change.toFixed(2)}%)`);
+  }
+
+  if (metrics.starts_trend_pct !== null && metrics.permits_trend_pct !== null
+      && metrics.starts_trend_pct - metrics.permits_trend_pct >= 1.5) {
+    score += 10;
+    drivers.push("starts are running ahead of permits, implying speculative conversion skew");
+  }
+
+  if (bidIntensity.score >= 62 && marginPressure.score >= 60) {
+    score += 8;
+    drivers.push("high bid intensity with margin pressure signals weaker-conversion mix risk");
+  }
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Project mix exposure is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
+function buildPortfolioRiskModel(terminal) {
+  const metroConcentrationRisk = terminal?.metro_concentration_risk || buildMetroConcentrationRiskModel(terminal);
+  const counterpartyConcentrationRisk = terminal?.counterparty_concentration_risk || buildCounterpartyConcentrationRiskModel(terminal);
+  const projectMixExposure = terminal?.project_mix_exposure || buildProjectMixExposureModel(terminal);
+  const marginPressure = terminal?.margin_pressure || buildMarginPressureModel(terminal);
+  const collectionsStress = terminal?.collections_stress || buildCollectionsStressModel(terminal);
+  const projectRisk = terminal?.project_risk || buildProjectRiskModel(terminal);
+
+  let score = metroConcentrationRisk.score * 0.32
+    + counterpartyConcentrationRisk.score * 0.3
+    + projectMixExposure.score * 0.28
+    + marginPressure.score * 0.05
+    + collectionsStress.score * 0.03
+    + projectRisk.score * 0.02;
+  const drivers = [
+    `metro concentration risk ${metroConcentrationRisk.score.toFixed(1)}`,
+    `counterparty concentration risk ${counterpartyConcentrationRisk.score.toFixed(1)}`,
+    `project mix exposure ${projectMixExposure.score.toFixed(1)}`,
+  ];
+
+  if (marginPressure.score >= 60) drivers.push(`margin pressure is elevated (${marginPressure.score.toFixed(1)})`);
+  if (collectionsStress.score >= 60) drivers.push(`collections stress is elevated (${collectionsStress.score.toFixed(1)})`);
+  if (projectRisk.score >= 60) drivers.push(`project risk is elevated (${projectRisk.score.toFixed(1)})`);
+
+  const finalScore = clampScore(score);
+  const state = toPressureState(finalScore);
+  return {
+    score: finalScore,
+    state,
+    drivers: drivers.slice(0, 6),
+    explanation: `Portfolio risk is ${state} due to ${drivers.slice(0, 4).join("; ")}.`,
+  };
+}
+
 function buildMaterialsShockModel(terminal) {
   const metrics = extractTerminalInputs(terminal);
   const inflationTrend = Number.isFinite(terminal?.risk?.inflation_trend_pct) ? terminal.risk.inflation_trend_pct : null;
@@ -1485,6 +1675,14 @@ async function buildTerminalPayload(request, env) {
   terminal.lender_pullback_risk_summary = terminal.lender_pullback_risk.explanation;
   terminal.counterparty_quality = buildCounterpartyQualityModel(terminal);
   terminal.counterparty_quality_summary = terminal.counterparty_quality.explanation;
+  terminal.metro_concentration_risk = buildMetroConcentrationRiskModel(terminal);
+  terminal.metro_concentration_risk_summary = terminal.metro_concentration_risk.explanation;
+  terminal.counterparty_concentration_risk = buildCounterpartyConcentrationRiskModel(terminal);
+  terminal.counterparty_concentration_risk_summary = terminal.counterparty_concentration_risk.explanation;
+  terminal.project_mix_exposure = buildProjectMixExposureModel(terminal);
+  terminal.project_mix_exposure_summary = terminal.project_mix_exposure.explanation;
+  terminal.portfolio_risk = buildPortfolioRiskModel(terminal);
+  terminal.portfolio_risk_summary = terminal.portfolio_risk.explanation;
 
   terminal.forecast_summary = {
     strongest_market: "unknown",
@@ -1510,6 +1708,7 @@ async function buildTerminalPayload(request, env) {
 
   const forecast = await tryBuildForecast(request, env, terminal);
   if (!isSubsectionFailure(forecast)) {
+    terminal.forecast = forecast;
     terminal.forecast_summary = {
       strongest_market: forecast.strongest_next_12_months[0]?.market || "unknown",
       weakest_market: forecast.weakest_next_12_months[0]?.market || "unknown",
@@ -1540,13 +1739,21 @@ async function buildTerminalPayload(request, env) {
   terminal.lender_pullback_risk_summary = terminal.lender_pullback_risk.explanation;
   terminal.counterparty_quality = buildCounterpartyQualityModel(terminal);
   terminal.counterparty_quality_summary = terminal.counterparty_quality.explanation;
+  terminal.metro_concentration_risk = buildMetroConcentrationRiskModel(terminal);
+  terminal.metro_concentration_risk_summary = terminal.metro_concentration_risk.explanation;
+  terminal.counterparty_concentration_risk = buildCounterpartyConcentrationRiskModel(terminal);
+  terminal.counterparty_concentration_risk_summary = terminal.counterparty_concentration_risk.explanation;
+  terminal.project_mix_exposure = buildProjectMixExposureModel(terminal);
+  terminal.project_mix_exposure_summary = terminal.project_mix_exposure.explanation;
+  terminal.portfolio_risk = buildPortfolioRiskModel(terminal);
+  terminal.portfolio_risk_summary = terminal.portfolio_risk.explanation;
 
-  if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated" || terminal.collections_stress.state === "elevated" || terminal.collections_stress.state === "severe" || terminal.owner_risk.state === "elevated" || terminal.owner_risk.state === "severe" || terminal.developer_fragility.state === "elevated" || terminal.developer_fragility.state === "severe" || terminal.lender_pullback_risk.state === "elevated" || terminal.lender_pullback_risk.state === "severe" || terminal.counterparty_quality.state === "weak") {
-    terminal.operator_actions.gc = "Tighten customer selection, shorten billing cadence, and stress-test backlog conversion by metro.";
-    terminal.operator_actions.subcontractor = "Monitor aging aggressively, favor stronger counterparties, and avoid thin-bid exposure in soft metros.";
-    terminal.operator_actions.developer = "Sequence starts by financing certainty, tighten pay-app governance, and defer marginal speculative starts.";
-    terminal.operator_actions.lender = "Underwrite payment-delay and lender retreat scenarios explicitly and tighten covenants on weaker conversion markets.";
-    terminal.operator_actions.supplier = "Tighten terms where owner quality is weakening and align inventory with higher-certainty backlog cohorts.";
+  if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated" || terminal.collections_stress.state === "elevated" || terminal.collections_stress.state === "severe" || terminal.owner_risk.state === "elevated" || terminal.owner_risk.state === "severe" || terminal.developer_fragility.state === "elevated" || terminal.developer_fragility.state === "severe" || terminal.lender_pullback_risk.state === "elevated" || terminal.lender_pullback_risk.state === "severe" || terminal.counterparty_quality.state === "weak" || terminal.metro_concentration_risk.state === "elevated" || terminal.metro_concentration_risk.state === "severe" || terminal.counterparty_concentration_risk.state === "elevated" || terminal.counterparty_concentration_risk.state === "severe" || terminal.project_mix_exposure.state === "elevated" || terminal.project_mix_exposure.state === "severe" || terminal.portfolio_risk.state === "elevated" || terminal.portfolio_risk.state === "severe") {
+    terminal.operator_actions.gc = "Diversify metro exposure, tighten customer selection, and stress-test backlog conversion by metro and sponsor bucket.";
+    terminal.operator_actions.subcontractor = "Monitor aging aggressively, reduce concentration in weaker sponsors, and avoid thin-bid exposure in soft metros.";
+    terminal.operator_actions.developer = "Rebalance toward higher-certainty project mix, sequence starts by financing certainty, and defer marginal speculative starts.";
+    terminal.operator_actions.lender = "Avoid over-allocating to one hot market and tighten covenants on fragile counterparties and soft-metro exposure.";
+    terminal.operator_actions.supplier = "Trim exposure to fragile counterparties and soft metros while aligning inventory to higher-certainty backlog cohorts.";
   }
 
   terminal.market_tape = buildMarketTape(terminal);
@@ -2245,6 +2452,50 @@ export async function handleConstructionCounterpartyQuality(request, env) {
   }
 }
 
+export async function handleConstructionMetroConcentrationRisk(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { metro_concentration_risk: terminal.metro_concentration_risk });
+  } catch (e) {
+    return error(env, 500, "METRO_CONCENTRATION_RISK_FAILED", "Unable to build construction metro concentration risk model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionCounterpartyConcentrationRisk(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { counterparty_concentration_risk: terminal.counterparty_concentration_risk });
+  } catch (e) {
+    return error(env, 500, "COUNTERPARTY_CONCENTRATION_RISK_FAILED", "Unable to build construction counterparty concentration risk model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionProjectMixExposure(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { project_mix_exposure: terminal.project_mix_exposure });
+  } catch (e) {
+    return error(env, 500, "PROJECT_MIX_EXPOSURE_FAILED", "Unable to build construction project mix exposure model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionPortfolioRisk(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, { portfolio_risk: terminal.portfolio_risk });
+  } catch (e) {
+    return error(env, 500, "PORTFOLIO_RISK_FAILED", "Unable to build construction portfolio risk model", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
 export async function handleConstructionForecast(request, env) {
   try {
     const terminal = await buildTerminalPayload(request, env);
@@ -2347,5 +2598,9 @@ export function __test_only__() {
     buildReceivablesRiskModel,
     buildPaymentDelayRiskModel,
     buildCollectionsStressModel,
+    buildMetroConcentrationRiskModel,
+    buildCounterpartyConcentrationRiskModel,
+    buildProjectMixExposureModel,
+    buildPortfolioRiskModel,
   };
 }

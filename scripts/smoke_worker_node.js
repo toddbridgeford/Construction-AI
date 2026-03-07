@@ -144,7 +144,7 @@ function runPowerHeatmapNowcastSmoke() {
 }
 
 function runIntelligenceLayerSmoke() {
-  const { buildConstructionAlerts, buildRecessionProbability, buildStressIndex, buildEarlyWarning, buildCapitalFlows, buildMigrationIndex, buildMarketTape, buildBidIntensityModel, buildBacklogQualityModel, buildProjectRiskModel } = constructionTestOnly();
+  const { buildConstructionAlerts, buildRecessionProbability, buildStressIndex, buildEarlyWarning, buildCapitalFlows, buildMigrationIndex, buildMarketTape, buildBidIntensityModel, buildBacklogQualityModel, buildProjectRiskModel, buildMetroConcentrationRiskModel, buildCounterpartyConcentrationRiskModel, buildProjectMixExposureModel, buildPortfolioRiskModel } = constructionTestOnly();
   const terminal = {
     liquidity: { liquidity_state: "tight", liquidity_score: 62, mortgage_rate: 7.1 },
     risk: { risk_score: 58, risk_level: "elevated" },
@@ -246,6 +246,44 @@ function runIntelligenceLayerSmoke() {
   const projectRisk = buildProjectRiskModel({ ...enrichedTerminal, backlog_quality: backlogQuality });
   assert(typeof projectRisk.score === "number", "Project risk score missing");
   assert(["low", "moderate", "elevated", "severe"].includes(projectRisk.state), "Project risk state invalid");
+
+  const metroConcentrationRisk = buildMetroConcentrationRiskModel({
+    ...enrichedTerminal,
+    forecast: {
+      strongest_next_12_months: [{ market: "Austin", forecast_score: 79 }],
+      weakest_next_12_months: [{ market: "Seattle", forecast_score: 40 }],
+    },
+  });
+  assert(typeof metroConcentrationRisk.score === "number", "Metro concentration risk score missing");
+  assert(["low", "moderate", "elevated", "severe"].includes(metroConcentrationRisk.state), "Metro concentration risk state invalid");
+
+  const counterpartyConcentrationRisk = buildCounterpartyConcentrationRiskModel({
+    ...enrichedTerminal,
+    owner_risk: { score: 66, state: "elevated", drivers: [], explanation: "test" },
+    developer_fragility: { score: 64, state: "elevated", drivers: [], explanation: "test" },
+    lender_pullback_risk: { score: 62, state: "elevated", drivers: [], explanation: "test" },
+    counterparty_quality: { score: 39, state: "weak", drivers: [], explanation: "test" },
+    receivables_risk: { score: 63, state: "elevated", drivers: [], explanation: "test" },
+    collections_stress: { score: 65, state: "elevated", drivers: [], explanation: "test" },
+  });
+  assert(typeof counterpartyConcentrationRisk.score === "number", "Counterparty concentration risk score missing");
+  assert(["low", "moderate", "elevated", "severe"].includes(counterpartyConcentrationRisk.state), "Counterparty concentration risk state invalid");
+
+  const projectMixExposure = buildProjectMixExposureModel({ ...enrichedTerminal, project_risk: projectRisk });
+  assert(typeof projectMixExposure.score === "number", "Project mix exposure score missing");
+  assert(["low", "moderate", "elevated", "severe"].includes(projectMixExposure.state), "Project mix exposure state invalid");
+
+  const portfolioRisk = buildPortfolioRiskModel({
+    ...enrichedTerminal,
+    metro_concentration_risk: metroConcentrationRisk,
+    counterparty_concentration_risk: counterpartyConcentrationRisk,
+    project_mix_exposure: projectMixExposure,
+    collections_stress: { score: 65, state: "elevated", drivers: [], explanation: "test" },
+    margin_pressure: { score: 71, state: "elevated", drivers: [], explanation: "test" },
+    project_risk: projectRisk,
+  });
+  assert(typeof portfolioRisk.score === "number", "Portfolio risk score missing");
+  assert(["low", "moderate", "elevated", "severe"].includes(portfolioRisk.state), "Portfolio risk state invalid");
 }
 
 try {
