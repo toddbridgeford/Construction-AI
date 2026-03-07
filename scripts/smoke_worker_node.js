@@ -95,6 +95,50 @@ function runMarketRadarSmoke() {
 }
 
 
+
+function runSettingsWatchlistSmoke() {
+  const { buildWatchlistAlerts, sanitizeConstructionSettings, buildCustomWatchlist } = constructionTestOnly();
+  const baseTerminal = {
+    labor_shock: { score: 71, state: "elevated" },
+    project_risk: { score: 80, state: "severe" },
+    collections_stress: { score: 78, state: "severe" },
+    owner_risk: { score: 77, state: "severe" },
+    developer_fragility: { score: 77, state: "severe" },
+    portfolio_risk: { score: 79, state: "severe" },
+    backlog_quality: { score: 39, state: "weak" },
+    bid_intensity: { score: 70, state: "elevated" },
+    migration_index: {
+      inbound_markets: [{ market: "Dallas", score: 52 }],
+      outbound_markets: [{ market: "Nashville", score: 39 }],
+    },
+  };
+
+  const strictSettings = sanitizeConstructionSettings({
+    alert_sensitivity: "balanced",
+    thresholds: {
+      labor_shock_elevated_threshold: 75,
+      weakest_metro_threshold: 42,
+    },
+  });
+
+  const strictAlerts = buildWatchlistAlerts(baseTerminal, strictSettings);
+  assert(!strictAlerts.alerts.some((a) => a.code === "LABOR_SHOCK_ELEVATED"), "Labor shock should be suppressed below custom threshold");
+  assert(strictAlerts.alerts.some((a) => a.code === "WEAKEST_METRO_THRESHOLD"), "Weakest metro alert should trigger below user threshold");
+
+  const mutedSettings = sanitizeConstructionSettings({
+    muted_alert_codes: ["PROJECT_RISK_SEVERE"],
+    risk_watchlist: ["project_risk", "metro_momentum"],
+    metros_watchlist: ["Dallas"],
+  });
+
+  const mutedAlerts = buildWatchlistAlerts(baseTerminal, mutedSettings);
+  assert(!mutedAlerts.alerts.some((a) => a.code === "PROJECT_RISK_SEVERE"), "Muted code should be suppressed");
+  assert(mutedAlerts.alerts.every((a) => ["WEAKEST_METRO_THRESHOLD", "STRONGEST_METRO_LOSING_MOMENTUM"].includes(a.code)), "Risk watchlist filter should keep only metro momentum alerts after mute");
+
+  const custom = buildCustomWatchlist(baseTerminal, mutedSettings);
+  assert(custom.alerts.some((a) => a.code === "WATCHLIST_METRO_TRACKING"), "Custom watchlist should include watched metro tracking message");
+}
+
 function runPowerHeatmapNowcastSmoke() {
   const { buildConstructionPowerFromMetrics, buildConstructionNowcastFromMetrics, toHeatmapPayload, buildForecastFromMarkets } = constructionTestOnly();
 
@@ -312,6 +356,7 @@ async function runPortfolioRouteWiringSmoke() {
     runMarketRadarSmoke();
     runIntelligenceLayerSmoke();
     runPowerHeatmapNowcastSmoke();
+  runSettingsWatchlistSmoke();
     await runPortfolioRouteWiringSmoke();
     console.log("smoke_worker_node: PASS");
   } catch (err) {
