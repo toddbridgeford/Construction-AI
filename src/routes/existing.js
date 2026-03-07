@@ -12,6 +12,28 @@ export const DEFAULT_SERIES = [
   "TTLCONS",
 ];
 
+function parseLimitParam(rawLimit, fallback, min, max) {
+  if (rawLimit === null) return { ok: true, value: fallback };
+
+  const trimmed = String(rawLimit).trim();
+  if (!/^\d+$/.test(trimmed)) {
+    return {
+      ok: false,
+      reason: `limit must be an integer between ${min} and ${max}`,
+    };
+  }
+
+  const limit = Number(trimmed);
+  if (!Number.isInteger(limit) || limit < min || limit > max) {
+    return {
+      ok: false,
+      reason: `limit must be an integer between ${min} and ${max}`,
+    };
+  }
+
+  return { ok: true, value: limit };
+}
+
 function safeTrendPct(observations) {
   if (!Array.isArray(observations) || observations.length < 2) return null;
   const a = parseObsValue(observations[0]?.value);
@@ -86,8 +108,15 @@ export async function handleFredObservations(request, env) {
 
   const url = new URL(request.url);
   const seriesId = url.searchParams.get("series_id") || "CPIAUCSL";
-  const limit = url.searchParams.get("limit") || "24";
-  const upstream = fredObservationsUrl(env, seriesId, limit);
+  const parsedLimit = parseLimitParam(url.searchParams.get("limit"), 24, 1, 5000);
+  if (!parsedLimit.ok) {
+    return error(env, 400, "LIMIT_INVALID", "Invalid limit query parameter", {
+      reason: parsedLimit.reason,
+    });
+  }
+
+  const limit = parsedLimit.value;
+  const upstream = fredObservationsUrl(env, seriesId, String(limit));
 
   try {
     const data = await fetchJson(upstream, { headers: { accept: "application/json" } });
@@ -272,7 +301,14 @@ function computeSignal(regime, risk, construction) {
 
 export async function handleBundle(request, env) {
   const url = new URL(request.url);
-  const limit = Number(url.searchParams.get("limit") || "12");
+  const parsedLimit = parseLimitParam(url.searchParams.get("limit"), 12, 1, 5000);
+  if (!parsedLimit.ok) {
+    return error(env, 400, "LIMIT_INVALID", "Invalid limit query parameter", {
+      reason: parsedLimit.reason,
+    });
+  }
+
+  const limit = parsedLimit.value;
   const use = (url.searchParams.get("series") || "").trim();
   const seriesList = use ? use.split(",").map((s) => s.trim()).filter(Boolean) : DEFAULT_SERIES;
 

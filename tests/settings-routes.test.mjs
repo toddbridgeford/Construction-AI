@@ -15,6 +15,8 @@ import {
   handleConstructionTerminal,
 } from '../src/routes/construction.js';
 
+import { handleBundle, handleFredObservations } from '../src/routes/existing.js';
+
 const REQUIRED_ROUTES = [
   '/construction/settings/defaults',
   '/construction/settings',
@@ -688,4 +690,30 @@ test('active profile endpoint returns endpoint-specific malformed JSON error', a
   const body = await json(res);
   assert.equal(res.status, 400);
   assert.equal(body.error.code, 'ACTIVE_PROFILE_INVALID_JSON');
+});
+
+
+test('bundle endpoint rejects invalid limit query values to prevent unbounded upstream requests', async () => {
+  const env = makeEnv();
+  const badValues = ['abc', '-1', '0', '5001', '12.5'];
+
+  for (const bad of badValues) {
+    const req = new Request(`https://example.com/bundle?limit=${encodeURIComponent(bad)}`);
+    const res = await handleBundle(req, env);
+    const body = await json(res);
+
+    assert.equal(res.status, 400);
+    assert.equal(body.error?.code, 'LIMIT_INVALID');
+  }
+});
+
+test('fred observations endpoint rejects invalid limit query values before upstream call', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const req = new Request('https://example.com/fred/observations?series_id=CPIAUCSL&limit=NaN');
+
+  const res = await handleFredObservations(req, env);
+  const body = await json(res);
+
+  assert.equal(res.status, 400);
+  assert.equal(body.error?.code, 'LIMIT_INVALID');
 });
