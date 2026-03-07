@@ -176,6 +176,14 @@ test('settings POST updates active profile with partial merge and validation', a
   assert.equal(unknownFieldRes.status, 400);
   assert.equal(unknownFieldBody.error.code, 'SETTINGS_WRITE_VALIDATION_FAILED');
   assert.match(unknownFieldBody.error.details.errors[0], /unknown field: invalid_toggle/);
+
+  const unknownThresholdFieldRes = await handleConstructionSettings(new Request('https://example.com/construction/settings', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ thresholds: { made_up_threshold: 75 } }),
+  }), env);
+  const unknownThresholdFieldBody = await json(unknownThresholdFieldRes);
+  assert.equal(unknownThresholdFieldRes.status, 400);
+  assert.equal(unknownThresholdFieldBody.error.code, 'SETTINGS_WRITE_VALIDATION_FAILED');
+  assert.match(unknownThresholdFieldBody.error.details.errors[0], /unknown thresholds field: made_up_threshold/);
 });
 
 test('profile create and delete enforce active profile delete protection', async () => {

@@ -1555,7 +1555,12 @@ function validatePartialSettingsPayload(input = {}) {
     if (input.thresholds === null || typeof input.thresholds !== "object" || Array.isArray(input.thresholds)) {
       errors.push("thresholds must be an object with numeric values");
     } else {
+      const allowedThresholdKeys = new Set(Object.keys(CONSTRUCTION_DEFAULT_SETTINGS.thresholds || {}));
       for (const [key, value] of Object.entries(input.thresholds)) {
+        if (!allowedThresholdKeys.has(key)) {
+          errors.push(`unknown thresholds field: ${key}`);
+          continue;
+        }
         if (!Number.isFinite(value)) errors.push(`thresholds.${key} must be numeric`);
       }
     }
