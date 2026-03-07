@@ -117,6 +117,7 @@ REQUIRED_SCHEMAS = [
   'ConstructionProjectMixExposureResponse',
   'ConstructionPortfolioRiskResponse',
   'ConstructionSettingsModel',
+  'ConstructionSettingsPatchModel',
   'ConstructionSettingsDefaultsModel',
   'ConstructionCustomWatchlistModel',
   'ConstructionSettingsResponse',
