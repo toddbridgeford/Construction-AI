@@ -17,3 +17,12 @@ test('OpenAPI construction settings response schema includes active profile meta
   assert.match(raw, /ConstructionSettingsResponse:[\s\S]*?active_profile_name:\s*\n\s*type:\s*string/);
   assert.match(raw, /ConstructionSettingsResponse:[\s\S]*?required:\s*\[ok, ts, service, active_profile_id, active_profile_name, settings\]/);
 });
+
+test('OpenAPI custom watchlist response schema includes profile-aware fields returned at runtime', async () => {
+  const raw = await fs.readFile(new URL('../openapi.yaml', import.meta.url), 'utf8');
+  assert.match(raw, /ConstructionCustomWatchlistResponse:[\s\S]*?active_profile_id:\s*\n\s*type:\s*string/);
+  assert.match(raw, /ConstructionCustomWatchlistResponse:[\s\S]*?active_profile_name:\s*\n\s*type:\s*string/);
+  assert.match(raw, /ConstructionCustomWatchlistResponse:[\s\S]*?settings_summary:\s*\n\s*type:\s*string/);
+  assert.match(raw, /ConstructionCustomWatchlistResponse:[\s\S]*?saved_profiles_summary:\s*\n\s*type:\s*string/);
+  assert.match(raw, /ConstructionCustomWatchlistResponse:[\s\S]*?required:\s*\[ok, ts, service, alerts, summary, active_settings, active_profile_id, active_profile_name, settings_summary, saved_profiles_summary\]/);
+});
