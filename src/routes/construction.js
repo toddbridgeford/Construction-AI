@@ -2479,6 +2479,7 @@ async function buildTerminalPayload(request, env) {
   terminal.scenarios_summary = terminal.scenarios.headline;
   terminal.watchlist = buildWatchlistAlerts(terminal, settings);
   terminal.watchlist_summary = terminal.watchlist.summary;
+  terminal.active_settings_profile_id = activeProfile?.profile_id || settingsEnvelope.active_profile_id || "balanced-operator";
   terminal.active_settings_profile = activeProfile?.profile_name || "Balanced Operator";
   terminal.settings_summary = buildSettingsSummary(settings, terminal.active_settings_profile);
   terminal.custom_watchlist = buildCustomWatchlist(terminal, settings);

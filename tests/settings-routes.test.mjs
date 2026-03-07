@@ -213,6 +213,7 @@ test('custom watchlist and terminal include profile-aware metadata', async () =>
   assert.equal(watchlistRes.status, 200);
   assert.ok(Array.isArray(watchlistBody.alerts));
   assert.equal(typeof watchlistBody.summary, 'string');
+  assert.equal(watchlistBody.active_profile_id, 'gc-cash-protection');
   assert.equal(watchlistBody.active_profile_name, 'GC Cash Protection');
   assert.equal(typeof watchlistBody.settings_summary, 'string');
   assert.equal(typeof watchlistBody.saved_profiles_summary, 'string');
@@ -220,8 +221,24 @@ test('custom watchlist and terminal include profile-aware metadata', async () =>
   const terminalRes = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
   const terminalBody = await json(terminalRes);
   assert.equal(terminalRes.status, 200);
-  assert.equal(typeof terminalBody.terminal.active_settings_profile, 'string');
+  assert.equal(terminalBody.terminal.active_settings_profile_id, 'gc-cash-protection');
+  assert.equal(terminalBody.terminal.active_settings_profile, 'GC Cash Protection');
   assert.equal(typeof terminalBody.terminal.saved_profiles_summary, 'string');
+});
+
+
+test('custom watchlist returns active non-default profile id/name without balanced fallback', async () => {
+  const env = makeEnv();
+  await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ profile_id: 'aggressive-growth' }),
+  }), env);
+
+  const watchlistRes = await handleConstructionCustomWatchlist(new Request('https://example.com/construction/watchlist/custom'), env);
+  const watchlistBody = await json(watchlistRes);
+  assert.equal(watchlistRes.status, 200);
+  assert.equal(watchlistBody.active_profile_id, 'aggressive-growth');
+  assert.equal(watchlistBody.active_profile_name, 'Aggressive Growth');
+  assert.notEqual(watchlistBody.active_profile_id, 'balanced-operator');
 });
 
 
