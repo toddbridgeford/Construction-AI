@@ -86,6 +86,29 @@ test('profiles list returns seeded defaults and balanced active when storage is 
   assert.equal(body.profiles.find((p) => p.profile_id === 'balanced-operator')?.is_active, true);
 });
 
+test('profiles list performs a single settings model read to avoid duplicate KV operations', async () => {
+  let getCount = 0;
+  const store = new Map();
+  const env = makeEnv({
+    CPI_SNAPSHOTS: {
+      async get(key, opts = {}) {
+        getCount += 1;
+        if (!store.has(key)) return null;
+        const value = store.get(key);
+        if (opts.type === 'json') return JSON.parse(value);
+        return value;
+      },
+      async put(key, value) {
+        store.set(key, value);
+      },
+    },
+  });
+
+  const res = await handleConstructionSettingsProfiles(new Request('https://example.com/construction/settings/profiles'), env);
+  assert.equal(res.status, 200);
+  assert.equal(getCount, 5);
+});
+
 test('active profile endpoint switches active profile with resolved settings payload', async () => {
   const env = makeEnv();
   const req = new Request('https://example.com/construction/settings/active-profile', {

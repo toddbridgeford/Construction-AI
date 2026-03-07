@@ -3041,13 +3041,10 @@ export async function handleConstructionSettingsProfiles(request, env) {
     if (request.method !== "GET") {
       return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     }
-    const [profiles, activeProfileId] = await Promise.all([
-      getProfiles(env),
-      getActiveProfileId(env),
-    ]);
+    const envelope = await readSettingsProfilesModel(env);
     return ok(env, {
-      active_profile_id: activeProfileId,
-      profiles,
+      active_profile_id: envelope.active_profile_id,
+      profiles: envelope.profiles,
     });
   } catch (e) {
     return error(env, 500, "SETTINGS_PROFILES_FAILED", "Unable to read settings profiles", {
