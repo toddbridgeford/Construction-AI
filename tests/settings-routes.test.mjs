@@ -103,6 +103,18 @@ test('active profile endpoint switches active profile with resolved settings pay
 });
 
 
+test('active profile GET returns active profile metadata for backward-compatible reads', async () => {
+  const env = makeEnv();
+  const res = await handleConstructionSettingsActiveProfile(new Request('https://example.com/construction/settings/active-profile'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(body.active_profile_id, 'balanced-operator');
+  assert.equal(body.active_profile_name, 'Balanced Operator');
+  assert.equal(body.settings.alert_sensitivity, 'balanced');
+});
+
+
 
 test('active profile endpoint validates missing and unknown profile ids', async () => {
   const env = makeEnv();
@@ -145,6 +157,12 @@ test('settings POST updates active profile with partial merge and validation', a
   assert.equal(body.action, 'settings_updated');
   assert.equal(body.settings.thresholds.labor_shock_elevated_threshold, 57);
   assert.equal(body.settings.alert_sensitivity, 'conservative');
+
+  const readRes = await handleConstructionSettings(new Request('https://example.com/construction/settings'), env);
+  const readBody = await json(readRes);
+  assert.equal(readRes.status, 200);
+  assert.equal(readBody.active_profile_id, 'conservative-lender');
+  assert.equal(readBody.active_profile_name, 'Conservative Lender');
 
   const badRes = await handleConstructionSettings(new Request('https://example.com/construction/settings', {
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ thresholds: { labor_shock_elevated_threshold: 'bad' } }),
@@ -195,6 +213,9 @@ test('custom watchlist and terminal include profile-aware metadata', async () =>
   assert.equal(watchlistRes.status, 200);
   assert.ok(Array.isArray(watchlistBody.alerts));
   assert.equal(typeof watchlistBody.summary, 'string');
+  assert.equal(watchlistBody.active_profile_name, 'GC Cash Protection');
+  assert.equal(typeof watchlistBody.settings_summary, 'string');
+  assert.equal(typeof watchlistBody.saved_profiles_summary, 'string');
 
   const terminalRes = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
   const terminalBody = await json(terminalRes);
@@ -282,4 +303,32 @@ test('/construction/watchlist/custom is wired and does not return NOT_FOUND at r
   const req = new Request('https://example.com/construction/watchlist/custom');
   const res = await worker.fetch(req, env);
   assert.notEqual(res.status, 404);
+});
+
+
+test('activate and delete endpoints accept trimmed profile ids', async () => {
+  const env = makeEnv();
+
+  const activateRes = await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: '  aggressive-growth  ' }),
+  }), env);
+  const activateBody = await json(activateRes);
+  assert.equal(activateRes.status, 200);
+  assert.equal(activateBody.profile_id, 'aggressive-growth');
+
+  const createRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_name: 'Trim Delete Target' }),
+  }), env);
+  const created = await json(createRes);
+
+  const deleteRes = await handleConstructionSettingsProfilesDelete(new Request('https://example.com/construction/settings/profiles/delete', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: `  ${created.profile_id}  ` }),
+  }), env);
+  assert.equal(deleteRes.status, 200);
 });

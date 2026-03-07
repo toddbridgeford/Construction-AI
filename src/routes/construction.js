@@ -2946,8 +2946,13 @@ async function readJsonBody(request) {
 export async function handleConstructionSettings(request, env) {
   try {
     if (request.method === "GET") {
-      const settings = await readConstructionSettings(env);
-      return ok(env, { settings });
+      const { envelope, activeProfile } = await readActiveSettingsProfile(env);
+      const settings = sanitizeConstructionSettings(activeProfile?.settings || {});
+      return ok(env, {
+        settings,
+        active_profile_id: envelope.active_profile_id,
+        active_profile_name: activeProfile?.profile_name || "Balanced Operator",
+      });
     }
 
     if (request.method === "POST") {
@@ -3065,8 +3070,18 @@ export async function handleConstructionSettingsProfilesCreate(request, env) {
 
 export async function handleConstructionSettingsActiveProfile(request, env) {
   try {
+    if (request.method === "GET") {
+      const { envelope, activeProfile } = await readActiveSettingsProfile(env);
+      return ok(env, {
+        active_profile_id: envelope.active_profile_id,
+        active_profile_name: activeProfile?.profile_name || "Balanced Operator",
+        settings: sanitizeConstructionSettings(activeProfile?.settings || {}),
+      });
+    }
+
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
+    if (body === null) return error(env, 400, "ACTIVE_PROFILE_INVALID_JSON", "Malformed JSON body");
     const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
 
     if (!profileId) {
@@ -3096,7 +3111,7 @@ export async function handleConstructionSettingsProfilesActivate(request, env) {
   try {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
-    const profileId = typeof body?.profile_id === "string" ? body.profile_id : "";
+    const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
     if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
 
     const resolved = await setActiveProfileId(env, profileId);
@@ -3114,7 +3129,7 @@ export async function handleConstructionSettingsProfilesDelete(request, env) {
   try {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
-    const profileId = typeof body?.profile_id === "string" ? body.profile_id : "";
+    const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
     if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
 
     const envelope = await readSettingsProfilesModel(env);
@@ -3145,6 +3160,10 @@ export async function handleConstructionCustomWatchlist(request, env) {
       alerts: terminal.custom_watchlist?.alerts || [],
       summary: terminal.custom_watchlist_summary || "No custom watchlist summary available.",
       active_settings: await readConstructionSettings(env),
+      active_profile_id: terminal.active_settings_profile_id || "balanced-operator",
+      active_profile_name: terminal.active_settings_profile || "Balanced Operator",
+      settings_summary: terminal.settings_summary || "No settings summary available.",
+      saved_profiles_summary: terminal.saved_profiles_summary || "No profile summary available.",
     });
   } catch (e) {
     return error(env, 500, "CUSTOM_WATCHLIST_FAILED", "Unable to build custom watchlist", {
