@@ -369,6 +369,7 @@ export async function handleBundle(request, env) {
   const series = {};
   let successfulSeriesCount = 0;
   let firstFailure = null;
+  const failedSeries = [];
   for (const id of seriesList) {
     try {
       const data = await fetchFredSeries(env, id, limit);
@@ -377,17 +378,23 @@ export async function handleBundle(request, env) {
       successfulSeriesCount += 1;
     } catch (e) {
       series[id] = { error: { message: e.message, status: e.status || 0 } };
+      failedSeries.push(id);
       if (!firstFailure) firstFailure = e;
     }
   }
 
-  if (successfulSeriesCount === 0 && firstFailure) {
+  if (successfulSeriesCount !== seriesList.length && firstFailure) {
     return error(
       env,
       firstFailure?.code === "UPSTREAM_FRED" ? 502 : 500,
       firstFailure?.code || "ERROR",
-      firstFailure?.message || "Unable to fetch requested bundle series",
-      firstFailure?.details || null
+      successfulSeriesCount === 0
+        ? (firstFailure?.message || "Unable to fetch requested bundle series")
+        : "Unable to fetch one or more requested bundle series",
+      {
+        ...(firstFailure?.details && typeof firstFailure.details === "object" ? firstFailure.details : {}),
+        failed_series: failedSeries,
+      }
     );
   }
 
