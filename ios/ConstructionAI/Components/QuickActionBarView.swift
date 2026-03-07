@@ -13,5 +13,6 @@ struct QuickActionBarView: View {
         }
         .buttonStyle(.bordered)
         .font(.caption)
+        .controlSize(.large)
     }
 }

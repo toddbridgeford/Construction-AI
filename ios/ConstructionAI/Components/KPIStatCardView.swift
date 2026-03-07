@@ -17,8 +17,8 @@ struct KPIStatCardView: View {
             }
             Text(subtitle).font(.caption2).foregroundStyle(.secondary)
         }
-        .padding(12)
+        .padding(TerminalTheme.Spacing.small)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: TerminalTheme.Radius.row))
     }
 }

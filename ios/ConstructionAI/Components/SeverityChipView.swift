@@ -20,5 +20,6 @@ struct SeverityChipView: View {
             .padding(.vertical, 4)
             .background(color.opacity(0.2), in: Capsule())
             .foregroundStyle(color)
+            .accessibilityLabel("Severity \(severity.rawValue)")
     }
 }

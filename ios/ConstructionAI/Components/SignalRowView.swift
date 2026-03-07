@@ -4,12 +4,19 @@ struct SignalRowView: View {
     let signal: SignalItem
 
     var body: some View {
-        HStack {
-            Text(signal.key)
+        HStack(alignment: .top, spacing: TerminalTheme.Spacing.small) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(signal.key)
+                Text(signal.interpretation ?? "No interpretation")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
             Spacer()
             TrendArrowView(direction: Trend.from(arrow: signal.arrow))
             SeverityChipView(severity: signal.severity)
         }
         .font(.subheadline)
+        .terminalRowBackground()
     }
 }

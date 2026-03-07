@@ -31,7 +31,7 @@ struct TickerStripView: View {
     private func chip(label: String, value: String, arrow: String) -> some View {
         HStack(spacing: 6) {
             Text(label).font(.caption).foregroundStyle(.secondary)
-            Text(value).font(TerminalTheme.mono(size: 13))
+            Text(value).font(TerminalTheme.Typography.denseMono)
             Image(systemName: arrow).font(.caption2)
         }
         .padding(.horizontal, 10)

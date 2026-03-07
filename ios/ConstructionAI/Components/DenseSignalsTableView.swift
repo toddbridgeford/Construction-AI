@@ -8,7 +8,7 @@ struct DenseSignalsTableView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Top 5 Signals").font(.headline)
+            TerminalSectionHeader(title: "Top signals", subtitle: "Priority market indicators")
             ForEach(signals) { signal in
                 HStack {
                     Button {
@@ -25,6 +25,7 @@ struct DenseSignalsTableView: View {
                         .font(.footnote)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Select signal \(signal.key)")
 
                     Button {
                         onPin(signal)
@@ -32,11 +33,12 @@ struct DenseSignalsTableView: View {
                         Image(systemName: pinned.contains(signal.id) ? "pin.fill" : "pin")
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(pinned.contains(signal.id) ? "Unpin \(signal.key)" : "Pin \(signal.key)")
                 }
                 Divider()
             }
         }
-        .padding(12)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+        .padding(TerminalTheme.Spacing.small)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: TerminalTheme.Radius.row))
     }
 }

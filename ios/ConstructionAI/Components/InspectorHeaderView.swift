@@ -8,7 +8,7 @@ struct InspectorHeaderView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
-                Text(title).font(.headline)
+                Text(title).font(TerminalTheme.Typography.sectionTitle)
                 Spacer()
                 SeverityChipView(severity: severity)
             }
@@ -16,5 +16,6 @@ struct InspectorHeaderView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
+        .terminalPanel()
     }
 }

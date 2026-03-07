@@ -4,21 +4,20 @@ struct EmptyStateView: View {
     let retry: () -> Void
 
     var body: some View {
-        VStack(spacing: 14) {
+        VStack(spacing: TerminalTheme.Spacing.medium) {
             Image(systemName: "wifi.exclamationmark")
                 .font(.system(size: 28, weight: .semibold))
                 .foregroundStyle(.secondary)
-            Text("No dashboard data available")
-                .font(.headline)
-            Text("We could not load a snapshot. Check connection and retry.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+            TerminalSectionHeader(title: "No dashboard data available", subtitle: "We could not load a snapshot. Check connection and retry.")
                 .multilineTextAlignment(.center)
-                .frame(maxWidth: 340)
             Button("Retry", action: retry)
                 .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .accessibilityHint("Attempts to refresh dashboard data")
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .terminalPanel()
+        .padding(.horizontal, TerminalTheme.Spacing.medium)
     }
 }

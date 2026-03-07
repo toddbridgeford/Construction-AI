@@ -29,6 +29,7 @@ struct TerminalShellView: View {
                     }
                 }
             }
+            .listStyle(.insetGrouped)
             .navigationTitle("Workspace")
         } content: {
             ZStack {
@@ -40,8 +41,8 @@ struct TerminalShellView: View {
                         ErrorBannerView(message: errorMessage) {
                             Task { await store.refreshFromGitHub() }
                         }
-                        .padding(.horizontal, 8)
-                        .padding(.bottom, 4)
+                        .padding(.horizontal, TerminalTheme.Spacing.small)
+                        .padding(.bottom, TerminalTheme.Spacing.xSmall)
                     }
 
                     if store.hasNoData {
@@ -148,8 +149,7 @@ private struct ErrorBannerView: View {
                 .foregroundStyle(.red)
                 .padding(.top, 1)
             VStack(alignment: .leading, spacing: 4) {
-                Text("Connection warning")
-                    .font(.subheadline.weight(.semibold))
+                TerminalSectionHeader(title: "Connection warning")
                 Text(message)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -161,7 +161,7 @@ private struct ErrorBannerView: View {
                 .font(.caption)
         }
         .padding(10)
-        .background(Color.red.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+        .background(Color.red.opacity(0.1), in: RoundedRectangle(cornerRadius: TerminalTheme.Radius.row))
     }
 }
 
