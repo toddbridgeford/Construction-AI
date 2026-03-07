@@ -6,12 +6,12 @@ kv_namespaces = [
   { binding = "CPI_SNAPSHOTS", id = "3ed4ce29b3c94758b531684cb927795a" }
 ]
 
+[assets]
+binding = "ASSETS"
+directory = "./dist"
+
 [vars]
 SERVICE_NAME = "construction-ai"
-
-[assets]
-directory = "./dist"
-binding = "ASSETS"
 
 [triggers]
 crons = ["0 * * * *"]
