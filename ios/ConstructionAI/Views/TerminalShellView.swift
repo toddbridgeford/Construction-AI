@@ -16,6 +16,7 @@ struct TerminalShellView: View {
                         NavigationLink(value: destination) {
                             Label(destination.title, systemImage: destination.systemImage)
                         }
+                        .accessibilityLabel("\(destination.title) section")
                     }
                 }
             }
@@ -228,3 +229,10 @@ func buildPaletteItems(store: DashboardStore, prefs: TerminalPreferencesStore) -
 
     return items
 }
+
+
+#if DEBUG
+#Preview("Terminal Shell") {
+    TerminalShellView()
+}
+#endif
