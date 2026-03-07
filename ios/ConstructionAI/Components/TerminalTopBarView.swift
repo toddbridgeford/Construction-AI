@@ -13,9 +13,14 @@ struct TerminalTopBarView: View {
                     .foregroundStyle(Color.orange)
                 Spacer()
                 StatusPillView(text: statusText)
-                Text(lastRefresh.map { DateFormatting.shortDateTime.string(from: $0) } ?? "Never")
-                    .font(.system(.caption, design: .monospaced))
-                    .foregroundStyle(.secondary)
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("Last refresh")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    Text(lastRefresh.map { DateFormatting.shortDateTime.string(from: $0) } ?? "Never")
+                        .font(.system(.caption, design: .monospaced))
+                        .foregroundStyle(.secondary)
+                }
             }
 
             TextField("Search alerts, signals, regions", text: $searchText)

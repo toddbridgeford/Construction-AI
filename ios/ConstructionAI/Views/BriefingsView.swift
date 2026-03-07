@@ -10,6 +10,12 @@ struct BriefingsView: View {
                     .font(.title3.weight(.semibold))
                 Text(store.payload?.executiveSummary ?? "No summary available.")
                     .foregroundStyle(.secondary)
+
+                if let generatedAt = store.payload?.generatedAt {
+                    Label("Generated \(DateFormatting.shortDateTime.string(from: generatedAt))", systemImage: "clock")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
             .padding(16)
         }
