@@ -1129,6 +1129,31 @@ test('fred observations endpoint accepts valid series_id values with unchanged p
   }
 });
 
+test('fred observations endpoint fails closed on upstream non-JSON 200 responses', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const originalFetch = globalThis.fetch;
+
+  globalThis.fetch = async () =>
+    new Response('<html>maintenance</html>', {
+      status: 200,
+      headers: { 'content-type': 'text/html' },
+    });
+
+  try {
+    const req = new Request('https://example.com/fred/observations?series_id=CPIAUCSL&limit=2');
+    const res = await handleFredObservations(req, env);
+    const body = await json(res);
+
+    assert.equal(res.status, 502);
+    assert.equal(body.error?.code, 'UPSTREAM_FRED');
+    assert.equal(body.error?.details?.status, 200);
+    assert.deepEqual(body.error?.details?.body, { raw: '<html>maintenance</html>' });
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+
 
 test('market radar returns subsection error when markets index asset contains malformed JSON', async () => {
   const env = makeEnv({

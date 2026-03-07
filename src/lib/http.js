@@ -67,11 +67,22 @@ export async function fetchJson(url, init = {}, timeoutMs = 15000) {
     const res = await fetch(url, { ...init, signal: controller.signal });
     const text = await res.text();
     let parsed;
+    let parseFailed = false;
     try {
       parsed = text ? JSON.parse(text) : null;
     } catch {
+      parseFailed = true;
       parsed = { raw: text };
     }
+
+    if (res.ok && text && parseFailed) {
+      const err = new Error(`Upstream ${res.status} returned invalid JSON`);
+      err.code = "UPSTREAM_INVALID_JSON";
+      err.status = res.status;
+      err.body = parsed;
+      throw err;
+    }
+
     if (!res.ok) {
       const err = new Error(`Upstream ${res.status}`);
       err.code = "UPSTREAM_HTTP";
