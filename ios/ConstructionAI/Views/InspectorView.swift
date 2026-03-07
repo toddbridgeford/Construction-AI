@@ -48,6 +48,14 @@ struct InspectorView: View {
             }
             .padding(16)
         }
+        .onChange(of: signal?.id) { _, _ in
+            isPinned = false
+            isWatched = false
+        }
+        .onChange(of: alert?.id) { _, _ in
+            isPinned = false
+            isWatched = false
+        }
     }
 
     private func actionButtons(summary: String) -> some View {
@@ -86,6 +94,7 @@ struct InspectorView: View {
             Label("Share", systemImage: "square.and.arrow.up")
         }
         .buttonStyle(TerminalButtonStyle(intent: .neutral))
+        .accessibilityHint("Opens the iOS share sheet")
     }
 
     private var pinButton: some View {

@@ -60,24 +60,36 @@ struct OverviewView: View {
     private var alertsPanel: some View {
         VStack(alignment: .leading, spacing: 8) {
             TerminalSectionHeader(title: "Alerts", subtitle: "Highest-priority changes")
-            ForEach(store.filteredAlerts.prefix(4)) { alert in
-                Button {
-                    store.selectedAlert = alert
-                } label: {
-                    HStack(alignment: .top, spacing: TerminalTheme.Spacing.xSmall) {
-                        SeverityChipView(severity: alert.severity)
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(alert.title).lineLimit(1)
-                            Text(alert.message).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+            if store.filteredAlerts.isEmpty {
+                Text("No alerts for this filter.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.vertical, TerminalTheme.Spacing.xSmall)
+                    .accessibilityLabel("No alerts for this filter")
+            } else {
+                ForEach(store.filteredAlerts.prefix(4)) { alert in
+                    Button {
+                        store.selectedAlert = alert
+                    } label: {
+                        HStack(alignment: .top, spacing: TerminalTheme.Spacing.xSmall) {
+                            SeverityChipView(severity: alert.severity)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(alert.title).lineLimit(1)
+                                Text(alert.message)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                            Spacer(minLength: TerminalTheme.Spacing.xSmall)
                         }
-                        Spacer(minLength: TerminalTheme.Spacing.xSmall)
                     }
+                    .buttonStyle(.plain)
+                    .terminalRowBackground()
+                    .terminalTapTarget()
+                    .accessibilityLabel("\(alert.severity.rawValue) alert \(alert.title)")
+                    .accessibilityHint("Opens alert details in inspector")
                 }
-                .buttonStyle(.plain)
-                .terminalRowBackground()
-                .terminalTapTarget()
-                .accessibilityLabel("\(alert.severity.rawValue) alert \(alert.title)")
-                .accessibilityHint("Opens alert details in inspector")
             }
         }
         .terminalPanel()
@@ -144,32 +156,36 @@ struct OverviewView: View {
     }
 
     private var signalsPanel: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            TerminalSectionHeader(title: "Signals")
-            DenseSignalsTableView(signals: store.filteredSignals, pinned: prefs.pinnedSignalIDs) { signal in
-                store.selectedSignal = signal
-            } onPin: { signal in
-                prefs.togglePinned(signalID: signal.id)
-            }
-            .frame(minHeight: 220)
+        DenseSignalsTableView(signals: store.filteredSignals, pinned: prefs.pinnedSignalIDs) { signal in
+            store.selectedSignal = signal
+        } onPin: { signal in
+            prefs.togglePinned(signalID: signal.id)
         }
+        .frame(minHeight: 220)
         .terminalPanel()
     }
 
     private var regionsPanel: some View {
         VStack(alignment: .leading, spacing: 8) {
             TerminalSectionHeader(title: "Regions")
-            ForEach(store.filteredRegions.prefix(5)) { region in
-                HStack {
-                    Text(region.name)
-                        .lineLimit(1)
-                    Spacer()
-                    Text(metricString(region.value, precision: 1)).font(TerminalTheme.Typography.denseMono)
-                }
-                Text(region.summary ?? "No region summary")
+            if store.filteredRegions.isEmpty {
+                Text("No regions match the current filter.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .lineLimit(2)
+                    .padding(.vertical, TerminalTheme.Spacing.xSmall)
+            } else {
+                ForEach(store.filteredRegions.prefix(5)) { region in
+                    HStack {
+                        Text(region.name)
+                            .lineLimit(1)
+                        Spacer()
+                        Text(metricString(region.value, precision: 1)).font(TerminalTheme.Typography.denseMono)
+                    }
+                    Text(region.summary ?? "No region summary")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
             }
         }
         .terminalPanel()
@@ -178,15 +194,24 @@ struct OverviewView: View {
     private var sourceHealthPanel: some View {
         VStack(alignment: .leading, spacing: 8) {
             TerminalSectionHeader(title: "Source Health")
-            ForEach(store.sourceHealth.prefix(6)) { source in
-                HStack {
-                    Text(source.source)
-                        .lineLimit(1)
-                    Spacer()
-                    Text(source.status).font(.caption).foregroundStyle(source.status == "error" ? .red : .secondary)
+            if store.sourceHealth.isEmpty {
+                Text("No source status reported in this snapshot.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.vertical, TerminalTheme.Spacing.xSmall)
+            } else {
+                ForEach(store.sourceHealth.prefix(6)) { source in
+                    HStack {
+                        Text(source.source)
+                            .lineLimit(1)
+                        Spacer()
+                        Text(sourceStatusLabel(source.status))
+                            .font(.caption)
+                            .foregroundStyle(sourceStatusColor(source.status))
+                    }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("\(source.source): \(sourceStatusLabel(source.status))")
                 }
-                .accessibilityElement(children: .combine)
-                .accessibilityLabel("\(source.source): \(source.status)")
             }
         }
         .terminalPanel()
@@ -205,6 +230,32 @@ struct OverviewView: View {
 
     private var topCards: ArraySlice<CardItem> {
         (store.payload?.cards ?? []).prefix(3)
+    }
+
+    private func sourceStatusLabel(_ status: String) -> String {
+        switch status.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
+        case "error", "failed", "down":
+            return "Error"
+        case "warning", "degraded", "stale":
+            return "Warning"
+        case "available", "ok", "healthy", "live":
+            return "Healthy"
+        default:
+            return status.isEmpty ? "Unknown" : status
+        }
+    }
+
+    private func sourceStatusColor(_ status: String) -> Color {
+        switch sourceStatusLabel(status) {
+        case "Error":
+            return .red
+        case "Warning":
+            return .orange
+        case "Healthy":
+            return .green
+        default:
+            return .secondary
+        }
     }
 
     private func metricString(_ value: Double?, precision: Int, fallback: String = "—") -> String {

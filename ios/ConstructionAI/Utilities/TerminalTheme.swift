@@ -72,7 +72,6 @@ struct TerminalButtonStyle: ButtonStyle {
             )
             .contentShape(RoundedRectangle(cornerRadius: TerminalTheme.Radius.chip, style: .continuous))
             .opacity(configuration.isPressed ? 0.88 : 1)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
     }
 
     private func backgroundColor(pressed: Bool) -> Color {
@@ -148,5 +147,7 @@ struct TerminalSectionHeader: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
     }
 }

@@ -11,7 +11,11 @@ struct SettingsView: View {
                 LabeledContent("Last refresh", value: store.lastRefresh.map { DateFormatting.shortDateTime.string(from: $0) } ?? "Never")
                 LabeledContent("GitHub API Token", value: Config.isGitHubTokenConfigured ? "Configured" : "Not configured")
                 Button("Clear Cache") { store.clearCache() }
+                    .buttonStyle(TerminalButtonStyle(intent: .destructive))
+                    .accessibilityHint("Removes local cached dashboard data")
                 Button("Retry Fetch") { Task { await store.refreshFromGitHub() } }
+                    .buttonStyle(TerminalButtonStyle(intent: .primary))
+                    .accessibilityHint("Attempts to reload data from APIs")
             }
 
             Section("Market API Feeds") {
