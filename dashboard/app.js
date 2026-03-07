@@ -39,6 +39,7 @@ const ENDPOINTS = {
   settingsDefaults: `${API_BASE}/construction/settings/defaults`,
   settingsReset: `${API_BASE}/construction/settings/reset`,
   settingsProfiles: `${API_BASE}/construction/settings/profiles`,
+  settingsActiveProfile: `${API_BASE}/construction/settings/active-profile`,
   settingsProfilesActivate: `${API_BASE}/construction/settings/profiles/activate`,
   settingsProfilesDelete: `${API_BASE}/construction/settings/profiles/delete`,
   customWatchlist: `${API_BASE}/construction/watchlist/custom`,
@@ -320,7 +321,7 @@ function renderPanels(vm) {
     <section class="row">${card("Receivables Risk", formatOneDecimal(vm.receivablesRisk?.score), vm.receivablesRisk?.explanation || vm.terminal?.receivables_risk_summary || "")}${card("Payment Delay Risk", formatOneDecimal(vm.paymentDelayRisk?.score), vm.paymentDelayRisk?.explanation || vm.terminal?.payment_delay_risk_summary || "")}${card("Collections Stress", formatOneDecimal(vm.collectionsStress?.score), vm.collectionsStress?.explanation || vm.terminal?.collections_stress_summary || "")}</section>
     <section class="row">${card("Owner Risk", formatOneDecimal(vm.ownerRisk?.score), vm.ownerRisk?.explanation || vm.terminal?.owner_risk_summary || "")}${card("Developer Fragility", formatOneDecimal(vm.developerFragility?.score), vm.developerFragility?.explanation || vm.terminal?.developer_fragility_summary || "")}${card("Lender Pullback Risk", formatOneDecimal(vm.lenderPullbackRisk?.score), vm.lenderPullbackRisk?.explanation || vm.terminal?.lender_pullback_risk_summary || "")}${card("Counterparty Quality", formatOneDecimal(vm.counterpartyQuality?.score), vm.counterpartyQuality?.explanation || vm.terminal?.counterparty_quality_summary || "")}</section>
     <section class="row">${card("Metro Concentration Risk", formatOneDecimal(vm.metroConcentrationRisk?.score), vm.metroConcentrationRisk?.explanation || vm.terminal?.metro_concentration_risk_summary || "")}${card("Counterparty Concentration Risk", formatOneDecimal(vm.counterpartyConcentrationRisk?.score), vm.counterpartyConcentrationRisk?.explanation || vm.terminal?.counterparty_concentration_risk_summary || "")}${card("Project Mix Exposure", formatOneDecimal(vm.projectMixExposure?.score), vm.projectMixExposure?.explanation || vm.terminal?.project_mix_exposure_summary || "")}${card("Portfolio Risk", formatOneDecimal(vm.portfolioRisk?.score), vm.portfolioRisk?.explanation || vm.terminal?.portfolio_risk_summary || "")}</section>
-    <section class="row">${card("Scenario Engine", vm.scenarios?.headline || vm.terminal?.scenarios_summary || "Unavailable", vm.scenarios?.base_case?.operator_implication || "")}${card("Watchlist Alerts", vm.watchlist?.summary || vm.terminal?.watchlist_summary || "No active watchlist alerts", vm.watchlist?.alerts?.[0]?.message || "")}${card("Morning Brief v2", vm.morningBriefV2?.operator_focus || vm.terminal?.morning_brief_v2_summary || "Unavailable", vm.morningBriefV2?.changed_conditions?.[0] || "")}${card("Custom Watchlist", vm.customWatchlistSummary, vm.customWatchlist?.[0]?.message || "")}</section>
+    <section class="row">${card("Scenario Engine", vm.scenarios?.headline || vm.terminal?.scenarios_summary || "Unavailable", vm.scenarios?.base_case?.operator_implication || "")}${card(`Watchlist Alerts <span class="badge">${vm.terminal?.active_settings_profile || "Profile"}</span>`, vm.watchlist?.summary || vm.terminal?.watchlist_summary || "No active watchlist alerts", vm.watchlist?.alerts?.[0]?.message || "")}${card("Morning Brief v2", vm.morningBriefV2?.operator_focus || vm.terminal?.morning_brief_v2_summary || "Unavailable", vm.morningBriefV2?.changed_conditions?.[0] || "")}${card("Custom Watchlist", vm.customWatchlistSummary, vm.customWatchlist?.[0]?.message || "")}</section>
     <section class="row settings-row">
       <article class="card settings-card">
         <h3>Alert Settings</h3>
@@ -422,10 +423,10 @@ async function activateSettingsProfileFromUI() {
   try {
     const profile_id = document.getElementById("settingsActiveProfile")?.value || "";
     if (!profile_id) return;
-    setStatus("Activating profile...");
-    await postJson(ENDPOINTS.settingsProfilesActivate, { profile_id });
+    setStatus("Switching profile...");
+    const response = await postJson(ENDPOINTS.settingsActiveProfile, { profile_id });
     await loadDashboard();
-    setStatus(`Profile activated ${new Date().toLocaleTimeString()}`);
+    setStatus(`Profile changed to ${response.active_profile_name || profile_id}`);
   } catch (error) {
     setStatus(`Profile activation error: ${error.message}`);
   }
