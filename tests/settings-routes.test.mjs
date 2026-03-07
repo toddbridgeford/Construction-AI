@@ -372,3 +372,43 @@ test('activate and delete endpoints accept trimmed profile ids', async () => {
   }), env);
   assert.equal(deleteRes.status, 200);
 });
+
+test('stored profile ids and active profile id are normalized when reading settings profiles model', async () => {
+  const env = makeEnv();
+  await env.CPI_SNAPSHOTS.put('settings:profiles', JSON.stringify([
+    {
+      profile_id: '  aggressive-growth  ',
+      profile_name: 'Aggressive Growth',
+      description: 'legacy spacing',
+      is_active: true,
+      settings: { alert_sensitivity: 'aggressive' },
+      updated_at: '2025-01-01T00:00:00.000Z',
+    },
+  ]));
+  await env.CPI_SNAPSHOTS.put('settings:active_profile_id', JSON.stringify('  aggressive-growth  '));
+
+  const profilesRes = await handleConstructionSettingsProfiles(new Request('https://example.com/construction/settings/profiles'), env);
+  const profilesBody = await json(profilesRes);
+  assert.equal(profilesRes.status, 200);
+  assert.equal(profilesBody.active_profile_id, 'aggressive-growth');
+  assert.ok(profilesBody.profiles.some((entry) => entry.profile_id === 'aggressive-growth'));
+  assert.equal(profilesBody.profiles.some((entry) => entry.profile_id === '  aggressive-growth  '), false);
+
+  const settingsRes = await handleConstructionSettings(new Request('https://example.com/construction/settings'), env);
+  const settingsBody = await json(settingsRes);
+  assert.equal(settingsRes.status, 200);
+  assert.equal(settingsBody.active_profile_id, 'aggressive-growth');
+  assert.equal(settingsBody.active_profile_name, 'Aggressive Growth');
+});
+
+test('active profile endpoint returns endpoint-specific malformed JSON error', async () => {
+  const env = makeEnv();
+  const res = await worker.fetch(new Request('https://example.com/construction/settings/active-profile', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: '{',
+  }), env);
+  const body = await json(res);
+  assert.equal(res.status, 400);
+  assert.equal(body.error.code, 'ACTIVE_PROFILE_INVALID_JSON');
+});
