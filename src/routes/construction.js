@@ -1351,6 +1351,133 @@ function buildConstructionAlerts(terminal) {
 }
 
 const SCENARIO_SNAPSHOT_KEY = "construction:terminal:scenario-watchlist:v1";
+const CONSTRUCTION_SETTINGS_KEY = "construction:settings:profile:default:v1";
+
+const CONSTRUCTION_DEFAULT_SETTINGS = Object.freeze({
+  metros_watchlist: ["Dallas", "Nashville", "Phoenix"],
+  risk_watchlist: [
+    "labor_shock",
+    "collections_stress",
+    "project_risk",
+    "portfolio_risk",
+    "owner_risk",
+    "developer_fragility",
+    "backlog_quality",
+    "bid_intensity",
+    "metro_momentum",
+  ],
+  thresholds: {
+    weakest_metro_threshold: 40,
+    strongest_metro_momentum_cooloff_threshold: 56,
+    labor_shock_elevated_threshold: 60,
+    collections_stress_severe_threshold: 75,
+    project_risk_severe_threshold: 75,
+    portfolio_risk_severe_threshold: 75,
+    owner_risk_severe_threshold: 75,
+    developer_fragility_severe_threshold: 75,
+    backlog_quality_weak_threshold: 45,
+    bid_intensity_mismatch_threshold: 60,
+  },
+  alert_sensitivity: "balanced",
+  muted_alert_codes: [],
+});
+
+const ALLOWED_ALERT_SENSITIVITY = new Set(["conservative", "balanced", "aggressive"]);
+
+const WATCHLIST_CODE_TO_FACTOR = {
+  LABOR_SHOCK_ELEVATED: "labor_shock",
+  PROJECT_RISK_SEVERE: "project_risk",
+  COLLECTIONS_STRESS_SEVERE: "collections_stress",
+  OWNER_RISK_SEVERE: "owner_risk",
+  DEVELOPER_FRAGILITY_SEVERE: "developer_fragility",
+  PORTFOLIO_RISK_SEVERE: "portfolio_risk",
+  WEAKEST_METRO_THRESHOLD: "metro_momentum",
+  STRONGEST_METRO_LOSING_MOMENTUM: "metro_momentum",
+  BACKLOG_QUALITY_WEAK: "backlog_quality",
+  BID_INTENSITY_MISMATCH: "bid_intensity",
+};
+
+function cloneDefaultConstructionSettings() {
+  return {
+    metros_watchlist: [...CONSTRUCTION_DEFAULT_SETTINGS.metros_watchlist],
+    risk_watchlist: [...CONSTRUCTION_DEFAULT_SETTINGS.risk_watchlist],
+    thresholds: { ...CONSTRUCTION_DEFAULT_SETTINGS.thresholds },
+    alert_sensitivity: CONSTRUCTION_DEFAULT_SETTINGS.alert_sensitivity,
+    muted_alert_codes: [...CONSTRUCTION_DEFAULT_SETTINGS.muted_alert_codes],
+    updated_at: new Date().toISOString(),
+  };
+}
+
+function normalizeStringArray(value) {
+  if (!Array.isArray(value)) return [];
+  return [...new Set(value.map((item) => String(item || "").trim()).filter(Boolean))];
+}
+
+function normalizeThresholdValue(value, fallback) {
+  return Number.isFinite(value) ? Number(value) : fallback;
+}
+
+function sanitizeConstructionSettings(input = {}, base = cloneDefaultConstructionSettings()) {
+  const defaults = cloneDefaultConstructionSettings();
+  const thresholdsSource = typeof input?.thresholds === "object" && input.thresholds ? input.thresholds : {};
+  const mergedThresholds = {};
+  for (const [key, defaultValue] of Object.entries(defaults.thresholds)) {
+    const candidate = thresholdsSource[key] ?? base.thresholds?.[key];
+    mergedThresholds[key] = normalizeThresholdValue(candidate, defaultValue);
+  }
+
+  const sensitivityCandidate = String(input?.alert_sensitivity ?? base.alert_sensitivity ?? defaults.alert_sensitivity).toLowerCase();
+  const alert_sensitivity = ALLOWED_ALERT_SENSITIVITY.has(sensitivityCandidate)
+    ? sensitivityCandidate
+    : defaults.alert_sensitivity;
+
+  return {
+    metros_watchlist: normalizeStringArray(input?.metros_watchlist ?? base.metros_watchlist ?? defaults.metros_watchlist),
+    risk_watchlist: normalizeStringArray(input?.risk_watchlist ?? base.risk_watchlist ?? defaults.risk_watchlist),
+    thresholds: mergedThresholds,
+    alert_sensitivity,
+    muted_alert_codes: normalizeStringArray(input?.muted_alert_codes ?? base.muted_alert_codes ?? defaults.muted_alert_codes),
+    updated_at: typeof input?.updated_at === "string" ? input.updated_at : new Date().toISOString(),
+  };
+}
+
+async function readConstructionSettings(env) {
+  const defaults = cloneDefaultConstructionSettings();
+  const saved = await kvGetJson(env, CONSTRUCTION_SETTINGS_KEY);
+  if (!saved || typeof saved !== "object") {
+    return defaults;
+  }
+  return sanitizeConstructionSettings(saved, defaults);
+}
+
+async function saveConstructionSettings(env, partialSettings) {
+  const current = await readConstructionSettings(env);
+  const merged = sanitizeConstructionSettings({ ...current, ...partialSettings, updated_at: new Date().toISOString() }, current);
+  await kvPutJson(env, CONSTRUCTION_SETTINGS_KEY, merged, 60 * 60 * 24 * 365);
+  return merged;
+}
+
+async function resetConstructionSettings(env) {
+  const reset = cloneDefaultConstructionSettings();
+  await kvPutJson(env, CONSTRUCTION_SETTINGS_KEY, reset, 60 * 60 * 24 * 365);
+  return reset;
+}
+
+function toSensitivityDelta(alertSensitivity) {
+  if (alertSensitivity === "conservative") return -5;
+  if (alertSensitivity === "aggressive") return 5;
+  return 0;
+}
+
+function thresholdFromSettings(settings, key, direction = "high") {
+  const defaults = CONSTRUCTION_DEFAULT_SETTINGS.thresholds;
+  const base = Number.isFinite(settings?.thresholds?.[key]) ? settings.thresholds[key] : defaults[key];
+  const delta = toSensitivityDelta(settings?.alert_sensitivity || "balanced");
+  if (direction === "low") {
+    return Number((base - delta).toFixed(1));
+  }
+  return Number((base + delta).toFixed(1));
+}
 
 function compareDelta(current, prior) {
   if (!Number.isFinite(current) || !Number.isFinite(prior)) return null;
@@ -1446,44 +1573,67 @@ function buildScenarioEngine(terminal) {
   };
 }
 
-function buildWatchlistAlerts(terminal) {
+function buildWatchlistAlerts(terminal, settings = cloneDefaultConstructionSettings()) {
   const alerts = [];
   const weakest = terminal?.migration_index?.outbound_markets?.[0] || null;
   const strongest = terminal?.migration_index?.inbound_markets?.[0] || null;
+  const riskWatchlist = new Set((settings?.risk_watchlist || []).map((risk) => String(risk).toLowerCase()));
+  const mutedAlertCodes = new Set((settings?.muted_alert_codes || []).map((code) => String(code).toUpperCase()));
 
-  const addAlert = (code, severity, trigger, message, operatorAction) => {
+  const shouldInclude = (code, riskFactor) => {
+    if (mutedAlertCodes.has(code)) return false;
+    if (riskWatchlist.size === 0) return true;
+    return riskWatchlist.has(String(riskFactor || WATCHLIST_CODE_TO_FACTOR[code] || "").toLowerCase());
+  };
+
+  const addAlert = (code, severity, trigger, message, operatorAction, riskFactor = null) => {
+    if (!shouldInclude(code, riskFactor)) return;
     alerts.push({ code, severity, trigger, message, operator_action: operatorAction });
   };
 
-  if (["elevated", "severe"].includes(terminal?.labor_shock?.state)) {
-    addAlert("LABOR_SHOCK_ELEVATED", "medium", `Labor shock ${terminal.labor_shock.state}`, "Qualified labor availability is tightening and could disrupt execution timing.", "Lock critical crews early and avoid fixed labor assumptions on long-duration bids.");
+  const laborThreshold = thresholdFromSettings(settings, "labor_shock_elevated_threshold", "high");
+  const projectRiskThreshold = thresholdFromSettings(settings, "project_risk_severe_threshold", "high");
+  const collectionsThreshold = thresholdFromSettings(settings, "collections_stress_severe_threshold", "high");
+  const ownerThreshold = thresholdFromSettings(settings, "owner_risk_severe_threshold", "high");
+  const developerThreshold = thresholdFromSettings(settings, "developer_fragility_severe_threshold", "high");
+  const portfolioThreshold = thresholdFromSettings(settings, "portfolio_risk_severe_threshold", "high");
+  const weakestMetroThreshold = thresholdFromSettings(settings, "weakest_metro_threshold", "low");
+  const strongestCooldownThreshold = thresholdFromSettings(settings, "strongest_metro_momentum_cooloff_threshold", "low");
+  const backlogWeakThreshold = thresholdFromSettings(settings, "backlog_quality_weak_threshold", "low");
+  const bidMismatchThreshold = thresholdFromSettings(settings, "bid_intensity_mismatch_threshold", "high");
+
+  if (Number.isFinite(terminal?.labor_shock?.score) && terminal.labor_shock.score >= laborThreshold) {
+    addAlert("LABOR_SHOCK_ELEVATED", "medium", `Labor shock ${terminal.labor_shock.state}`, `Qualified labor availability is tightening and could disrupt execution timing (threshold ${laborThreshold.toFixed(1)}).`, "Lock critical crews early and avoid fixed labor assumptions on long-duration bids.", "labor_shock");
   }
-  if (terminal?.project_risk?.state === "severe") {
-    addAlert("PROJECT_RISK_SEVERE", "high", "Project risk severe", "Project-level risk is severe and threatens conversion quality and margin reliability.", "Pause low-quality pursuits and escalate deal gating for weak sponsors and weak metros.");
+  if (Number.isFinite(terminal?.project_risk?.score) && terminal.project_risk.score >= projectRiskThreshold) {
+    addAlert("PROJECT_RISK_SEVERE", "high", "Project risk severe", `Project-level risk is severe and threatens conversion quality and margin reliability (threshold ${projectRiskThreshold.toFixed(1)}).`, "Pause low-quality pursuits and escalate deal gating for weak sponsors and weak metros.", "project_risk");
   }
-  if (terminal?.collections_stress?.state === "severe") {
-    addAlert("COLLECTIONS_STRESS_SEVERE", "high", "Collections stress severe", "Collections stress is severe and may impair cash conversion.", "Shorten terms, tighten billing cadence, and trigger aging escalation playbooks.");
+  if (Number.isFinite(terminal?.collections_stress?.score) && terminal.collections_stress.score >= collectionsThreshold) {
+    addAlert("COLLECTIONS_STRESS_SEVERE", "high", "Collections stress severe", `Collections stress is severe and may impair cash conversion (threshold ${collectionsThreshold.toFixed(1)}).`, "Shorten terms, tighten billing cadence, and trigger aging escalation playbooks.", "collections_stress");
   }
-  if (terminal?.owner_risk?.state === "severe") {
-    addAlert("OWNER_RISK_SEVERE", "high", "Owner risk severe", "Owner credit quality is deteriorating in active pipeline segments.", "Shift mix toward owners with stronger payment history and financing certainty.");
+  if (Number.isFinite(terminal?.owner_risk?.score) && terminal.owner_risk.score >= ownerThreshold) {
+    addAlert("OWNER_RISK_SEVERE", "high", "Owner risk severe", `Owner credit quality is deteriorating in active pipeline segments (threshold ${ownerThreshold.toFixed(1)}).`, "Shift mix toward owners with stronger payment history and financing certainty.", "owner_risk");
   }
-  if (terminal?.developer_fragility?.state === "severe") {
-    addAlert("DEVELOPER_FRAGILITY_SEVERE", "high", "Developer fragility severe", "Developer fragility is severe, increasing deferral and cancellation risk.", "Rebalance away from fragile project mix and require additional safeguards pre-award.");
+  if (Number.isFinite(terminal?.developer_fragility?.score) && terminal.developer_fragility.score >= developerThreshold) {
+    addAlert("DEVELOPER_FRAGILITY_SEVERE", "high", "Developer fragility severe", `Developer fragility is severe, increasing deferral and cancellation risk (threshold ${developerThreshold.toFixed(1)}).`, "Rebalance away from fragile project mix and require additional safeguards pre-award.", "developer_fragility");
   }
-  if (terminal?.portfolio_risk?.state === "severe") {
-    addAlert("PORTFOLIO_RISK_SEVERE", "high", "Portfolio risk severe", "Portfolio risk concentration is severe across metro and counterparty mix.", "Re-underwrite concentration caps and redirect pursuit toward resilient segments.");
+  if (Number.isFinite(terminal?.portfolio_risk?.score) && terminal.portfolio_risk.score >= portfolioThreshold) {
+    addAlert("PORTFOLIO_RISK_SEVERE", "high", "Portfolio risk severe", `Portfolio risk concentration is severe across metro and counterparty mix (threshold ${portfolioThreshold.toFixed(1)}).`, "Re-underwrite concentration caps and redirect pursuit toward resilient segments.", "portfolio_risk");
   }
-  if (Number.isFinite(weakest?.score) && weakest.score < 40) {
-    addAlert("WEAKEST_METRO_THRESHOLD", "medium", `${weakest.market} below resilience threshold`, `${weakest.market} score has fallen below resilience threshold, increasing downside spillover risk.`, "Reduce exposure to thin-margin pursuits in the weakest metro and track spillover into adjacent markets.");
+  if (Number.isFinite(weakest?.score) && weakest.score < weakestMetroThreshold) {
+    addAlert("WEAKEST_METRO_THRESHOLD", "medium", `${weakest.market} below resilience threshold`, `${weakest.market} score has fallen below resilience threshold (${weakestMetroThreshold.toFixed(1)}), increasing downside spillover risk.`, "Reduce exposure to thin-margin pursuits in the weakest metro and track spillover into adjacent markets.", "metro_momentum");
   }
-  if (Number.isFinite(strongest?.score) && strongest.score < 56) {
-    addAlert("STRONGEST_METRO_LOSING_MOMENTUM", "medium", `${strongest.market} momentum cooling`, `${strongest.market} remains a leader but momentum is cooling versus prior strength.`, "Watch concentration in current strongholds and avoid overcommitting capacity.");
+  if (Number.isFinite(strongest?.score) && strongest.score < strongestCooldownThreshold) {
+    addAlert("STRONGEST_METRO_LOSING_MOMENTUM", "medium", `${strongest.market} momentum cooling`, `${strongest.market} remains a leader but momentum is cooling versus prior strength (cooloff ${strongestCooldownThreshold.toFixed(1)}).`, "Watch concentration in current strongholds and avoid overcommitting capacity.", "metro_momentum");
   }
-  if (terminal?.backlog_quality?.state === "weak") {
-    addAlert("BACKLOG_QUALITY_WEAK", "high", "Backlog quality weak", "Backlog quality is weak and future execution quality is at risk.", "Favor stronger counterparties and rebalance bid mix toward higher-certainty opportunities.");
+  if (Number.isFinite(terminal?.backlog_quality?.score) && terminal.backlog_quality.score < backlogWeakThreshold) {
+    addAlert("BACKLOG_QUALITY_WEAK", "high", "Backlog quality weak", `Backlog quality is weak and future execution quality is at risk (threshold ${backlogWeakThreshold.toFixed(1)}).`, "Favor stronger counterparties and rebalance bid mix toward higher-certainty opportunities.", "backlog_quality");
   }
-  if (["elevated", "severe"].includes(terminal?.bid_intensity?.state) && terminal?.backlog_quality?.state === "weak") {
-    addAlert("BID_INTENSITY_MISMATCH", "high", "Bid intensity elevated with weak backlog quality", "Pursuit intensity is high while backlog quality is weak, increasing win-at-any-cost risk.", "Pause thin-bid pursuit in weak metros and enforce minimum margin/quality gates.");
+  if (Number.isFinite(terminal?.bid_intensity?.score)
+      && terminal.bid_intensity.score >= bidMismatchThreshold
+      && Number.isFinite(terminal?.backlog_quality?.score)
+      && terminal.backlog_quality.score < backlogWeakThreshold) {
+    addAlert("BID_INTENSITY_MISMATCH", "high", "Bid intensity elevated with weak backlog quality", `Pursuit intensity is high while backlog quality is weak, increasing win-at-any-cost risk (threshold ${bidMismatchThreshold.toFixed(1)}).`, "Pause thin-bid pursuit in weak metros and enforce minimum margin/quality gates.", "bid_intensity");
   }
 
   return {
@@ -1491,6 +1641,50 @@ function buildWatchlistAlerts(terminal) {
     summary: alerts.length
       ? `${alerts.filter((a) => a.severity === "high").length} high and ${alerts.filter((a) => a.severity === "medium").length} medium watchlist alerts active.`
       : "No active watchlist alerts.",
+  };
+}
+
+
+function buildSettingsSummary(settings) {
+  const thresholdsCount = Object.keys(settings?.thresholds || {}).length;
+  return `App-level settings profile (single default profile) tracks ${settings?.metros_watchlist?.length || 0} watched metros, ${settings?.risk_watchlist?.length || 0} risk factors, ${thresholdsCount} thresholds, and ${settings?.muted_alert_codes?.length || 0} muted alert codes at ${settings?.alert_sensitivity || "balanced"} sensitivity.`;
+}
+
+function buildCustomWatchlist(terminal, settings) {
+  const baseWatchlist = buildWatchlistAlerts(terminal, settings);
+  const watchedMetros = new Set((settings?.metros_watchlist || []).map((m) => String(m).toLowerCase()));
+  const metroHighlights = [];
+
+  const inbound = Array.isArray(terminal?.migration_index?.inbound_markets) ? terminal.migration_index.inbound_markets : [];
+  const outbound = Array.isArray(terminal?.migration_index?.outbound_markets) ? terminal.migration_index.outbound_markets : [];
+  for (const metro of [...inbound, ...outbound]) {
+    if (!metro?.market) continue;
+    const normalized = String(metro.market).toLowerCase();
+    if (watchedMetros.has(normalized)) {
+      metroHighlights.push(`${metro.market} is on your watchlist with score ${Number.isFinite(metro.score) ? metro.score.toFixed(1) : "n/a"}`);
+    }
+  }
+
+  if (metroHighlights.length > 0) {
+    baseWatchlist.alerts.unshift({
+      code: "WATCHLIST_METRO_TRACKING",
+      severity: "medium",
+      trigger: "Watched metro tracking",
+      message: metroHighlights.slice(0, 2).join("; "),
+      operator_action: "Prioritize underwriting reviews and staffing plans for watched metros with fast score movement.",
+    });
+  }
+
+  const summaryParts = [
+    baseWatchlist.summary,
+    metroHighlights.length ? `${metroHighlights.length} watched metros currently represented in migration rankings.` : "No watched metros currently appear in migration top/bottom rankings.",
+    settings?.muted_alert_codes?.length ? `${settings.muted_alert_codes.length} alert code(s) muted.` : "No muted alert codes.",
+  ];
+
+  return {
+    alerts: baseWatchlist.alerts,
+    summary: summaryParts.join(" "),
+    active_settings: settings,
   };
 }
 
@@ -1511,7 +1705,7 @@ function terminalSnapshotState(terminal) {
   };
 }
 
-async function buildMorningBriefV2(terminal, env) {
+async function buildMorningBriefV2(terminal, env, settings = cloneDefaultConstructionSettings()) {
   const current = terminalSnapshotState(terminal);
   const prior = await kvGetJson(env, SCENARIO_SNAPSHOT_KEY);
 
@@ -1536,7 +1730,7 @@ async function buildMorningBriefV2(terminal, env) {
 
   await kvPutJson(env, SCENARIO_SNAPSHOT_KEY, current, 60 * 60 * 24 * 14);
 
-  const watchlist = buildWatchlistAlerts(terminal);
+  const watchlist = buildWatchlistAlerts(terminal, settings);
   const topRisk = watchlist.alerts.find((alert) => alert.severity === "high")?.message
     || terminal?.portfolio_risk_summary
     || "No urgent new risk detected.";
@@ -1808,6 +2002,7 @@ async function tryBuildForecast(request, env, terminal = null) {
 }
 
 async function buildTerminalPayload(request, env) {
+  const settings = await readConstructionSettings(env);
   const dashboardResult = await buildConstructionDashboard(env);
   const spending = await readSpendingSummary(request, env);
 
@@ -1958,9 +2153,12 @@ async function buildTerminalPayload(request, env) {
   terminal.portfolio_risk_summary = terminal.portfolio_risk.explanation;
   terminal.scenarios = buildScenarioEngine(terminal);
   terminal.scenarios_summary = terminal.scenarios.headline;
-  terminal.watchlist = buildWatchlistAlerts(terminal);
+  terminal.watchlist = buildWatchlistAlerts(terminal, settings);
   terminal.watchlist_summary = terminal.watchlist.summary;
-  terminal.morning_brief_v2 = await buildMorningBriefV2(terminal, env);
+  terminal.settings_summary = buildSettingsSummary(settings);
+  terminal.custom_watchlist = buildCustomWatchlist(terminal, settings);
+  terminal.custom_watchlist_summary = terminal.custom_watchlist.summary;
+  terminal.morning_brief_v2 = await buildMorningBriefV2(terminal, env, settings);
   terminal.morning_brief_v2_summary = terminal.morning_brief_v2.operator_focus;
 
   if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated" || terminal.collections_stress.state === "elevated" || terminal.collections_stress.state === "severe" || terminal.owner_risk.state === "elevated" || terminal.owner_risk.state === "severe" || terminal.developer_fragility.state === "elevated" || terminal.developer_fragility.state === "severe" || terminal.lender_pullback_risk.state === "elevated" || terminal.lender_pullback_risk.state === "severe" || terminal.counterparty_quality.state === "weak" || terminal.metro_concentration_risk.state === "elevated" || terminal.metro_concentration_risk.state === "severe" || terminal.counterparty_concentration_risk.state === "elevated" || terminal.counterparty_concentration_risk.state === "severe" || terminal.project_mix_exposure.state === "elevated" || terminal.project_mix_exposure.state === "severe" || terminal.portfolio_risk.state === "elevated" || terminal.portfolio_risk.state === "severe") {
@@ -2411,6 +2609,74 @@ async function loadScoredMarketsFromAssets(env) {
   return scoredMarkets;
 }
 
+async function readJsonBody(request) {
+  try {
+    return await request.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function handleConstructionSettings(request, env) {
+  try {
+    if (request.method === "GET") {
+      const settings = await readConstructionSettings(env);
+      return ok(env, { settings });
+    }
+
+    if (request.method === "POST") {
+      const body = await readJsonBody(request);
+      const settings = await saveConstructionSettings(env, body && typeof body === "object" ? body : {});
+      return ok(env, { settings });
+    }
+
+    return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+  } catch (e) {
+    return error(env, 500, "SETTINGS_FAILED", "Unable to read/write construction settings", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionSettingsDefaults(_request, env) {
+  try {
+    return ok(env, { defaults: cloneDefaultConstructionSettings() });
+  } catch (e) {
+    return error(env, 500, "SETTINGS_DEFAULTS_FAILED", "Unable to load default construction settings", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionSettingsReset(request, env) {
+  try {
+    if (request.method !== "POST") {
+      return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+    }
+    const settings = await resetConstructionSettings(env);
+    return ok(env, { settings, reset: true });
+  } catch (e) {
+    return error(env, 500, "SETTINGS_RESET_FAILED", "Unable to reset construction settings", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
+export async function handleConstructionCustomWatchlist(request, env) {
+  try {
+    const terminal = await buildTerminalPayload(request, env);
+    return ok(env, {
+      alerts: terminal.custom_watchlist?.alerts || [],
+      summary: terminal.custom_watchlist_summary || "No custom watchlist summary available.",
+      active_settings: await readConstructionSettings(env),
+    });
+  } catch (e) {
+    return error(env, 500, "CUSTOM_WATCHLIST_FAILED", "Unable to build custom watchlist", {
+      message: e?.message || String(e),
+    });
+  }
+}
+
 export async function handleConstructionTerminal(request, env) {
   try {
     const terminal = await buildTerminalPayload(request, env);
@@ -2449,6 +2715,8 @@ export async function handleConstructionMorningBrief(request, env) {
     const terminal = await buildTerminalPayload(request, env);
     const marketRadar = await tryReadMarketRadar(env);
     const metrics = extractTerminalInputs(terminal);
+    const settings = await readConstructionSettings(env);
+    const customWatchlist = buildCustomWatchlist(terminal, settings);
 
     const brief = {
       title: "Construction Morning Brief",
@@ -2474,6 +2742,12 @@ export async function handleConstructionMorningBrief(request, env) {
       market_radar: marketRadar,
       heatmap_summary: !isSubsectionFailure(marketRadar) ? marketRadar.summary : marketRadar,
       operator_guidance: operatorActions(),
+      settings_priority: {
+        alert_sensitivity: settings.alert_sensitivity,
+        watched_metros: settings.metros_watchlist,
+        watched_risks: settings.risk_watchlist,
+        top_custom_alert: customWatchlist.alerts[0]?.message || "No settings-specific watchlist alert currently active.",
+      },
     };
 
     return ok(env, { brief });
@@ -2906,5 +3180,8 @@ export function __test_only__() {
     buildScenarioEngine,
     buildWatchlistAlerts,
     buildMorningBriefV2,
+    sanitizeConstructionSettings,
+    buildCustomWatchlist,
+    buildSettingsSummary,
   };
 }

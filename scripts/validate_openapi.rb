@@ -37,9 +37,12 @@ REQUIRED_NEW_PATHS = [
   '/construction/metro-concentration-risk',
   '/construction/counterparty-concentration-risk',
   '/construction/project-mix-exposure',
-  '/construction/portfolio-risk'
+  '/construction/portfolio-risk',
+  '/construction/settings',
+  '/construction/settings/defaults',
+  '/construction/watchlist/custom'
 ]
-REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/spending/ytd/summary']
+REQUIRED_PATHS = REQUIRED_NEW_PATHS + ['/construction/settings/reset', '/spending/ytd/summary']
 REQUIRED_SCHEMAS = [
   'ConstructionTerminalResponse',
   'ConstructionMarketRadarResponse',
@@ -103,7 +106,14 @@ REQUIRED_SCHEMAS = [
   'ConstructionMetroConcentrationRiskResponse',
   'ConstructionCounterpartyConcentrationRiskResponse',
   'ConstructionProjectMixExposureResponse',
-  'ConstructionPortfolioRiskResponse'
+  'ConstructionPortfolioRiskResponse',
+  'ConstructionSettingsModel',
+  'ConstructionSettingsDefaultsModel',
+  'ConstructionCustomWatchlistModel',
+  'ConstructionSettingsResponse',
+  'ConstructionSettingsDefaultsResponse',
+  'ConstructionSettingsResetResponse',
+  'ConstructionCustomWatchlistResponse'
 ]
 
 abort("Missing #{OPENAPI_PATH}") unless File.exist?(OPENAPI_PATH)
@@ -143,6 +153,9 @@ errors << 'ConstructionTerminalResponse terminal schema must include scenarios' 
 errors << 'ConstructionTerminalResponse terminal schema must include scenarios_summary' unless terminal_properties.key?('scenarios_summary')
 errors << 'ConstructionTerminalResponse terminal schema must include watchlist' unless terminal_properties.key?('watchlist')
 errors << 'ConstructionTerminalResponse terminal schema must include watchlist_summary' unless terminal_properties.key?('watchlist_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include settings_summary' unless terminal_properties.key?('settings_summary')
+errors << 'ConstructionTerminalResponse terminal schema must include custom_watchlist' unless terminal_properties.key?('custom_watchlist')
+errors << 'ConstructionTerminalResponse terminal schema must include custom_watchlist_summary' unless terminal_properties.key?('custom_watchlist_summary')
 errors << 'ConstructionTerminalResponse terminal schema must include morning_brief_v2' unless terminal_properties.key?('morning_brief_v2')
 errors << 'ConstructionTerminalResponse terminal schema must include morning_brief_v2_summary' unless terminal_properties.key?('morning_brief_v2_summary')
 errors << 'ConstructionTerminalResponse terminal schema must include stress_index' unless terminal_properties.key?('stress_index')

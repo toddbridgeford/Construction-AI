@@ -40,6 +40,10 @@ import {
   handleConstructionScenarios,
   handleConstructionWatchlist,
   handleConstructionMorningBriefV2,
+  handleConstructionSettings,
+  handleConstructionSettingsDefaults,
+  handleConstructionSettingsReset,
+  handleConstructionCustomWatchlist,
   PORTFOLIO_LAYER_ROUTE_HANDLERS,
 } from "./routes/construction.js";
 
@@ -52,7 +56,9 @@ export default {
     const { pathname } = new URL(request.url);
 
     try {
-      if (request.method !== "GET") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+      const isSettingsWriteRoute = pathname === "/construction/settings" || pathname === "/construction/settings/reset";
+      if (!(["GET", "POST"].includes(request.method))) return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
+      if (request.method === "POST" && !isSettingsWriteRoute) return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
 
       if (pathname === "/" || pathname === "/health") return handleHealth(env);
       if (pathname === "/fred/observations") return handleFredObservations(request, env);
@@ -88,6 +94,10 @@ export default {
       if (pathname === "/construction/collections-stress") return handleConstructionCollectionsStress(request, env);
       if (pathname === "/construction/scenarios") return handleConstructionScenarios(request, env);
       if (pathname === "/construction/watchlist") return handleConstructionWatchlist(request, env);
+      if (pathname === "/construction/watchlist/custom") return handleConstructionCustomWatchlist(request, env);
+      if (pathname === "/construction/settings") return handleConstructionSettings(request, env);
+      if (pathname === "/construction/settings/defaults") return handleConstructionSettingsDefaults(request, env);
+      if (pathname === "/construction/settings/reset") return handleConstructionSettingsReset(request, env);
       if (pathname === "/construction/morning-brief/v2") return handleConstructionMorningBriefV2(request, env);
       const portfolioRouteHandler = PORTFOLIO_LAYER_ROUTE_HANDLERS[pathname];
       if (portfolioRouteHandler) return portfolioRouteHandler(request, env);

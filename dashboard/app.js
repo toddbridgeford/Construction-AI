@@ -35,6 +35,10 @@ const ENDPOINTS = {
   projectMixExposure: `${API_BASE}/construction/project-mix-exposure`,
   portfolioRisk: `${API_BASE}/construction/portfolio-risk`,
   spendingSummary: `${API_BASE}/spending/ytd/summary`,
+  settings: `${API_BASE}/construction/settings`,
+  settingsDefaults: `${API_BASE}/construction/settings/defaults`,
+  settingsReset: `${API_BASE}/construction/settings/reset`,
+  customWatchlist: `${API_BASE}/construction/watchlist/custom`,
 };
 
 const statusEl = document.getElementById("status");
@@ -50,6 +54,16 @@ function setStatus(message) {
 
 async function fetchJson(url) {
   const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+}
+
+async function postJson(url, payload = {}) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(payload),
+  });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return response.json();
 }
@@ -205,6 +219,10 @@ function modelFromSettled(results) {
     scenarios: settledValue(results.scenarios, "scenarios") || terminal.scenarios || null,
     watchlist: settledValue(results.watchlist, "watchlist") || terminal.watchlist || null,
     morningBriefV2: settledValue(results.morningBriefV2, "brief") || terminal.morning_brief_v2 || null,
+    settings: settledValue(results.settings, "settings") || null,
+    settingsDefaults: settledValue(results.settingsDefaults, "defaults") || null,
+    customWatchlist: settledValue(results.customWatchlist, "alerts") ? settledValue(results.customWatchlist, "alerts") : terminal?.custom_watchlist?.alerts || [],
+    customWatchlistSummary: settledValue(results.customWatchlist, "summary") || terminal?.custom_watchlist_summary || "No custom watchlist summary.",
     operatorActions: terminal.operator_actions || null,
     cycleInterpretation: asText(terminal.cycle_interpretation, "Neutral"),
     marketTape: marketTape || {
@@ -297,7 +315,27 @@ function renderPanels(vm) {
     <section class="row">${card("Receivables Risk", formatOneDecimal(vm.receivablesRisk?.score), vm.receivablesRisk?.explanation || vm.terminal?.receivables_risk_summary || "")}${card("Payment Delay Risk", formatOneDecimal(vm.paymentDelayRisk?.score), vm.paymentDelayRisk?.explanation || vm.terminal?.payment_delay_risk_summary || "")}${card("Collections Stress", formatOneDecimal(vm.collectionsStress?.score), vm.collectionsStress?.explanation || vm.terminal?.collections_stress_summary || "")}</section>
     <section class="row">${card("Owner Risk", formatOneDecimal(vm.ownerRisk?.score), vm.ownerRisk?.explanation || vm.terminal?.owner_risk_summary || "")}${card("Developer Fragility", formatOneDecimal(vm.developerFragility?.score), vm.developerFragility?.explanation || vm.terminal?.developer_fragility_summary || "")}${card("Lender Pullback Risk", formatOneDecimal(vm.lenderPullbackRisk?.score), vm.lenderPullbackRisk?.explanation || vm.terminal?.lender_pullback_risk_summary || "")}${card("Counterparty Quality", formatOneDecimal(vm.counterpartyQuality?.score), vm.counterpartyQuality?.explanation || vm.terminal?.counterparty_quality_summary || "")}</section>
     <section class="row">${card("Metro Concentration Risk", formatOneDecimal(vm.metroConcentrationRisk?.score), vm.metroConcentrationRisk?.explanation || vm.terminal?.metro_concentration_risk_summary || "")}${card("Counterparty Concentration Risk", formatOneDecimal(vm.counterpartyConcentrationRisk?.score), vm.counterpartyConcentrationRisk?.explanation || vm.terminal?.counterparty_concentration_risk_summary || "")}${card("Project Mix Exposure", formatOneDecimal(vm.projectMixExposure?.score), vm.projectMixExposure?.explanation || vm.terminal?.project_mix_exposure_summary || "")}${card("Portfolio Risk", formatOneDecimal(vm.portfolioRisk?.score), vm.portfolioRisk?.explanation || vm.terminal?.portfolio_risk_summary || "")}</section>
-    <section class="row">${card("Scenario Engine", vm.scenarios?.headline || vm.terminal?.scenarios_summary || "Unavailable", vm.scenarios?.base_case?.operator_implication || "")}${card("Watchlist Alerts", vm.watchlist?.summary || vm.terminal?.watchlist_summary || "No active watchlist alerts", vm.watchlist?.alerts?.[0]?.message || "")}${card("Morning Brief v2", vm.morningBriefV2?.operator_focus || vm.terminal?.morning_brief_v2_summary || "Unavailable", vm.morningBriefV2?.changed_conditions?.[0] || "")}</section>
+    <section class="row">${card("Scenario Engine", vm.scenarios?.headline || vm.terminal?.scenarios_summary || "Unavailable", vm.scenarios?.base_case?.operator_implication || "")}${card("Watchlist Alerts", vm.watchlist?.summary || vm.terminal?.watchlist_summary || "No active watchlist alerts", vm.watchlist?.alerts?.[0]?.message || "")}${card("Morning Brief v2", vm.morningBriefV2?.operator_focus || vm.terminal?.morning_brief_v2_summary || "Unavailable", vm.morningBriefV2?.changed_conditions?.[0] || "")}${card("Custom Watchlist", vm.customWatchlistSummary, vm.customWatchlist?.[0]?.message || "")}</section>
+    <section class="row settings-row">
+      <article class="card settings-card">
+        <h3>Alert Settings</h3>
+        <div class="settings-grid">
+          <label>Sensitivity
+            <select id="settingsSensitivity">
+              <option value="conservative" ${vm.settings?.alert_sensitivity === "conservative" ? "selected" : ""}>conservative</option>
+              <option value="balanced" ${vm.settings?.alert_sensitivity !== "aggressive" && vm.settings?.alert_sensitivity !== "conservative" ? "selected" : ""}>balanced</option>
+              <option value="aggressive" ${vm.settings?.alert_sensitivity === "aggressive" ? "selected" : ""}>aggressive</option>
+            </select>
+          </label>
+          <label>Watched metros (comma-separated)<input id="settingsMetros" value="${(vm.settings?.metros_watchlist || []).join(", ")}" /></label>
+          <label>Watched risks (comma-separated)<input id="settingsRisks" value="${(vm.settings?.risk_watchlist || []).join(", ")}" /></label>
+          <label>Muted alert codes (comma-separated)<input id="settingsMuted" value="${(vm.settings?.muted_alert_codes || []).join(", ")}" /></label>
+          <label>Threshold JSON<textarea id="settingsThresholds">${JSON.stringify(vm.settings?.thresholds || vm.settingsDefaults?.thresholds || {}, null, 2)}</textarea></label>
+        </div>
+        <div class="settings-actions"><button id="saveSettingsBtn" type="button">Save Settings</button><button id="resetSettingsBtn" type="button">Reset Defaults</button></div>
+        <p>${vm.terminal?.settings_summary || "App-level settings profile (single default profile)."}</p>
+      </article>
+    </section>
     <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
   `;
 }
@@ -325,7 +363,53 @@ async function loadDashboard() {
   }
 }
 
+
+
+async function saveSettingsFromUI() {
+  try {
+    setStatus("Saving settings...");
+    const thresholdsRaw = document.getElementById("settingsThresholds")?.value || "{}";
+    let thresholds = {};
+    try {
+      thresholds = JSON.parse(thresholdsRaw);
+    } catch {
+      setStatus("Settings JSON invalid. Use valid threshold JSON.");
+      return;
+    }
+
+    const payload = {
+      alert_sensitivity: document.getElementById("settingsSensitivity")?.value || "balanced",
+      metros_watchlist: (document.getElementById("settingsMetros")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
+      risk_watchlist: (document.getElementById("settingsRisks")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
+      muted_alert_codes: (document.getElementById("settingsMuted")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
+      thresholds,
+    };
+
+    await postJson(ENDPOINTS.settings, payload);
+    await loadDashboard();
+    setStatus(`Settings saved ${new Date().toLocaleTimeString()}`);
+  } catch (error) {
+    setStatus(`Settings save error: ${error.message}`);
+  }
+}
+
+async function resetSettingsFromUI() {
+  try {
+    setStatus("Resetting settings...");
+    await postJson(ENDPOINTS.settingsReset, {});
+    await loadDashboard();
+    setStatus(`Settings reset ${new Date().toLocaleTimeString()}`);
+  } catch (error) {
+    setStatus(`Settings reset error: ${error.message}`);
+  }
+}
+
 refreshBtn.addEventListener("click", loadDashboard);
 loadDashboard();
 refreshHandle = setInterval(loadDashboard, REFRESH_MS);
+document.addEventListener("click", (event) => {
+  if (event.target?.id === "saveSettingsBtn") saveSettingsFromUI();
+  if (event.target?.id === "resetSettingsBtn") resetSettingsFromUI();
+});
+
 window.addEventListener("beforeunload", () => clearInterval(refreshHandle));

@@ -268,6 +268,66 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/ConstructionWatchlistResponse"
+  "/construction/watchlist/custom":
+    get:
+      operationId: constructionWatchlistCustom
+      summary: Settings-aware custom watchlist alerts
+      responses:
+        '200':
+          description: Construction custom watchlist response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionCustomWatchlistResponse"
+  "/construction/settings":
+    get:
+      operationId: constructionSettingsGet
+      summary: Read app-level construction alert settings profile
+      responses:
+        '200':
+          description: Construction settings response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsResponse"
+    post:
+      operationId: constructionSettingsSave
+      summary: Save app-level construction alert settings profile
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ConstructionSettingsModel"
+      responses:
+        '200':
+          description: Construction settings response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsResponse"
+  "/construction/settings/defaults":
+    get:
+      operationId: constructionSettingsDefaults
+      summary: Read safe default construction settings
+      responses:
+        '200':
+          description: Construction settings defaults response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsDefaultsResponse"
+  "/construction/settings/reset":
+    post:
+      operationId: constructionSettingsReset
+      summary: Reset app-level construction settings to defaults
+      responses:
+        '200':
+          description: Construction settings reset response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ConstructionSettingsResetResponse"
   "/construction/morning-brief/v2":
     get:
       operationId: constructionMorningBriefV2
@@ -1120,6 +1180,12 @@ components:
               "$ref": "#/components/schemas/ConstructionWatchlistModel"
             watchlist_summary:
               type: string
+            settings_summary:
+              type: string
+            custom_watchlist:
+              "$ref": "#/components/schemas/ConstructionCustomWatchlistModel"
+            custom_watchlist_summary:
+              type: string
             morning_brief_v2:
               "$ref": "#/components/schemas/MorningBriefV2Model"
             morning_brief_v2_summary:
@@ -1183,6 +1249,9 @@ components:
           - migration_index
           - migration_summary
           - market_tape
+          - settings_summary
+          - custom_watchlist
+          - custom_watchlist_summary
           additionalProperties: true
       required:
       - ok
@@ -1573,6 +1642,59 @@ components:
           type: string
       required: [alerts, summary]
       additionalProperties: false
+    ConstructionSettingsModel:
+      type: object
+      properties:
+        metros_watchlist:
+          type: array
+          items: { type: string }
+        risk_watchlist:
+          type: array
+          items: { type: string }
+        thresholds:
+          type: object
+          properties:
+            weakest_metro_threshold: { type: number }
+            strongest_metro_momentum_cooloff_threshold: { type: number }
+            labor_shock_elevated_threshold: { type: number }
+            collections_stress_severe_threshold: { type: number }
+            project_risk_severe_threshold: { type: number }
+            portfolio_risk_severe_threshold: { type: number }
+            owner_risk_severe_threshold: { type: number }
+            developer_fragility_severe_threshold: { type: number }
+            backlog_quality_weak_threshold: { type: number }
+            bid_intensity_mismatch_threshold: { type: number }
+          additionalProperties: true
+        alert_sensitivity:
+          type: string
+          enum: [conservative, balanced, aggressive]
+        muted_alert_codes:
+          type: array
+          items: { type: string }
+        updated_at:
+          type: string
+      required: [metros_watchlist, risk_watchlist, thresholds, alert_sensitivity, muted_alert_codes, updated_at]
+      additionalProperties: false
+    ConstructionSettingsDefaultsModel:
+      type: object
+      properties:
+        defaults:
+          "$ref": "#/components/schemas/ConstructionSettingsModel"
+      required: [defaults]
+      additionalProperties: false
+    ConstructionCustomWatchlistModel:
+      type: object
+      properties:
+        alerts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/WatchlistAlertModel"
+        summary:
+          type: string
+        active_settings:
+          "$ref": "#/components/schemas/ConstructionSettingsModel"
+      required: [alerts, summary, active_settings]
+      additionalProperties: false
     MorningBriefV2Model:
       type: object
       properties:
@@ -1623,6 +1745,66 @@ components:
         watchlist:
           "$ref": "#/components/schemas/ConstructionWatchlistModel"
       required: [ok, ts, service, watchlist]
+      additionalProperties: true
+    ConstructionSettingsResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        settings:
+          "$ref": "#/components/schemas/ConstructionSettingsModel"
+      required: [ok, ts, service, settings]
+      additionalProperties: true
+    ConstructionSettingsDefaultsResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        defaults:
+          "$ref": "#/components/schemas/ConstructionSettingsModel"
+      required: [ok, ts, service, defaults]
+      additionalProperties: true
+    ConstructionSettingsResetResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        settings:
+          "$ref": "#/components/schemas/ConstructionSettingsModel"
+        reset:
+          type: boolean
+      required: [ok, ts, service, settings, reset]
+      additionalProperties: true
+    ConstructionCustomWatchlistResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        ts:
+          type: string
+        service:
+          type: string
+        alerts:
+          type: array
+          items:
+            "$ref": "#/components/schemas/WatchlistAlertModel"
+        summary:
+          type: string
+        active_settings:
+          "$ref": "#/components/schemas/ConstructionSettingsModel"
+      required: [ok, ts, service, alerts, summary, active_settings]
       additionalProperties: true
     ConstructionMorningBriefV2Response:
       type: object
