@@ -62,6 +62,22 @@ test('construction settings routes are explicitly registered in worker route tab
   }
 });
 
+test('OPTIONS preflight advertises POST for settings write routes', async () => {
+  const env = makeEnv();
+  const req = new Request('https://example.com/construction/settings', {
+    method: 'OPTIONS',
+    headers: {
+      origin: 'https://app.example.com',
+      'access-control-request-method': 'POST',
+    },
+  });
+
+  const res = await worker.fetch(req, env);
+
+  assert.equal(res.status, 204);
+  assert.equal(res.headers.get('access-control-allow-methods'), 'GET,POST,OPTIONS');
+});
+
 test('/construction/settings/defaults returns deterministic fallback payload', async () => {
   const env = makeEnv();
   const req = new Request('https://example.com/construction/settings/defaults');
