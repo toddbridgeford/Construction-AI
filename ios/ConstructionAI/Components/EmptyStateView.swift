@@ -13,11 +13,13 @@ struct EmptyStateView: View {
             Button("Retry", action: retry)
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+                .terminalTapTarget()
                 .accessibilityHint("Attempts to refresh dashboard data")
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .terminalPanel()
         .padding(.horizontal, TerminalTheme.Spacing.medium)
+        .accessibilityElement(children: .contain)
     }
 }

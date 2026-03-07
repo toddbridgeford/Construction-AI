@@ -21,8 +21,18 @@ struct TrendArrowView: View {
         }
     }
 
+    private var directionLabel: String {
+        switch direction {
+        case .up: return "Up"
+        case .down: return "Down"
+        case .flat: return "Flat"
+        case .unknown: return "Unknown"
+        }
+    }
+
     var body: some View {
         Image(systemName: symbol)
             .foregroundStyle(color)
+            .accessibilityLabel("Trend \(directionLabel)")
     }
 }

@@ -17,5 +17,7 @@ struct InspectorHeaderView: View {
                 .foregroundStyle(.secondary)
         }
         .terminalPanel()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title). Severity \(severity.rawValue). Last updated \(lastUpdated)")
     }
 }

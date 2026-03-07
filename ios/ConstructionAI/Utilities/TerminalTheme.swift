@@ -61,6 +61,12 @@ extension View {
                     .fill(TerminalTheme.ColorSet.panelBackground.opacity(0.65))
             )
     }
+
+    func terminalTapTarget() -> some View {
+        self
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(Rectangle())
+    }
 }
 
 struct TerminalSectionHeader: View {

@@ -16,6 +16,7 @@ struct CommandPaletteView: View {
                 TextField("Type a command or search…", text: $query)
                     .textFieldStyle(.roundedBorder)
                     .focused($isFocused)
+                    .accessibilityHint("Searches navigation and terminal actions")
 
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 8) {
@@ -25,10 +26,16 @@ struct CommandPaletteView: View {
                                 .foregroundStyle(.secondary)
                                 .padding(.top, 6)
                             ForEach(group.1) { item in
-                                row(item: item, selected: selectedItemID == item.id)
-                                    .onTapGesture { onSelect(item) }
-                                    .accessibilityLabel(item.title)
-                                    .accessibilityHint(item.subtitle)
+                                Button {
+                                    onSelect(item)
+                                } label: {
+                                    row(item: item, selected: selectedItemID == item.id)
+                                }
+                                .buttonStyle(.plain)
+                                .terminalTapTarget()
+                                .accessibilityLabel(item.title)
+                                .accessibilityHint(item.subtitle)
+                                .accessibilityAddTraits(selectedItemID == item.id ? [.isSelected] : [])
                             }
                         }
                     }

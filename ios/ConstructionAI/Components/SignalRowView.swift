@@ -10,7 +10,7 @@ struct SignalRowView: View {
                 Text(signal.interpretation ?? "No interpretation")
                     .font(.caption)
                     .foregroundStyle(.secondary)
-                    .lineLimit(1)
+                    .lineLimit(2)
             }
             Spacer()
             TrendArrowView(direction: Trend.from(arrow: signal.arrow))
@@ -18,5 +18,7 @@ struct SignalRowView: View {
         }
         .font(.subheadline)
         .terminalRowBackground()
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(signal.key), \(signal.severity.rawValue) severity, \(signal.interpretation ?? "No interpretation")")
     }
 }

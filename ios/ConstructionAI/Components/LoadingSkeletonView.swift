@@ -13,6 +13,8 @@ struct LoadingSkeletonView: View {
         .terminalPanel()
         .padding(.horizontal, TerminalTheme.Spacing.medium)
         .redacted(reason: .placeholder)
+        .accessibilityElement(children: .ignore)
         .accessibilityLabel("Loading dashboard")
+        .accessibilityHint("Please wait while latest construction market data is fetched")
     }
 }

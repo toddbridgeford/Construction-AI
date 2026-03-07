@@ -19,13 +19,15 @@ struct TickerStripView: View {
                         chip(label: signal.key, value: signal.value.map { String(format: "%.2f", $0) } ?? "—", arrow: Trend.from(arrow: signal.arrow).symbol)
                     }
                     .buttonStyle(.plain)
+                    .terminalTapTarget()
                     .accessibilityLabel("Signal \(signal.key) \(signal.value.map { String(format: "%.2f", $0) } ?? "no value")")
                     .accessibilityHint("Opens inspector for this signal")
                 }
             }
             .padding(.horizontal, TerminalTheme.Spacing.medium)
-            .frame(height: 48)
+            .frame(minHeight: 48)
         }
+        .accessibilityElement(children: .contain)
     }
 
     private func chip(label: String, value: String, arrow: String) -> some View {
@@ -35,7 +37,8 @@ struct TickerStripView: View {
             Image(systemName: arrow).font(.caption2)
         }
         .padding(.horizontal, 10)
-        .frame(height: 34)
+        .frame(minHeight: 34)
         .background(TerminalTheme.ColorSet.panelBackground, in: RoundedRectangle(cornerRadius: TerminalTheme.Radius.chip, style: .continuous))
+        .accessibilityElement(children: .combine)
     }
 }

@@ -25,6 +25,8 @@ struct RegionsView: View {
                             .foregroundStyle(.orange)
                     }
                     .terminalRowBackground()
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("\(region.name), value \(region.value.map { String(format: "%.0f", $0) } ?? "not available")")
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                 }

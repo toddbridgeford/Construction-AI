@@ -12,6 +12,8 @@ struct KPIStatCardView: View {
             HStack {
                 Text(value)
                     .font(.title3.weight(.semibold))
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
                     .monospacedDigit()
                 TrendArrowView(direction: direction)
             }
@@ -20,5 +22,7 @@ struct KPIStatCardView: View {
         .padding(TerminalTheme.Spacing.small)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.thinMaterial, in: RoundedRectangle(cornerRadius: TerminalTheme.Radius.row))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title), \(value), \(subtitle)")
     }
 }
