@@ -3050,7 +3050,7 @@ export async function handleConstructionSettingsProfilesCreate(request, env) {
     }
 
     const nowIso = new Date().toISOString();
-    const profileId = `custom-${Date.now().toString(36)}`;
+    const profileId = `custom-${Date.now().toString(36)}-${crypto.randomUUID().slice(0, 8)}`;
     const profile = {
       profile_id: profileId,
       profile_name: String(body.profile_name).trim(),
