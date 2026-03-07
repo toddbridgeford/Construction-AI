@@ -1782,10 +1782,22 @@ async function resetConstructionSettings(env) {
     ...(balancedPreset || {}),
     updated_at: new Date().toISOString(),
   });
-  const nextProfiles = envelope.profiles.map((profile) => (profile.profile_id === envelope.active_profile_id
-    ? { ...profile, settings: baseline, updated_at: baseline.updated_at }
-    : profile));
-  await persistSettingsProfilesModel(env, { ...envelope, profiles: nextProfiles });
+  const baselineProfileId = envelope.profiles.some((profile) => profile.profile_id === "balanced-operator")
+    ? "balanced-operator"
+    : envelope.active_profile_id;
+  const nextProfiles = envelope.profiles.map((profile) => (profile.profile_id === baselineProfileId
+    ? {
+      ...profile,
+      settings: baseline,
+      updated_at: baseline.updated_at,
+      is_active: true,
+    }
+    : { ...profile, is_active: false }));
+  await persistSettingsProfilesModel(env, {
+    ...envelope,
+    active_profile_id: baselineProfileId,
+    profiles: nextProfiles,
+  });
   return baseline;
 }
 
