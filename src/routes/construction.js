@@ -2574,6 +2574,28 @@ export async function handleConstructionMarketRadar(env) {
   }
 }
 
+
+export const PORTFOLIO_LAYER_ENDPOINTS = [
+  "/construction/owner-risk",
+  "/construction/developer-fragility",
+  "/construction/lender-pullback-risk",
+  "/construction/counterparty-quality",
+  "/construction/metro-concentration-risk",
+  "/construction/counterparty-concentration-risk",
+  "/construction/project-mix-exposure",
+  "/construction/portfolio-risk",
+];
+
+export const PORTFOLIO_LAYER_ROUTE_HANDLERS = {
+  "/construction/owner-risk": handleConstructionOwnerRisk,
+  "/construction/developer-fragility": handleConstructionDeveloperFragility,
+  "/construction/lender-pullback-risk": handleConstructionLenderPullbackRisk,
+  "/construction/counterparty-quality": handleConstructionCounterpartyQuality,
+  "/construction/metro-concentration-risk": handleConstructionMetroConcentrationRisk,
+  "/construction/counterparty-concentration-risk": handleConstructionCounterpartyConcentrationRisk,
+  "/construction/project-mix-exposure": handleConstructionProjectMixExposure,
+  "/construction/portfolio-risk": handleConstructionPortfolioRisk,
+};
 export function __test_only__() {
   return {
     cycleInterpretation,

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { buildYtdPytdFromObservations } from "../src/routes/spending_ytd.js";
-import { __test_only__ as constructionTestOnly } from "../src/routes/construction.js";
+import worker from "../src/worker.js";
+import { PORTFOLIO_LAYER_ENDPOINTS, __test_only__ as constructionTestOnly } from "../src/routes/construction.js";
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -286,15 +287,36 @@ function runIntelligenceLayerSmoke() {
   assert(["low", "moderate", "elevated", "severe"].includes(portfolioRisk.state), "Portfolio risk state invalid");
 }
 
-try {
-  runYtdSmoke();
-  runTerminalSmoke();
-  runMarketRadarSmoke();
-  runIntelligenceLayerSmoke();
-  runPowerHeatmapNowcastSmoke();
-  console.log("smoke_worker_node: PASS");
-} catch (err) {
-  console.error("smoke_worker_node: FAIL");
-  console.error(err?.stack || String(err));
-  process.exit(1);
+
+async function runPortfolioRouteWiringSmoke() {
+  for (const path of PORTFOLIO_LAYER_ENDPOINTS) {
+    const response = await worker.fetch(new Request(`https://example.com${path}`), {});
+    assert(response.status !== 404, `${path} must be registered in worker route table`);
+
+    const bodyText = await response.text();
+    let parsed;
+    try {
+      parsed = JSON.parse(bodyText);
+    } catch (err) {
+      throw new Error(`${path} must return valid JSON: ${err?.message || String(err)}`);
+    }
+
+    assert(parsed && typeof parsed === "object", `${path} must return a JSON object`);
+  }
 }
+
+(async () => {
+  try {
+    runYtdSmoke();
+    runTerminalSmoke();
+    runMarketRadarSmoke();
+    runIntelligenceLayerSmoke();
+    runPowerHeatmapNowcastSmoke();
+    await runPortfolioRouteWiringSmoke();
+    console.log("smoke_worker_node: PASS");
+  } catch (err) {
+    console.error("smoke_worker_node: FAIL");
+    console.error(err?.stack || String(err));
+    process.exit(1);
+  }
+})();
