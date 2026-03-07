@@ -1607,10 +1607,15 @@ function cloneProfile(profile, isActive = profile?.is_active === true) {
 
 function normalizeProfilesEnvelope(rawProfiles, rawActiveProfileId) {
   const seededProfiles = CONSTRUCTION_SEEDED_PROFILE_PRESETS.map((preset) => profileModelFromPreset(preset));
+  const balancedPreset = CONSTRUCTION_SEEDED_PROFILE_PRESETS.find((preset) => preset.profile_id === "balanced-operator");
   const savedProfiles = Array.isArray(rawProfiles)
     ? rawProfiles.map((entry) => cloneProfile(entry)).filter(Boolean).filter((entry) => entry.profile_id && validateProfileName(entry.profile_name))
     : [];
-  const source = savedProfiles.length ? savedProfiles : seededProfiles;
+  const source = savedProfiles.length
+    ? (savedProfiles.some((profile) => profile.profile_id === "balanced-operator")
+      ? savedProfiles
+      : [profileModelFromPreset(balancedPreset || CONSTRUCTION_SEEDED_PROFILE_PRESETS[0]), ...savedProfiles])
+    : seededProfiles;
 
   const uniqueProfiles = [];
   const seen = new Set();

@@ -175,6 +175,35 @@ test('custom watchlist and terminal include profile-aware metadata', async () =>
   assert.equal(typeof terminalBody.terminal.saved_profiles_summary, 'string');
 });
 
+
+test('settings profile routes are wired at router level and do not return NOT_FOUND', async () => {
+  const env = makeEnv();
+
+  const listRes = await worker.fetch(new Request('https://example.com/construction/settings/profiles'), env);
+  assert.equal(listRes.status, 200);
+
+  const createRes = await worker.fetch(new Request('https://example.com/construction/settings/profiles', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_name: 'Router Test Profile' }),
+  }), env);
+  assert.equal(createRes.status, 200);
+
+  const activateRes = await worker.fetch(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'balanced-operator' }),
+  }), env);
+  assert.equal(activateRes.status, 200);
+
+  const deleteRes = await worker.fetch(new Request('https://example.com/construction/settings/profiles/delete', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'conservative-lender' }),
+  }), env);
+  assert.equal(deleteRes.status, 200);
+});
+
 test('/construction/watchlist/custom is wired and does not return NOT_FOUND at router level', async () => {
   const env = makeEnv();
   const req = new Request('https://example.com/construction/watchlist/custom');
