@@ -2086,7 +2086,13 @@ function terminalSnapshotState(terminal) {
   };
 }
 
-async function buildMorningBriefV2(terminal, env, settings = cloneDefaultConstructionSettings()) {
+async function buildMorningBriefV2(
+  terminal,
+  env,
+  settings = cloneDefaultConstructionSettings(),
+  options = {}
+) {
+  const { persistSnapshot = false } = options || {};
   const current = terminalSnapshotState(terminal);
   const prior = await kvGetJson(env, SCENARIO_SNAPSHOT_KEY);
 
@@ -2109,7 +2115,9 @@ async function buildMorningBriefV2(terminal, env, settings = cloneDefaultConstru
     changed.push(`Strongest metro rotated from ${prior.strongest_market} to ${current.strongest_market}`);
   }
 
-  await kvPutJson(env, SCENARIO_SNAPSHOT_KEY, current, 60 * 60 * 24 * 14);
+  if (persistSnapshot) {
+    await kvPutJson(env, SCENARIO_SNAPSHOT_KEY, current, 60 * 60 * 24 * 14);
+  }
 
   const watchlist = buildWatchlistAlerts(terminal, settings);
   const topRisk = watchlist.alerts.find((alert) => alert.severity === "high")?.message
@@ -3409,6 +3417,9 @@ export async function handleConstructionWatchlist(request, env) {
 export async function handleConstructionMorningBriefV2(request, env) {
   try {
     const terminal = await buildTerminalPayload(request, env);
+    const { activeProfile } = await readActiveSettingsProfile(env);
+    const settings = sanitizeConstructionSettings(activeProfile?.settings || {});
+    terminal.morning_brief_v2 = await buildMorningBriefV2(terminal, env, settings, { persistSnapshot: true });
     return ok(env, { brief: terminal.morning_brief_v2 });
   } catch (e) {
     return error(env, 500, "MORNING_BRIEF_V2_FAILED", "Unable to build construction morning brief v2", {
