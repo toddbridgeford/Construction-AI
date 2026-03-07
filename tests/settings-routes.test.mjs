@@ -192,6 +192,21 @@ test('profile create and delete enforce active profile delete protection', async
   assert.equal(deleteRes.status, 200);
 });
 
+test('profile create rejects invalid settings payload when settings key is provided', async () => {
+  const env = makeEnv();
+  const createRes = await handleConstructionSettingsProfilesCreate(new Request('https://example.com/construction/settings/profiles', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_name: 'Invalid Override', settings: null }),
+  }), env);
+  const body = await json(createRes);
+
+  assert.equal(createRes.status, 400);
+  assert.equal(body.error.code, 'SETTINGS_PROFILE_CREATE_VALIDATION_FAILED');
+  assert.ok(Array.isArray(body.error.details.errors));
+  assert.match(body.error.details.errors[0], /payload must be an object/i);
+});
+
 test('reset returns balanced baseline and keeps endpoint compatibility', async () => {
   const env = makeEnv();
   const res = await handleConstructionSettingsReset(new Request('https://example.com/construction/settings/reset', { method: 'POST' }), env);
