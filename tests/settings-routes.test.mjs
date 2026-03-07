@@ -168,6 +168,14 @@ test('settings POST updates active profile with partial merge and validation', a
     method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ thresholds: { labor_shock_elevated_threshold: 'bad' } }),
   }), env);
   assert.equal(badRes.status, 400);
+
+  const unknownFieldRes = await handleConstructionSettings(new Request('https://example.com/construction/settings', {
+    method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ invalid_toggle: true }),
+  }), env);
+  const unknownFieldBody = await json(unknownFieldRes);
+  assert.equal(unknownFieldRes.status, 400);
+  assert.equal(unknownFieldBody.error.code, 'SETTINGS_WRITE_VALIDATION_FAILED');
+  assert.match(unknownFieldBody.error.details.errors[0], /unknown field: invalid_toggle/);
 });
 
 test('profile create and delete enforce active profile delete protection', async () => {
