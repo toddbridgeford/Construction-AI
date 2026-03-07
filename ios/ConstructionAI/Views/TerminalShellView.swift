@@ -157,9 +157,7 @@ private struct ErrorBannerView: View {
             }
             Spacer()
             Button("Retry", action: retry)
-                .buttonStyle(.bordered)
-                .font(.caption)
-                .terminalTapTarget()
+                .buttonStyle(TerminalButtonStyle(intent: .destructive))
                 .accessibilityHint("Attempts to reconnect and reload dashboard data")
         }
         .padding(10)

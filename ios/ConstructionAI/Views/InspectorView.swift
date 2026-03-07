@@ -50,32 +50,32 @@ struct InspectorView: View {
     }
 
     private func actionButtons(summary: String) -> some View {
-        HStack {
+        HStack(spacing: TerminalTheme.Spacing.small) {
             Button("Copy summary") {
                 #if canImport(UIKit)
                 UIPasteboard.general.string = summary
                 #endif
             }
-            .buttonStyle(.bordered)
-            .terminalTapTarget()
+            .buttonStyle(TerminalButtonStyle(intent: .neutral))
             .accessibilityHint("Copies summary text to clipboard")
 
             ShareLink(item: summary) {
                 Label("Share", systemImage: "square.and.arrow.up")
             }
-            .buttonStyle(.bordered)
-            .terminalTapTarget()
+            .buttonStyle(TerminalButtonStyle(intent: .neutral))
 
-            Toggle("Pin", isOn: $isPinned)
-                .toggleStyle(.button)
-                .terminalTapTarget()
-                .accessibilityHint("Marks this inspector item as pinned in this session")
-            Toggle("Watch", isOn: $isWatched)
-                .toggleStyle(.button)
-                .terminalTapTarget()
-                .accessibilityHint("Marks this inspector item as watched in this session")
+            Button(isPinned ? "Pinned" : "Pin") {
+                isPinned.toggle()
+            }
+            .buttonStyle(TerminalButtonStyle(intent: isPinned ? .selected : .neutral))
+            .accessibilityHint("Marks this inspector item as pinned in this session")
+
+            Button(isWatched ? "Watching" : "Watch") {
+                isWatched.toggle()
+            }
+            .buttonStyle(TerminalButtonStyle(intent: isWatched ? .primary : .neutral))
+            .accessibilityHint("Marks this inspector item as watched in this session")
         }
-        .controlSize(.large)
         .terminalPanel()
     }
 }

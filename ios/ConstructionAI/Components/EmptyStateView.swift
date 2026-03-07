@@ -11,9 +11,7 @@ struct EmptyStateView: View {
             TerminalSectionHeader(title: "No dashboard data available", subtitle: "We could not load a snapshot. Check connection and retry.")
                 .multilineTextAlignment(.center)
             Button("Retry", action: retry)
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .terminalTapTarget()
+                .buttonStyle(TerminalButtonStyle(intent: .primary))
                 .accessibilityHint("Attempts to refresh dashboard data")
         }
         .padding(24)
