@@ -3113,6 +3113,19 @@ export async function handleConstructionSettingsActiveProfile(request, env) {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
     if (body === null) return error(env, 400, "ACTIVE_PROFILE_INVALID_JSON", "Malformed JSON body");
+    if (body === null || typeof body !== "object" || Array.isArray(body)) {
+      return error(env, 400, "ACTIVE_PROFILE_VALIDATION_FAILED", "Invalid active profile payload", {
+        errors: ["payload must be an object"],
+      });
+    }
+
+    const unknownFields = Object.keys(body).filter((key) => key !== "profile_id");
+    if (unknownFields.length > 0) {
+      return error(env, 400, "ACTIVE_PROFILE_VALIDATION_FAILED", "Invalid active profile payload", {
+        errors: unknownFields.map((key) => `unknown field: ${key}`),
+      });
+    }
+
     const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
 
     if (!profileId) {

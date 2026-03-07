@@ -137,6 +137,16 @@ test('active profile endpoint validates missing and unknown profile ids', async 
   assert.equal(unknownRes.status, 404);
   assert.equal(unknownBody.error.code, 'PROFILE_NOT_FOUND');
   assert.equal(unknownBody.error.details.profile_id, 'missing-profile');
+
+  const unknownFieldRes = await handleConstructionSettingsActiveProfile(new Request('https://example.com/construction/settings/active-profile', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ profile_id: 'balanced-operator', invalid_toggle: true }),
+  }), env);
+  const unknownFieldBody = await json(unknownFieldRes);
+  assert.equal(unknownFieldRes.status, 400);
+  assert.equal(unknownFieldBody.error.code, 'ACTIVE_PROFILE_VALIDATION_FAILED');
+  assert.match(unknownFieldBody.error.details.errors[0], /unknown field: invalid_toggle/);
 });
 
 test('settings POST updates active profile with partial merge and validation', async () => {
