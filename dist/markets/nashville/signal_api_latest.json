@@ -10,7 +10,7 @@
     }
   },
   "provenance": {
-    "generated_at": "2026-03-07T06:59:12.879Z",
+    "generated_at": "2026-03-07T13:09:21.619Z",
     "sources": [
       {
         "name": "FRED",
@@ -37,7 +37,7 @@
   },
   "indices": {
     "pressure_index": {
-      "value": 41,
+      "value": 40,
       "direction": "↑",
       "zone": "Compression",
       "delta_3m": 0.3,
