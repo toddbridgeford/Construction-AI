@@ -892,6 +892,41 @@ test('bundle endpoint returns top-level upstream error when all custom series fe
   }
 });
 
+
+test('bundle endpoint returns top-level upstream error when any requested custom series fails', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const originalFetch = globalThis.fetch;
+
+  globalThis.fetch = async (url) => {
+    const parsed = new URL(String(url));
+    const seriesId = parsed.searchParams.get('series_id');
+    if (seriesId === 'FEDFUNDS') {
+      return new Response(JSON.stringify({ error_code: 500, error_message: 'upstream unavailable' }), {
+        status: 500,
+        headers: { 'content-type': 'application/json' },
+      });
+    }
+
+    return new Response(JSON.stringify({ observations: [{ date: '2025-01-01', value: '1.0' }] }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  };
+
+  try {
+    const req = new Request('https://example.com/bundle?series=MORTGAGE30US,FEDFUNDS');
+    const res = await handleBundle(req, env);
+    const body = await json(res);
+
+    assert.equal(res.status, 502);
+    assert.equal(body.error?.code, 'UPSTREAM_FRED');
+    assert.deepEqual(body.error?.details?.failed_series, ['FEDFUNDS']);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+
 test('bundle endpoint deduplicates repeated custom series ids before fetch fan-out', async () => {
   const env = makeEnv({ FRED_API_KEY: 'test-key' });
   const originalFetch = globalThis.fetch;
