@@ -846,6 +846,52 @@ test('bundle endpoint accepts valid custom series list', async () => {
   }
 });
 
+test('bundle endpoint returns top-level missing env error for custom series requests', async () => {
+  const env = makeEnv();
+  const req = new Request('https://example.com/bundle?series=MORTGAGE30US,FEDFUNDS');
+
+  const res = await handleBundle(req, env);
+  const body = await json(res);
+
+  assert.equal(res.status, 500);
+  assert.equal(body.error?.code, 'MISSING_ENV');
+  assert.deepEqual(body.error?.details?.missing, ['FRED_API_KEY']);
+});
+
+test('bundle endpoint keeps omitted-series path behavior unchanged when env is missing', async () => {
+  const env = makeEnv();
+  const req = new Request('https://example.com/bundle');
+
+  const res = await handleBundle(req, env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(body.bundle?.ok, false);
+  assert.equal(body.bundle?.error?.code, 'MISSING_ENV');
+});
+
+test('bundle endpoint returns top-level upstream error when all custom series fetches fail', async () => {
+  const env = makeEnv({ FRED_API_KEY: 'test-key' });
+  const originalFetch = globalThis.fetch;
+
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ error_code: 500, error_message: 'upstream unavailable' }), {
+      status: 500,
+      headers: { 'content-type': 'application/json' },
+    });
+
+  try {
+    const req = new Request('https://example.com/bundle?series=MORTGAGE30US,FEDFUNDS');
+    const res = await handleBundle(req, env);
+    const body = await json(res);
+
+    assert.equal(res.status, 502);
+    assert.equal(body.error?.code, 'UPSTREAM_FRED');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test('bundle endpoint deduplicates repeated custom series ids before fetch fan-out', async () => {
   const env = makeEnv({ FRED_API_KEY: 'test-key' });
   const originalFetch = globalThis.fetch;
