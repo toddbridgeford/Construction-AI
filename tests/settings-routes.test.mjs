@@ -109,6 +109,52 @@ test('profiles list performs a single settings model read to avoid duplicate KV 
   assert.equal(getCount, 5);
 });
 
+test('profiles list avoids redundant KV writes when stored profiles model is already normalized', async () => {
+  let putCount = 0;
+  const store = new Map();
+  store.set('settings:profiles', JSON.stringify([
+    {
+      profile_id: 'balanced-operator',
+      profile_name: 'Balanced Operator',
+      description: 'Most teams default here for day-to-day planning.',
+      is_active: true,
+      settings: {
+        thresholds: {
+          labor_shock_elevated_threshold: 60,
+          margin_pressure_elevated_threshold: 58,
+          bid_intensity_hot_threshold: 62,
+        },
+        alert_sensitivity: 'balanced',
+        metros_watchlist: ['Dallas-Fort Worth', 'Phoenix', 'Nashville'],
+        risk_watchlist: ['labor_shock', 'margin_pressure', 'project_risk'],
+        muted_alert_codes: [],
+        updated_at: '2024-01-01T00:00:00.000Z',
+      },
+      updated_at: '2024-01-01T00:00:00.000Z',
+    },
+  ]));
+  store.set('settings:active_profile_id', JSON.stringify('balanced-operator'));
+
+  const env = makeEnv({
+    CPI_SNAPSHOTS: {
+      async get(key, opts = {}) {
+        if (!store.has(key)) return null;
+        const value = store.get(key);
+        if (opts.type === 'json') return JSON.parse(value);
+        return value;
+      },
+      async put(key, value) {
+        putCount += 1;
+        store.set(key, value);
+      },
+    },
+  });
+
+  const res = await handleConstructionSettingsProfiles(new Request('https://example.com/construction/settings/profiles'), env);
+  assert.equal(res.status, 200);
+  assert.equal(putCount, 0);
+});
+
 test('active profile endpoint switches active profile with resolved settings payload', async () => {
   const env = makeEnv();
   const req = new Request('https://example.com/construction/settings/active-profile', {

@@ -1661,6 +1661,25 @@ function normalizeProfilesEnvelope(rawProfiles, rawActiveProfileId) {
   };
 }
 
+function shouldPersistNormalizedProfilesModel(savedProfilesRaw, activeProfileIdRaw, legacyProfilesRaw, legacyActiveProfileIdRaw, legacySettings, envelope) {
+  if (!Array.isArray(savedProfilesRaw) || savedProfilesRaw.length === 0) return true;
+  if (typeof activeProfileIdRaw !== "string") return true;
+
+  const usingLegacyProfiles = Array.isArray(legacyProfilesRaw) && legacyProfilesRaw.length > 0 && savedProfilesRaw.length === 0;
+  if (usingLegacyProfiles) return true;
+
+  const usingLegacyActiveProfileId = (typeof legacyActiveProfileIdRaw === "string" && legacyActiveProfileIdRaw)
+    && (!activeProfileIdRaw || typeof activeProfileIdRaw !== "string");
+  if (usingLegacyActiveProfileId) return true;
+
+  if (legacySettings && typeof legacySettings === "object") return true;
+
+  const normalizedSavedEnvelope = normalizeProfilesEnvelope(savedProfilesRaw, activeProfileIdRaw);
+  if (JSON.stringify(normalizedSavedEnvelope) !== JSON.stringify(envelope)) return true;
+
+  return false;
+}
+
 async function readSettingsProfilesModel(env) {
   const [savedProfilesRaw, activeProfileIdRaw, legacyProfilesRaw, legacyActiveProfileIdRaw, legacySettings] = await Promise.all([
     kvGetJson(env, CONSTRUCTION_SETTINGS_PROFILES_KEY),
@@ -1694,9 +1713,18 @@ async function readSettingsProfilesModel(env) {
     };
   }
 
-  await kvPutJson(env, CONSTRUCTION_SETTINGS_PROFILES_KEY, envelope.profiles, 60 * 60 * 24 * 365);
-  await kvPutJson(env, CONSTRUCTION_ACTIVE_PROFILE_ID_KEY, envelope.active_profile_id, 60 * 60 * 24 * 365);
-  await kvPutJson(env, CONSTRUCTION_SETTINGS_KEY, envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id)?.settings || cloneDefaultConstructionSettings(), 60 * 60 * 24 * 365);
+  if (shouldPersistNormalizedProfilesModel(
+    savedProfilesRaw,
+    activeProfileIdRaw,
+    legacyProfilesRaw,
+    legacyActiveProfileIdRaw,
+    legacySettings,
+    envelope,
+  )) {
+    await kvPutJson(env, CONSTRUCTION_SETTINGS_PROFILES_KEY, envelope.profiles, 60 * 60 * 24 * 365);
+    await kvPutJson(env, CONSTRUCTION_ACTIVE_PROFILE_ID_KEY, envelope.active_profile_id, 60 * 60 * 24 * 365);
+    await kvPutJson(env, CONSTRUCTION_SETTINGS_KEY, envelope.profiles.find((profile) => profile.profile_id === envelope.active_profile_id)?.settings || cloneDefaultConstructionSettings(), 60 * 60 * 24 * 365);
+  }
 
   return envelope;
 }
