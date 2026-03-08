@@ -40,9 +40,11 @@ struct DenseSignalsTableView: View {
                         Image(systemName: pinned.contains(signal.id) ? "pin.fill" : "pin")
                             .font(.body.weight(.semibold))
                             .frame(width: 18, height: 18)
+                            .frame(minWidth: 44, minHeight: 44)
                     }
                     .buttonStyle(TerminalButtonStyle(intent: pinned.contains(signal.id) ? .selected : .neutral))
                     .accessibilityLabel(pinned.contains(signal.id) ? "Unpin \(signal.key)" : "Pin \(signal.key)")
+                    .accessibilityHint("Adds or removes this signal from your pinned list")
                 }
                 if index < signals.count - 1 {
                     Divider()

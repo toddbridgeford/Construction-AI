@@ -7,9 +7,9 @@ struct RegionsView: View {
         List {
             if regions.isEmpty {
                 ContentUnavailableView(
-                    "No regional data",
+                    regionsEmptyTitle,
                     systemImage: "map",
-                    description: Text("No regions matched your current search.")
+                    description: Text(regionsEmptyDescription)
                 )
                 .listRowBackground(Color.clear)
                 .terminalListRowStyle()
@@ -26,6 +26,20 @@ struct RegionsView: View {
 
     private var regions: [RegionItem] {
         store.filteredRegions
+    }
+
+    private var hasActiveSearch: Bool {
+        !store.searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private var regionsEmptyTitle: String {
+        hasActiveSearch ? "No matching regions" : "No regional data yet"
+    }
+
+    private var regionsEmptyDescription: String {
+        hasActiveSearch
+            ? "Try broadening your search to see more regions."
+            : "Pull to refresh or tap Retry Fetch in Settings to load the latest regional snapshot."
     }
 
     @ViewBuilder
