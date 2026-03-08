@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-08T03:12:26.517Z",
+  "generated_at": "2026-03-08T07:00:50.223Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -9,13 +9,9 @@
   "cpi": {
     "headline": 47,
     "zone": "Slowdown",
-    "delta_3m": -1,
+    "delta_3m": 0,
     "momentum": "Stable",
     "history": [
-      {
-        "date": "2026-03-05",
-        "value": 46
-      },
       {
         "date": "2026-03-05",
         "value": 46
@@ -54,6 +50,10 @@
       },
       {
         "date": "2026-03-07",
+        "value": 47
+      },
+      {
+        "date": "2026-03-08",
         "value": 47
       },
       {
@@ -187,7 +187,7 @@
     "heat_strip": {
       "cpi": 47,
       "zone": "Slowdown",
-      "delta_3m": -1,
+      "delta_3m": 0,
       "momentum": "Stable",
       "risk_thermometer_mode": false,
       "freeze_risk": false
@@ -195,10 +195,64 @@
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 28,
-      "newsapi:everything": 77
+      "newsapi:top_headlines": 29,
+      "newsapi:everything": 76
     },
     "news_unified": [
+      {
+        "title": "Neiman Marcus store at Ala Moana Center to close - Honolulu Star-Advertiser",
+        "url": "https://www.staradvertiser.com/2026/03/06/breaking-news/neiman-marcus-store-to-close-at-ala-moana-center/",
+        "source": "Honolulu Star-Advertiser",
+        "published_at": "2026-03-07T02:55:30Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Saks Global is closing the Neiman Marcus department store at Ala Moana Center as part of ongoing restructuring efforts, the luxury retailer said in a news release today."
+      },
+      {
+        "title": "Trump administration's embattled FDA vaccine chief is leaving for the second time - NPR",
+        "url": "https://www.npr.org/2026/03/06/nx-s1-5740596/trump-administrations-embattled-fda-vaccine-chief-is-leaving-for-the-second-time",
+        "source": "NPR",
+        "published_at": "2026-03-07T02:38:53Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The FDA's controversial vaccine chief, Dr. Vinay Prasad, is leaving the agency. It's the second time he has abruptly departed following decisions involving the review of vaccinations and specialty drugs."
+      },
+      {
+        "title": "Crude prices make record jump as Trump’s measures fail to calm markets - Politico",
+        "url": "https://www.politico.com/news/2026/03/06/crude-prices-make-record-jump-as-trumps-measures-fail-to-calm-markets-00817397",
+        "source": "Politico",
+        "published_at": "2026-03-07T02:11:50Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The Trump administration has yet to solve the fundamental issue of getting oil and gas tankers moving through the Strait of Hormuz again, analysts said."
+      },
+      {
+        "title": "Google gives CEO Sundar Pichai new pay deal worth up to $692mn - Financial Times",
+        "url": "https://www.ft.com/content/1d3fa4f9-ec94-49ff-b22f-bd69b92be8ce",
+        "source": "Financial Times",
+        "published_at": "2026-03-07T01:10:33Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Alphabet boss gets bumper package of stock options tied to the share price and growth of Waymo in the next three years"
+      },
+      {
+        "title": "Trump Accounts: IRS announces rules proposal for $1K payments - The Hill",
+        "url": "https://thehill.com/homenews/nexstar_media_wire/5772283-trump-accounts-irs-announces-rules-proposal-for-1k-payments/",
+        "source": "The Hill",
+        "published_at": "2026-03-07T01:10:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The IRS announced a series of proposed rules that would determine eligibility and timing for the $1,000 government seed payments, among other aspects of the Trump Accounts."
+      },
+      {
+        "title": "Prediction market Kalshi sued over $54M Iranian leader bets after ‘death carveout’ invoked - Fox Business",
+        "url": "https://www.foxbusiness.com/technology/prediction-market-kalshi-sued-54m-iran-leader-bets-death-carveout-invoked",
+        "source": "Fox Business",
+        "published_at": "2026-03-06T23:22:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Kalshi was sued over $54 million in bets after invoking a “death carveout\" after the killing of Iran’s Ayatollah Ali Khamenei during Operation Epic Fury."
+      },
       {
         "title": "Oil price at two-year high after Qatar warns all Gulf production could stop within days - BBC",
         "url": "https://www.bbc.com/news/articles/cy031ylgepro",
@@ -207,6 +261,42 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Energy Minister Saad al-Kaabi says oil could hit $150 a barrel if the Iran conflict continues over the coming weeks."
+      },
+      {
+        "title": "Donald Trump’s Greatest Promise Is Looking More Disastrous for Him by the Day - Slate",
+        "url": "https://slate.com/news-and-politics/2026/03/february-jobs-report-trump-economy.html",
+        "source": "Slate Magazine",
+        "published_at": "2026-03-06T22:02:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Is it good politics to preside over job losses and rising gas prices? We’ll find out!."
+      },
+      {
+        "title": "Wall Street’s Safety Net Is Giving Way as Iran War Hits Markets - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-06/wall-street-s-safety-net-is-giving-way-as-iran-war-hits-markets",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T21:27:24Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The Iran war rattled but didn’t break Wall Street this week. Instead it exposed the limits of diversification strategies built to cushion investors against chaos."
+      },
+      {
+        "title": "Chevron executive: 'I think we have a state of emergency in California' - KCRA",
+        "url": "https://www.kcra.com/article/chevron-executive-state-of-emergency-california/70630507",
+        "source": "KCRA Sacramento",
+        "published_at": "2026-03-06T20:41:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A top official at Chevron is warning that an upcoming vote by California state regulators could be the final straw that collapses the oil and gas industry in the state."
+      },
+      {
+        "title": "The FDA, urged to avoid controversy, creates a new headache with attack against UniQure - statnews.com",
+        "url": "https://www.statnews.com/2026/03/06/fda-uniqure-rare-disease-huntingtons/",
+        "source": "STAT",
+        "published_at": "2026-03-06T20:25:08Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Recent decisions at the FDA threaten to turn its disagreements with the drugmaker UniQure into another political headache for the Trump administration."
       },
       {
         "title": "Oil surges to its highest price since 2023, and stocks drop after U.S. jobs report - NPR",
@@ -218,13 +308,58 @@
         "description": "Oil shot to its highest price since 2023 after surging again because of the Iran war, and a weak update on the U.S. job market knocked stocks lower to cap Wall Street's worst week since October."
       },
       {
-        "title": "Kalshi Gamblers Furious After Company Refuses to Pay Out $54 Million on Ayatollah Khamenei’s Death - Futurism",
-        "url": "http://futurism.com/future-society/kalshi-ayatollah-khamenei-iran",
-        "source": "Futurism",
-        "published_at": "2026-03-06T20:06:16Z",
+        "title": "Bond Traders Pile Into Inflation Hedges as War Drives Up Oil - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-06/bond-traders-pile-into-inflation-hedges-as-war-drives-up-oil",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T20:01:35Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The prediction market platform has refused to pay out on bets related to Ayatollah Khamenei due to a technicality."
+        "description": "Investors are piling into US bond-market products that protect against inflation — pushing some valuations to the highest levels in nearly a year — as the Mideast war sparks a surge in energy prices."
+      },
+      {
+        "title": "Airlines Warn Of Higher Fares As Trouble Brews Due To Jet Fuel Cost Skyrocketing - One Mile at a Time",
+        "url": "https://onemileatatime.com/news/airlines-warn-higher-fares-trouble-brews-jet-fuel-cost-skyrocketing/",
+        "source": "One Mile at a Time",
+        "published_at": "2026-03-06T19:48:10Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "As the cost of jet fuel skyrockets, airlines are facing billions of dollars in additional costs, which could prove problematic."
+      },
+      {
+        "title": "E-ZPass transponders are being phased out for stickers in Massachusetts. Here's what to know. - CBS News",
+        "url": "https://www.cbsnews.com/boston/news/e-zpass-transponders-stickers-massachusetts/",
+        "source": "CBS News",
+        "published_at": "2026-03-06T19:40:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A big change is underway for how the state tracks people using the E-ZPass​ program in Massachusetts."
+      },
+      {
+        "title": "Stock market today: Dow, S&P 500, Nasdaq sink after jobs report surprise as oil jumps - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/live/stock-market-today-dow-sp-500-nasdaq-drop-to-end-volatile-week-as-oil-surges-above-90-210059886.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-06T19:20:11Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Stock markets continue to be dominated by developments in the Middle East as the major gauges posted a week of losses."
+      },
+      {
+        "title": "Stock Market Today: Dow down around 500 points as oil prices rise to $90 a barrel and a weak jobs report adds another worry for investors; S&P 500 and tech-heavy Nasdaq drop sharply - MarketWatch",
+        "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-s-p-500-and-nasdaq-set-for-rise-as-payrolls-awaited",
+        "source": "MarketWatch",
+        "published_at": "2026-03-06T19:18:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The U.S. stock market struggled Friday with a disappointing U.S. jobs report and a spike in oil prices amid the Iran conflict. Treasury yields saw their biggest weekly jump since April amid worries over inflation."
+      },
+      {
+        "title": "Ford recalls over 1.7M vehicles. See affected models. - USA Today",
+        "url": "https://www.usatoday.com/story/cars/recalls/2026/03/06/ford-recalls-bronco-edge-escape-explorer-lincoln-vehicles/89019344007/",
+        "source": "USA Today",
+        "published_at": "2026-03-06T19:09:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Nearly 2 million Ford vehicles, including Bronco, Escape, Explorer and several other models, have been recalled. Check if yours is included."
       },
       {
         "title": "Private Debt Should Face ‘Full-Blown Default Cycle,’ Pimco Says - Bloomberg.com",
@@ -245,31 +380,40 @@
         "description": "The CEO took a drive with the pope and demonstrated some of the vehicle's advanced features, as well as some of the unique nods, including to the Vatican and his Chicago upbringing."
       },
       {
-        "title": "Billionaire Gas Station Owner Calls Iran War Price Hikes Temporary: ‘Suffer For One Month’ - Forbes",
-        "url": "https://www.forbes.com/sites/martinadilicosa/2026/03/06/billionaire-gas-station-owner-calls-iran-war-price-hikes-temporary-suffer-for-one-month/",
-        "source": "Forbes",
-        "published_at": "2026-03-06T18:34:44Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Catsimatidis controls over 400 gas stations across the country, as well as a major oil refinery."
-      },
-      {
-        "title": "Iran Is Bombing Data Centers in Retaliation - Futurism",
-        "url": "http://futurism.com/artificial-intelligence/iran-bombing-data-centers",
-        "source": "Futurism",
-        "published_at": "2026-03-06T18:07:01Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Iranian drones hit three Amazon Web Services (AWS) facilities in the United Arab Emirates and Bahrain, putting US assets at risk."
-      },
-      {
-        "title": "Tech employment now significantly worse than the 2008 or 2020 recessions - Hacker News",
-        "url": "https://news.ycombinator.com/item?id%5C%5Cu003d47278426=",
-        "source": "Hacker News",
-        "published_at": "2026-03-06T18:02:14Z",
+        "title": "Las Vegas tourism plummets as officials consider $6M plan to win back Canadian visitors - Fox News",
+        "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPX3ZoNWZNXzVsMXAzcmU1dzlpX0pld3NRMFRNaWYzWXdBbnJncnVsbFgxUUZNdWg1eTZka1pwZW9Venhla0dKcFVOekl4OUI4STFBVHBDWGlvdE5nUHFrV2hRVHh2WXlSNS1BT3JaSi1yRUxvb05SMmJwX2Q2LXJzVWg3OWpKY3BNYUJxYlJ3UXdPdjRFNkUtY2xrV1loSDBORlhkdkpQNklxZE11THfSAbMBQVVfeXFMTlphUE5TSlNNdDgyOWZGQ29KcnlBNDZqV3BTaHVCZ2lUN0tVNGYwLWxaS19IYlVMbGMyVXppNjlON0tINjFGNGx4UU01cG84cS02NHJhaXpfajBBX0N2OVgzalFkWldwc2lDNXJmU1ZGejJzaG1GcW1LaGlGZFlVYkh3ZFg1YmdTNm4zSjdraGJ2TUNLY2FGdHZ1OHBaSlJmUkJOS2c0X2QxdnYtNWFNenR4R3M?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-06T18:37:23Z",
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": null
+      },
+      {
+        "title": "Lloyd Center plan, and its ice rink’s fate, are sealed with a vote - OregonLive.com",
+        "url": "https://www.oregonlive.com/business/2026/03/lloyd-center-plan-and-its-ice-rinks-fate-are-sealed-with-a-vote.html",
+        "source": "OregonLive",
+        "published_at": "2026-03-06T18:15:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Under the master plan, Lloyd Center and its ice rink are expected to be torn down to one day make way for a mixed-use development."
+      },
+      {
+        "title": "The invisible layoff: AI is quietly locking Americans out of the job market, CEO warns - Fox Business",
+        "url": "https://www.foxbusiness.com/economy/invisible-layoff-ai-quietly-locking-americans-out-job-market-ceo-warns",
+        "source": "Fox Business",
+        "published_at": "2026-03-06T18:00:25Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "February's shocking 92,000 job losses reveal a potential hidden crisis: AI algorithms are allegedly screening out qualified workers while boosting productivity."
+      },
+      {
+        "title": "U.S.-Iran war exposes big market concentration risk. It isn't in S&P 500 stocks - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/iran-war-oil-energy-emerging-markets-stocks-south-korea.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T17:52:33Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Oil prices soar in the U.S.-Iran war, leading to volatility in emerging markets, and showing how concentrated EM funds are in Asian economies."
       },
       {
         "title": "Why A 'White Knight' Could Still Fight For Day One Bio - Investor's Business Daily",
@@ -281,15 +425,6 @@
         "description": "The deal will expand Servier's pipeline of cancer treatments. But an analyst says other companies could make overtures."
       },
       {
-        "title": "Worried that AI might replace you? Check out this graph from Anthropic showing the jobs most at risk - Business Insider",
-        "url": "https://www.businessinsider.com/anthropic-is-tracking-the-jobs-most-exposed-to-ai-disruption-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-06T16:53:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Anthropic economists say there's not yet evidence to suggest AI is fueling a spike in job losses in highly exposed fields like computer programming."
-      },
-      {
         "title": "New Jersey Girl Scout Troop Chastised For Brilliant Sales Hack - OutKick",
         "url": "https://www.outkick.com/culture/new-jersey-girl-scout-troop-chastised-brilliant-sales-hack",
         "source": "Outkick.com",
@@ -299,157 +434,49 @@
         "description": "A New Jersey Girl Scout troop decided to set up shop outside a local weed dispensary. Then all hell broke loose."
       },
       {
-        "title": "‘Ugly’: Trump’s job market shrinks as oil fears mount - Politico",
-        "url": "https://www.politico.com/news/2026/03/06/job-losses-oil-spike-trump-economy-fed-00816228",
-        "source": "Politico",
-        "published_at": "2026-03-06T15:20:21Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The combination of a weakening labor market and higher energy prices poses serious risks to Republicans in the coming months."
-      },
-      {
-        "title": "Axel Springer agrees to buy Telegraph Media Group in £575m deal - BBC",
-        "url": "https://www.bbc.com/news/articles/cyv916d999no",
-        "source": "BBC News",
-        "published_at": "2026-03-06T14:59:03Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Last year the Daily Mail and General Trust proposed to buy the company in a £500m takeover."
-      },
-      {
-        "title": "United can remove and ban passengers who refuse to use headphones - Mashable",
-        "url": "https://mashable.com/article/united-airlines-headphone-policy",
-        "source": "Mashable",
-        "published_at": "2026-03-06T14:03:45Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Some more peace and quiet in the cabin."
-      },
-      {
-        "title": "United CEO Scott Kirby says higher airfare could be ahead after fuel price spike - CNBC",
-        "url": "https://www.cnbc.com/2026/03/06/united-airlines-ceo-scott-kirby.html",
+        "title": "Marvell stock surges 18% as CEO points to continuing AI demand: 'Do you see me blinking?' - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/marvell-shares-surge-18percent-as-ceo-points-to-continuing-ai-demand.html",
         "source": "CNBC",
-        "published_at": "2026-03-06T13:22:56Z",
+        "published_at": "2026-03-06T16:38:34Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "United CEO Scott Kirby said demand remains high but that fuel prices will hit first-quarter results."
+        "description": "Marvell shares surged on Friday after the company beat earnings expectations and issued strong guidance on continuing AI demand."
       },
       {
-        "title": "Dow Jones Futures Fall As Oil Keeps Surging On Iran Conflict; Jobs Report On Tap - Investor's Business Daily",
-        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-oil-prices-broadcom-nvidia-jobs-report/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-06T12:50:00Z",
+        "title": "FDA reversals leave investors worrying about the fates of other experimental drugs - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/fda-reversals-on-uniqure-moderna-approvals-worry-investors.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T16:33:37Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Crude oil on track for biggest weekly gain since 2022"
+        "description": "Investors are scrutinizing the prospects for some drugs in the pipeline following a string of recent rejections from the U.S. Food and Drug Administration."
       },
       {
-        "title": "Rocket Report: SpaceX launch prices are going up; Russia fixes broken launch pad - Ars Technica",
-        "url": "https://arstechnica.com/space/2026/03/rocket-report-spacex-launch-prices-are-going-up-russia-fixes-broken-launch-pad/",
-        "source": "Ars Technica",
-        "published_at": "2026-03-06T12:00:02Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "It looks like United Launch Alliance will build more upper stages for NASA's SLS rocket."
-      },
-      {
-        "title": "Why Berkshire Is Buying Its Stock Again - WSJ",
-        "url": "https://www.wsj.com/finance/stocks/why-berkshire-is-buying-its-stock-again-d411bfc8",
+        "title": "Axel Springer Strikes $770 Million Deal for U.K.’s Daily Telegraph - WSJ",
+        "url": "https://www.wsj.com/business/media/axel-springer-strikes-770-million-deal-for-u-k-s-daily-telegraph-f6ac9073",
         "source": "The Wall Street Journal",
-        "published_at": "2026-03-06T11:35:00Z",
+        "published_at": "2026-03-06T16:32:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Plus, it’s Jobs Friday"
+        "description": null
       },
       {
-        "title": "Renewable Energy and National Security - Paul Krugman | Substack",
-        "url": "https://paulkrugman.substack.com/p/renewable-energy-and-national-security",
-        "source": "Substack.com",
-        "published_at": "2026-03-06T11:31:36Z",
+        "title": "Top 10: World’s longest road tunnels",
+        "url": "https://www.autocar.co.uk/car-news/slideshow/top-10-world%E2%80%99s-longest-road-tunnels-0",
+        "source": "Autocar",
+        "published_at": "2026-03-07T07:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The wind and the sun don’t need to transit the Strait of Hormuz"
+        "feed": "everything",
+        "description": "Top 10: World’s longest road tunnels\n\nTunnels are used to carry traffic through some of the most extreme terrain on the planet and they help ease journeys with reduced travel time.\r\n\nWhile most tunnels offer a short underground burst of driving, some are much…"
       },
       {
-        "title": "David Ellison won Warner Bros. Now he has to prove Paramount can beat Netflix at its own game. - Business Insider",
-        "url": "https://www.businessinsider.com/david-ellison-paramount-reorg-tech-new-streaming-features-execs-wbd-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-06T10:04:00Z",
+        "title": "Health care has become the lifeblood of the labor market | Chattanooga Times Free Press",
+        "url": "https://www.timesfreepress.com/news/2026/mar/06/health-care-has-become-the-lifeblood-of-the-labor/",
+        "source": "Chattanooga Times Free Press",
+        "published_at": "2026-03-07T06:50:38Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Paramount Skydance CEO David Ellison is looking to battle Netflix by bringing on short-form video and hiring key executives away from Amazon."
-      },
-      {
-        "title": "OpenAI releases new ChatGPT model for working in Excel and Google Sheets - Axios",
-        "url": "https://www.axios.com/2026/03/05/openai-gpt-54-chatgpt-office",
-        "source": "Axios",
-        "published_at": "2026-03-06T08:13:22Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "GPT-5.4 outperforms office workers 83% of the time, OpenAI says."
-      },
-      {
-        "title": "McDonald’s CEO did a burger taste test that became a cautionary tale for execs. But there’s a silver lining - Fortune",
-        "url": "https://fortune.com/2026/03/06/mcdonalds-ceo-did-a-burger-taste-test-that-became-a-cautionary-tale-for-execs-but-theres-a-silver-lining/",
-        "source": "Fortune",
-        "published_at": "2026-03-06T08:07:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "McDonald’s CEO Chris Kempczinski’s taste test turned into a viral meme war that shows how risky the CEO-influencer model has become."
-      },
-      {
-        "title": "Amazon is back up after outage affecting tens of thousands of shoppers - Business Insider",
-        "url": "https://www.businessinsider.com/amazon-down-outage-payment-failure-shoppers-downdetector-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-06T02:47:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Shoppers are reporting Amazon on Downdetector, saying the problems ranged from checkout and payment failures to incorrect or fluctuating prices."
-      },
-      {
-        "title": "Grocery Outlet to close 36 stores - KING5.com",
-        "url": "https://www.king5.com/article/news/nation-world/grocery-outlet-close-36-stores/507-17b03e8f-0476-484c-9796-76fe802a1f92",
-        "source": "KING5.com",
-        "published_at": "2026-03-06T01:42:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Grocery Outlet plans to close 36 underperforming stores, the company said this week. (AP photo)"
-      },
-      {
-        "title": "Six Flags is selling 7 parks, and 1 is in Upstate NY - NewYorkUpstate.com",
-        "url": "https://www.newyorkupstate.com/amusement-parks/2026/03/six-flags-is-selling-7-parks-and-one-is-in-upstate-ny.html",
-        "source": "newyorkupstate.com",
-        "published_at": "2026-03-05T23:51:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The $342 million sale is part of a strategy to reduce debt and focus on higher-performing parks in the company's portfolio."
-      },
-      {
-        "title": "Long-Trusted Haven Trades Are Failing as Gold, Treasuries Fall - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-05/treasuries-gold-and-yen-fail-to-deliver-safety-in-market-rout",
-        "source": "Bloomberg",
-        "published_at": "2026-03-05T23:47:16Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Traditional safe havens — Treasuries, the yen, the Swiss franc, and gold — have offered investors no refuge as the Middle East conflict roiled markets this week."
-      },
-      {
-        "title": "Costco says it'll return tariff money to members — if it gets refund - Axios",
-        "url": "https://www.axios.com/2026/03/05/costco-members-tariff-refunds-earnings",
-        "source": "Axios",
-        "published_at": "2026-03-05T22:56:13Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Costco Wholesale executives said they would return any recovered tariff charges to members through lower prices and better values."
-      },
-      {
-        "title": "US considers tying Nvidia and AMD AI chip exports to foreign investment pledges - Financial Times",
-        "url": "https://www.ft.com/content/30d0b1df-ad8c-42eb-852b-dad53acaecfc",
-        "source": "Financial Times",
-        "published_at": "2026-03-05T22:48:42Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Draft rule would require countries to invest in America in exchange for advanced semiconductors"
+        "feed": "everything",
+        "description": "It is an exceptionally difficult time to find a job in America as employers work through a hiring hangover from the pandemic and hesitate to invest in new staff with policy changes coming fast and furious from Washington."
       },
       {
         "title": "FluffCo Luxury Hotel Pillow Claims Evaluated: 2026 Consumer Report on 5-Star Hotel Pillow Marketing, Materials, Pricing Transparency, and What Buyers Should Verify Before Ordering",
@@ -470,15 +497,6 @@
         "description": "Rep. Joyce Beatty of Ohio filed an emergency motion Friday, warning that Trump may not revive the memorial and performing arts center\nThe post Democratic Congresswoman Sues Trump Over Kennedy Center Closure appeared first on TheWrap."
       },
       {
-        "title": "Discovery of van Hove singularities: electronic fingerprints of 3Q magnetic order in a van der Waals quantum magnet",
-        "url": "https://www.nature.com/articles/s41467-026-70063-5",
-        "source": "Nature.com",
-        "published_at": "2026-03-07T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Cobalt intercalated TaS2 has recently been found to host 3Q antiferromagnetic order. This 3Q state occurs coexists with a very large anomalous hall effect, and shows strong sensitivity to Cobalt concentration. Here, Luo and coauthors perform doping dependent …"
-      },
-      {
         "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
         "url": "https://www.nature.com/articles/s41467-026-70501-4",
         "source": "Nature.com",
@@ -486,6 +504,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …"
+      },
+      {
+        "title": "Discovery of van Hove singularities: electronic fingerprints of 3Q magnetic order in a van der Waals quantum magnet",
+        "url": "https://www.nature.com/articles/s41467-026-70063-5",
+        "source": "Nature.com",
+        "published_at": "2026-03-07T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Cobalt intercalated TaS2 has recently been found to host 3Q antiferromagnetic order. This 3Q state occurs coexists with a very large anomalous hall effect, and shows strong sensitivity to Cobalt concentration. Here, Luo and coauthors perform doping dependent …"
       },
       {
         "title": "How the Iran War Could Consolidate China’s Energy Dominance",
@@ -812,15 +839,6 @@
         "description": "Check out the latest security news from the Informa TechTarget team."
       },
       {
-        "title": "Stanley Martin Homes Celebrates Grand Opening of Essence at Laurelbrook in Sherrills Ford, NC, its First ESSENCE BY STANLEY MARTIN™ Community in the Charlotte Market",
-        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251066/0/en/Stanley-Martin-Homes-Celebrates-Grand-Opening-of-Essence-at-Laurelbrook-in-Sherrills-Ford-NC-its-First-ESSENCE-BY-STANLEY-MARTIN-Community-in-the-Charlotte-Market.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-06T14:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "RESTON, Virginia, March 06, 2026 (GLOBE NEWSWIRE) -- Stanley Martin Homes announces that Essence at Laurelbrook, a new 55+ active adult neighborhood in Sherrills Ford, North Carolina, is now open for sales. Located at 1032 Arundle Road, this highly anticipate…"
-      },
-      {
         "title": "Climate Activist Despair: “Where’s the pushback?” Against President Trump",
         "url": "https://wattsupwiththat.com/2026/03/06/climate-activist-despair-wheres-the-pushback-against-president-trump/",
         "source": "Wattsupwiththat.com",
@@ -828,6 +846,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "\"... climate deniers have been privately celebrating what they claim is the “silent” acquiescence of billionaires, Democrats, climate activists and even reporters ...\""
+      },
+      {
+        "title": "Stanley Martin Homes Celebrates Grand Opening of Essence at Laurelbrook in Sherrills Ford, NC, its First ESSENCE BY STANLEY MARTIN™ Community in the Charlotte Market",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251066/0/en/Stanley-Martin-Homes-Celebrates-Grand-Opening-of-Essence-at-Laurelbrook-in-Sherrills-Ford-NC-its-First-ESSENCE-BY-STANLEY-MARTIN-Community-in-the-Charlotte-Market.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "RESTON, Virginia, March 06, 2026 (GLOBE NEWSWIRE) -- Stanley Martin Homes announces that Essence at Laurelbrook, a new 55+ active adult neighborhood in Sherrills Ford, North Carolina, is now open for sales. Located at 1032 Arundle Road, this highly anticipate…"
       },
       {
         "title": "Study on the differentiated impact of climate change on plague epidemics in Northern and Southern China, 1912–1949",
@@ -857,15 +884,6 @@
         "description": "Background Machine learning (ML) algorithms are increasingly used in healthcare to support clinical decision-making. While models with similar overall performance are often considered interchangeable for deployment, they may produce divergent predictions, a p…"
       },
       {
-        "title": "Repurposing metformin as a dual-function agent to combat E. coli-induced mastitis: Mechanistic insights into biofilm dispersion and AMPK/SIRT1-mediated NF-κB inhibition",
-        "url": "https://journals.plos.org/plospathogens/article?id=10.1371%2Fjournal.ppat.1014012",
-        "source": "Plos.org",
-        "published_at": "2026-03-06T14:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Author summary Bovine mastitis caused by drug-resistant E. coli is difficult to treat with conventional antibiotics. We explored repurposing metformin, a common diabetes drug, as a new strategy. We found that metformin fights mastitis in two ways at once. Fir…"
-      },
-      {
         "title": "Morphological determinants of glycosylation efficiency in Golgi cisternae",
         "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1013993",
         "source": "Plos.org",
@@ -873,6 +891,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Author summary The Golgi apparatus is a universal feature of eukaryotic cells, playing a critical role in post-translational modification of secreted proteins. Its importance is demonstrated by the variety of disorders caused by errors in its function. A majo…"
+      },
+      {
+        "title": "Repurposing metformin as a dual-function agent to combat E. coli-induced mastitis: Mechanistic insights into biofilm dispersion and AMPK/SIRT1-mediated NF-κB inhibition",
+        "url": "https://journals.plos.org/plospathogens/article?id=10.1371%2Fjournal.ppat.1014012",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Author summary Bovine mastitis caused by drug-resistant E. coli is difficult to treat with conventional antibiotics. We explored repurposing metformin, a common diabetes drug, as a new strategy. We found that metformin fights mastitis in two ways at once. Fir…"
       },
       {
         "title": "Wyoming Project Gets First Construction Permit for Nuclear Reactor in Years",
@@ -929,15 +956,6 @@
         "description": "This is a Vanderhall Brawley GTS, it’s an American-made 4×4 with seating for four, and a drivetrain that turns out a highly-respectable 404 bhp...\nThe post The Unusual, American-Made Vanderhall Brawley GTS 4×4 appeared first on Silodrome."
       },
       {
-        "title": "Inside the Latest, and Scariest, Iteration of America’s Endless Abortion Wars",
-        "url": "https://www.motherjones.com/politics/2026/03/inside-the-latest-and-scariest-iteration-of-americas-endless-abortion-wars/",
-        "source": "Mother Jones",
-        "published_at": "2026-03-06T12:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "“I have a bomb, I have a bomb,” the male voice said. “Don’t let anyone in or out of the clinic, or I’ll set it off.” For about 25 years, A Preferred Women’s Health Center, an abortion clinic in Charlotte, North Carolina, has endured more than its share of thr…"
-      },
-      {
         "title": "Aerogel Market to Hit USD 1.59 Billion by 2031 as Energy, Construction, and Mobility Sectors Increase Adoption of Advanced Insulation Materials, Says Mordor Intelligence",
         "url": "https://www.globenewswire.com/news-release/2026/03/06/3250974/0/en/Aerogel-Market-to-Hit-USD-1-59-Billion-by-2031-as-Energy-Construction-and-Mobility-Sectors-Increase-Adoption-of-Advanced-Insulation-Materials-Says-Mordor-Intelligence.html",
         "source": "GlobeNewswire",
@@ -945,6 +963,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "The global aerogel market is gaining momentum as industries prioritize recyclable materials to meet sustainability goals. Rising demand for high-performance thermal insulation in energy-efficient buildings is accelerating adoption, while Asia-Pacific is expec…"
+      },
+      {
+        "title": "Inside the Latest, and Scariest, Iteration of America’s Endless Abortion Wars",
+        "url": "https://www.motherjones.com/politics/2026/03/inside-the-latest-and-scariest-iteration-of-americas-endless-abortion-wars/",
+        "source": "Mother Jones",
+        "published_at": "2026-03-06T12:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "“I have a bomb, I have a bomb,” the male voice said. “Don’t let anyone in or out of the clinic, or I’ll set it off.” For about 25 years, A Preferred Women’s Health Center, an abortion clinic in Charlotte, North Carolina, has endured more than its share of thr…"
       },
       {
         "title": "Gold and silver prices surge today while copper and platinum crash — 5 key reasons behind the sharp move in gold, silver, copper, and platinum markets",
@@ -1116,36 +1143,87 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "ElvalHalcor is focusing on the increased needs of data centers in Europe and the US for aluminum and copper, as well as on meeting the needs of energy network applications,…\nElvalHalcor: Energy costs and scrap prices key drivers of 2026 performance - Η ΝΑΥΤΕΜ…"
-      },
-      {
-        "title": "Big railway PSU merger on the way? IRCON, RVNL shares rally up to 12% on merger reports",
-        "url": "https://economictimes.indiatimes.com/markets/stocks/news/big-railway-psu-merger-on-the-way-ircon-rvnl-shares-rally-up-to-12-on-merger-reports/articleshow/129135350.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-06T05:43:47Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "IRCON and RVNL shares surged significantly on Friday following reports of a proposed merger initiated by the Ministry of Railways. This consolidation aims to create a larger, more efficient railway entity by combining specialized expertise and enhancing execu…"
-      },
-      {
-        "title": "What does a hummingbird’s nest look like in a tree?",
-        "url": "https://www.lifesciencesworld.com/what-does-a-hummingbirds-nest-look-like-in-a-tree/",
-        "source": "Lifesciencesworld.com",
-        "published_at": "2026-03-06T05:13:42Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "What Does a Hummingbird’s Nest Look Like in a Tree? A hummingbird’s nest in a tree is a marvel of natural engineering: a tiny, meticulously crafted cup of soft plant down, spider silk, and lichen, perfectly camouflaged and often no larger than a thimble. It o…"
-      },
-      {
-        "title": "`It’s a fantastic moment for Ireland ... €275bn of investment in the next 10 years’",
-        "url": "https://www.irishtimes.com/business/2026/03/06/its-a-fantastic-moment-for-ireland275-billion-of-investment-in-the-next-10-years-in-every-bit-of-infrastructure-you-can-think-of/",
-        "source": "The Irish Times",
-        "published_at": "2026-03-06T05:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "As the State prepares to spend big on infrastructure, Arup boss Jerome Frost is keen to expand its activities here"
       }
     ],
     "news_with_impact": [
+      {
+        "title": "Neiman Marcus store at Ala Moana Center to close - Honolulu Star-Advertiser",
+        "url": "https://www.staradvertiser.com/2026/03/06/breaking-news/neiman-marcus-store-to-close-at-ala-moana-center/",
+        "source": "Honolulu Star-Advertiser",
+        "published_at": "2026-03-07T02:55:30Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Saks Global is closing the Neiman Marcus department store at Ala Moana Center as part of ongoing restructuring efforts, the luxury retailer said in a news release today.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Trump administration's embattled FDA vaccine chief is leaving for the second time - NPR",
+        "url": "https://www.npr.org/2026/03/06/nx-s1-5740596/trump-administrations-embattled-fda-vaccine-chief-is-leaving-for-the-second-time",
+        "source": "NPR",
+        "published_at": "2026-03-07T02:38:53Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The FDA's controversial vaccine chief, Dr. Vinay Prasad, is leaving the agency. It's the second time he has abruptly departed following decisions involving the review of vaccinations and specialty drugs.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Crude prices make record jump as Trump’s measures fail to calm markets - Politico",
+        "url": "https://www.politico.com/news/2026/03/06/crude-prices-make-record-jump-as-trumps-measures-fail-to-calm-markets-00817397",
+        "source": "Politico",
+        "published_at": "2026-03-07T02:11:50Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The Trump administration has yet to solve the fundamental issue of getting oil and gas tankers moving through the Strait of Hormuz again, analysts said.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Google gives CEO Sundar Pichai new pay deal worth up to $692mn - Financial Times",
+        "url": "https://www.ft.com/content/1d3fa4f9-ec94-49ff-b22f-bd69b92be8ce",
+        "source": "Financial Times",
+        "published_at": "2026-03-07T01:10:33Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Alphabet boss gets bumper package of stock options tied to the share price and growth of Waymo in the next three years",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Trump Accounts: IRS announces rules proposal for $1K payments - The Hill",
+        "url": "https://thehill.com/homenews/nexstar_media_wire/5772283-trump-accounts-irs-announces-rules-proposal-for-1k-payments/",
+        "source": "The Hill",
+        "published_at": "2026-03-07T01:10:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The IRS announced a series of proposed rules that would determine eligibility and timing for the $1,000 government seed payments, among other aspects of the Trump Accounts.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Prediction market Kalshi sued over $54M Iranian leader bets after ‘death carveout’ invoked - Fox Business",
+        "url": "https://www.foxbusiness.com/technology/prediction-market-kalshi-sued-54m-iran-leader-bets-death-carveout-invoked",
+        "source": "Fox Business",
+        "published_at": "2026-03-06T23:22:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Kalshi was sued over $54 million in bets after invoking a “death carveout\" after the killing of Iran’s Ayatollah Ali Khamenei during Operation Epic Fury.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
       {
         "title": "Oil price at two-year high after Qatar warns all Gulf production could stop within days - BBC",
         "url": "https://www.bbc.com/news/articles/cy031ylgepro",
@@ -1155,6 +1233,58 @@
         "feed": "top_headlines",
         "description": "Energy Minister Saad al-Kaabi says oil could hit $150 a barrel if the Iran conflict continues over the coming weeks.",
         "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Donald Trump’s Greatest Promise Is Looking More Disastrous for Him by the Day - Slate",
+        "url": "https://slate.com/news-and-politics/2026/03/february-jobs-report-trump-economy.html",
+        "source": "Slate Magazine",
+        "published_at": "2026-03-06T22:02:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Is it good politics to preside over job losses and rising gas prices? We’ll find out!.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Wall Street’s Safety Net Is Giving Way as Iran War Hits Markets - Bloomberg.com",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-06/wall-street-s-safety-net-is-giving-way-as-iran-war-hits-markets",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T21:27:24Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The Iran war rattled but didn’t break Wall Street this week. Instead it exposed the limits of diversification strategies built to cushion investors against chaos.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Chevron executive: 'I think we have a state of emergency in California' - KCRA",
+        "url": "https://www.kcra.com/article/chevron-executive-state-of-emergency-california/70630507",
+        "source": "KCRA Sacramento",
+        "published_at": "2026-03-06T20:41:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A top official at Chevron is warning that an upcoming vote by California state regulators could be the final straw that collapses the oil and gas industry in the state.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "The FDA, urged to avoid controversy, creates a new headache with attack against UniQure - statnews.com",
+        "url": "https://www.statnews.com/2026/03/06/fda-uniqure-rare-disease-huntingtons/",
+        "source": "STAT",
+        "published_at": "2026-03-06T20:25:08Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Recent decisions at the FDA threaten to turn its disagreements with the drugmaker UniQure into another political headache for the Trump administration.",
+        "impact_score": 40,
         "themes": [
           "other"
         ]
@@ -1173,13 +1303,78 @@
         ]
       },
       {
-        "title": "Kalshi Gamblers Furious After Company Refuses to Pay Out $54 Million on Ayatollah Khamenei’s Death - Futurism",
-        "url": "http://futurism.com/future-society/kalshi-ayatollah-khamenei-iran",
-        "source": "Futurism",
-        "published_at": "2026-03-06T20:06:16Z",
+        "title": "Bond Traders Pile Into Inflation Hedges as War Drives Up Oil - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-06/bond-traders-pile-into-inflation-hedges-as-war-drives-up-oil",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T20:01:35Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The prediction market platform has refused to pay out on bets related to Ayatollah Khamenei due to a technicality.",
+        "description": "Investors are piling into US bond-market products that protect against inflation — pushing some valuations to the highest levels in nearly a year — as the Mideast war sparks a surge in energy prices.",
+        "impact_score": 55,
+        "themes": [
+          "macro"
+        ]
+      },
+      {
+        "title": "Airlines Warn Of Higher Fares As Trouble Brews Due To Jet Fuel Cost Skyrocketing - One Mile at a Time",
+        "url": "https://onemileatatime.com/news/airlines-warn-higher-fares-trouble-brews-jet-fuel-cost-skyrocketing/",
+        "source": "One Mile at a Time",
+        "published_at": "2026-03-06T19:48:10Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "As the cost of jet fuel skyrockets, airlines are facing billions of dollars in additional costs, which could prove problematic.",
+        "impact_score": 40,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "E-ZPass transponders are being phased out for stickers in Massachusetts. Here's what to know. - CBS News",
+        "url": "https://www.cbsnews.com/boston/news/e-zpass-transponders-stickers-massachusetts/",
+        "source": "CBS News",
+        "published_at": "2026-03-06T19:40:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A big change is underway for how the state tracks people using the E-ZPass​ program in Massachusetts.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Stock market today: Dow, S&P 500, Nasdaq sink after jobs report surprise as oil jumps - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/live/stock-market-today-dow-sp-500-nasdaq-drop-to-end-volatile-week-as-oil-surges-above-90-210059886.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-06T19:20:11Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Stock markets continue to be dominated by developments in the Middle East as the major gauges posted a week of losses.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Stock Market Today: Dow down around 500 points as oil prices rise to $90 a barrel and a weak jobs report adds another worry for investors; S&P 500 and tech-heavy Nasdaq drop sharply - MarketWatch",
+        "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-s-p-500-and-nasdaq-set-for-rise-as-payrolls-awaited",
+        "source": "MarketWatch",
+        "published_at": "2026-03-06T19:18:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The U.S. stock market struggled Friday with a disappointing U.S. jobs report and a spike in oil prices amid the Iran conflict. Treasury yields saw their biggest weekly jump since April amid worries over inflation.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Ford recalls over 1.7M vehicles. See affected models. - USA Today",
+        "url": "https://www.usatoday.com/story/cars/recalls/2026/03/06/ford-recalls-bronco-edge-escape-explorer-lincoln-vehicles/89019344007/",
+        "source": "USA Today",
+        "published_at": "2026-03-06T19:09:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Nearly 2 million Ford vehicles, including Bronco, Escape, Explorer and several other models, have been recalled. Check if yours is included.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1212,42 +1407,55 @@
         ]
       },
       {
-        "title": "Billionaire Gas Station Owner Calls Iran War Price Hikes Temporary: ‘Suffer For One Month’ - Forbes",
-        "url": "https://www.forbes.com/sites/martinadilicosa/2026/03/06/billionaire-gas-station-owner-calls-iran-war-price-hikes-temporary-suffer-for-one-month/",
-        "source": "Forbes",
-        "published_at": "2026-03-06T18:34:44Z",
+        "title": "Las Vegas tourism plummets as officials consider $6M plan to win back Canadian visitors - Fox News",
+        "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPX3ZoNWZNXzVsMXAzcmU1dzlpX0pld3NRMFRNaWYzWXdBbnJncnVsbFgxUUZNdWg1eTZka1pwZW9Venhla0dKcFVOekl4OUI4STFBVHBDWGlvdE5nUHFrV2hRVHh2WXlSNS1BT3JaSi1yRUxvb05SMmJwX2Q2LXJzVWg3OWpKY3BNYUJxYlJ3UXdPdjRFNkUtY2xrV1loSDBORlhkdkpQNklxZE11THfSAbMBQVVfeXFMTlphUE5TSlNNdDgyOWZGQ29KcnlBNDZqV3BTaHVCZ2lUN0tVNGYwLWxaS19IYlVMbGMyVXppNjlON0tINjFGNGx4UU01cG84cS02NHJhaXpfajBBX0N2OVgzalFkWldwc2lDNXJmU1ZGejJzaG1GcW1LaGlGZFlVYkh3ZFg1YmdTNm4zSjdraGJ2TUNLY2FGdHZ1OHBaSlJmUkJOS2c0X2QxdnYtNWFNenR4R3M?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-06T18:37:23Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Catsimatidis controls over 400 gas stations across the country, as well as a major oil refinery.",
+        "description": null,
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Iran Is Bombing Data Centers in Retaliation - Futurism",
-        "url": "http://futurism.com/artificial-intelligence/iran-bombing-data-centers",
-        "source": "Futurism",
-        "published_at": "2026-03-06T18:07:01Z",
+        "title": "Lloyd Center plan, and its ice rink’s fate, are sealed with a vote - OregonLive.com",
+        "url": "https://www.oregonlive.com/business/2026/03/lloyd-center-plan-and-its-ice-rinks-fate-are-sealed-with-a-vote.html",
+        "source": "OregonLive",
+        "published_at": "2026-03-06T18:15:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Iranian drones hit three Amazon Web Services (AWS) facilities in the United Arab Emirates and Bahrain, putting US assets at risk.",
+        "description": "Under the master plan, Lloyd Center and its ice rink are expected to be torn down to one day make way for a mixed-use development.",
         "impact_score": 40,
         "themes": [
-          "commercial"
+          "other"
         ]
       },
       {
-        "title": "Tech employment now significantly worse than the 2008 or 2020 recessions - Hacker News",
-        "url": "https://news.ycombinator.com/item?id%5C%5Cu003d47278426=",
-        "source": "Hacker News",
-        "published_at": "2026-03-06T18:02:14Z",
+        "title": "The invisible layoff: AI is quietly locking Americans out of the job market, CEO warns - Fox Business",
+        "url": "https://www.foxbusiness.com/economy/invisible-layoff-ai-quietly-locking-americans-out-job-market-ceo-warns",
+        "source": "Fox Business",
+        "published_at": "2026-03-06T18:00:25Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
-        "impact_score": 60,
+        "description": "February's shocking 92,000 job losses reveal a potential hidden crisis: AI algorithms are allegedly screening out qualified workers while boosting productivity.",
+        "impact_score": 40,
         "themes": [
-          "macro"
+          "other"
+        ]
+      },
+      {
+        "title": "U.S.-Iran war exposes big market concentration risk. It isn't in S&P 500 stocks - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/iran-war-oil-energy-emerging-markets-stocks-south-korea.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T17:52:33Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Oil prices soar in the U.S.-Iran war, leading to volatility in emerging markets, and showing how concentrated EM funds are in Asian economies.",
+        "impact_score": 40,
+        "themes": [
+          "other"
         ]
       },
       {
@@ -1258,19 +1466,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "The deal will expand Servier's pipeline of cancer treatments. But an analyst says other companies could make overtures.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Worried that AI might replace you? Check out this graph from Anthropic showing the jobs most at risk - Business Insider",
-        "url": "https://www.businessinsider.com/anthropic-is-tracking-the-jobs-most-exposed-to-ai-disruption-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-06T16:53:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Anthropic economists say there's not yet evidence to suggest AI is fueling a spike in job losses in highly exposed fields like computer programming.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1290,224 +1485,68 @@
         ]
       },
       {
-        "title": "‘Ugly’: Trump’s job market shrinks as oil fears mount - Politico",
-        "url": "https://www.politico.com/news/2026/03/06/job-losses-oil-spike-trump-economy-fed-00816228",
-        "source": "Politico",
-        "published_at": "2026-03-06T15:20:21Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The combination of a weakening labor market and higher energy prices poses serious risks to Republicans in the coming months.",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Axel Springer agrees to buy Telegraph Media Group in £575m deal - BBC",
-        "url": "https://www.bbc.com/news/articles/cyv916d999no",
-        "source": "BBC News",
-        "published_at": "2026-03-06T14:59:03Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Last year the Daily Mail and General Trust proposed to buy the company in a £500m takeover.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "United can remove and ban passengers who refuse to use headphones - Mashable",
-        "url": "https://mashable.com/article/united-airlines-headphone-policy",
-        "source": "Mashable",
-        "published_at": "2026-03-06T14:03:45Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Some more peace and quiet in the cabin.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "United CEO Scott Kirby says higher airfare could be ahead after fuel price spike - CNBC",
-        "url": "https://www.cnbc.com/2026/03/06/united-airlines-ceo-scott-kirby.html",
+        "title": "Marvell stock surges 18% as CEO points to continuing AI demand: 'Do you see me blinking?' - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/marvell-shares-surge-18percent-as-ceo-points-to-continuing-ai-demand.html",
         "source": "CNBC",
-        "published_at": "2026-03-06T13:22:56Z",
+        "published_at": "2026-03-06T16:38:34Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "United CEO Scott Kirby said demand remains high but that fuel prices will hit first-quarter results.",
-        "impact_score": 40,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "Dow Jones Futures Fall As Oil Keeps Surging On Iran Conflict; Jobs Report On Tap - Investor's Business Daily",
-        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-oil-prices-broadcom-nvidia-jobs-report/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-06T12:50:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Crude oil on track for biggest weekly gain since 2022",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Rocket Report: SpaceX launch prices are going up; Russia fixes broken launch pad - Ars Technica",
-        "url": "https://arstechnica.com/space/2026/03/rocket-report-spacex-launch-prices-are-going-up-russia-fixes-broken-launch-pad/",
-        "source": "Ars Technica",
-        "published_at": "2026-03-06T12:00:02Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "It looks like United Launch Alliance will build more upper stages for NASA's SLS rocket.",
+        "description": "Marvell shares surged on Friday after the company beat earnings expectations and issued strong guidance on continuing AI demand.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Why Berkshire Is Buying Its Stock Again - WSJ",
-        "url": "https://www.wsj.com/finance/stocks/why-berkshire-is-buying-its-stock-again-d411bfc8",
+        "title": "FDA reversals leave investors worrying about the fates of other experimental drugs - CNBC",
+        "url": "https://www.cnbc.com/2026/03/06/fda-reversals-on-uniqure-moderna-approvals-worry-investors.html",
+        "source": "CNBC",
+        "published_at": "2026-03-06T16:33:37Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Investors are scrutinizing the prospects for some drugs in the pipeline following a string of recent rejections from the U.S. Food and Drug Administration.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Axel Springer Strikes $770 Million Deal for U.K.’s Daily Telegraph - WSJ",
+        "url": "https://www.wsj.com/business/media/axel-springer-strikes-770-million-deal-for-u-k-s-daily-telegraph-f6ac9073",
         "source": "The Wall Street Journal",
-        "published_at": "2026-03-06T11:35:00Z",
+        "published_at": "2026-03-06T16:32:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Plus, it’s Jobs Friday",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "trade"
+        ]
+      },
+      {
+        "title": "Top 10: World’s longest road tunnels",
+        "url": "https://www.autocar.co.uk/car-news/slideshow/top-10-world%E2%80%99s-longest-road-tunnels-0",
+        "source": "Autocar",
+        "published_at": "2026-03-07T07:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Top 10: World’s longest road tunnels\n\nTunnels are used to carry traffic through some of the most extreme terrain on the planet and they help ease journeys with reduced travel time.\r\n\nWhile most tunnels offer a short underground burst of driving, some are much…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Renewable Energy and National Security - Paul Krugman | Substack",
-        "url": "https://paulkrugman.substack.com/p/renewable-energy-and-national-security",
-        "source": "Substack.com",
-        "published_at": "2026-03-06T11:31:36Z",
+        "title": "Health care has become the lifeblood of the labor market | Chattanooga Times Free Press",
+        "url": "https://www.timesfreepress.com/news/2026/mar/06/health-care-has-become-the-lifeblood-of-the-labor/",
+        "source": "Chattanooga Times Free Press",
+        "published_at": "2026-03-07T06:50:38Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The wind and the sun don’t need to transit the Strait of Hormuz",
+        "feed": "everything",
+        "description": "It is an exceptionally difficult time to find a job in America as employers work through a hiring hangover from the pandemic and hesitate to invest in new staff with policy changes coming fast and furious from Washington.",
         "impact_score": 40,
         "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "David Ellison won Warner Bros. Now he has to prove Paramount can beat Netflix at its own game. - Business Insider",
-        "url": "https://www.businessinsider.com/david-ellison-paramount-reorg-tech-new-streaming-features-execs-wbd-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-06T10:04:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Paramount Skydance CEO David Ellison is looking to battle Netflix by bringing on short-form video and hiring key executives away from Amazon.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "OpenAI releases new ChatGPT model for working in Excel and Google Sheets - Axios",
-        "url": "https://www.axios.com/2026/03/05/openai-gpt-54-chatgpt-office",
-        "source": "Axios",
-        "published_at": "2026-03-06T08:13:22Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "GPT-5.4 outperforms office workers 83% of the time, OpenAI says.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "McDonald’s CEO did a burger taste test that became a cautionary tale for execs. But there’s a silver lining - Fortune",
-        "url": "https://fortune.com/2026/03/06/mcdonalds-ceo-did-a-burger-taste-test-that-became-a-cautionary-tale-for-execs-but-theres-a-silver-lining/",
-        "source": "Fortune",
-        "published_at": "2026-03-06T08:07:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "McDonald’s CEO Chris Kempczinski’s taste test turned into a viral meme war that shows how risky the CEO-influencer model has become.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Amazon is back up after outage affecting tens of thousands of shoppers - Business Insider",
-        "url": "https://www.businessinsider.com/amazon-down-outage-payment-failure-shoppers-downdetector-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-06T02:47:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Shoppers are reporting Amazon on Downdetector, saying the problems ranged from checkout and payment failures to incorrect or fluctuating prices.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Grocery Outlet to close 36 stores - KING5.com",
-        "url": "https://www.king5.com/article/news/nation-world/grocery-outlet-close-36-stores/507-17b03e8f-0476-484c-9796-76fe802a1f92",
-        "source": "KING5.com",
-        "published_at": "2026-03-06T01:42:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Grocery Outlet plans to close 36 underperforming stores, the company said this week. (AP photo)",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Six Flags is selling 7 parks, and 1 is in Upstate NY - NewYorkUpstate.com",
-        "url": "https://www.newyorkupstate.com/amusement-parks/2026/03/six-flags-is-selling-7-parks-and-one-is-in-upstate-ny.html",
-        "source": "newyorkupstate.com",
-        "published_at": "2026-03-05T23:51:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The $342 million sale is part of a strategy to reduce debt and focus on higher-performing parks in the company's portfolio.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Long-Trusted Haven Trades Are Failing as Gold, Treasuries Fall - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-05/treasuries-gold-and-yen-fail-to-deliver-safety-in-market-rout",
-        "source": "Bloomberg",
-        "published_at": "2026-03-05T23:47:16Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Traditional safe havens — Treasuries, the yen, the Swiss franc, and gold — have offered investors no refuge as the Middle East conflict roiled markets this week.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Costco says it'll return tariff money to members — if it gets refund - Axios",
-        "url": "https://www.axios.com/2026/03/05/costco-members-tariff-refunds-earnings",
-        "source": "Axios",
-        "published_at": "2026-03-05T22:56:13Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Costco Wholesale executives said they would return any recovered tariff charges to members through lower prices and better values.",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "US considers tying Nvidia and AMD AI chip exports to foreign investment pledges - Financial Times",
-        "url": "https://www.ft.com/content/30d0b1df-ad8c-42eb-852b-dad53acaecfc",
-        "source": "Financial Times",
-        "published_at": "2026-03-05T22:48:42Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Draft rule would require countries to invest in America in exchange for advanced semiconductors",
-        "impact_score": 40,
-        "themes": [
-          "other"
+          "trade"
         ]
       },
       {
@@ -1538,19 +1577,6 @@
         ]
       },
       {
-        "title": "Discovery of van Hove singularities: electronic fingerprints of 3Q magnetic order in a van der Waals quantum magnet",
-        "url": "https://www.nature.com/articles/s41467-026-70063-5",
-        "source": "Nature.com",
-        "published_at": "2026-03-07T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Cobalt intercalated TaS2 has recently been found to host 3Q antiferromagnetic order. This 3Q state occurs coexists with a very large anomalous hall effect, and shows strong sensitivity to Cobalt concentration. Here, Luo and coauthors perform doping dependent …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
         "url": "https://www.nature.com/articles/s41467-026-70501-4",
         "source": "Nature.com",
@@ -1558,6 +1584,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Discovery of van Hove singularities: electronic fingerprints of 3Q magnetic order in a van der Waals quantum magnet",
+        "url": "https://www.nature.com/articles/s41467-026-70063-5",
+        "source": "Nature.com",
+        "published_at": "2026-03-07T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Cobalt intercalated TaS2 has recently been found to host 3Q antiferromagnetic order. This 3Q state occurs coexists with a very large anomalous hall effect, and shows strong sensitivity to Cobalt concentration. Here, Luo and coauthors perform doping dependent …",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2033,19 +2072,6 @@
         ]
       },
       {
-        "title": "Stanley Martin Homes Celebrates Grand Opening of Essence at Laurelbrook in Sherrills Ford, NC, its First ESSENCE BY STANLEY MARTIN™ Community in the Charlotte Market",
-        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251066/0/en/Stanley-Martin-Homes-Celebrates-Grand-Opening-of-Essence-at-Laurelbrook-in-Sherrills-Ford-NC-its-First-ESSENCE-BY-STANLEY-MARTIN-Community-in-the-Charlotte-Market.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-06T14:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "RESTON, Virginia, March 06, 2026 (GLOBE NEWSWIRE) -- Stanley Martin Homes announces that Essence at Laurelbrook, a new 55+ active adult neighborhood in Sherrills Ford, North Carolina, is now open for sales. Located at 1032 Arundle Road, this highly anticipate…",
-        "impact_score": 40,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
         "title": "Climate Activist Despair: “Where’s the pushback?” Against President Trump",
         "url": "https://wattsupwiththat.com/2026/03/06/climate-activist-despair-wheres-the-pushback-against-president-trump/",
         "source": "Wattsupwiththat.com",
@@ -2056,6 +2082,19 @@
         "impact_score": 40,
         "themes": [
           "other"
+        ]
+      },
+      {
+        "title": "Stanley Martin Homes Celebrates Grand Opening of Essence at Laurelbrook in Sherrills Ford, NC, its First ESSENCE BY STANLEY MARTIN™ Community in the Charlotte Market",
+        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251066/0/en/Stanley-Martin-Homes-Celebrates-Grand-Opening-of-Essence-at-Laurelbrook-in-Sherrills-Ford-NC-its-First-ESSENCE-BY-STANLEY-MARTIN-Community-in-the-Charlotte-Market.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "RESTON, Virginia, March 06, 2026 (GLOBE NEWSWIRE) -- Stanley Martin Homes announces that Essence at Laurelbrook, a new 55+ active adult neighborhood in Sherrills Ford, North Carolina, is now open for sales. Located at 1032 Arundle Road, this highly anticipate…",
+        "impact_score": 40,
+        "themes": [
+          "capital"
         ]
       },
       {
@@ -2098,19 +2137,6 @@
         ]
       },
       {
-        "title": "Repurposing metformin as a dual-function agent to combat E. coli-induced mastitis: Mechanistic insights into biofilm dispersion and AMPK/SIRT1-mediated NF-κB inhibition",
-        "url": "https://journals.plos.org/plospathogens/article?id=10.1371%2Fjournal.ppat.1014012",
-        "source": "Plos.org",
-        "published_at": "2026-03-06T14:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Author summary Bovine mastitis caused by drug-resistant E. coli is difficult to treat with conventional antibiotics. We explored repurposing metformin, a common diabetes drug, as a new strategy. We found that metformin fights mastitis in two ways at once. Fir…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Morphological determinants of glycosylation efficiency in Golgi cisternae",
         "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1013993",
         "source": "Plos.org",
@@ -2118,6 +2144,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Author summary The Golgi apparatus is a universal feature of eukaryotic cells, playing a critical role in post-translational modification of secreted proteins. Its importance is demonstrated by the variety of disorders caused by errors in its function. A majo…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Repurposing metformin as a dual-function agent to combat E. coli-induced mastitis: Mechanistic insights into biofilm dispersion and AMPK/SIRT1-mediated NF-κB inhibition",
+        "url": "https://journals.plos.org/plospathogens/article?id=10.1371%2Fjournal.ppat.1014012",
+        "source": "Plos.org",
+        "published_at": "2026-03-06T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Author summary Bovine mastitis caused by drug-resistant E. coli is difficult to treat with conventional antibiotics. We explored repurposing metformin, a common diabetes drug, as a new strategy. We found that metformin fights mastitis in two ways at once. Fir…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2202,19 +2241,6 @@
         ]
       },
       {
-        "title": "Inside the Latest, and Scariest, Iteration of America’s Endless Abortion Wars",
-        "url": "https://www.motherjones.com/politics/2026/03/inside-the-latest-and-scariest-iteration-of-americas-endless-abortion-wars/",
-        "source": "Mother Jones",
-        "published_at": "2026-03-06T12:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "“I have a bomb, I have a bomb,” the male voice said. “Don’t let anyone in or out of the clinic, or I’ll set it off.” For about 25 years, A Preferred Women’s Health Center, an abortion clinic in Charlotte, North Carolina, has endured more than its share of thr…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Aerogel Market to Hit USD 1.59 Billion by 2031 as Energy, Construction, and Mobility Sectors Increase Adoption of Advanced Insulation Materials, Says Mordor Intelligence",
         "url": "https://www.globenewswire.com/news-release/2026/03/06/3250974/0/en/Aerogel-Market-to-Hit-USD-1-59-Billion-by-2031-as-Energy-Construction-and-Mobility-Sectors-Increase-Adoption-of-Advanced-Insulation-Materials-Says-Mordor-Intelligence.html",
         "source": "GlobeNewswire",
@@ -2225,6 +2251,19 @@
         "impact_score": 40,
         "themes": [
           "materials"
+        ]
+      },
+      {
+        "title": "Inside the Latest, and Scariest, Iteration of America’s Endless Abortion Wars",
+        "url": "https://www.motherjones.com/politics/2026/03/inside-the-latest-and-scariest-iteration-of-americas-endless-abortion-wars/",
+        "source": "Mother Jones",
+        "published_at": "2026-03-06T12:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "“I have a bomb, I have a bomb,” the male voice said. “Don’t let anyone in or out of the clinic, or I’ll set it off.” For about 25 years, A Preferred Women’s Health Center, an abortion clinic in Charlotte, North Carolina, has endured more than its share of thr…",
+        "impact_score": 40,
+        "themes": [
+          "other"
         ]
       },
       {
@@ -2473,45 +2512,6 @@
         "themes": [
           "materials"
         ]
-      },
-      {
-        "title": "Big railway PSU merger on the way? IRCON, RVNL shares rally up to 12% on merger reports",
-        "url": "https://economictimes.indiatimes.com/markets/stocks/news/big-railway-psu-merger-on-the-way-ircon-rvnl-shares-rally-up-to-12-on-merger-reports/articleshow/129135350.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-06T05:43:47Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "IRCON and RVNL shares surged significantly on Friday following reports of a proposed merger initiated by the Ministry of Railways. This consolidation aims to create a larger, more efficient railway entity by combining specialized expertise and enhancing execu…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "What does a hummingbird’s nest look like in a tree?",
-        "url": "https://www.lifesciencesworld.com/what-does-a-hummingbirds-nest-look-like-in-a-tree/",
-        "source": "Lifesciencesworld.com",
-        "published_at": "2026-03-06T05:13:42Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "What Does a Hummingbird’s Nest Look Like in a Tree? A hummingbird’s nest in a tree is a marvel of natural engineering: a tiny, meticulously crafted cup of soft plant down, spider silk, and lichen, perfectly camouflaged and often no larger than a thimble. It o…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "`It’s a fantastic moment for Ireland ... €275bn of investment in the next 10 years’",
-        "url": "https://www.irishtimes.com/business/2026/03/06/its-a-fantastic-moment-for-ireland275-billion-of-investment-in-the-next-10-years-in-every-bit-of-infrastructure-you-can-think-of/",
-        "source": "The Irish Times",
-        "published_at": "2026-03-06T05:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "As the State prepares to spend big on infrastructure, Arup boss Jerome Frost is keen to expand its activities here",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2542,19 +2542,6 @@
         ]
       },
       {
-        "title": "Tech employment now significantly worse than the 2008 or 2020 recessions - Hacker News",
-        "url": "https://news.ycombinator.com/item?id%5C%5Cu003d47278426=",
-        "source": "Hacker News",
-        "published_at": "2026-03-06T18:02:14Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": null,
-        "impact_score": 60,
-        "themes": [
-          "macro"
-        ]
-      },
-      {
         "title": "Oil price at two-year high after Qatar warns all Gulf production could stop within days - BBC",
         "url": "https://www.bbc.com/news/articles/cy031ylgepro",
         "source": "BBC News",
@@ -2581,42 +2568,42 @@
         ]
       },
       {
-        "title": "‘Ugly’: Trump’s job market shrinks as oil fears mount - Politico",
-        "url": "https://www.politico.com/news/2026/03/06/job-losses-oil-spike-trump-economy-fed-00816228",
-        "source": "Politico",
-        "published_at": "2026-03-06T15:20:21Z",
+        "title": "Bond Traders Pile Into Inflation Hedges as War Drives Up Oil - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-06/bond-traders-pile-into-inflation-hedges-as-war-drives-up-oil",
+        "source": "Bloomberg",
+        "published_at": "2026-03-06T20:01:35Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The combination of a weakening labor market and higher energy prices poses serious risks to Republicans in the coming months.",
+        "description": "Investors are piling into US bond-market products that protect against inflation — pushing some valuations to the highest levels in nearly a year — as the Mideast war sparks a surge in energy prices.",
+        "impact_score": 55,
+        "themes": [
+          "macro"
+        ]
+      },
+      {
+        "title": "Stock market today: Dow, S&P 500, Nasdaq sink after jobs report surprise as oil jumps - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/live/stock-market-today-dow-sp-500-nasdaq-drop-to-end-volatile-week-as-oil-surges-above-90-210059886.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-06T19:20:11Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Stock markets continue to be dominated by developments in the Middle East as the major gauges posted a week of losses.",
         "impact_score": 55,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Dow Jones Futures Fall As Oil Keeps Surging On Iran Conflict; Jobs Report On Tap - Investor's Business Daily",
-        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-oil-prices-broadcom-nvidia-jobs-report/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-06T12:50:00Z",
+        "title": "Stock Market Today: Dow down around 500 points as oil prices rise to $90 a barrel and a weak jobs report adds another worry for investors; S&P 500 and tech-heavy Nasdaq drop sharply - MarketWatch",
+        "url": "https://www.marketwatch.com/livecoverage/stock-market-today-dow-s-p-500-and-nasdaq-set-for-rise-as-payrolls-awaited",
+        "source": "MarketWatch",
+        "published_at": "2026-03-06T19:18:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Crude oil on track for biggest weekly gain since 2022",
+        "description": "The U.S. stock market struggled Friday with a disappointing U.S. jobs report and a spike in oil prices amid the Iran conflict. Treasury yields saw their biggest weekly jump since April amid worries over inflation.",
         "impact_score": 55,
         "themes": [
           "other"
-        ]
-      },
-      {
-        "title": "Costco says it'll return tariff money to members — if it gets refund - Axios",
-        "url": "https://www.axios.com/2026/03/05/costco-members-tariff-refunds-earnings",
-        "source": "Axios",
-        "published_at": "2026-03-05T22:56:13Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Costco Wholesale executives said they would return any recovered tariff charges to members through lower prices and better values.",
-        "impact_score": 55,
-        "themes": [
-          "materials"
         ]
       },
       {
@@ -2634,13 +2621,26 @@
         ]
       },
       {
-        "title": "Kalshi Gamblers Furious After Company Refuses to Pay Out $54 Million on Ayatollah Khamenei’s Death - Futurism",
-        "url": "http://futurism.com/future-society/kalshi-ayatollah-khamenei-iran",
-        "source": "Futurism",
-        "published_at": "2026-03-06T20:06:16Z",
+        "title": "Neiman Marcus store at Ala Moana Center to close - Honolulu Star-Advertiser",
+        "url": "https://www.staradvertiser.com/2026/03/06/breaking-news/neiman-marcus-store-to-close-at-ala-moana-center/",
+        "source": "Honolulu Star-Advertiser",
+        "published_at": "2026-03-07T02:55:30Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The prediction market platform has refused to pay out on bets related to Ayatollah Khamenei due to a technicality.",
+        "description": "Saks Global is closing the Neiman Marcus department store at Ala Moana Center as part of ongoing restructuring efforts, the luxury retailer said in a news release today.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Trump administration's embattled FDA vaccine chief is leaving for the second time - NPR",
+        "url": "https://www.npr.org/2026/03/06/nx-s1-5740596/trump-administrations-embattled-fda-vaccine-chief-is-leaving-for-the-second-time",
+        "source": "NPR",
+        "published_at": "2026-03-07T02:38:53Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The FDA's controversial vaccine chief, Dr. Vinay Prasad, is leaving the agency. It's the second time he has abruptly departed following decisions involving the review of vaccinations and specialty drugs.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2785,6 +2785,32 @@
       ],
       "trade": [
         {
+          "title": "Axel Springer Strikes $770 Million Deal for U.K.’s Daily Telegraph - WSJ",
+          "url": "https://www.wsj.com/business/media/axel-springer-strikes-770-million-deal-for-u-k-s-daily-telegraph-f6ac9073",
+          "source": "The Wall Street Journal",
+          "published_at": "2026-03-06T16:32:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 40,
+          "themes": [
+            "trade"
+          ]
+        },
+        {
+          "title": "Health care has become the lifeblood of the labor market | Chattanooga Times Free Press",
+          "url": "https://www.timesfreepress.com/news/2026/mar/06/health-care-has-become-the-lifeblood-of-the-labor/",
+          "source": "Chattanooga Times Free Press",
+          "published_at": "2026-03-07T06:50:38Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "It is an exceptionally difficult time to find a job in America as employers work through a hiring hangover from the pandemic and hesitate to invest in new staff with policy changes coming fast and furious from Washington.",
+          "impact_score": 40,
+          "themes": [
+            "trade"
+          ]
+        },
+        {
           "title": "Jersey Hired Analysis: Garden State Labor Market Faces Uphill Climb as National Job Growth Hits February Slump",
           "url": "https://www.globenewswire.com/news-release/2026/03/06/3251106/0/en/Jersey-Hired-Analysis-Garden-State-Labor-Market-Faces-Uphill-Climb-as-National-Job-Growth-Hits-February-Slump.html",
           "source": "GlobeNewswire",
@@ -2813,40 +2839,14 @@
       ],
       "materials": [
         {
-          "title": "United CEO Scott Kirby says higher airfare could be ahead after fuel price spike - CNBC",
-          "url": "https://www.cnbc.com/2026/03/06/united-airlines-ceo-scott-kirby.html",
-          "source": "CNBC",
-          "published_at": "2026-03-06T13:22:56Z",
+          "title": "Airlines Warn Of Higher Fares As Trouble Brews Due To Jet Fuel Cost Skyrocketing - One Mile at a Time",
+          "url": "https://onemileatatime.com/news/airlines-warn-higher-fares-trouble-brews-jet-fuel-cost-skyrocketing/",
+          "source": "One Mile at a Time",
+          "published_at": "2026-03-06T19:48:10Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "United CEO Scott Kirby said demand remains high but that fuel prices will hit first-quarter results.",
+          "description": "As the cost of jet fuel skyrockets, airlines are facing billions of dollars in additional costs, which could prove problematic.",
           "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
-        },
-        {
-          "title": "Renewable Energy and National Security - Paul Krugman | Substack",
-          "url": "https://paulkrugman.substack.com/p/renewable-energy-and-national-security",
-          "source": "Substack.com",
-          "published_at": "2026-03-06T11:31:36Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The wind and the sun don’t need to transit the Strait of Hormuz",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
-        },
-        {
-          "title": "Costco says it'll return tariff money to members — if it gets refund - Axios",
-          "url": "https://www.axios.com/2026/03/05/costco-members-tariff-refunds-earnings",
-          "source": "Axios",
-          "published_at": "2026-03-05T22:56:13Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Costco Wholesale executives said they would return any recovered tariff charges to members through lower prices and better values.",
-          "impact_score": 55,
           "themes": [
             "materials"
           ]
@@ -2935,14 +2935,14 @@
       ],
       "macro": [
         {
-          "title": "Tech employment now significantly worse than the 2008 or 2020 recessions - Hacker News",
-          "url": "https://news.ycombinator.com/item?id%5C%5Cu003d47278426=",
-          "source": "Hacker News",
-          "published_at": "2026-03-06T18:02:14Z",
+          "title": "Bond Traders Pile Into Inflation Hedges as War Drives Up Oil - Bloomberg",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-06/bond-traders-pile-into-inflation-hedges-as-war-drives-up-oil",
+          "source": "Bloomberg",
+          "published_at": "2026-03-06T20:01:35Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
-          "impact_score": 60,
+          "description": "Investors are piling into US bond-market products that protect against inflation — pushing some valuations to the highest levels in nearly a year — as the Mideast war sparks a surge in energy prices.",
+          "impact_score": 55,
           "themes": [
             "macro"
           ]
@@ -2965,6 +2965,84 @@
       "land": [],
       "other": [
         {
+          "title": "Neiman Marcus store at Ala Moana Center to close - Honolulu Star-Advertiser",
+          "url": "https://www.staradvertiser.com/2026/03/06/breaking-news/neiman-marcus-store-to-close-at-ala-moana-center/",
+          "source": "Honolulu Star-Advertiser",
+          "published_at": "2026-03-07T02:55:30Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Saks Global is closing the Neiman Marcus department store at Ala Moana Center as part of ongoing restructuring efforts, the luxury retailer said in a news release today.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Trump administration's embattled FDA vaccine chief is leaving for the second time - NPR",
+          "url": "https://www.npr.org/2026/03/06/nx-s1-5740596/trump-administrations-embattled-fda-vaccine-chief-is-leaving-for-the-second-time",
+          "source": "NPR",
+          "published_at": "2026-03-07T02:38:53Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The FDA's controversial vaccine chief, Dr. Vinay Prasad, is leaving the agency. It's the second time he has abruptly departed following decisions involving the review of vaccinations and specialty drugs.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Crude prices make record jump as Trump’s measures fail to calm markets - Politico",
+          "url": "https://www.politico.com/news/2026/03/06/crude-prices-make-record-jump-as-trumps-measures-fail-to-calm-markets-00817397",
+          "source": "Politico",
+          "published_at": "2026-03-07T02:11:50Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The Trump administration has yet to solve the fundamental issue of getting oil and gas tankers moving through the Strait of Hormuz again, analysts said.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Google gives CEO Sundar Pichai new pay deal worth up to $692mn - Financial Times",
+          "url": "https://www.ft.com/content/1d3fa4f9-ec94-49ff-b22f-bd69b92be8ce",
+          "source": "Financial Times",
+          "published_at": "2026-03-07T01:10:33Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Alphabet boss gets bumper package of stock options tied to the share price and growth of Waymo in the next three years",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Trump Accounts: IRS announces rules proposal for $1K payments - The Hill",
+          "url": "https://thehill.com/homenews/nexstar_media_wire/5772283-trump-accounts-irs-announces-rules-proposal-for-1k-payments/",
+          "source": "The Hill",
+          "published_at": "2026-03-07T01:10:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The IRS announced a series of proposed rules that would determine eligibility and timing for the $1,000 government seed payments, among other aspects of the Trump Accounts.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Prediction market Kalshi sued over $54M Iranian leader bets after ‘death carveout’ invoked - Fox Business",
+          "url": "https://www.foxbusiness.com/technology/prediction-market-kalshi-sued-54m-iran-leader-bets-death-carveout-invoked",
+          "source": "Fox Business",
+          "published_at": "2026-03-06T23:22:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Kalshi was sued over $54 million in bets after invoking a “death carveout\" after the killing of Iran’s Ayatollah Ali Khamenei during Operation Epic Fury.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
           "title": "Oil price at two-year high after Qatar warns all Gulf production could stop within days - BBC",
           "url": "https://www.bbc.com/news/articles/cy031ylgepro",
           "source": "BBC News",
@@ -2973,6 +3051,58 @@
           "feed": "top_headlines",
           "description": "Energy Minister Saad al-Kaabi says oil could hit $150 a barrel if the Iran conflict continues over the coming weeks.",
           "impact_score": 55,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Donald Trump’s Greatest Promise Is Looking More Disastrous for Him by the Day - Slate",
+          "url": "https://slate.com/news-and-politics/2026/03/february-jobs-report-trump-economy.html",
+          "source": "Slate Magazine",
+          "published_at": "2026-03-06T22:02:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Is it good politics to preside over job losses and rising gas prices? We’ll find out!.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Wall Street’s Safety Net Is Giving Way as Iran War Hits Markets - Bloomberg.com",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-06/wall-street-s-safety-net-is-giving-way-as-iran-war-hits-markets",
+          "source": "Bloomberg",
+          "published_at": "2026-03-06T21:27:24Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The Iran war rattled but didn’t break Wall Street this week. Instead it exposed the limits of diversification strategies built to cushion investors against chaos.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Chevron executive: 'I think we have a state of emergency in California' - KCRA",
+          "url": "https://www.kcra.com/article/chevron-executive-state-of-emergency-california/70630507",
+          "source": "KCRA Sacramento",
+          "published_at": "2026-03-06T20:41:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "A top official at Chevron is warning that an upcoming vote by California state regulators could be the final straw that collapses the oil and gas industry in the state.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "The FDA, urged to avoid controversy, creates a new headache with attack against UniQure - statnews.com",
+          "url": "https://www.statnews.com/2026/03/06/fda-uniqure-rare-disease-huntingtons/",
+          "source": "STAT",
+          "published_at": "2026-03-06T20:25:08Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Recent decisions at the FDA threaten to turn its disagreements with the drugmaker UniQure into another political headache for the Trump administration.",
+          "impact_score": 40,
           "themes": [
             "other"
           ]
@@ -2989,152 +3119,9 @@
           "themes": [
             "other"
           ]
-        },
-        {
-          "title": "Kalshi Gamblers Furious After Company Refuses to Pay Out $54 Million on Ayatollah Khamenei’s Death - Futurism",
-          "url": "http://futurism.com/future-society/kalshi-ayatollah-khamenei-iran",
-          "source": "Futurism",
-          "published_at": "2026-03-06T20:06:16Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The prediction market platform has refused to pay out on bets related to Ayatollah Khamenei due to a technicality.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "The secret vehicle Ford built that CEO just gave to Pope Leo - The Seattle Times",
-          "url": "https://www.detroitnews.com/story/business/autos/ford/2026/03/06/ford-explorer-pope-leo-xiv-catholic-jim-farley-lia-hybrid-vatican/89016515007/",
-          "source": "The Detroit News",
-          "published_at": "2026-03-06T18:56:22Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The CEO took a drive with the pope and demonstrated some of the vehicle's advanced features, as well as some of the unique nods, including to the Vatican and his Chicago upbringing.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Billionaire Gas Station Owner Calls Iran War Price Hikes Temporary: ‘Suffer For One Month’ - Forbes",
-          "url": "https://www.forbes.com/sites/martinadilicosa/2026/03/06/billionaire-gas-station-owner-calls-iran-war-price-hikes-temporary-suffer-for-one-month/",
-          "source": "Forbes",
-          "published_at": "2026-03-06T18:34:44Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Catsimatidis controls over 400 gas stations across the country, as well as a major oil refinery.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Why A 'White Knight' Could Still Fight For Day One Bio - Investor's Business Daily",
-          "url": "https://www.investors.com/news/technology/day-one-biopharmaceuticals-seriver-acquisition/",
-          "source": "Investor's Business Daily",
-          "published_at": "2026-03-06T17:04:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The deal will expand Servier's pipeline of cancer treatments. But an analyst says other companies could make overtures.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Worried that AI might replace you? Check out this graph from Anthropic showing the jobs most at risk - Business Insider",
-          "url": "https://www.businessinsider.com/anthropic-is-tracking-the-jobs-most-exposed-to-ai-disruption-2026-3",
-          "source": "Business Insider",
-          "published_at": "2026-03-06T16:53:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Anthropic economists say there's not yet evidence to suggest AI is fueling a spike in job losses in highly exposed fields like computer programming.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "New Jersey Girl Scout Troop Chastised For Brilliant Sales Hack - OutKick",
-          "url": "https://www.outkick.com/culture/new-jersey-girl-scout-troop-chastised-brilliant-sales-hack",
-          "source": "Outkick.com",
-          "published_at": "2026-03-06T16:40:11Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "A New Jersey Girl Scout troop decided to set up shop outside a local weed dispensary. Then all hell broke loose.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "‘Ugly’: Trump’s job market shrinks as oil fears mount - Politico",
-          "url": "https://www.politico.com/news/2026/03/06/job-losses-oil-spike-trump-economy-fed-00816228",
-          "source": "Politico",
-          "published_at": "2026-03-06T15:20:21Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The combination of a weakening labor market and higher energy prices poses serious risks to Republicans in the coming months.",
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Axel Springer agrees to buy Telegraph Media Group in £575m deal - BBC",
-          "url": "https://www.bbc.com/news/articles/cyv916d999no",
-          "source": "BBC News",
-          "published_at": "2026-03-06T14:59:03Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Last year the Daily Mail and General Trust proposed to buy the company in a £500m takeover.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "United can remove and ban passengers who refuse to use headphones - Mashable",
-          "url": "https://mashable.com/article/united-airlines-headphone-policy",
-          "source": "Mashable",
-          "published_at": "2026-03-06T14:03:45Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Some more peace and quiet in the cabin.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Dow Jones Futures Fall As Oil Keeps Surging On Iran Conflict; Jobs Report On Tap - Investor's Business Daily",
-          "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-oil-prices-broadcom-nvidia-jobs-report/",
-          "source": "Investor's Business Daily",
-          "published_at": "2026-03-06T12:50:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Crude oil on track for biggest weekly gain since 2022",
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
         }
       ],
       "commercial": [
-        {
-          "title": "Iran Is Bombing Data Centers in Retaliation - Futurism",
-          "url": "http://futurism.com/artificial-intelligence/iran-bombing-data-centers",
-          "source": "Futurism",
-          "published_at": "2026-03-06T18:07:01Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Iranian drones hit three Amazon Web Services (AWS) facilities in the United Arab Emirates and Bahrain, putting US assets at risk.",
-          "impact_score": 40,
-          "themes": [
-            "commercial"
-          ]
-        },
         {
           "title": "FluffCo Luxury Hotel Pillow Claims Evaluated: 2026 Consumer Report on 5-Star Hotel Pillow Marketing, Materials, Pricing Transparency, and What Buyers Should Verify Before Ordering",
           "url": "https://www.globenewswire.com/news-release/2026/03/07/3251374/0/en/FluffCo-Luxury-Hotel-Pillow-Claims-Evaluated-2026-Consumer-Report-on-5-Star-Hotel-Pillow-Marketing-Materials-Pricing-Transparency-and-What-Buyers-Should-Verify-Before-Ordering.html",
@@ -3251,12 +3238,12 @@
       },
       {
         "ticker": "HD",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-06",
+        "open": 357.625,
         "close": 357.92,
-        "prev_close": 361.68,
-        "change": -3.76,
-        "change_pct": -1.0396
+        "change": 0.2950000000000159,
+        "change_pct": 0.08248864033555146
       },
       {
         "ticker": "LOW",
@@ -3287,12 +3274,12 @@
       },
       {
         "ticker": "BLDR",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-06",
-        "open": 93.72,
         "close": 93.12,
-        "change": -0.5999999999999943,
-        "change_pct": -0.6402048655569721
+        "prev_close": 95.51,
+        "change": -2.39,
+        "change_pct": -2.5024
       },
       {
         "ticker": "FBIN",
@@ -3305,12 +3292,12 @@
       },
       {
         "ticker": "OC",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-06",
+        "open": 109.32,
         "close": 109.75,
-        "prev_close": 111.52,
-        "change": -1.77,
-        "change_pct": -1.5872
+        "change": 0.4300000000000068,
+        "change_pct": 0.3933406512989452
       },
       {
         "ticker": "EXP",
@@ -3374,11 +3361,11 @@
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -2.391019929444507
+        "avg_change_pct": -2.060929820894683
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": -0.6402048655569721
+        "avg_change_pct": -2.5024
       },
       "equipment": {
         "count": 3,
@@ -3386,7 +3373,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": -0.20017076990690913
+        "avg_change_pct": 0.36087355026086665
       }
     },
     "stock_pressure_overlay": 5,
@@ -3469,7 +3456,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-08T03:12:26.517Z",
+    "generated_at_utc": "2026-03-08T07:00:50.223Z",
     "regime_history": {
       "current_regime_duration_days": 5,
       "previous_regime": null,
@@ -3484,7 +3471,7 @@
     "cpi": {
       "headline": 47,
       "zone": "Slowdown",
-      "delta_3m": -1,
+      "delta_3m": 0,
       "momentum": "Stable",
       "freeze_risk": false,
       "risk_thermometer_mode": false,
