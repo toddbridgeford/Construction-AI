@@ -3,14 +3,14 @@
     "system": "Construction Intelligence OS",
     "version": "signal_api_v1",
     "mode": "data_assisted",
-    "run_date": "2026-03-07",
+    "run_date": "2026-03-08",
     "region": {
       "name": "United States",
       "geo_id": null
     }
   },
   "provenance": {
-    "as_of": "2026-03-07",
+    "as_of": "2026-03-08",
     "sources": [
       {
         "name": "FRED",
@@ -40,7 +40,7 @@
       "value": 47,
       "direction": "→",
       "zone": "Compression Phase",
-      "delta_3m": 0,
+      "delta_3m": -1,
       "momentum_band": "Stable",
       "risk_state": "🟢",
       "drivers": {
@@ -161,12 +161,12 @@
     "display": {
       "cpi_value": 47,
       "zone": "Compression Phase",
-      "delta_3m": 0,
+      "delta_3m": -1,
       "risk_state": "🟢"
     }
   },
   "heatmap": {
-    "as_of": "2026-03-07",
+    "as_of": "2026-03-08",
     "regions": [
       {
         "name": "National",
