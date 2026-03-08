@@ -9,7 +9,7 @@ enum DiskCache {
         return dir.appendingPathComponent("dashboard_cache.json")
     }
 
-    static func save(_ payload: DashboardPayload) {
+    static func savePayload(_ payload: DashboardPayload) {
         do {
             let data = try JSONEncoder().encode(payload)
             try data.write(to: fileURL, options: .atomic)
@@ -18,7 +18,7 @@ enum DiskCache {
         }
     }
 
-    static func load() -> DashboardPayload? {
+    static func loadPayload() -> DashboardPayload? {
         do {
             let data = try Data(contentsOf: fileURL)
             return try JSONDecoder().decode(DashboardPayload.self, from: data)
@@ -28,7 +28,20 @@ enum DiskCache {
         }
     }
 
-    static func clear() {
+    static func clearPayload() {
         try? FileManager.default.removeItem(at: fileURL)
+    }
+
+    // Compatibility wrappers used by DashboardStore.
+    static func save(_ payload: DashboardPayload) {
+        savePayload(payload)
+    }
+
+    static func load() -> DashboardPayload? {
+        loadPayload()
+    }
+
+    static func clear() {
+        clearPayload()
     }
 }
