@@ -28,7 +28,7 @@ struct TerminalShellView: View {
                 VStack(spacing: 0) {
                     TerminalTopBarView(searchText: $store.searchText, statusText: store.statusText, lastRefresh: store.lastRefresh)
 
-                    if let errorMessage = store.errorMessage {
+                    if let errorMessage = store.errorMessage, store.payload != nil {
                         ErrorBannerView(message: errorMessage) {
                             Task { await store.refreshFromGitHub() }
                         }
