@@ -3,14 +3,14 @@
     "system": "Construction Intelligence OS",
     "version": "signal_api_v1",
     "mode": "data_assisted",
-    "run_date": "2026-03-08",
+    "run_date": "2026-03-09",
     "region": {
       "name": "Denver-Aurora-Lakewood, CO MSA",
       "geo_id": "19740"
     }
   },
   "provenance": {
-    "generated_at": "2026-03-08T18:51:57.892Z",
+    "generated_at": "2026-03-09T03:15:19.349Z",
     "sources": [
       {
         "name": "FRED",
