@@ -1,59 +1,237 @@
 const API_BASE = window.DASHBOARD_API_BASE || "";
-const REFRESH_MS = 60_000;
+const STORAGE_KEY = "construct.workflow.projects.v1";
+const ACTIVE_PROJECT_KEY = "construct.workflow.activeProjectId.v1";
 
 const ENDPOINTS = {
   terminal: `${API_BASE}/construction/terminal`,
   power: `${API_BASE}/construction/power`,
-  heatmap: `${API_BASE}/construction/heatmap`,
   forecast: `${API_BASE}/construction/forecast`,
-  nowcast: `${API_BASE}/construction/nowcast`,
-  alerts: `${API_BASE}/construction/alerts`,
-  morningBrief: `${API_BASE}/construction/morning-brief`,
-  scenarios: `${API_BASE}/construction/scenarios`,
-  watchlist: `${API_BASE}/construction/watchlist`,
-  morningBriefV2: `${API_BASE}/construction/morning-brief/v2`,
-  recessionProbability: `${API_BASE}/construction/recession-probability`,
-  stressIndex: `${API_BASE}/construction/stress-index`,
-  earlyWarning: `${API_BASE}/construction/early-warning`,
-  capitalFlows: `${API_BASE}/construction/capital-flows`,
-  migrationIndex: `${API_BASE}/construction/migration-index`,
-  materialsShock: `${API_BASE}/construction/materials-shock`,
-  laborShock: `${API_BASE}/construction/labor-shock`,
-  marginPressure: `${API_BASE}/construction/margin-pressure`,
-  bidIntensity: `${API_BASE}/construction/bid-intensity`,
-  backlogQuality: `${API_BASE}/construction/backlog-quality`,
-  projectRisk: `${API_BASE}/construction/project-risk`,
-  receivablesRisk: `${API_BASE}/construction/receivables-risk`,
-  paymentDelayRisk: `${API_BASE}/construction/payment-delay-risk`,
-  collectionsStress: `${API_BASE}/construction/collections-stress`,
-  ownerRisk: `${API_BASE}/construction/owner-risk`,
-  developerFragility: `${API_BASE}/construction/developer-fragility`,
-  lenderPullbackRisk: `${API_BASE}/construction/lender-pullback-risk`,
-  counterpartyQuality: `${API_BASE}/construction/counterparty-quality`,
-  metroConcentrationRisk: `${API_BASE}/construction/metro-concentration-risk`,
-  counterpartyConcentrationRisk: `${API_BASE}/construction/counterparty-concentration-risk`,
-  projectMixExposure: `${API_BASE}/construction/project-mix-exposure`,
-  portfolioRisk: `${API_BASE}/construction/portfolio-risk`,
-  spendingSummary: `${API_BASE}/spending/ytd/summary`,
-  settings: `${API_BASE}/construction/settings`,
-  settingsDefaults: `${API_BASE}/construction/settings/defaults`,
-  settingsReset: `${API_BASE}/construction/settings/reset`,
-  settingsProfiles: `${API_BASE}/construction/settings/profiles`,
-  settingsActiveProfile: `${API_BASE}/construction/settings/active-profile`,
-  settingsProfilesActivate: `${API_BASE}/construction/settings/profiles/activate`,
-  settingsProfilesDelete: `${API_BASE}/construction/settings/profiles/delete`,
-  customWatchlist: `${API_BASE}/construction/watchlist/custom`,
 };
 
-const statusEl = document.getElementById("status");
-const refreshBtn = document.getElementById("refreshBtn");
-const tapeEl = document.getElementById("marketTape");
-const panelsEl = document.getElementById("panels");
+const STATUS = {
+  DRAFT: "Draft",
+  MISSING_PLANS: "Missing Plans",
+  READY: "Ready",
+  SUBMITTED: "Submitted",
+  CALCULATED: "Calculated",
+  ERROR: "Error",
+};
 
-let refreshHandle;
+const state = {
+  projects: loadProjects(),
+  activeProjectId: localStorage.getItem(ACTIVE_PROJECT_KEY),
+  activeTab: "home",
+  statusMessage: "",
+  loading: false,
+};
+
+const tabContentEl = document.getElementById("tabContent");
+const refreshBtn = document.getElementById("refreshBtn");
+const tabButtons = Array.from(document.querySelectorAll(".tab-btn"));
+
+if (!("serviceWorker" in navigator)) {
+  setStatus("PWA limited: service worker not supported in this browser.");
+} else {
+  navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+    setStatus(`PWA setup warning: ${error.message}`);
+  });
+}
+
+if (!state.activeProjectId && state.projects.length) {
+  state.activeProjectId = state.projects[0].id;
+}
+
+if (!state.projects.length) {
+  const starter = createProject({ projectName: "New Project" });
+  state.projects.push(starter);
+  setActiveProject(starter.id);
+}
+
+render();
+
+refreshBtn.addEventListener("click", async () => {
+  const project = getActiveProject();
+  if (!project) return;
+  await runCalculation(project, { fromSubmit: false });
+});
+
+document.addEventListener("click", async (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+
+  if (target.matches(".tab-btn")) {
+    state.activeTab = target.dataset.tab || "home";
+    render();
+  }
+
+  if (target.id === "createProjectBtn") {
+    const project = createProject({ projectName: `Project ${state.projects.length + 1}` });
+    state.projects.unshift(project);
+    setActiveProject(project.id);
+    setStatus("New draft project created.");
+    saveState();
+    render();
+  }
+
+  if (target.matches("[data-project-id]")) {
+    setActiveProject(target.dataset.projectId);
+    setStatus("Project loaded.");
+    render();
+  }
+
+  if (target.id === "addPlanRefBtn") {
+    const project = getActiveProject();
+    const input = document.getElementById("planRefInput");
+    if (!project || !(input instanceof HTMLInputElement)) return;
+    const ref = input.value.trim();
+    if (!ref) return;
+    project.plans.push({
+      id: crypto.randomUUID(),
+      type: "reference",
+      name: ref,
+      source: ref,
+      addedAt: new Date().toISOString(),
+      status: "attached",
+    });
+    input.value = "";
+    touchProject(project);
+    autoUpdateStatus(project);
+    saveState();
+    setStatus("Plan reference attached.");
+    render();
+  }
+
+  if (target.id === "submitProjectBtn") {
+    const project = getActiveProject();
+    if (!project) return;
+    await submitProject(project);
+  }
+});
+
+document.addEventListener("change", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+  const project = getActiveProject();
+  if (!project) return;
+
+  if (target.id === "projectName" && target instanceof HTMLInputElement) {
+    project.projectName = target.value;
+  }
+
+  if (target.id === "projectLocation" && target instanceof HTMLInputElement) {
+    project.metadata.location = target.value;
+  }
+
+  if (target.id === "projectType" && target instanceof HTMLSelectElement) {
+    project.metadata.projectType = target.value;
+  }
+
+  if (target.id === "inputArea" && target instanceof HTMLInputElement) {
+    project.inputs.estimatedAreaSqFt = Number(target.value || 0);
+  }
+
+  if (target.id === "inputBudget" && target instanceof HTMLInputElement) {
+    project.inputs.targetBudget = Number(target.value || 0);
+  }
+
+  if (target.id === "assumptions" && target instanceof HTMLTextAreaElement) {
+    project.assumptions.notes = target.value;
+  }
+
+  if (target.id === "planFileInput" && target instanceof HTMLInputElement) {
+    const files = Array.from(target.files || []);
+    files.forEach((file) => {
+      project.plans.push({
+        id: crypto.randomUUID(),
+        type: "upload",
+        name: file.name,
+        mimeType: file.type || "application/octet-stream",
+        size: file.size,
+        lastModified: file.lastModified,
+        addedAt: new Date().toISOString(),
+        status: "uploaded",
+      });
+    });
+    target.value = "";
+  }
+
+  touchProject(project);
+  autoUpdateStatus(project);
+  saveState();
+  render();
+});
+
+function loadProjects() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.projects));
+  if (state.activeProjectId) {
+    localStorage.setItem(ACTIVE_PROJECT_KEY, state.activeProjectId);
+  }
+}
 
 function setStatus(message) {
-  statusEl.textContent = message;
+  state.statusMessage = message;
+}
+
+function getActiveProject() {
+  return state.projects.find((project) => project.id === state.activeProjectId) || null;
+}
+
+function setActiveProject(projectId) {
+  state.activeProjectId = projectId;
+  saveState();
+}
+
+function createProject(overrides = {}) {
+  const now = new Date().toISOString();
+  return {
+    id: crypto.randomUUID(),
+    createdAt: now,
+    updatedAt: now,
+    status: STATUS.DRAFT,
+    projectName: "",
+    metadata: { location: "", projectType: "commercial" },
+    plans: [],
+    inputs: { estimatedAreaSqFt: 0, targetBudget: 0 },
+    assumptions: { notes: "" },
+    results: {},
+    calculationSummary: {},
+    storageInfo: {
+      plansStorage: "Browser local storage metadata only",
+      projectStorage: "Browser local storage",
+    },
+    schemaVersion: 1,
+    ...overrides,
+  };
+}
+
+function touchProject(project) {
+  project.updatedAt = new Date().toISOString();
+}
+
+function isProjectValid(project) {
+  const hasName = Boolean(project.projectName?.trim());
+  const hasArea = Number(project.inputs.estimatedAreaSqFt) > 0;
+  const hasPlan = project.plans.length > 0;
+  return hasName && hasArea && hasPlan;
+}
+
+function autoUpdateStatus(project) {
+  if (project.status === STATUS.SUBMITTED) return;
+  if (!project.projectName?.trim() || Number(project.inputs.estimatedAreaSqFt) <= 0) {
+    project.status = STATUS.DRAFT;
+    return;
+  }
+  project.status = project.plans.length ? STATUS.READY : STATUS.MISSING_PLANS;
 }
 
 async function fetchJson(url) {
@@ -62,425 +240,188 @@ async function fetchJson(url) {
   return response.json();
 }
 
-async function postJson(url, payload = {}) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(payload),
+async function submitProject(project) {
+  if (!isProjectValid(project)) {
+    setStatus("Submit Project is disabled until required fields and plans are complete.");
+    render();
+    return;
+  }
+
+  state.loading = true;
+  project.status = STATUS.SUBMITTED;
+  touchProject(project);
+  saveState();
+  render();
+
+  await runCalculation(project, { fromSubmit: true });
+}
+
+async function runCalculation(project, { fromSubmit }) {
+  try {
+    setStatus(fromSubmit ? "Submitting project and running calculations..." : "Refreshing calculations...");
+    render();
+
+    const [terminalData, powerData, forecastData] = await Promise.all([
+      fetchJson(ENDPOINTS.terminal),
+      fetchJson(ENDPOINTS.power),
+      fetchJson(ENDPOINTS.forecast),
+    ]);
+
+    const powerIndex = powerData?.power_index ?? terminalData?.terminal?.power_index ?? null;
+    const regime = terminalData?.terminal?.regime?.regime ?? "Unknown";
+    const forecastHeadline = forecastData?.forecast?.headline ?? "No forecast headline returned";
+
+    project.results = {
+      powerIndex,
+      regime,
+      forecastHeadline,
+      includedPlans: project.plans.map((plan) => ({ name: plan.name, type: plan.type })),
+      usedInputs: {
+        estimatedAreaSqFt: project.inputs.estimatedAreaSqFt,
+        targetBudget: project.inputs.targetBudget,
+      },
+      assumptions: project.assumptions,
+      calculatedAt: new Date().toISOString(),
+    };
+
+    project.calculationSummary = {
+      method:
+        "The app fetches terminal, power, and forecast endpoints, then combines market power index, regime, and forecast context with project inputs and attached plans.",
+      explanation:
+        "Results are deterministic from API responses plus your saved inputs; no hidden transforms are applied in the UI.",
+    };
+
+    project.status = STATUS.CALCULATED;
+    touchProject(project);
+    saveState();
+
+    state.activeTab = "results";
+    setStatus(fromSubmit ? "Project submitted successfully." : "Results refreshed.");
+  } catch (error) {
+    project.status = STATUS.ERROR;
+    touchProject(project);
+    saveState();
+    setStatus(`Calculation failed: ${error.message}`);
+  } finally {
+    state.loading = false;
+    render();
+  }
+}
+
+function render() {
+  tabButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.tab === state.activeTab);
   });
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return response.json();
-}
 
-function settledValue(result, key) {
-  if (!result || result.status !== "fulfilled") return null;
-  return result.value?.[key] ?? null;
-}
+  const project = getActiveProject();
+  const disabledSubmit = !project || !isProjectValid(project) || state.loading;
 
-function isSubsectionError(value) {
-  return !!(value && typeof value === "object" && value.ok === false && value.error);
-}
-
-function asText(value, fallback = "unknown") {
-  return typeof value === "string" && value.length > 0 ? value : fallback;
-}
-
-function asNumber(value) {
-  return Number.isFinite(value) ? value : null;
-}
-
-function formatOneDecimal(value, fallback = "n/a") {
-  const numeric = asNumber(value);
-  return numeric === null ? fallback : numeric.toFixed(1);
-}
-
-function isUnavailableText(value, unavailableLabel) {
-  return typeof value === "string" && value.toLowerCase().includes(unavailableLabel.toLowerCase());
-}
-
-function marketFromList(list) {
-  return Array.isArray(list) && list[0]?.market ? list[0].market : "unknown";
-}
-
-function modelFromSettled(results) {
-  const terminal = settledValue(results.terminal, "terminal") || {};
-  const power = {
-    power_index: settledValue(results.power, "power_index") || terminal.power_index || null,
-    power_summary: settledValue(results.power, "power_summary") || terminal.power_summary || null,
+  const content = {
+    home: renderHome(project),
+    projects: renderProjects(project),
+    plans: renderPlans(project),
+    results: renderResults(project),
   };
 
-  const marketTape = terminal.market_tape || null;
-  const terminalSignal = isSubsectionError(terminal.signal) ? null : terminal.signal;
-  const terminalRegime = isSubsectionError(terminal.regime) ? null : terminal.regime;
-  const terminalLiquidity = isSubsectionError(terminal.liquidity) ? null : terminal.liquidity;
-  const terminalRisk = isSubsectionError(terminal.risk) ? null : terminal.risk;
-  const spendingSummary = settledValue(results.spendingSummary, "summary");
-  const spending = spendingSummary || (isSubsectionError(terminal.spending) ? null : terminal.spending);
-
-  const nowcast = settledValue(results.nowcast, "nowcast") || terminal.nowcast || null;
-  const stressIndex = settledValue(results.stressIndex, "stress_index") || terminal.stress_index || null;
-  const capitalFlows = settledValue(results.capitalFlows, "capital_flows") || terminal.capital_flows || null;
-  const migrationIndex = settledValue(results.migrationIndex, "migration_index") || terminal.migration_index || null;
-  const materialsShock = settledValue(results.materialsShock, "materials_shock") || terminal.materials_shock || null;
-  const laborShock = settledValue(results.laborShock, "labor_shock") || terminal.labor_shock || null;
-  const marginPressure = settledValue(results.marginPressure, "margin_pressure") || terminal.margin_pressure || null;
-  const bidIntensity = settledValue(results.bidIntensity, "bid_intensity") || terminal.bid_intensity || null;
-  const backlogQuality = settledValue(results.backlogQuality, "backlog_quality") || terminal.backlog_quality || null;
-  const projectRisk = settledValue(results.projectRisk, "project_risk") || terminal.project_risk || null;
-  const receivablesRisk = settledValue(results.receivablesRisk, "receivables_risk") || terminal.receivables_risk || null;
-  const paymentDelayRisk = settledValue(results.paymentDelayRisk, "payment_delay_risk") || terminal.payment_delay_risk || null;
-  const collectionsStress = settledValue(results.collectionsStress, "collections_stress") || terminal.collections_stress || null;
-  const ownerRisk = settledValue(results.ownerRisk, "owner_risk") || terminal.owner_risk || null;
-  const developerFragility = settledValue(results.developerFragility, "developer_fragility") || terminal.developer_fragility || null;
-  const lenderPullbackRisk = settledValue(results.lenderPullbackRisk, "lender_pullback_risk") || terminal.lender_pullback_risk || null;
-  const counterpartyQuality = settledValue(results.counterpartyQuality, "counterparty_quality") || terminal.counterparty_quality || null;
-  const metroConcentrationRisk = settledValue(results.metroConcentrationRisk, "metro_concentration_risk") || terminal.metro_concentration_risk || null;
-  const counterpartyConcentrationRisk = settledValue(results.counterpartyConcentrationRisk, "counterparty_concentration_risk") || terminal.counterparty_concentration_risk || null;
-  const projectMixExposure = settledValue(results.projectMixExposure, "project_mix_exposure") || terminal.project_mix_exposure || null;
-  const portfolioRisk = settledValue(results.portfolioRisk, "portfolio_risk") || terminal.portfolio_risk || null;
-  const powerIndex = power?.power_index || terminal.power_index || null;
-  const subcontractors = powerIndex?.subcontractors || null;
-
-  const permitsTrend = asNumber(terminal.activity_trends?.permits_trend_pct);
-  const startsTrend = asNumber(terminal.activity_trends?.starts_trend_pct);
-  const avgActivityTrend = permitsTrend !== null && startsTrend !== null ? (permitsTrend + startsTrend) / 2 : null;
-
-  const projectPipeline = nowcast?.next_6_months === "softening" || (avgActivityTrend !== null && avgActivityTrend < 0)
-    ? "Pipeline bias: cautious"
-    : terminalLiquidity?.liquidity_state === "tight"
-      ? "Pipeline bias: selective"
-      : "Pipeline bias: stable";
-
-  const bidEnvironment = asNumber(terminal.construction_index) !== null && asNumber(terminal.construction_index) >= 55
-    ? "Competitive"
-    : subcontractors?.state === "tight" || nowcast?.next_6_months === "softening"
-      ? "Disciplined"
-      : "Balanced";
-
-  const migrationUnavailable = !migrationIndex
-    || (!Array.isArray(migrationIndex?.inbound_markets) && !Array.isArray(migrationIndex?.outbound_markets))
-    || (Array.isArray(migrationIndex?.inbound_markets) && migrationIndex.inbound_markets.length === 0
-      && Array.isArray(migrationIndex?.outbound_markets) && migrationIndex.outbound_markets.length === 0);
-
-  const forecastHeadline = terminal?.forecast_summary?.headline;
-  const heatmapTheme = terminal?.heatmap_summary?.top_strength_theme;
-
-  return {
-    terminal,
-    tape: marketTape,
-    signal: asText(terminalSignal?.signal, "unknown"),
-    regime: asText(terminalRegime?.regime, "unknown"),
-    liquidity: asText(terminalLiquidity?.liquidity_state, asText(marketTape?.liquidity, "unknown")),
-    risk: asText(terminalRisk?.risk_level, asText(marketTape?.risk, "unknown")),
-    constructionIndex: asNumber(terminal.construction_index),
-    formattedConstructionIndex: formatOneDecimal(terminal.construction_index),
-    stressIndex,
-    formattedStressIndex: formatOneDecimal(stressIndex?.score),
-    spending,
-    power,
-    nowcast,
-    heatmap: settledValue(results.heatmap, "heatmap") || null,
-    forecast: settledValue(results.forecast, "forecast") || null,
-    alerts: settledValue(results.alerts, "alerts") || terminal.alerts || [],
-    recessionProbability: settledValue(results.recessionProbability, "recession_probability") || terminal.recession_probability || null,
-    earlyWarning: settledValue(results.earlyWarning, "early_warning") || terminal.early_warning || null,
-    capitalFlows,
-    materialsShock,
-    laborShock,
-    marginPressure,
-    bidIntensity,
-    backlogQuality,
-    projectRisk,
-    receivablesRisk,
-    paymentDelayRisk,
-    collectionsStress,
-    ownerRisk,
-    developerFragility,
-    lenderPullbackRisk,
-    counterpartyQuality,
-    metroConcentrationRisk,
-    counterpartyConcentrationRisk,
-    projectMixExposure,
-    portfolioRisk,
-    migrationIndex,
-    projectPipeline,
-    bidEnvironment,
-    subcontractorCapacity: {
-      score: asNumber(subcontractors?.score),
-      state: asText(subcontractors?.state, "unknown"),
-      explanation: asText(subcontractors?.explanation, ""),
-    },
-    migrationSummary: migrationUnavailable
-      ? "Migration index unavailable"
-      : `${marketFromList(migrationIndex?.inbound_markets)} → ${marketFromList(migrationIndex?.outbound_markets)}`,
-    forecastSummary: isUnavailableText(forecastHeadline, "unavailable")
-      ? "Forecast unavailable"
-      : asText(forecastHeadline, "Forecast unavailable"),
-    heatmapSummary: isUnavailableText(heatmapTheme, "unavailable")
-      ? "Heatmap unavailable"
-      : asText(heatmapTheme, "Heatmap unavailable"),
-    morningBrief: settledValue(results.morningBrief, "brief") || null,
-    scenarios: settledValue(results.scenarios, "scenarios") || terminal.scenarios || null,
-    watchlist: settledValue(results.watchlist, "watchlist") || terminal.watchlist || null,
-    morningBriefV2: settledValue(results.morningBriefV2, "brief") || terminal.morning_brief_v2 || null,
-    settings: settledValue(results.settings, "settings") || null,
-    settingsDefaults: settledValue(results.settingsDefaults, "defaults") || null,
-    settingsProfiles: settledValue(results.settingsProfiles, "profiles") || [],
-    activeSettingsProfileId: settledValue(results.settingsProfiles, "active_profile_id") || null,
-    customWatchlist: settledValue(results.customWatchlist, "alerts") ? settledValue(results.customWatchlist, "alerts") : terminal?.custom_watchlist?.alerts || [],
-    customWatchlistSummary: settledValue(results.customWatchlist, "summary") || terminal?.custom_watchlist_summary || "No custom watchlist summary.",
-    operatorActions: terminal.operator_actions || null,
-    cycleInterpretation: asText(terminal.cycle_interpretation, "Neutral"),
-    marketTape: marketTape || {
-      signal: asText(terminalSignal?.signal, "unknown"),
-      regime: asText(terminalRegime?.regime, "unknown"),
-      liquidity: asText(terminalLiquidity?.liquidity_state, "unknown"),
-      risk: asText(terminalRisk?.risk_level, "unknown"),
-      construction_index: formatOneDecimal(terminal.construction_index),
-      stress_index: formatOneDecimal(stressIndex?.score),
-      recession_probability: asNumber(nowcast?.next_12_months_recession_probability),
-      commercial_pct: asNumber(spending?.commercial?.pct_change_ytd_vs_pytd),
-      housing_pct: asNumber(spending?.housing?.pct_change_ytd_vs_pytd),
-      top_market: marketFromList(terminal.migration_index?.inbound_markets),
-      weakest_market: marketFromList(terminal.migration_index?.outbound_markets),
-    },
-    failures: Object.entries(results)
-      .filter(([, value]) => value.status === "rejected")
-      .map(([key, value]) => ({ key, reason: value.reason?.message || "failed" })),
-  };
+  tabContentEl.innerHTML = `${content[state.activeTab]}
+    <div class="status-banner ${state.loading ? "loading" : ""}">${state.statusMessage || "Ready"}</div>
+    <button id="submitProjectBtn" class="primary-cta" ${disabledSubmit ? "disabled" : ""}>${state.loading ? "Submitting..." : "Submit Project"}</button>`;
 }
 
-async function useConstructionTerminalData() {
-  const entries = Object.entries(ENDPOINTS);
-  const settled = await Promise.allSettled(entries.map(([, url]) => fetchJson(url)));
-  const results = {};
-  entries.forEach(([name], index) => {
-    results[name] = settled[index];
-  });
-  return modelFromSettled(results);
-}
-
-function card(title, value, subtitle = "") {
-  return `<article class="card"><h3>${title}</h3><div class="value">${value}</div><p>${subtitle || ""}</p></article>`;
-}
-
-function renderTape(tape) {
-  tapeEl.innerHTML = "";
-  const activeTape = tape || {};
-  const fields = [
-    ["Signal", activeTape.signal || "unknown"],
-    ["Regime", activeTape.regime || "unknown"],
-    ["Liquidity", activeTape.liquidity || "unknown"],
-    ["Risk", activeTape.risk ?? "n/a"],
-    ["Construction", activeTape.construction_index ?? "n/a"],
-    ["Stress", activeTape.stress_index ?? "n/a"],
-    ["Recession %", activeTape.recession_probability ?? "n/a"],
-    ["Commercial %", activeTape.commercial_pct ?? "n/a"],
-    ["Housing %", activeTape.housing_pct ?? "n/a"],
-    ["Top Market", activeTape.top_market || "unknown"],
-    ["Weakest Market", activeTape.weakest_market || "unknown"],
-  ];
-
-  fields.forEach(([label, value]) => {
-    const span = document.createElement("span");
-    span.className = "tape-item";
-    span.innerHTML = `<strong>${label}</strong> ${value}`;
-    tapeEl.appendChild(span);
-  });
-}
-
-function renderPanels(vm) {
-  const commercial = asNumber(vm.spending?.commercial?.pct_change_ytd_vs_pytd);
-  const housing = asNumber(vm.spending?.housing?.pct_change_ytd_vs_pytd);
-  const powerHeadline = vm.power?.power_summary?.headline || "Power summary unavailable";
-  const heatmapSummary = vm.heatmapSummary;
-  const forecastHeadline = vm.forecastSummary;
-  const stressValue = vm.formattedStressIndex;
-  const commercialHousingTakeaway = commercial !== null && housing !== null
-    ? commercial >= 0 && housing >= 0
-      ? "Both segments are above prior-year pace."
-      : commercial < 0 && housing < 0
-        ? "Both segments are below prior-year pace."
-        : "Segments are diverging; stay selective by market."
-    : "Segment data unavailable.";
-  const projectPipeline = vm.projectPipeline;
-  const bidEnvironment = vm.bidEnvironment;
-  const subCapacity = vm.subcontractorCapacity?.state || "unknown";
-  const topAlerts = Array.from(new Map((vm.alerts || []).map((a) => [a.headline, a])).values());
-  const operatorActions = vm.operatorActions
-    ? `GC: ${vm.operatorActions.gc} Sub: ${vm.operatorActions.subcontractor} Dev: ${vm.operatorActions.developer} Lender: ${vm.operatorActions.lender} Supplier: ${vm.operatorActions.supplier || "Maintain delivery reliability and margin discipline."}`
-    : "GC: Protect backlog quality. Sub: Maintain pricing discipline. Dev: Stage starts by financing certainty. Lender: Monitor commercial exposures. Supplier: Maintain delivery reliability and margin discipline.";
-
-  panelsEl.innerHTML = `
-    <section class="row row-top">${card("Cycle Dial", vm.cycleInterpretation)}${card("Signal", vm.signal)}${card("Regime", vm.regime)}${card("Liquidity", vm.liquidity)}${card("Risk", vm.risk)}${card("Construction Index", vm.formattedConstructionIndex)}${card("Stress Index", stressValue, vm.stressIndex?.explanation || "")}</section>
-    <section class="row">${card("Commercial vs Housing", `${commercial ?? "n/a"} / ${housing ?? "n/a"}`, commercialHousingTakeaway)}${card("Power Index", vm.power?.power_summary?.margin_leader || "unknown", powerHeadline)}${card("Forward Outlook", vm.nowcast?.next_6_months || "unknown", `Recession: ${vm.nowcast?.next_12_months_recession_probability ?? "n/a"}%`)}${card("Project Pipeline", projectPipeline, vm.nowcast?.drivers?.[0] || "No driver available")}</section>
-    <section class="row">${card("Alerts", topAlerts?.[0]?.headline || "No active alerts", topAlerts?.[0]?.explanation || "")}${card("Heatmap", heatmapSummary, asText(vm.terminal?.heatmap_summary?.top_weakness_theme, ""))}${card("Bid Environment", bidEnvironment, vm.terminal?.power_summary?.headline || "")}${card("Subcontractor Capacity", subCapacity, vm.subcontractorCapacity?.explanation || "")}</section>
-    <section class="row">${card("Capital Flows", vm.capitalFlows?.headline || "unknown", vm.capitalFlows?.explanation || vm.terminal?.capital_flows_summary || "")}${card("Migration Index", vm.migrationSummary, vm.migrationIndex?.headline || vm.terminal?.migration_summary || "")}${card("Market Forecast", asText(vm.terminal?.forecast_summary?.strongest_market, marketFromList(vm.forecast?.strongest_next_12_months)), forecastHeadline)}</section>
-    <section class="row">${card("Materials Shock", formatOneDecimal(vm.materialsShock?.score), vm.materialsShock?.explanation || vm.terminal?.materials_shock_summary || "")}${card("Labor Shock", formatOneDecimal(vm.laborShock?.score), vm.laborShock?.explanation || vm.terminal?.labor_shock_summary || "")}${card("Margin Pressure", formatOneDecimal(vm.marginPressure?.score), vm.marginPressure?.explanation || vm.terminal?.margin_pressure_summary || "")}</section>
-    <section class="row">${card("Bid Activity / Intensity", formatOneDecimal(vm.bidIntensity?.score), vm.bidIntensity?.explanation || vm.terminal?.bid_intensity_summary || "")}${card("Backlog Quality", formatOneDecimal(vm.backlogQuality?.score), vm.backlogQuality?.explanation || vm.terminal?.backlog_quality_summary || "")}${card("Project Risk", formatOneDecimal(vm.projectRisk?.score), vm.projectRisk?.explanation || vm.terminal?.project_risk_summary || "")}</section>
-    <section class="row">${card("Receivables Risk", formatOneDecimal(vm.receivablesRisk?.score), vm.receivablesRisk?.explanation || vm.terminal?.receivables_risk_summary || "")}${card("Payment Delay Risk", formatOneDecimal(vm.paymentDelayRisk?.score), vm.paymentDelayRisk?.explanation || vm.terminal?.payment_delay_risk_summary || "")}${card("Collections Stress", formatOneDecimal(vm.collectionsStress?.score), vm.collectionsStress?.explanation || vm.terminal?.collections_stress_summary || "")}</section>
-    <section class="row">${card("Owner Risk", formatOneDecimal(vm.ownerRisk?.score), vm.ownerRisk?.explanation || vm.terminal?.owner_risk_summary || "")}${card("Developer Fragility", formatOneDecimal(vm.developerFragility?.score), vm.developerFragility?.explanation || vm.terminal?.developer_fragility_summary || "")}${card("Lender Pullback Risk", formatOneDecimal(vm.lenderPullbackRisk?.score), vm.lenderPullbackRisk?.explanation || vm.terminal?.lender_pullback_risk_summary || "")}${card("Counterparty Quality", formatOneDecimal(vm.counterpartyQuality?.score), vm.counterpartyQuality?.explanation || vm.terminal?.counterparty_quality_summary || "")}</section>
-    <section class="row">${card("Metro Concentration Risk", formatOneDecimal(vm.metroConcentrationRisk?.score), vm.metroConcentrationRisk?.explanation || vm.terminal?.metro_concentration_risk_summary || "")}${card("Counterparty Concentration Risk", formatOneDecimal(vm.counterpartyConcentrationRisk?.score), vm.counterpartyConcentrationRisk?.explanation || vm.terminal?.counterparty_concentration_risk_summary || "")}${card("Project Mix Exposure", formatOneDecimal(vm.projectMixExposure?.score), vm.projectMixExposure?.explanation || vm.terminal?.project_mix_exposure_summary || "")}${card("Portfolio Risk", formatOneDecimal(vm.portfolioRisk?.score), vm.portfolioRisk?.explanation || vm.terminal?.portfolio_risk_summary || "")}</section>
-    <section class="row">${card("Scenario Engine", vm.scenarios?.headline || vm.terminal?.scenarios_summary || "Unavailable", vm.scenarios?.base_case?.operator_implication || "")}${card(`Watchlist Alerts <span class="badge">${vm.terminal?.active_settings_profile || "Profile"}</span>`, vm.watchlist?.summary || vm.terminal?.watchlist_summary || "No active watchlist alerts", vm.watchlist?.alerts?.[0]?.message || "")}${card("Morning Brief v2", vm.morningBriefV2?.operator_focus || vm.terminal?.morning_brief_v2_summary || "Unavailable", vm.morningBriefV2?.changed_conditions?.[0] || "")}${card("Custom Watchlist", vm.customWatchlistSummary, vm.customWatchlist?.[0]?.message || "")}</section>
-    <section class="row settings-row">
-      <article class="card settings-card">
-        <h3>Alert Settings</h3>
-        <div class="settings-grid">
-          <label>Active profile
-            <select id="settingsActiveProfile">
-              ${(vm.settingsProfiles || []).map((profile) => `<option value="${profile.profile_id}" ${profile.profile_id === vm.activeSettingsProfileId ? "selected" : ""}>${profile.profile_name}</option>`).join("")}
-            </select>
-          </label>
-          <label>New profile name<input id="newProfileName" placeholder="Create profile" /></label>
-          <label>New profile description<input id="newProfileDescription" placeholder="Optional description" /></label>
-          <label>Sensitivity
-            <select id="settingsSensitivity">
-              <option value="conservative" ${vm.settings?.alert_sensitivity === "conservative" ? "selected" : ""}>conservative</option>
-              <option value="balanced" ${vm.settings?.alert_sensitivity !== "aggressive" && vm.settings?.alert_sensitivity !== "conservative" ? "selected" : ""}>balanced</option>
-              <option value="aggressive" ${vm.settings?.alert_sensitivity === "aggressive" ? "selected" : ""}>aggressive</option>
-            </select>
-          </label>
-          <label>Watched metros (comma-separated)<input id="settingsMetros" value="${(vm.settings?.metros_watchlist || []).join(", ")}" /></label>
-          <label>Watched risks (comma-separated)<input id="settingsRisks" value="${(vm.settings?.risk_watchlist || []).join(", ")}" /></label>
-          <label>Muted alert codes (comma-separated)<input id="settingsMuted" value="${(vm.settings?.muted_alert_codes || []).join(", ")}" /></label>
-          <label>Threshold JSON<textarea id="settingsThresholds">${JSON.stringify(vm.settings?.thresholds || vm.settingsDefaults?.thresholds || {}, null, 2)}</textarea></label>
-        </div>
-        <div class="settings-actions"><button id="saveSettingsBtn" type="button">Save Settings</button><button id="activateSettingsProfileBtn" type="button">Activate Profile</button><button id="createSettingsProfileBtn" type="button">Create Profile</button><button id="deleteSettingsProfileBtn" type="button">Delete Selected (non-active only)</button><button id="resetSettingsBtn" type="button">Reset Defaults</button></div>
-        <p>${vm.terminal?.settings_summary || "Active settings profile."}</p>
-        <p>${vm.terminal?.saved_profiles_summary || "Saved profiles unavailable."}</p>
-      </article>
-    </section>
-    <section class="row row-bottom">${card("Morning Brief", vm.morningBrief?.spending?.takeaway || "Unavailable")} ${card("Operator Actions", operatorActions)}</section>
+function renderHome(project) {
+  if (!project) return card("No project selected", "Create a project to continue.");
+  return `
+    ${card("Current Project", `<strong>${escapeHtml(project.projectName || "Untitled")}</strong><p>Status: ${project.status}</p>`)}
+    ${card("Recent Activity", `<p>Updated: ${new Date(project.updatedAt).toLocaleString()}</p><p>Plans: ${project.plans.length}</p>`)}
+    ${card("Continue", `<p>Complete required fields, add plans, then tap Submit Project.</p>`)}
+    ${card("Latest Calculation", `<p>${project.results?.forecastHeadline || "No calculation yet."}</p>`)}
   `;
 }
 
-function renderFailures(failures) {
-  if (!failures.length) return;
-  const failed = failures.map((f) => `${f.key}: ${f.reason}`).join(" | ");
-  setStatus(`Partial data mode — ${failed}`);
+function renderProjects(project) {
+  return `
+    <section class="card-list">
+      ${card("Project Draft", `
+        <label>Project name<input id="projectName" value="${escapeAttr(project?.projectName || "")}" placeholder="Example: North Yard Renovation" /></label>
+        <label>Location<input id="projectLocation" value="${escapeAttr(project?.metadata?.location || "")}" placeholder="City, State" /></label>
+        <label>Project type
+          <select id="projectType">
+            ${["commercial", "residential", "industrial"].map((option) => `<option value="${option}" ${project?.metadata?.projectType === option ? "selected" : ""}>${option}</option>`).join("")}
+          </select>
+        </label>
+        <label>Estimated area (sq ft)<input id="inputArea" type="number" min="0" value="${Number(project?.inputs?.estimatedAreaSqFt || 0)}" /></label>
+        <label>Target budget<input id="inputBudget" type="number" min="0" value="${Number(project?.inputs?.targetBudget || 0)}" /></label>
+        <label>Assumptions<textarea id="assumptions" placeholder="Known constraints and assumptions">${escapeHtml(project?.assumptions?.notes || "")}</textarea></label>
+      `)}
+      ${card("Saved Drafts & Submitted", `
+        <button id="createProjectBtn" class="ghost-btn" type="button">New Draft</button>
+        <div class="project-list">
+          ${state.projects
+            .map((item) => `<button type="button" class="project-chip ${item.id === state.activeProjectId ? "active" : ""}" data-project-id="${item.id}">${escapeHtml(item.projectName || "Untitled")} · ${item.status}</button>`)
+            .join("")}
+        </div>
+      `)}
+    </section>
+  `;
 }
 
-async function loadDashboard() {
-  setStatus("Refreshing terminal...");
-  try {
-    const vm = await useConstructionTerminalData();
-    renderTape(vm.marketTape || vm.tape);
-    renderPanels(vm);
+function renderPlans(project) {
+  const readyText = isProjectValid(project)
+    ? "Ready to submit."
+    : "Not ready: add required project fields and at least one plan.";
 
-    if (vm.failures.length) {
-      renderFailures(vm.failures);
-    } else {
-      setStatus(`Updated ${new Date().toLocaleTimeString()}`);
-    }
-  } catch (error) {
-    setStatus(`Terminal load error: ${error.message}`);
-  }
+  return `
+    ${card("Plans", `
+      <label>Upload plan files<input id="planFileInput" type="file" multiple /></label>
+      <label>Attach plan reference<input id="planRefInput" placeholder="https://... or sheet reference" /></label>
+      <button id="addPlanRefBtn" class="ghost-btn" type="button">Attach Reference</button>
+      <p class="helper">${readyText}</p>
+    `)}
+    ${card("Plan Status", `
+      <ul class="plan-list">
+        ${(project?.plans || []).map((plan) => `<li>${escapeHtml(plan.name)} <span>${plan.status}</span></li>`).join("") || "<li>No plans attached yet.</li>"}
+      </ul>
+      <p class="helper">Phase 2 ready: sheet metadata, discipline, preview, and grouping can be layered onto each plan record.</p>
+    `)}
+  `;
 }
 
-
-
-async function saveSettingsFromUI() {
-  try {
-    setStatus("Saving settings...");
-    const thresholdsRaw = document.getElementById("settingsThresholds")?.value || "{}";
-    let thresholds = {};
-    try {
-      thresholds = JSON.parse(thresholdsRaw);
-    } catch {
-      setStatus("Settings JSON invalid. Use valid threshold JSON.");
-      return;
-    }
-
-    const payload = {
-      alert_sensitivity: document.getElementById("settingsSensitivity")?.value || "balanced",
-      metros_watchlist: (document.getElementById("settingsMetros")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
-      risk_watchlist: (document.getElementById("settingsRisks")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
-      muted_alert_codes: (document.getElementById("settingsMuted")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
-      thresholds,
-    };
-
-    await postJson(ENDPOINTS.settings, payload);
-    await loadDashboard();
-    setStatus(`Settings saved ${new Date().toLocaleTimeString()}`);
-  } catch (error) {
-    setStatus(`Settings save error: ${error.message}`);
-  }
+function renderResults(project) {
+  const results = project?.results || {};
+  const summary = project?.calculationSummary || {};
+  return `
+    ${card("Results Summary", `
+      <p>Power Index: <strong>${results.powerIndex ?? "n/a"}</strong></p>
+      <p>Regime: <strong>${escapeHtml(results.regime || "Unknown")}</strong></p>
+      <p>Forecast: ${escapeHtml(results.forecastHeadline || "No results yet")}</p>
+      <p>Last Calculated: ${results.calculatedAt ? new Date(results.calculatedAt).toLocaleString() : "Never"}</p>
+    `)}
+    ${card("Assumptions & Method", `
+      <p><strong>Assumptions used:</strong> ${escapeHtml(project?.assumptions?.notes || "None provided")}</p>
+      <p><strong>Calculation method:</strong> ${escapeHtml(summary.method || "Submit Project to populate method details.")}</p>
+      <p><strong>Explainability:</strong> ${escapeHtml(summary.explanation || "")}</p>
+    `)}
+    ${card("Storage & Included Plans", `
+      <p>Project data store: ${escapeHtml(project?.storageInfo?.projectStorage || "local storage")}</p>
+      <p>Plan data store: ${escapeHtml(project?.storageInfo?.plansStorage || "local storage metadata")}</p>
+      <ul class="plan-list">${(results.includedPlans || []).map((plan) => `<li>${escapeHtml(plan.name)} (${plan.type})</li>`).join("") || "<li>No plans used yet.</li>"}</ul>
+    `)}
+  `;
 }
 
-async function resetSettingsFromUI() {
-  try {
-    setStatus("Resetting settings...");
-    await postJson(ENDPOINTS.settingsReset, {});
-    await loadDashboard();
-    setStatus(`Settings reset ${new Date().toLocaleTimeString()}`);
-  } catch (error) {
-    setStatus(`Settings reset error: ${error.message}`);
-  }
+function card(title, content) {
+  return `<section class="card"><h2>${title}</h2><div>${content}</div></section>`;
 }
 
-
-async function activateSettingsProfileFromUI() {
-  try {
-    const profile_id = document.getElementById("settingsActiveProfile")?.value || "";
-    if (!profile_id) return;
-    setStatus("Switching profile...");
-    const response = await postJson(ENDPOINTS.settingsActiveProfile, { profile_id });
-    await loadDashboard();
-    setStatus(`Profile changed to ${response.active_profile_name || profile_id}`);
-  } catch (error) {
-    setStatus(`Profile activation error: ${error.message}`);
-  }
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
-async function createSettingsProfileFromUI() {
-  try {
-    const profile_name = (document.getElementById("newProfileName")?.value || "").trim();
-    if (!profile_name) {
-      setStatus("Profile name required.");
-      return;
-    }
-    const description = (document.getElementById("newProfileDescription")?.value || "").trim();
-    const thresholdsRaw = document.getElementById("settingsThresholds")?.value || "{}";
-    let thresholds = {};
-    try { thresholds = JSON.parse(thresholdsRaw); } catch { setStatus("Settings JSON invalid. Use valid threshold JSON."); return; }
-    const settings = {
-      alert_sensitivity: document.getElementById("settingsSensitivity")?.value || "balanced",
-      metros_watchlist: (document.getElementById("settingsMetros")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
-      risk_watchlist: (document.getElementById("settingsRisks")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
-      muted_alert_codes: (document.getElementById("settingsMuted")?.value || "").split(",").map((v) => v.trim()).filter(Boolean),
-      thresholds,
-    };
-    setStatus("Creating profile...");
-    await postJson(ENDPOINTS.settingsProfiles, { profile_name, description, settings });
-    await loadDashboard();
-    setStatus(`Profile created ${new Date().toLocaleTimeString()}`);
-  } catch (error) {
-    setStatus(`Profile create error: ${error.message}`);
-  }
+function escapeAttr(value) {
+  return escapeHtml(value).replaceAll("`", "");
 }
-
-async function deleteSettingsProfileFromUI() {
-  try {
-    const profile_id = document.getElementById("settingsActiveProfile")?.value || "";
-    if (!profile_id) return;
-    setStatus("Deleting profile...");
-    await postJson(ENDPOINTS.settingsProfilesDelete, { profile_id });
-    await loadDashboard();
-    setStatus(`Profile deleted ${new Date().toLocaleTimeString()}`);
-  } catch (error) {
-    setStatus(`Profile delete error: ${error.message}`);
-  }
-}
-
-refreshBtn.addEventListener("click", loadDashboard);
-loadDashboard();
-refreshHandle = setInterval(loadDashboard, REFRESH_MS);
-document.addEventListener("click", (event) => {
-  if (event.target?.id === "saveSettingsBtn") saveSettingsFromUI();
-  if (event.target?.id === "activateSettingsProfileBtn") activateSettingsProfileFromUI();
-  if (event.target?.id === "createSettingsProfileBtn") createSettingsProfileFromUI();
-  if (event.target?.id === "deleteSettingsProfileBtn") deleteSettingsProfileFromUI();
-  if (event.target?.id === "resetSettingsBtn") resetSettingsFromUI();
-});
-
-window.addEventListener("beforeunload", () => clearInterval(refreshHandle));
