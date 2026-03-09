@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
-  "generated_at": "2026-03-03T13:43:58.419Z",
-  "source": "dashboard_latest.json",
+  "generated_at": "2026-03-09T14:12:46.110Z",
+  "source": "artifacts/dashboard_latest.json",
   "retention_policy": {
     "active_window_days": 365,
     "archive_closed_regimes": true,
@@ -9,7 +9,7 @@
   },
   "entries": [
     {
-      "date": "2026-03-01",
+      "date": "2026-03-03",
       "primary_regime": "Slowdown",
       "secondary_modifier": "Neutral",
       "confidence": "medium",
@@ -17,12 +17,12 @@
       "capital_score": 39,
       "pipeline_score": 47,
       "flip_trigger": null,
-      "duration_days": 2,
+      "duration_days": 6,
       "status": "Active"
     }
   ],
   "display": {
-    "current_regime_duration_days": 2,
+    "current_regime_duration_days": 6,
     "previous_regime": null,
     "last_flip_date": null,
     "regime_stability": "🟢 Stable"
