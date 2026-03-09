@@ -1,0 +1,9 @@
+{
+  "name": "Construct Workflow",
+  "short_name": "Construct",
+  "start_url": "./index2.html",
+  "display": "standalone",
+  "background_color": "#f4f6fb",
+  "theme_color": "#f4f6fb",
+  "icons": []
+}
