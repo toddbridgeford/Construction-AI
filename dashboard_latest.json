@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-09T07:17:26.961Z",
+  "generated_at": "2026-03-09T13:39:55.866Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -12,10 +12,6 @@
     "delta_3m": 0,
     "momentum": "Stable",
     "history": [
-      {
-        "date": "2026-03-06",
-        "value": 47
-      },
       {
         "date": "2026-03-06",
         "value": 47
@@ -50,6 +46,10 @@
       },
       {
         "date": "2026-03-08",
+        "value": 47
+      },
+      {
+        "date": "2026-03-09",
         "value": 47
       },
       {
@@ -195,10 +195,64 @@
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 29,
+      "newsapi:top_headlines": 26,
       "newsapi:everything": 75
     },
     "news_unified": [
+      {
+        "title": "Who’s Excited to Be Replaced By AI? These Guys! - The Free Press",
+        "url": "https://www.thefp.com/p/whos-excited-to-be-replaced-by-ai",
+        "source": "Thefp.com",
+        "published_at": "2026-03-08T14:18:56Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "At New York City’s inaugural ClawCon, those attempting to automate their lives gathered to dream of a utopia without work, where humans can just drink beer."
+      },
+      {
+        "title": "The great wealth transfer is giving Americans another reason to argue - USA Today",
+        "url": "https://www.usatoday.com/story/money/personalfinance/2026/03/08/inheritances-legal-fees-disputes-avoid/88944390007/",
+        "source": "USA Today",
+        "published_at": "2026-03-08T14:04:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The largest wealth transfer in history is causing a surge in estate disputes. Learn how to protect your estate and inheritance gifts."
+      },
+      {
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show - AP News",
+        "url": "https://apnews.com/article/trump-economy-iran-inflation-jobs-gas-prices-7fbd5e99e3b6023963dd3de226aee4e4",
+        "source": "Associated Press",
+        "published_at": "2026-03-08T11:32:17Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth. Instead it's kicked off with job losses, rising gasoline prices and more uncertainty about America’s future. In his recent State of the Union address, Trump said \"the roarin…"
+      },
+      {
+        "title": "Electric vehicle sales are plummeting. Will they soon become too niche? - ABC News",
+        "url": "https://abcnews.com/Business/electric-vehicle-sales-plummeting-become-niche/story?id%5C%5Cu003d130752429=",
+        "source": "Abcnews.com",
+        "published_at": "2026-03-08T10:06:53Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
+      {
+        "title": "Millions of jobs vulnerable as ‘silver tsunami’ looms over US small businesses, experts warn - Fox Business",
+        "url": "https://www.foxbusiness.com/small-business/millions-jobs-vulnerable-silver-tsunami-looms-us-small-businesses-experts-warn",
+        "source": "Fox Business",
+        "published_at": "2026-03-08T09:30:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Nearly half of U.S. small-business owners are 55 or older, and with many lacking succession plans, jobs and local economies could face disruptions in the coming decade, experts warn."
+      },
+      {
+        "title": "A New Generation of Mall Rats Has Arrived - WSJ",
+        "url": "https://www.wsj.com/business/retail/gen-z-shopping-mall-visits-15716009",
+        "source": "The Wall Street Journal",
+        "published_at": "2026-03-08T06:03:20Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
       {
         "title": "Gas prices jump across Southern California, with Los Angeles County seeing average of $5.17 per gallon, amid war in Iran - ABC7 Los Angeles",
         "url": "https://abc7.com/post/gas-prices-jump-southern-california-los-angeles-county-seeing-average-517-gallon-amid-war-iran/18691262/",
@@ -207,6 +261,42 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "The statewide average climbed above $5 per gallon and some drivers encountered prices more than $8 at the pump."
+      },
+      {
+        "title": "AI is spurring a big expansion of high-voltage power lines. Landowners and locals are fighting back - AP News",
+        "url": "https://apnews.com/article/ai-trump-energy-transmission-lines-f1c6b1251054d2a7e193297e4111b8d1",
+        "source": "Associated Press",
+        "published_at": "2026-03-08T05:14:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Bigger and bigger data centers are leading to proposals for massive electric power transmission lines, sometimes across hundreds of miles. These high-voltage power lines cost tens of billions of dollars a year and are the latest front line in the battle over …"
+      },
+      {
+        "title": "Wall Street executives blame Morgan Stanley’s latest layoffs on AI - New York Post",
+        "url": "https://nypost.com/2026/03/07/business/wall-street-executives-say-morgan-stanleys-latest-layoffs-caused-by-ai-sources/",
+        "source": "New York Post",
+        "published_at": "2026-03-08T03:39:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Insiders close to the Wall Street giant say the real culprit can be summed up in two letters: “A” and “I.”"
+      },
+      {
+        "title": "Report: Cincinnati sees largest spike in gas prices anywhere in the US since start of Iran war - WLWT",
+        "url": "https://www.wlwt.com/article/cincinnati-drivers-see-largest-spike-in-gas-prices-in-nation/70650799",
+        "source": "WLWT Cincinnati",
+        "published_at": "2026-03-08T02:10:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "As drivers have headed to the pump across the country over the past week, a new report indicates that no other metro area has been hit harder than Cincinnati since the start of the U.S.-Iran war."
+      },
+      {
+        "title": "War to force Gulf producers to stop energy exports within days, push oil to $150, Qatar minister says - Seeking Alpha",
+        "url": "https://seekingalpha.com/news/4562067-war-will-force-gulf-producers-to-stop-energy-exports-within-days-qatar-energy-minister-says",
+        "source": "Seeking Alpha",
+        "published_at": "2026-03-08T01:25:25Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Qatar's energy minister said the Middle East war could \"bring down the economies of the world,\" all Persian Gulf energy exporters would shut down production within days and drive oil to $150"
       },
       {
         "title": "Paramount Eyes Changes to Historic Studio Lot Following Warner Bros. Merger - The Hollywood Reporter",
@@ -227,6 +317,33 @@
         "description": "Oil prices spiked 36% for the week. Here's why they could still go a lot higher."
       },
       {
+        "title": "Iran war threatens Trump's affordability push as rising energy prices complicate Fed rate cuts - NBC News",
+        "url": "https://www.nbcnews.com/news/us-news/iran-war-threatens-trumps-affordability-push-rising-energy-prices-comp-rcna262206",
+        "source": "NBC News",
+        "published_at": "2026-03-07T21:58:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The war with Iran is quickly becoming an economic problem for the United States — and a policy dilemma for the Federal Reserve"
+      },
+      {
+        "title": "Southwest Airlines flight heading to FLL overnight diverted after passenger disturbance: FAA - NBC 6 South Florida",
+        "url": "https://www.nbcmiami.com/news/local/southwest-airlines-flight-heading-to-fll-overnight-diverted-after-passenger-disturbance-faa/3777858/",
+        "source": "NBC 6 South Florida",
+        "published_at": "2026-03-07T21:40:31Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "According to the Federal Aviation Administration, Southwest Airlines Flight 2094 left Nashville and was going to South Florida when it had to land at…"
+      },
+      {
+        "title": "Fast food brands get snarky after McDonald's CEO burger tasting mishap - USA Today",
+        "url": "https://www.usatoday.com/story/money/food/2026/03/07/mcdonalds-ceo-taste-videos/89036141007/",
+        "source": "USA Today",
+        "published_at": "2026-03-07T21:25:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "After McDonald's posted a widely mocked video of its CEO, competitors took to social media with videos, jokes and unrelated fights."
+      },
+      {
         "title": "OpenAI robotics lead Caitlin Kalinowski quits in response to Pentagon deal - TechCrunch",
         "url": "https://techcrunch.com/2026/03/07/openai-robotics-lead-caitlin-kalinowski-quits-in-response-to-pentagon-deal/",
         "source": "TechCrunch",
@@ -234,15 +351,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Hardware executive Caitlin Kalinowski announced today that in response to OpenAI's controversial agreement with the Department of Defense, she’s resigned from her role leading the company's robotics team."
-      },
-      {
-        "title": "Dick’s joins viral CEO-eats-burger trend - The Seattle Times",
-        "url": "https://www.seattletimes.com/life/food-drink/dicks-joins-viral-ceo-eats-burger-trend/",
-        "source": "The Seattle Times",
-        "published_at": "2026-03-07T20:30:57Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Burger chains everywhere, including in Seattle, are responding to a viral video by having their own CEOs eat burgers on camera."
       },
       {
         "title": "Ford recalls 1.74 million of its cars over rearview display issues - AP News",
@@ -263,13 +371,13 @@
         "description": "This places blockchain security in the context of national technology competition alongside AI and quantum computing."
       },
       {
-        "title": "How to cope with rising gas prices on Long Island - Newsday",
-        "url": "https://www.newsday.com/business/tips-to-save-on-gas-prices-bpgg5x21",
-        "source": "Newsday",
-        "published_at": "2026-03-07T19:46:39Z",
+        "title": "Are all Eddie Bauer stores closing? Here's what we know. - USA Today",
+        "url": "https://www.usatoday.com/story/money/2026/03/07/eddie-bauer-store-closures/89037687007/",
+        "source": "USA Today",
+        "published_at": "2026-03-07T19:30:29Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Experts told Newsday that motorists should maximize their mileage with vehicle maintenance and fewer trips with more stops."
+        "description": "All Eddie Bauer stores are on the verge of closing after the retailer couldn't find a buyer by its March 3 deadline, according to court records."
       },
       {
         "title": "Kuwait Cuts Oil and Refining Output as Hormuz Transits Slow - Bloomberg.com",
@@ -279,6 +387,15 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "The United Arab Emirates and Kuwait started reducing oil production, as the near-closure of the crucial Strait of Hormuz ripples through energy markets and affects global supply."
+      },
+      {
+        "title": "Medical Mysteries: After a Grand Canyon adventure, his body began to fail - The Washington Post",
+        "url": "https://www.washingtonpost.com/health/2026/03/07/medical-mysteries-stiff-joints/",
+        "source": "The Washington Post",
+        "published_at": "2026-03-07T19:00:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A 55-year-old man developed painful swelling that doctors later thought was arthritis. Subtle clues revealed something more rare."
       },
       {
         "title": "4 Berkshire Hathaway Stocks That New CEO Greg Abel \"Expect Will Compound Over Decades\" - The Motley Fool",
@@ -299,166 +416,103 @@
         "description": "As Hawaii has faced significant declines in visitors, the state looks toward ways to diversify its economy."
       },
       {
-        "title": "Iconic department store closes more locations during bankruptcy - thestreet.com",
-        "url": "https://www.thestreet.com/retail/saks-neiman-marcus-close-more-locations-during-bankruptcy",
-        "source": "TheStreet",
-        "published_at": "2026-03-07T18:17:48Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The retailer’s future is uncertain, and its value may not be in running stores."
-      },
-      {
-        "title": "Gas prices are climbing fast as Trump’s Iran conflict continues - The Washington Post",
-        "url": "https://www.washingtonpost.com/business/2026/03/07/gas-prices-increasing-iran-war/",
+        "title": "A suburb rife with data centers set to fight Amazon plan for another - The Washington Post",
+        "url": "https://www.washingtonpost.com/dc-md-va/2026/03/07/amazon-george-washington-university/",
         "source": "The Washington Post",
         "published_at": "2026-03-07T18:00:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Gas prices are increasing rapidly as President Donald Trump’s military assault on Iran continues, forcing a potential shutdown of oil production in the region."
+        "description": "An announcement that George Washington University sold its Northern Virginia campus to Amazon for $427 million stunned officials in Loudoun County."
       },
       {
-        "title": "No credible threat after Southwest flight diverted to Atlanta: FBI - WSB-TV",
-        "url": "https://www.wsbtv.com/news/local/atlanta/fbi-no-credible-threat-after-southwest-flight-diverted-atlanta/NLMPLP3VQJGYZKM2Q6L4AXBXF4/",
-        "source": "WSB Atlanta",
-        "published_at": "2026-03-07T15:52:33Z",
+        "title": "Beachwood Place’s Saks Fifth Avenue store to close - FOX 8 News",
+        "url": "https://fox8.com/news/beachwood-places-saks-fifth-avenue-store-closing/",
+        "source": "fox8.com",
+        "published_at": "2026-03-07T17:29:39Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "A Southwest Airlines flight diverted to Atlanta Friday night over a possible security concern, but investigators later determined there was no credible threat, according to the Federal Bureau of Investigation."
+        "description": "The Saks Fifth Avenue store at Beachwood Place is closing its doors."
       },
       {
-        "title": "China warns of global chip shortages as Nexperia dispute escalates again - Yahoo Finance",
-        "url": "https://finance.yahoo.com/news/china-warns-global-chip-shortages-151426635.html",
-        "source": "Yahoo Entertainment",
-        "published_at": "2026-03-07T15:45:59Z",
+        "title": "Sunday Summary: Just When We Were Feeling Bullish …",
+        "url": "http://commercialobserver.com/2026/03/commercial-real-estate-feeling-bullish/",
+        "source": "Commercial Observer",
+        "published_at": "2026-03-08T13:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "China's commerce ministry on Saturday raised the possibility of another global semiconductor supply chain crisis due to \"new ‌conflicts\" between Dutch..."
+        "feed": "everything",
+        "description": "Maybe it was the fact that this is the winter that just doesn’t end, maybe it was the shadow of tariffs on one end of the political spectrum, or real estate tax hikes on the other, but, after feeling like the Manhattan office market was firing on all cylinder…"
       },
       {
-        "title": "Microsoft: Hackers abusing AI at every stage of cyberattacks - BleepingComputer",
-        "url": "https://www.bleepingcomputer.com/news/security/microsoft-hackers-abusing-ai-at-every-stage-of-cyberattacks/",
-        "source": "BleepingComputer",
-        "published_at": "2026-03-07T15:15:25Z",
+        "title": "THE LANGS: The Family That Called Epstein ‘Dad’",
+        "url": "https://www.activistpost.com/the-langs-the-family-that-called-epstein-dad/",
+        "source": "Activistpost.com",
+        "published_at": "2026-03-08T13:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Microsoft says threat actors are increasingly using artificial intelligence in their operations to accelerate attacks, scale malicious activity, and lower technical barriers across all aspects of a cyberattack."
+        "feed": "everything",
+        "description": "Freddie Ponton21st Century Wire The public story of Jack and Caroline Lang was supposed to be a triumph of culture and enlightened politics in the Fifth Republic. The private record now emerging from the Epstein files reads more like the biography of a dynast…"
       },
       {
-        "title": "These States Are Joining in the Push to Ban Surveillance Pricing - Gizmodo",
-        "url": "https://gizmodo.com/these-states-are-joining-in-the-push-to-ban-surveillance-pricing-2000730636",
-        "source": "Gizmodo.com",
-        "published_at": "2026-03-07T15:09:23Z",
+        "title": "Show HN: I logged Gemini's stock predictions for 38 days to study LLM drift",
+        "url": "https://huggingface.co/datasets/louidev/glassballai",
+        "source": "Huggingface.co",
+        "published_at": "2026-03-08T12:55:05Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "At least a dozen states are considering legislation."
+        "feed": "everything",
+        "description": "Article URL: https://huggingface.co/datasets/louidev/glassballai\nComments URL: https://news.ycombinator.com/item?id=47296932\nPoints: 1\n# Comments: 1"
       },
       {
-        "title": "A Chilling Warning From United Airlines CEO On Airfares - Live and Let's Fly",
-        "url": "https://liveandletsfly.com/united-ceo-warning-airfares/",
-        "source": "Liveandletsfly.com",
-        "published_at": "2026-03-07T14:39:45Z",
+        "title": "Trump’s booming economy faces a bumpy 2026 start",
+        "url": "https://economictimes.indiatimes.com/news/international/global-trends/trumps-booming-economy-faces-a-bumpy-2026-start/articleshow/129268018.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-08T11:53:22Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "United Airlines CEO Scott Kirby warns that rising fuel costs tied to the Middle East conflict could soon push airline ticket prices higher"
+        "feed": "everything",
+        "description": "President Trump's economic forecasts for 2026 are not matching current realities. Job growth has slowed, with recent reports showing losses. Gasoline prices are increasing, impacting consumers. The stock market has also seen a downturn. These economic shifts …"
       },
       {
-        "title": "Will Iran war fallout end the bull market? When investors really need to worry - CNBC",
-        "url": "https://www.cnbc.com/2026/03/07/will-iran-war-fallout-end-the-bull-market-when-investors-need-to-worry.html",
-        "source": "CNBC",
-        "published_at": "2026-03-07T13:41:24Z",
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show",
+        "url": "https://abcnews.com/Business/wireStory/trumps-roaring-economy-meets-rough-start-2026-latest-130873775",
+        "source": "Abcnews.com",
+        "published_at": "2026-03-08T11:53:15Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Bank of America says there could be \"non-linear\" effects on the economy if oil ever stays above $100 a barrel."
+        "feed": "everything",
+        "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth"
       },
       {
-        "title": "Spike in oil prices triggers talk of an economic doomsday scenario - MarketWatch",
-        "url": "https://www.marketwatch.com/story/spike-in-oil-prices-triggers-talk-of-an-economic-doomsday-scenario-86860a98",
-        "source": "MarketWatch",
-        "published_at": "2026-03-07T13:30:00Z",
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show",
+        "url": "https://www.clickondetroit.com/news/politics/2026/03/08/trumps-roaring-economy-meets-a-rough-start-to-2026-what-the-latest-numbers-show/",
+        "source": "WDIV ClickOnDetroit",
+        "published_at": "2026-03-08T11:44:24Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "President Trump calling for an ‘unconditional surrender’ by Iran didn’t help oil markets Friday"
+        "feed": "everything",
+        "description": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers showclickondetroit.com"
       },
       {
-        "title": "BlackRock’s Retail Private-Credit Hopes Run Into Market’s Angst - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-07/blackrock-s-retail-private-credit-hopes-run-into-market-s-angst",
-        "source": "Bloomberg",
-        "published_at": "2026-03-07T13:00:00Z",
+        "title": "Nitish Kumar’s Rajya Sabha move may trigger 'ideological takeover' in Bihar: CPI(ML)",
+        "url": "https://economictimes.indiatimes.com/news/politics-and-nation/nitish-kumars-rajya-sabha-move-may-trigger-ideological-takeover-in-bihar-cpiml/articleshow/129266017.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-08T10:57:22Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "It looked like a golden age of private credit when BlackRock Inc. plunked down $12 billion to buy HPS Investment Partners and crowed about the prospect of selling millions of retail investors on juicy returns from complex debt."
+        "feed": "everything",
+        "description": "Bihar Chief Minister Nitish Kumar's move to the Rajya Sabha is seen as a BJP ideological takeover. CPI(ML) Liberation leader Dipankar Bhattacharya calls it a betrayal of Bihar's people. He states the BJP is now controlling the government and dumping Kumar dis…"
       },
       {
-        "title": "Trump administration's embattled FDA vaccine chief is leaving again - CBS News",
-        "url": "https://www.cbsnews.com/news/fda-vaccine-chief-vinay-prasad-departure-marty-makary/",
-        "source": "CBS News",
-        "published_at": "2026-03-07T12:15:00Z",
+        "title": "Türkiye, EU focus on Caucasus-centered connectivity projects",
+        "url": "https://www.hurriyetdailynews.com/turkiye-eu-focus-on-caucasus-centered-connectivity-projects-219722",
+        "source": "Hurriyet Daily News",
+        "published_at": "2026-03-08T10:51:56Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "In July, Prasad was briefly forced from his job​, but was reinstated less than two weeks later."
+        "feed": "everything",
+        "description": "Escalating geopolitical tensions and regional armed conflicts have disrupted traditional trade routes, prompting the European Union and Türkiye to prioritize new connectivity projects that ensure secure and uninterrupted trade between Central Asia and Europe …"
       },
       {
-        "title": "The Corvette ZR1X hybrid can outpace million-dollar sports cars for a fraction of the cost - The Verge",
-        "url": "https://www.theverge.com/transportation/888573/chevy-corvette-zr1x-hybrid-racing-performance",
-        "source": "The Verge",
-        "published_at": "2026-03-07T12:00:00Z",
+        "title": "People of Bengal will not forgive TMC for insult to President Murmu: PM Modi",
+        "url": "https://economictimes.indiatimes.com/news/elections/assembly-elections/west-bengal/people-of-bengal-will-not-forgive-tmc-for-insult-to-president-murmu-pm-modi/articleshow/129263942.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-08T10:05:03Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The Corvette ZR1X is faster than Ferrari and McLaren"
-      },
-      {
-        "title": "Chamath Palihapitiya said his software company is moving away from Cursor because it was spending too much on tokens - Business Insider",
-        "url": "https://www.businessinsider.com/chamath-palihapitiya-ai-costs-tokens-8090-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-07T11:23:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Venture capitalist Chamath Palihapitiya said that his software company's AI costs are tripling every 3 months but his revenues are not."
-      },
-      {
-        "title": "Is this the beginning of the worst gas crisis the world has seen? - The Times",
-        "url": "https://www.thetimes.com/world/middle-east/article/oil-gas-prices-gulf-strait-hormuz-iran-war-bv0vqk9cs",
-        "source": "Thetimes.com",
-        "published_at": "2026-03-07T10:30:38Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The closure of the Ras Laffan energy complex — and threats to the Strait of Hormuz — could cripple economies, send prices soaring and halt oil supplies"
-      },
-      {
-        "title": "Energy Price Shock From Iran War Exposes Europe’s Weakness - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-07/iran-war-energy-fallout-is-exposing-another-european-weakness",
-        "source": "Bloomberg",
-        "published_at": "2026-03-07T09:00:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Underneath the glass and wrought iron ceiling of Antwerp’s stock exchange last month, French President Emmanuel Macron addressed a hall full of executives from heavy industries. He wasted no time in diving into the issue everyone cared most about: Europe’s pe…"
-      },
-      {
-        "title": "Axel Springer Strikes $770 Million Deal for U.K.’s Daily Telegraph - WSJ",
-        "url": "https://www.wsj.com/business/media/axel-springer-strikes-770-million-deal-for-u-k-s-daily-telegraph-f6ac9073",
-        "source": "The Wall Street Journal",
-        "published_at": "2026-03-07T07:33:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": null
-      },
-      {
-        "title": "'You will no longer see the eyesore': Plan revealed for former New Orleans Six Flags site - WWLTV.com",
-        "url": "https://www.wwltv.com/article/news/local/orleans/you-will-no-longer-see-the-eyesore-plan-unveiled-for-former-new-orleans-six-flags-site/289-b5ad6eda-6057-43af-8136-1b55d9dc0fe7",
-        "source": "WWLTV.com",
-        "published_at": "2026-03-07T04:29:49Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "A production studio, sports complex, indoor water park and hotels are planned to take the space of the abandoned Six Flags site."
-      },
-      {
-        "title": "Queues, Price Hikes and Shortages as Asia Battles Fuel Crunch - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-07/queues-price-hikes-and-shortages-as-asia-battles-fuel-crunch",
-        "source": "Bloomberg",
-        "published_at": "2026-03-07T01:05:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "From Thai farmers racing for diesel to Indian refinery executives monitoring the Persian Gulf through the night, energy buyers across import-dependent Asia are feeling the impact of a dramatic crunch."
+        "feed": "everything",
+        "description": "Prime Minister Narendra Modi has strongly criticized the TMC government in West Bengal. He stated that the party insulted President Droupadi Murmu, a tribal woman, during her recent visit. Modi asserted that the people of West Bengal will not forgive this act…"
       },
       {
         "title": "Explained: The jobs that AI could most certainly replace, as per an Anthropic study",
@@ -785,15 +839,6 @@
         "description": "Rep. Joyce Beatty of Ohio filed an emergency motion Friday, warning that Trump may not revive the memorial and performing arts center\nThe post Democratic Congresswoman Sues Trump Over Kennedy Center Closure appeared first on TheWrap."
       },
       {
-        "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
-        "url": "https://www.nature.com/articles/s41467-026-70501-4",
-        "source": "Nature.com",
-        "published_at": "2026-03-07T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …"
-      },
-      {
         "title": "Discovery of van Hove singularities: electronic fingerprints of 3Q magnetic order in a van der Waals quantum magnet",
         "url": "https://www.nature.com/articles/s41467-026-70063-5",
         "source": "Nature.com",
@@ -801,6 +846,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Cobalt intercalated TaS2 has recently been found to host 3Q antiferromagnetic order. This 3Q state occurs coexists with a very large anomalous hall effect, and shows strong sensitivity to Cobalt concentration. Here, Luo and coauthors perform doping dependent …"
+      },
+      {
+        "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
+        "url": "https://www.nature.com/articles/s41467-026-70501-4",
+        "source": "Nature.com",
+        "published_at": "2026-03-07T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …"
       },
       {
         "title": "How the Iran War Could Consolidate China’s Energy Dominance",
@@ -1053,90 +1107,87 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Guangdong, China's economic powerhouse, is set to significantly boost artificial intelligence across its vast industries. This move aligns with Beijing's national strategy to integrate AI everywhere. The province aims for large-scale AI commercialization and …"
-      },
-      {
-        "title": "What Happened to Total Recall (1990)? The Chaotic Story Behind the Sci-Fi Classic",
-        "url": "https://www.joblo.com/total-recall-what-happened/",
-        "source": "JoBlo.com",
-        "published_at": "2026-03-06T15:07:56Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "How Total Recall survived bankruptcy, production chaos, and injuries to become one of the most unforgettable sci-fi action films\nThe post What Happened to Total Recall (1990)? The Chaotic Story Behind the Sci-Fi Classic appeared first on JoBlo."
-      },
-      {
-        "title": "Transboundary Water in MENA: Cooperation and Competition",
-        "url": "https://blogs.lse.ac.uk/mec/2026/03/06/transboundary-water-in-mena-cooperation-and-competition/",
-        "source": "Lse.ac.uk",
-        "published_at": "2026-03-06T15:04:07Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "by Greg Shapland Transboundary water resources are an important component of the water budget of many countries in the Middle East and North Africa (MENA) region. These resources exist in two forms: surface water (rivers, streams and lakes), and groundwater, …"
-      },
-      {
-        "title": "U.S. unexpectedly sheds 92,000 jobs, unemployment rate rises",
-        "url": "https://financialpost.com/news/economy/us-sheds-92000-jobs",
-        "source": "Financial Post",
-        "published_at": "2026-03-06T15:03:21Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "U.S. employers unexpectedly cut jobs in February and the unemployment rate rose, pointing to lingering fragility in a labour market. Read on"
-      },
-      {
-        "title": "U.S. lost 92,000 jobs last month and unemployment rate rises to 4.4%",
-        "url": "https://www.pbs.org/newshour/economy/u-s-lost-92000-jobs-last-month-and-unemployment-rate-rises-to-4-4",
-        "source": "PBS",
-        "published_at": "2026-03-06T14:57:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The Labor Department reported Friday that hiring deteriorated from January, when companies, nonprofits and government agencies added 126,000 jobs."
-      },
-      {
-        "title": "U.S. aluminum buyers hunt for alternatives as Iran war upends global supply",
-        "url": "https://financialpost.com/commodities/us-aluminum-buyers-hunt-for-alternative-supply",
-        "source": "Financial Post",
-        "published_at": "2026-03-06T14:55:24Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Aluminum buyers in the U.S. are rushing to secure alternative supplies from Asia as the war on Iran disrupts a major foreign source. Read on"
-      },
-      {
-        "title": "'Immense stress' on power grid as Virginia refuses data center regulation",
-        "url": "https://www.rawstory.com/general-assembly-nixes-bills-that-required-data-centers-to-get-scc-certificate/",
-        "source": "Raw Story",
-        "published_at": "2026-03-06T14:54:33Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "For most of the industry’s existence in Virginia, approvals for data centers were largely seen as a local issue – with the state and federal governments giving the thumbs up on certain permits.But as the industry balloons across the commonwealth, those local …"
-      },
-      {
-        "title": "Jersey Hired Analysis: Garden State Labor Market Faces Uphill Climb as National Job Growth Hits February Slump",
-        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251106/0/en/Jersey-Hired-Analysis-Garden-State-Labor-Market-Faces-Uphill-Climb-as-National-Job-Growth-Hits-February-Slump.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-06T14:50:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "February Jobs Report Shows a Loss of 92,000 Jobs Nationwide. How Does This Affect New Jersey?..."
-      },
-      {
-        "title": "Trump admits the hyperscalers ‘need some PR help’ because the American taxpayer is on the hook for their data centers",
-        "url": "https://fortune.com/2026/03/06/trump-data-centers-big-tech-hyperscalers-need-some-pr-help-affordability/",
-        "source": "Fortune",
-        "published_at": "2026-03-06T14:45:11Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "“Trump is trying to cover up his mistakes with a photo op,” said Lena Moffitt, executive director of Evergreen Action, an environmental group."
-      },
-      {
-        "title": "News brief: Strikes on Iran put cybersecurity teams on alert",
-        "url": "https://www.techtarget.com/searchsecurity/news/366639824/News-brief-Strikes-on-Iran-put-cybersecurity-teams-on-alert",
-        "source": "Techtarget.com",
-        "published_at": "2026-03-06T14:23:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Check out the latest security news from the Informa TechTarget team."
       }
     ],
     "news_with_impact": [
+      {
+        "title": "Who’s Excited to Be Replaced By AI? These Guys! - The Free Press",
+        "url": "https://www.thefp.com/p/whos-excited-to-be-replaced-by-ai",
+        "source": "Thefp.com",
+        "published_at": "2026-03-08T14:18:56Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "At New York City’s inaugural ClawCon, those attempting to automate their lives gathered to dream of a utopia without work, where humans can just drink beer.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "The great wealth transfer is giving Americans another reason to argue - USA Today",
+        "url": "https://www.usatoday.com/story/money/personalfinance/2026/03/08/inheritances-legal-fees-disputes-avoid/88944390007/",
+        "source": "USA Today",
+        "published_at": "2026-03-08T14:04:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The largest wealth transfer in history is causing a surge in estate disputes. Learn how to protect your estate and inheritance gifts.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show - AP News",
+        "url": "https://apnews.com/article/trump-economy-iran-inflation-jobs-gas-prices-7fbd5e99e3b6023963dd3de226aee4e4",
+        "source": "Associated Press",
+        "published_at": "2026-03-08T11:32:17Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth. Instead it's kicked off with job losses, rising gasoline prices and more uncertainty about America’s future. In his recent State of the Union address, Trump said \"the roarin…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Electric vehicle sales are plummeting. Will they soon become too niche? - ABC News",
+        "url": "https://abcnews.com/Business/electric-vehicle-sales-plummeting-become-niche/story?id%5C%5Cu003d130752429=",
+        "source": "Abcnews.com",
+        "published_at": "2026-03-08T10:06:53Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Millions of jobs vulnerable as ‘silver tsunami’ looms over US small businesses, experts warn - Fox Business",
+        "url": "https://www.foxbusiness.com/small-business/millions-jobs-vulnerable-silver-tsunami-looms-us-small-businesses-experts-warn",
+        "source": "Fox Business",
+        "published_at": "2026-03-08T09:30:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Nearly half of U.S. small-business owners are 55 or older, and with many lacking succession plans, jobs and local economies could face disruptions in the coming decade, experts warn.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "A New Generation of Mall Rats Has Arrived - WSJ",
+        "url": "https://www.wsj.com/business/retail/gen-z-shopping-mall-visits-15716009",
+        "source": "The Wall Street Journal",
+        "published_at": "2026-03-08T06:03:20Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
       {
         "title": "Gas prices jump across Southern California, with Los Angeles County seeing average of $5.17 per gallon, amid war in Iran - ABC7 Los Angeles",
         "url": "https://abc7.com/post/gas-prices-jump-southern-california-los-angeles-county-seeing-average-517-gallon-amid-war-iran/18691262/",
@@ -1148,6 +1199,58 @@
         "impact_score": 40,
         "themes": [
           "other"
+        ]
+      },
+      {
+        "title": "AI is spurring a big expansion of high-voltage power lines. Landowners and locals are fighting back - AP News",
+        "url": "https://apnews.com/article/ai-trump-energy-transmission-lines-f1c6b1251054d2a7e193297e4111b8d1",
+        "source": "Associated Press",
+        "published_at": "2026-03-08T05:14:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Bigger and bigger data centers are leading to proposals for massive electric power transmission lines, sometimes across hundreds of miles. These high-voltage power lines cost tens of billions of dollars a year and are the latest front line in the battle over …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Wall Street executives blame Morgan Stanley’s latest layoffs on AI - New York Post",
+        "url": "https://nypost.com/2026/03/07/business/wall-street-executives-say-morgan-stanleys-latest-layoffs-caused-by-ai-sources/",
+        "source": "New York Post",
+        "published_at": "2026-03-08T03:39:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Insiders close to the Wall Street giant say the real culprit can be summed up in two letters: “A” and “I.”",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Report: Cincinnati sees largest spike in gas prices anywhere in the US since start of Iran war - WLWT",
+        "url": "https://www.wlwt.com/article/cincinnati-drivers-see-largest-spike-in-gas-prices-in-nation/70650799",
+        "source": "WLWT Cincinnati",
+        "published_at": "2026-03-08T02:10:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "As drivers have headed to the pump across the country over the past week, a new report indicates that no other metro area has been hit harder than Cincinnati since the start of the U.S.-Iran war.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "War to force Gulf producers to stop energy exports within days, push oil to $150, Qatar minister says - Seeking Alpha",
+        "url": "https://seekingalpha.com/news/4562067-war-will-force-gulf-producers-to-stop-energy-exports-within-days-qatar-energy-minister-says",
+        "source": "Seeking Alpha",
+        "published_at": "2026-03-08T01:25:25Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Qatar's energy minister said the Middle East war could \"bring down the economies of the world,\" all Persian Gulf energy exporters would shut down production within days and drive oil to $150",
+        "impact_score": 55,
+        "themes": [
+          "materials"
         ]
       },
       {
@@ -1177,6 +1280,46 @@
         ]
       },
       {
+        "title": "Iran war threatens Trump's affordability push as rising energy prices complicate Fed rate cuts - NBC News",
+        "url": "https://www.nbcnews.com/news/us-news/iran-war-threatens-trumps-affordability-push-rising-energy-prices-comp-rcna262206",
+        "source": "NBC News",
+        "published_at": "2026-03-07T21:58:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The war with Iran is quickly becoming an economic problem for the United States — and a policy dilemma for the Federal Reserve",
+        "impact_score": 55,
+        "themes": [
+          "capital",
+          "materials"
+        ]
+      },
+      {
+        "title": "Southwest Airlines flight heading to FLL overnight diverted after passenger disturbance: FAA - NBC 6 South Florida",
+        "url": "https://www.nbcmiami.com/news/local/southwest-airlines-flight-heading-to-fll-overnight-diverted-after-passenger-disturbance-faa/3777858/",
+        "source": "NBC 6 South Florida",
+        "published_at": "2026-03-07T21:40:31Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "According to the Federal Aviation Administration, Southwest Airlines Flight 2094 left Nashville and was going to South Florida when it had to land at…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Fast food brands get snarky after McDonald's CEO burger tasting mishap - USA Today",
+        "url": "https://www.usatoday.com/story/money/food/2026/03/07/mcdonalds-ceo-taste-videos/89036141007/",
+        "source": "USA Today",
+        "published_at": "2026-03-07T21:25:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "After McDonald's posted a widely mocked video of its CEO, competitors took to social media with videos, jokes and unrelated fights.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
         "title": "OpenAI robotics lead Caitlin Kalinowski quits in response to Pentagon deal - TechCrunch",
         "url": "https://techcrunch.com/2026/03/07/openai-robotics-lead-caitlin-kalinowski-quits-in-response-to-pentagon-deal/",
         "source": "TechCrunch",
@@ -1184,19 +1327,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Hardware executive Caitlin Kalinowski announced today that in response to OpenAI's controversial agreement with the Department of Defense, she’s resigned from her role leading the company's robotics team.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Dick’s joins viral CEO-eats-burger trend - The Seattle Times",
-        "url": "https://www.seattletimes.com/life/food-drink/dicks-joins-viral-ceo-eats-burger-trend/",
-        "source": "The Seattle Times",
-        "published_at": "2026-03-07T20:30:57Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Burger chains everywhere, including in Seattle, are responding to a viral video by having their own CEOs eat burgers on camera.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1229,13 +1359,13 @@
         ]
       },
       {
-        "title": "How to cope with rising gas prices on Long Island - Newsday",
-        "url": "https://www.newsday.com/business/tips-to-save-on-gas-prices-bpgg5x21",
-        "source": "Newsday",
-        "published_at": "2026-03-07T19:46:39Z",
+        "title": "Are all Eddie Bauer stores closing? Here's what we know. - USA Today",
+        "url": "https://www.usatoday.com/story/money/2026/03/07/eddie-bauer-store-closures/89037687007/",
+        "source": "USA Today",
+        "published_at": "2026-03-07T19:30:29Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Experts told Newsday that motorists should maximize their mileage with vehicle maintenance and fewer trips with more stops.",
+        "description": "All Eddie Bauer stores are on the verge of closing after the retailer couldn't find a buyer by its March 3 deadline, according to court records.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1250,6 +1380,19 @@
         "feed": "top_headlines",
         "description": "The United Arab Emirates and Kuwait started reducing oil production, as the near-closure of the crucial Strait of Hormuz ripples through energy markets and affects global supply.",
         "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Medical Mysteries: After a Grand Canyon adventure, his body began to fail - The Washington Post",
+        "url": "https://www.washingtonpost.com/health/2026/03/07/medical-mysteries-stiff-joints/",
+        "source": "The Washington Post",
+        "published_at": "2026-03-07T19:00:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A 55-year-old man developed painful swelling that doctors later thought was arthritis. Subtle clues revealed something more rare.",
+        "impact_score": 40,
         "themes": [
           "other"
         ]
@@ -1281,238 +1424,146 @@
         ]
       },
       {
-        "title": "Iconic department store closes more locations during bankruptcy - thestreet.com",
-        "url": "https://www.thestreet.com/retail/saks-neiman-marcus-close-more-locations-during-bankruptcy",
-        "source": "TheStreet",
-        "published_at": "2026-03-07T18:17:48Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The retailer’s future is uncertain, and its value may not be in running stores.",
-        "impact_score": 85,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "Gas prices are climbing fast as Trump’s Iran conflict continues - The Washington Post",
-        "url": "https://www.washingtonpost.com/business/2026/03/07/gas-prices-increasing-iran-war/",
+        "title": "A suburb rife with data centers set to fight Amazon plan for another - The Washington Post",
+        "url": "https://www.washingtonpost.com/dc-md-va/2026/03/07/amazon-george-washington-university/",
         "source": "The Washington Post",
         "published_at": "2026-03-07T18:00:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Gas prices are increasing rapidly as President Donald Trump’s military assault on Iran continues, forcing a potential shutdown of oil production in the region.",
+        "description": "An announcement that George Washington University sold its Northern Virginia campus to Amazon for $427 million stunned officials in Loudoun County.",
         "impact_score": 40,
         "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "No credible threat after Southwest flight diverted to Atlanta: FBI - WSB-TV",
-        "url": "https://www.wsbtv.com/news/local/atlanta/fbi-no-credible-threat-after-southwest-flight-diverted-atlanta/NLMPLP3VQJGYZKM2Q6L4AXBXF4/",
-        "source": "WSB Atlanta",
-        "published_at": "2026-03-07T15:52:33Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "A Southwest Airlines flight diverted to Atlanta Friday night over a possible security concern, but investigators later determined there was no credible threat, according to the Federal Bureau of Investigation.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "China warns of global chip shortages as Nexperia dispute escalates again - Yahoo Finance",
-        "url": "https://finance.yahoo.com/news/china-warns-global-chip-shortages-151426635.html",
-        "source": "Yahoo Entertainment",
-        "published_at": "2026-03-07T15:45:59Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "China's commerce ministry on Saturday raised the possibility of another global semiconductor supply chain crisis due to \"new ‌conflicts\" between Dutch...",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "Microsoft: Hackers abusing AI at every stage of cyberattacks - BleepingComputer",
-        "url": "https://www.bleepingcomputer.com/news/security/microsoft-hackers-abusing-ai-at-every-stage-of-cyberattacks/",
-        "source": "BleepingComputer",
-        "published_at": "2026-03-07T15:15:25Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Microsoft says threat actors are increasingly using artificial intelligence in their operations to accelerate attacks, scale malicious activity, and lower technical barriers across all aspects of a cyberattack.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "These States Are Joining in the Push to Ban Surveillance Pricing - Gizmodo",
-        "url": "https://gizmodo.com/these-states-are-joining-in-the-push-to-ban-surveillance-pricing-2000730636",
-        "source": "Gizmodo.com",
-        "published_at": "2026-03-07T15:09:23Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "At least a dozen states are considering legislation.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "A Chilling Warning From United Airlines CEO On Airfares - Live and Let's Fly",
-        "url": "https://liveandletsfly.com/united-ceo-warning-airfares/",
-        "source": "Liveandletsfly.com",
-        "published_at": "2026-03-07T14:39:45Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "United Airlines CEO Scott Kirby warns that rising fuel costs tied to the Middle East conflict could soon push airline ticket prices higher",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Will Iran war fallout end the bull market? When investors really need to worry - CNBC",
-        "url": "https://www.cnbc.com/2026/03/07/will-iran-war-fallout-end-the-bull-market-when-investors-need-to-worry.html",
-        "source": "CNBC",
-        "published_at": "2026-03-07T13:41:24Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Bank of America says there could be \"non-linear\" effects on the economy if oil ever stays above $100 a barrel.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Spike in oil prices triggers talk of an economic doomsday scenario - MarketWatch",
-        "url": "https://www.marketwatch.com/story/spike-in-oil-prices-triggers-talk-of-an-economic-doomsday-scenario-86860a98",
-        "source": "MarketWatch",
-        "published_at": "2026-03-07T13:30:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "President Trump calling for an ‘unconditional surrender’ by Iran didn’t help oil markets Friday",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "BlackRock’s Retail Private-Credit Hopes Run Into Market’s Angst - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-07/blackrock-s-retail-private-credit-hopes-run-into-market-s-angst",
-        "source": "Bloomberg",
-        "published_at": "2026-03-07T13:00:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "It looked like a golden age of private credit when BlackRock Inc. plunked down $12 billion to buy HPS Investment Partners and crowed about the prospect of selling millions of retail investors on juicy returns from complex debt.",
-        "impact_score": 65,
-        "themes": [
-          "capital",
           "commercial"
         ]
       },
       {
-        "title": "Trump administration's embattled FDA vaccine chief is leaving again - CBS News",
-        "url": "https://www.cbsnews.com/news/fda-vaccine-chief-vinay-prasad-departure-marty-makary/",
-        "source": "CBS News",
-        "published_at": "2026-03-07T12:15:00Z",
+        "title": "Beachwood Place’s Saks Fifth Avenue store to close - FOX 8 News",
+        "url": "https://fox8.com/news/beachwood-places-saks-fifth-avenue-store-closing/",
+        "source": "fox8.com",
+        "published_at": "2026-03-07T17:29:39Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "In July, Prasad was briefly forced from his job​, but was reinstated less than two weeks later.",
+        "description": "The Saks Fifth Avenue store at Beachwood Place is closing its doors.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "The Corvette ZR1X hybrid can outpace million-dollar sports cars for a fraction of the cost - The Verge",
-        "url": "https://www.theverge.com/transportation/888573/chevy-corvette-zr1x-hybrid-racing-performance",
-        "source": "The Verge",
-        "published_at": "2026-03-07T12:00:00Z",
+        "title": "Sunday Summary: Just When We Were Feeling Bullish …",
+        "url": "http://commercialobserver.com/2026/03/commercial-real-estate-feeling-bullish/",
+        "source": "Commercial Observer",
+        "published_at": "2026-03-08T13:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The Corvette ZR1X is faster than Ferrari and McLaren",
+        "feed": "everything",
+        "description": "Maybe it was the fact that this is the winter that just doesn’t end, maybe it was the shadow of tariffs on one end of the political spectrum, or real estate tax hikes on the other, but, after feeling like the Manhattan office market was firing on all cylinder…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Chamath Palihapitiya said his software company is moving away from Cursor because it was spending too much on tokens - Business Insider",
-        "url": "https://www.businessinsider.com/chamath-palihapitiya-ai-costs-tokens-8090-2026-3",
-        "source": "Business Insider",
-        "published_at": "2026-03-07T11:23:00Z",
+        "title": "THE LANGS: The Family That Called Epstein ‘Dad’",
+        "url": "https://www.activistpost.com/the-langs-the-family-that-called-epstein-dad/",
+        "source": "Activistpost.com",
+        "published_at": "2026-03-08T13:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Venture capitalist Chamath Palihapitiya said that his software company's AI costs are tripling every 3 months but his revenues are not.",
+        "feed": "everything",
+        "description": "Freddie Ponton21st Century Wire The public story of Jack and Caroline Lang was supposed to be a triumph of culture and enlightened politics in the Fifth Republic. The private record now emerging from the Epstein files reads more like the biography of a dynast…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Is this the beginning of the worst gas crisis the world has seen? - The Times",
-        "url": "https://www.thetimes.com/world/middle-east/article/oil-gas-prices-gulf-strait-hormuz-iran-war-bv0vqk9cs",
-        "source": "Thetimes.com",
-        "published_at": "2026-03-07T10:30:38Z",
+        "title": "Show HN: I logged Gemini's stock predictions for 38 days to study LLM drift",
+        "url": "https://huggingface.co/datasets/louidev/glassballai",
+        "source": "Huggingface.co",
+        "published_at": "2026-03-08T12:55:05Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The closure of the Ras Laffan energy complex — and threats to the Strait of Hormuz — could cripple economies, send prices soaring and halt oil supplies",
+        "feed": "everything",
+        "description": "Article URL: https://huggingface.co/datasets/louidev/glassballai\nComments URL: https://news.ycombinator.com/item?id=47296932\nPoints: 1\n# Comments: 1",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Energy Price Shock From Iran War Exposes Europe’s Weakness - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-07/iran-war-energy-fallout-is-exposing-another-european-weakness",
-        "source": "Bloomberg",
-        "published_at": "2026-03-07T09:00:00Z",
+        "title": "Trump’s booming economy faces a bumpy 2026 start",
+        "url": "https://economictimes.indiatimes.com/news/international/global-trends/trumps-booming-economy-faces-a-bumpy-2026-start/articleshow/129268018.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-08T11:53:22Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Underneath the glass and wrought iron ceiling of Antwerp’s stock exchange last month, French President Emmanuel Macron addressed a hall full of executives from heavy industries. He wasted no time in diving into the issue everyone cared most about: Europe’s pe…",
-        "impact_score": 40,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "Axel Springer Strikes $770 Million Deal for U.K.’s Daily Telegraph - WSJ",
-        "url": "https://www.wsj.com/business/media/axel-springer-strikes-770-million-deal-for-u-k-s-daily-telegraph-f6ac9073",
-        "source": "The Wall Street Journal",
-        "published_at": "2026-03-07T07:33:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": null,
-        "impact_score": 40,
-        "themes": [
-          "trade"
-        ]
-      },
-      {
-        "title": "'You will no longer see the eyesore': Plan revealed for former New Orleans Six Flags site - WWLTV.com",
-        "url": "https://www.wwltv.com/article/news/local/orleans/you-will-no-longer-see-the-eyesore-plan-unveiled-for-former-new-orleans-six-flags-site/289-b5ad6eda-6057-43af-8136-1b55d9dc0fe7",
-        "source": "WWLTV.com",
-        "published_at": "2026-03-07T04:29:49Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "A production studio, sports complex, indoor water park and hotels are planned to take the space of the abandoned Six Flags site.",
+        "feed": "everything",
+        "description": "President Trump's economic forecasts for 2026 are not matching current realities. Job growth has slowed, with recent reports showing losses. Gasoline prices are increasing, impacting consumers. The stock market has also seen a downturn. These economic shifts …",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Queues, Price Hikes and Shortages as Asia Battles Fuel Crunch - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-07/queues-price-hikes-and-shortages-as-asia-battles-fuel-crunch",
-        "source": "Bloomberg",
-        "published_at": "2026-03-07T01:05:00Z",
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show",
+        "url": "https://abcnews.com/Business/wireStory/trumps-roaring-economy-meets-rough-start-2026-latest-130873775",
+        "source": "Abcnews.com",
+        "published_at": "2026-03-08T11:53:15Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "From Thai farmers racing for diesel to Indian refinery executives monitoring the Persian Gulf through the night, energy buyers across import-dependent Asia are feeling the impact of a dramatic crunch.",
-        "impact_score": 55,
+        "feed": "everything",
+        "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth",
+        "impact_score": 40,
         "themes": [
-          "materials"
+          "other"
+        ]
+      },
+      {
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show",
+        "url": "https://www.clickondetroit.com/news/politics/2026/03/08/trumps-roaring-economy-meets-a-rough-start-to-2026-what-the-latest-numbers-show/",
+        "source": "WDIV ClickOnDetroit",
+        "published_at": "2026-03-08T11:44:24Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers showclickondetroit.com",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Nitish Kumar’s Rajya Sabha move may trigger 'ideological takeover' in Bihar: CPI(ML)",
+        "url": "https://economictimes.indiatimes.com/news/politics-and-nation/nitish-kumars-rajya-sabha-move-may-trigger-ideological-takeover-in-bihar-cpiml/articleshow/129266017.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-08T10:57:22Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Bihar Chief Minister Nitish Kumar's move to the Rajya Sabha is seen as a BJP ideological takeover. CPI(ML) Liberation leader Dipankar Bhattacharya calls it a betrayal of Bihar's people. He states the BJP is now controlling the government and dumping Kumar dis…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Türkiye, EU focus on Caucasus-centered connectivity projects",
+        "url": "https://www.hurriyetdailynews.com/turkiye-eu-focus-on-caucasus-centered-connectivity-projects-219722",
+        "source": "Hurriyet Daily News",
+        "published_at": "2026-03-08T10:51:56Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Escalating geopolitical tensions and regional armed conflicts have disrupted traditional trade routes, prompting the European Union and Türkiye to prioritize new connectivity projects that ensure secure and uninterrupted trade between Central Asia and Europe …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "People of Bengal will not forgive TMC for insult to President Murmu: PM Modi",
+        "url": "https://economictimes.indiatimes.com/news/elections/assembly-elections/west-bengal/people-of-bengal-will-not-forgive-tmc-for-insult-to-president-murmu-pm-modi/articleshow/129263942.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-08T10:05:03Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Prime Minister Narendra Modi has strongly criticized the TMC government in West Bengal. He stated that the party insulted President Droupadi Murmu, a tribal woman, during her recent visit. Modi asserted that the people of West Bengal will not forgive this act…",
+        "impact_score": 40,
+        "themes": [
+          "other"
         ]
       },
       {
@@ -1985,19 +2036,6 @@
         ]
       },
       {
-        "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
-        "url": "https://www.nature.com/articles/s41467-026-70501-4",
-        "source": "Nature.com",
-        "published_at": "2026-03-07T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Discovery of van Hove singularities: electronic fingerprints of 3Q magnetic order in a van der Waals quantum magnet",
         "url": "https://www.nature.com/articles/s41467-026-70063-5",
         "source": "Nature.com",
@@ -2005,6 +2043,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Cobalt intercalated TaS2 has recently been found to host 3Q antiferromagnetic order. This 3Q state occurs coexists with a very large anomalous hall effect, and shows strong sensitivity to Cobalt concentration. Here, Luo and coauthors perform doping dependent …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
+        "url": "https://www.nature.com/articles/s41467-026-70501-4",
+        "source": "Nature.com",
+        "published_at": "2026-03-07T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2373,154 +2424,9 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "What Happened to Total Recall (1990)? The Chaotic Story Behind the Sci-Fi Classic",
-        "url": "https://www.joblo.com/total-recall-what-happened/",
-        "source": "JoBlo.com",
-        "published_at": "2026-03-06T15:07:56Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "How Total Recall survived bankruptcy, production chaos, and injuries to become one of the most unforgettable sci-fi action films\nThe post What Happened to Total Recall (1990)? The Chaotic Story Behind the Sci-Fi Classic appeared first on JoBlo.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Transboundary Water in MENA: Cooperation and Competition",
-        "url": "https://blogs.lse.ac.uk/mec/2026/03/06/transboundary-water-in-mena-cooperation-and-competition/",
-        "source": "Lse.ac.uk",
-        "published_at": "2026-03-06T15:04:07Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "by Greg Shapland Transboundary water resources are an important component of the water budget of many countries in the Middle East and North Africa (MENA) region. These resources exist in two forms: surface water (rivers, streams and lakes), and groundwater, …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "U.S. unexpectedly sheds 92,000 jobs, unemployment rate rises",
-        "url": "https://financialpost.com/news/economy/us-sheds-92000-jobs",
-        "source": "Financial Post",
-        "published_at": "2026-03-06T15:03:21Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "U.S. employers unexpectedly cut jobs in February and the unemployment rate rose, pointing to lingering fragility in a labour market. Read on",
-        "impact_score": 40,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "U.S. lost 92,000 jobs last month and unemployment rate rises to 4.4%",
-        "url": "https://www.pbs.org/newshour/economy/u-s-lost-92000-jobs-last-month-and-unemployment-rate-rises-to-4-4",
-        "source": "PBS",
-        "published_at": "2026-03-06T14:57:01Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The Labor Department reported Friday that hiring deteriorated from January, when companies, nonprofits and government agencies added 126,000 jobs.",
-        "impact_score": 40,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "U.S. aluminum buyers hunt for alternatives as Iran war upends global supply",
-        "url": "https://financialpost.com/commodities/us-aluminum-buyers-hunt-for-alternative-supply",
-        "source": "Financial Post",
-        "published_at": "2026-03-06T14:55:24Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Aluminum buyers in the U.S. are rushing to secure alternative supplies from Asia as the war on Iran disrupts a major foreign source. Read on",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "'Immense stress' on power grid as Virginia refuses data center regulation",
-        "url": "https://www.rawstory.com/general-assembly-nixes-bills-that-required-data-centers-to-get-scc-certificate/",
-        "source": "Raw Story",
-        "published_at": "2026-03-06T14:54:33Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "For most of the industry’s existence in Virginia, approvals for data centers were largely seen as a local issue – with the state and federal governments giving the thumbs up on certain permits.But as the industry balloons across the commonwealth, those local …",
-        "impact_score": 50,
-        "themes": [
-          "regulatory",
-          "commercial"
-        ]
-      },
-      {
-        "title": "Jersey Hired Analysis: Garden State Labor Market Faces Uphill Climb as National Job Growth Hits February Slump",
-        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251106/0/en/Jersey-Hired-Analysis-Garden-State-Labor-Market-Faces-Uphill-Climb-as-National-Job-Growth-Hits-February-Slump.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-06T14:50:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "February Jobs Report Shows a Loss of 92,000 Jobs Nationwide. How Does This Affect New Jersey?...",
-        "impact_score": 40,
-        "themes": [
-          "trade"
-        ]
-      },
-      {
-        "title": "Trump admits the hyperscalers ‘need some PR help’ because the American taxpayer is on the hook for their data centers",
-        "url": "https://fortune.com/2026/03/06/trump-data-centers-big-tech-hyperscalers-need-some-pr-help-affordability/",
-        "source": "Fortune",
-        "published_at": "2026-03-06T14:45:11Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "“Trump is trying to cover up his mistakes with a photo op,” said Lena Moffitt, executive director of Evergreen Action, an environmental group.",
-        "impact_score": 40,
-        "themes": [
-          "commercial"
-        ]
-      },
-      {
-        "title": "News brief: Strikes on Iran put cybersecurity teams on alert",
-        "url": "https://www.techtarget.com/searchsecurity/news/366639824/News-brief-Strikes-on-Iran-put-cybersecurity-teams-on-alert",
-        "source": "Techtarget.com",
-        "published_at": "2026-03-06T14:23:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Check out the latest security news from the Informa TechTarget team.",
-        "impact_score": 40,
-        "themes": [
-          "trade"
-        ]
       }
     ],
     "top_high_impact": [
-      {
-        "title": "Iconic department store closes more locations during bankruptcy - thestreet.com",
-        "url": "https://www.thestreet.com/retail/saks-neiman-marcus-close-more-locations-during-bankruptcy",
-        "source": "TheStreet",
-        "published_at": "2026-03-07T18:17:48Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The retailer’s future is uncertain, and its value may not be in running stores.",
-        "impact_score": 85,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "BlackRock’s Retail Private-Credit Hopes Run Into Market’s Angst - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-07/blackrock-s-retail-private-credit-hopes-run-into-market-s-angst",
-        "source": "Bloomberg",
-        "published_at": "2026-03-07T13:00:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "It looked like a golden age of private credit when BlackRock Inc. plunked down $12 billion to buy HPS Investment Partners and crowed about the prospect of selling millions of retail investors on juicy returns from complex debt.",
-        "impact_score": 65,
-        "themes": [
-          "capital",
-          "commercial"
-        ]
-      },
       {
         "title": "US to offer services in illegal West Bank settlements as Israel pushes for annexation",
         "url": "https://www.globalsecurity.org/military/library/news/2026/03/mil-260306-presstv02.htm",
@@ -2561,6 +2467,19 @@
         ]
       },
       {
+        "title": "War to force Gulf producers to stop energy exports within days, push oil to $150, Qatar minister says - Seeking Alpha",
+        "url": "https://seekingalpha.com/news/4562067-war-will-force-gulf-producers-to-stop-energy-exports-within-days-qatar-energy-minister-says",
+        "source": "Seeking Alpha",
+        "published_at": "2026-03-08T01:25:25Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Qatar's energy minister said the Middle East war could \"bring down the economies of the world,\" all Persian Gulf energy exporters would shut down production within days and drive oil to $150",
+        "impact_score": 55,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
         "title": "Stock Market Rally Attempt Depends On Iran War, Oil's Next Move - Investor's Business Daily",
         "url": "https://www.investors.com/market-trend/stock-market-today/stock-market-iran-war-news-crude-oil-prices-trump/",
         "source": "Investor's Business Daily",
@@ -2571,6 +2490,20 @@
         "impact_score": 55,
         "themes": [
           "other"
+        ]
+      },
+      {
+        "title": "Iran war threatens Trump's affordability push as rising energy prices complicate Fed rate cuts - NBC News",
+        "url": "https://www.nbcnews.com/news/us-news/iran-war-threatens-trumps-affordability-push-rising-energy-prices-comp-rcna262206",
+        "source": "NBC News",
+        "published_at": "2026-03-07T21:58:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The war with Iran is quickly becoming an economic problem for the United States — and a policy dilemma for the Federal Reserve",
+        "impact_score": 55,
+        "themes": [
+          "capital",
+          "materials"
         ]
       },
       {
@@ -2587,48 +2520,62 @@
         ]
       },
       {
-        "title": "China warns of global chip shortages as Nexperia dispute escalates again - Yahoo Finance",
-        "url": "https://finance.yahoo.com/news/china-warns-global-chip-shortages-151426635.html",
-        "source": "Yahoo Entertainment",
-        "published_at": "2026-03-07T15:45:59Z",
+        "title": "Japan asks U.S. not to slap higher tariffs in weeks before Takaichi's visit",
+        "url": "https://japantoday.com/category/politics/Japan-asks-U.S.-not-to-slap-higher-tariffs-in-weeks-before-Takaichi%27s-visit",
+        "source": "Japan Today",
+        "published_at": "2026-03-07T07:06:46Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "China's commerce ministry on Saturday raised the possibility of another global semiconductor supply chain crisis due to \"new ‌conflicts\" between Dutch...",
+        "feed": "everything",
+        "description": "Japan's industry minister Ryosei Akazawa on Friday urged the United States not to impose higher tariffs than those agreed last year, as the two countries advance preparations for a meeting between their countries' leaders later this month. Following talks wit…",
         "impact_score": 55,
         "themes": [
           "materials"
         ]
       },
       {
-        "title": "Spike in oil prices triggers talk of an economic doomsday scenario - MarketWatch",
-        "url": "https://www.marketwatch.com/story/spike-in-oil-prices-triggers-talk-of-an-economic-doomsday-scenario-86860a98",
-        "source": "MarketWatch",
-        "published_at": "2026-03-07T13:30:00Z",
+        "title": "Economic Digest: Nepal’s Business News in a Snap",
+        "url": "https://english.khabarhub.com/2026/08/538279/",
+        "source": "Khabarhub.com",
+        "published_at": "2026-03-08T02:15:11Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "KATHMANDU: Economic Digest offers a concise yet comprehensive overview of significant business happenings in Nepal, presented in easily digestible summaries. Nepal’s economy is currently experiencing a mix of short-term stimulus and structural vulnerability a…",
+        "impact_score": 50,
+        "themes": [
+          "regulatory"
+        ]
+      },
+      {
+        "title": "Who’s Excited to Be Replaced By AI? These Guys! - The Free Press",
+        "url": "https://www.thefp.com/p/whos-excited-to-be-replaced-by-ai",
+        "source": "Thefp.com",
+        "published_at": "2026-03-08T14:18:56Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "President Trump calling for an ‘unconditional surrender’ by Iran didn’t help oil markets Friday",
-        "impact_score": 55,
+        "description": "At New York City’s inaugural ClawCon, those attempting to automate their lives gathered to dream of a utopia without work, where humans can just drink beer.",
+        "impact_score": 40,
         "themes": [
           "other"
-        ]
-      },
-      {
-        "title": "Queues, Price Hikes and Shortages as Asia Battles Fuel Crunch - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-07/queues-price-hikes-and-shortages-as-asia-battles-fuel-crunch",
-        "source": "Bloomberg",
-        "published_at": "2026-03-07T01:05:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "From Thai farmers racing for diesel to Indian refinery executives monitoring the Persian Gulf through the night, energy buyers across import-dependent Asia are feeling the impact of a dramatic crunch.",
-        "impact_score": 55,
-        "themes": [
-          "materials"
         ]
       }
     ],
     "news_pressure_overlay": 0,
     "news_clusters": {
       "capital": [
+        {
+          "title": "Iran war threatens Trump's affordability push as rising energy prices complicate Fed rate cuts - NBC News",
+          "url": "https://www.nbcnews.com/news/us-news/iran-war-threatens-trumps-affordability-push-rising-energy-prices-comp-rcna262206",
+          "source": "NBC News",
+          "published_at": "2026-03-07T21:58:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The war with Iran is quickly becoming an economic problem for the United States — and a policy dilemma for the Federal Reserve",
+          "impact_score": 55,
+          "themes": [
+            "capital",
+            "materials"
+          ]
+        },
         {
           "title": "Trump's cyber strategy vows to 'support the security' of cryptocurrencies and blockchain - CoinDesk",
           "url": "https://www.coindesk.com/policy/2026/03/07/trump-s-cyber-strategy-vows-to-support-the-security-of-cryptocurrencies-and-blockchain",
@@ -2640,33 +2587,6 @@
           "impact_score": 40,
           "themes": [
             "capital"
-          ]
-        },
-        {
-          "title": "Iconic department store closes more locations during bankruptcy - thestreet.com",
-          "url": "https://www.thestreet.com/retail/saks-neiman-marcus-close-more-locations-during-bankruptcy",
-          "source": "TheStreet",
-          "published_at": "2026-03-07T18:17:48Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The retailer’s future is uncertain, and its value may not be in running stores.",
-          "impact_score": 85,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "BlackRock’s Retail Private-Credit Hopes Run Into Market’s Angst - Bloomberg.com",
-          "url": "https://www.bloomberg.com/news/articles/2026-03-07/blackrock-s-retail-private-credit-hopes-run-into-market-s-angst",
-          "source": "Bloomberg",
-          "published_at": "2026-03-07T13:00:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "It looked like a golden age of private credit when BlackRock Inc. plunked down $12 billion to buy HPS Investment Partners and crowed about the prospect of selling millions of retail investors on juicy returns from complex debt.",
-          "impact_score": 65,
-          "themes": [
-            "capital",
-            "commercial"
           ]
         },
         {
@@ -2746,49 +2666,10 @@
           "themes": [
             "capital"
           ]
-        },
-        {
-          "title": "U.S. unexpectedly sheds 92,000 jobs, unemployment rate rises",
-          "url": "https://financialpost.com/news/economy/us-sheds-92000-jobs",
-          "source": "Financial Post",
-          "published_at": "2026-03-06T15:03:21Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "U.S. employers unexpectedly cut jobs in February and the unemployment rate rose, pointing to lingering fragility in a labour market. Read on",
-          "impact_score": 40,
-          "themes": [
-            "capital"
-          ]
-        },
-        {
-          "title": "U.S. lost 92,000 jobs last month and unemployment rate rises to 4.4%",
-          "url": "https://www.pbs.org/newshour/economy/u-s-lost-92000-jobs-last-month-and-unemployment-rate-rises-to-4-4",
-          "source": "PBS",
-          "published_at": "2026-03-06T14:57:01Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The Labor Department reported Friday that hiring deteriorated from January, when companies, nonprofits and government agencies added 126,000 jobs.",
-          "impact_score": 40,
-          "themes": [
-            "capital"
-          ]
         }
       ],
       "pipeline": [],
       "trade": [
-        {
-          "title": "Axel Springer Strikes $770 Million Deal for U.K.’s Daily Telegraph - WSJ",
-          "url": "https://www.wsj.com/business/media/axel-springer-strikes-770-million-deal-for-u-k-s-daily-telegraph-f6ac9073",
-          "source": "The Wall Street Journal",
-          "published_at": "2026-03-07T07:33:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": null,
-          "impact_score": 40,
-          "themes": [
-            "trade"
-          ]
-        },
         {
           "title": "Health care has become the lifeblood of the labor market | Chattanooga Times Free Press",
           "url": "https://www.timesfreepress.com/news/2026/mar/06/health-care-has-become-the-lifeblood-of-the-labor/",
@@ -2801,71 +2682,33 @@
           "themes": [
             "trade"
           ]
-        },
-        {
-          "title": "Jersey Hired Analysis: Garden State Labor Market Faces Uphill Climb as National Job Growth Hits February Slump",
-          "url": "https://www.globenewswire.com/news-release/2026/03/06/3251106/0/en/Jersey-Hired-Analysis-Garden-State-Labor-Market-Faces-Uphill-Climb-as-National-Job-Growth-Hits-February-Slump.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-06T14:50:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "February Jobs Report Shows a Loss of 92,000 Jobs Nationwide. How Does This Affect New Jersey?...",
-          "impact_score": 40,
-          "themes": [
-            "trade"
-          ]
-        },
-        {
-          "title": "News brief: Strikes on Iran put cybersecurity teams on alert",
-          "url": "https://www.techtarget.com/searchsecurity/news/366639824/News-brief-Strikes-on-Iran-put-cybersecurity-teams-on-alert",
-          "source": "Techtarget.com",
-          "published_at": "2026-03-06T14:23:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Check out the latest security news from the Informa TechTarget team.",
-          "impact_score": 40,
-          "themes": [
-            "trade"
-          ]
         }
       ],
       "materials": [
         {
-          "title": "China warns of global chip shortages as Nexperia dispute escalates again - Yahoo Finance",
-          "url": "https://finance.yahoo.com/news/china-warns-global-chip-shortages-151426635.html",
-          "source": "Yahoo Entertainment",
-          "published_at": "2026-03-07T15:45:59Z",
+          "title": "War to force Gulf producers to stop energy exports within days, push oil to $150, Qatar minister says - Seeking Alpha",
+          "url": "https://seekingalpha.com/news/4562067-war-will-force-gulf-producers-to-stop-energy-exports-within-days-qatar-energy-minister-says",
+          "source": "Seeking Alpha",
+          "published_at": "2026-03-08T01:25:25Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "China's commerce ministry on Saturday raised the possibility of another global semiconductor supply chain crisis due to \"new ‌conflicts\" between Dutch...",
+          "description": "Qatar's energy minister said the Middle East war could \"bring down the economies of the world,\" all Persian Gulf energy exporters would shut down production within days and drive oil to $150",
           "impact_score": 55,
           "themes": [
             "materials"
           ]
         },
         {
-          "title": "Energy Price Shock From Iran War Exposes Europe’s Weakness - Bloomberg.com",
-          "url": "https://www.bloomberg.com/news/articles/2026-03-07/iran-war-energy-fallout-is-exposing-another-european-weakness",
-          "source": "Bloomberg",
-          "published_at": "2026-03-07T09:00:00Z",
+          "title": "Iran war threatens Trump's affordability push as rising energy prices complicate Fed rate cuts - NBC News",
+          "url": "https://www.nbcnews.com/news/us-news/iran-war-threatens-trumps-affordability-push-rising-energy-prices-comp-rcna262206",
+          "source": "NBC News",
+          "published_at": "2026-03-07T21:58:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Underneath the glass and wrought iron ceiling of Antwerp’s stock exchange last month, French President Emmanuel Macron addressed a hall full of executives from heavy industries. He wasted no time in diving into the issue everyone cared most about: Europe’s pe…",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
-        },
-        {
-          "title": "Queues, Price Hikes and Shortages as Asia Battles Fuel Crunch - Bloomberg.com",
-          "url": "https://www.bloomberg.com/news/articles/2026-03-07/queues-price-hikes-and-shortages-as-asia-battles-fuel-crunch",
-          "source": "Bloomberg",
-          "published_at": "2026-03-07T01:05:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "From Thai farmers racing for diesel to Indian refinery executives monitoring the Persian Gulf through the night, energy buyers across import-dependent Asia are feeling the impact of a dramatic crunch.",
+          "description": "The war with Iran is quickly becoming an economic problem for the United States — and a policy dilemma for the Federal Reserve",
           "impact_score": 55,
           "themes": [
+            "capital",
             "materials"
           ]
         },
@@ -2948,20 +2791,6 @@
           "themes": [
             "regulatory"
           ]
-        },
-        {
-          "title": "'Immense stress' on power grid as Virginia refuses data center regulation",
-          "url": "https://www.rawstory.com/general-assembly-nixes-bills-that-required-data-centers-to-get-scc-certificate/",
-          "source": "Raw Story",
-          "published_at": "2026-03-06T14:54:33Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "For most of the industry’s existence in Virginia, approvals for data centers were largely seen as a local issue – with the state and federal governments giving the thumbs up on certain permits.But as the industry balloons across the commonwealth, those local …",
-          "impact_score": 50,
-          "themes": [
-            "regulatory",
-            "commercial"
-          ]
         }
       ],
       "macro": [
@@ -2996,6 +2825,84 @@
       "land": [],
       "other": [
         {
+          "title": "Who’s Excited to Be Replaced By AI? These Guys! - The Free Press",
+          "url": "https://www.thefp.com/p/whos-excited-to-be-replaced-by-ai",
+          "source": "Thefp.com",
+          "published_at": "2026-03-08T14:18:56Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "At New York City’s inaugural ClawCon, those attempting to automate their lives gathered to dream of a utopia without work, where humans can just drink beer.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "The great wealth transfer is giving Americans another reason to argue - USA Today",
+          "url": "https://www.usatoday.com/story/money/personalfinance/2026/03/08/inheritances-legal-fees-disputes-avoid/88944390007/",
+          "source": "USA Today",
+          "published_at": "2026-03-08T14:04:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The largest wealth transfer in history is causing a surge in estate disputes. Learn how to protect your estate and inheritance gifts.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show - AP News",
+          "url": "https://apnews.com/article/trump-economy-iran-inflation-jobs-gas-prices-7fbd5e99e3b6023963dd3de226aee4e4",
+          "source": "Associated Press",
+          "published_at": "2026-03-08T11:32:17Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth. Instead it's kicked off with job losses, rising gasoline prices and more uncertainty about America’s future. In his recent State of the Union address, Trump said \"the roarin…",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Electric vehicle sales are plummeting. Will they soon become too niche? - ABC News",
+          "url": "https://abcnews.com/Business/electric-vehicle-sales-plummeting-become-niche/story?id%5C%5Cu003d130752429=",
+          "source": "Abcnews.com",
+          "published_at": "2026-03-08T10:06:53Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Millions of jobs vulnerable as ‘silver tsunami’ looms over US small businesses, experts warn - Fox Business",
+          "url": "https://www.foxbusiness.com/small-business/millions-jobs-vulnerable-silver-tsunami-looms-us-small-businesses-experts-warn",
+          "source": "Fox Business",
+          "published_at": "2026-03-08T09:30:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Nearly half of U.S. small-business owners are 55 or older, and with many lacking succession plans, jobs and local economies could face disruptions in the coming decade, experts warn.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "A New Generation of Mall Rats Has Arrived - WSJ",
+          "url": "https://www.wsj.com/business/retail/gen-z-shopping-mall-visits-15716009",
+          "source": "The Wall Street Journal",
+          "published_at": "2026-03-08T06:03:20Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
           "title": "Gas prices jump across Southern California, with Los Angeles County seeing average of $5.17 per gallon, amid war in Iran - ABC7 Los Angeles",
           "url": "https://abc7.com/post/gas-prices-jump-southern-california-los-angeles-county-seeing-average-517-gallon-amid-war-iran/18691262/",
           "source": "KABC-TV",
@@ -3003,6 +2910,45 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "The statewide average climbed above $5 per gallon and some drivers encountered prices more than $8 at the pump.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "AI is spurring a big expansion of high-voltage power lines. Landowners and locals are fighting back - AP News",
+          "url": "https://apnews.com/article/ai-trump-energy-transmission-lines-f1c6b1251054d2a7e193297e4111b8d1",
+          "source": "Associated Press",
+          "published_at": "2026-03-08T05:14:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Bigger and bigger data centers are leading to proposals for massive electric power transmission lines, sometimes across hundreds of miles. These high-voltage power lines cost tens of billions of dollars a year and are the latest front line in the battle over …",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Wall Street executives blame Morgan Stanley’s latest layoffs on AI - New York Post",
+          "url": "https://nypost.com/2026/03/07/business/wall-street-executives-say-morgan-stanleys-latest-layoffs-caused-by-ai-sources/",
+          "source": "New York Post",
+          "published_at": "2026-03-08T03:39:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Insiders close to the Wall Street giant say the real culprit can be summed up in two letters: “A” and “I.”",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Report: Cincinnati sees largest spike in gas prices anywhere in the US since start of Iran war - WLWT",
+          "url": "https://www.wlwt.com/article/cincinnati-drivers-see-largest-spike-in-gas-prices-in-nation/70650799",
+          "source": "WLWT Cincinnati",
+          "published_at": "2026-03-08T02:10:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "As drivers have headed to the pump across the country over the past week, a new report indicates that no other metro area has been hit harder than Cincinnati since the start of the U.S.-Iran war.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3033,137 +2979,19 @@
           "themes": [
             "other"
           ]
-        },
-        {
-          "title": "OpenAI robotics lead Caitlin Kalinowski quits in response to Pentagon deal - TechCrunch",
-          "url": "https://techcrunch.com/2026/03/07/openai-robotics-lead-caitlin-kalinowski-quits-in-response-to-pentagon-deal/",
-          "source": "TechCrunch",
-          "published_at": "2026-03-07T20:44:25Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Hardware executive Caitlin Kalinowski announced today that in response to OpenAI's controversial agreement with the Department of Defense, she’s resigned from her role leading the company's robotics team.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Dick’s joins viral CEO-eats-burger trend - The Seattle Times",
-          "url": "https://www.seattletimes.com/life/food-drink/dicks-joins-viral-ceo-eats-burger-trend/",
-          "source": "The Seattle Times",
-          "published_at": "2026-03-07T20:30:57Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Burger chains everywhere, including in Seattle, are responding to a viral video by having their own CEOs eat burgers on camera.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Ford recalls 1.74 million of its cars over rearview display issues - AP News",
-          "url": "https://apnews.com/article/ford-car-recall-rearview-camera-display-69a846973b55f00b8e7b584c7b25cd6b",
-          "source": "Associated Press",
-          "published_at": "2026-03-07T20:06:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Ford has issued two recalls affecting nearly 1.74 million of its cars in the U.S., due to software issues impacting the vehicles’ rearview camera displays that could increase crash risks. According to notices published by the National Highway Traffic Safety A…",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "How to cope with rising gas prices on Long Island - Newsday",
-          "url": "https://www.newsday.com/business/tips-to-save-on-gas-prices-bpgg5x21",
-          "source": "Newsday",
-          "published_at": "2026-03-07T19:46:39Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Experts told Newsday that motorists should maximize their mileage with vehicle maintenance and fewer trips with more stops.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Kuwait Cuts Oil and Refining Output as Hormuz Transits Slow - Bloomberg.com",
-          "url": "https://www.bloomberg.com/news/articles/2026-03-07/kuwait-cuts-oil-and-refining-output-as-hormuz-transits-slow",
-          "source": "Bloomberg",
-          "published_at": "2026-03-07T19:14:20Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The United Arab Emirates and Kuwait started reducing oil production, as the near-closure of the crucial Strait of Hormuz ripples through energy markets and affects global supply.",
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "4 Berkshire Hathaway Stocks That New CEO Greg Abel \"Expect Will Compound Over Decades\" - The Motley Fool",
-          "url": "https://www.fool.com/investing/2026/03/07/berkshire-hathaway-stocks-new-ceo-greg-abel-letter/",
-          "source": "Motley Fool",
-          "published_at": "2026-03-07T18:49:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Greg Abel recently issued his first-ever annual letter to shareholders.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "As visitors to Hawaii decline, risks abound - SFGATE",
-          "url": "https://www.sfgate.com/hawaii/article/hawaii-tourism-economy-diversification-21957224.php",
-          "source": "SFGate",
-          "published_at": "2026-03-07T18:34:47Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "As Hawaii has faced significant declines in visitors, the state looks toward ways to diversify its economy.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Gas prices are climbing fast as Trump’s Iran conflict continues - The Washington Post",
-          "url": "https://www.washingtonpost.com/business/2026/03/07/gas-prices-increasing-iran-war/",
-          "source": "The Washington Post",
-          "published_at": "2026-03-07T18:00:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Gas prices are increasing rapidly as President Donald Trump’s military assault on Iran continues, forcing a potential shutdown of oil production in the region.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "No credible threat after Southwest flight diverted to Atlanta: FBI - WSB-TV",
-          "url": "https://www.wsbtv.com/news/local/atlanta/fbi-no-credible-threat-after-southwest-flight-diverted-atlanta/NLMPLP3VQJGYZKM2Q6L4AXBXF4/",
-          "source": "WSB Atlanta",
-          "published_at": "2026-03-07T15:52:33Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "A Southwest Airlines flight diverted to Atlanta Friday night over a possible security concern, but investigators later determined there was no credible threat, according to the Federal Bureau of Investigation.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
         }
       ],
       "commercial": [
         {
-          "title": "BlackRock’s Retail Private-Credit Hopes Run Into Market’s Angst - Bloomberg.com",
-          "url": "https://www.bloomberg.com/news/articles/2026-03-07/blackrock-s-retail-private-credit-hopes-run-into-market-s-angst",
-          "source": "Bloomberg",
-          "published_at": "2026-03-07T13:00:00Z",
+          "title": "A suburb rife with data centers set to fight Amazon plan for another - The Washington Post",
+          "url": "https://www.washingtonpost.com/dc-md-va/2026/03/07/amazon-george-washington-university/",
+          "source": "The Washington Post",
+          "published_at": "2026-03-07T18:00:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "It looked like a golden age of private credit when BlackRock Inc. plunked down $12 billion to buy HPS Investment Partners and crowed about the prospect of selling millions of retail investors on juicy returns from complex debt.",
-          "impact_score": 65,
+          "description": "An announcement that George Washington University sold its Northern Virginia campus to Amazon for $427 million stunned officials in Loudoun County.",
+          "impact_score": 40,
           "themes": [
-            "capital",
             "commercial"
           ]
         },
@@ -3178,33 +3006,6 @@
           "impact_score": 40,
           "themes": [
             "macro",
-            "commercial"
-          ]
-        },
-        {
-          "title": "'Immense stress' on power grid as Virginia refuses data center regulation",
-          "url": "https://www.rawstory.com/general-assembly-nixes-bills-that-required-data-centers-to-get-scc-certificate/",
-          "source": "Raw Story",
-          "published_at": "2026-03-06T14:54:33Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "For most of the industry’s existence in Virginia, approvals for data centers were largely seen as a local issue – with the state and federal governments giving the thumbs up on certain permits.But as the industry balloons across the commonwealth, those local …",
-          "impact_score": 50,
-          "themes": [
-            "regulatory",
-            "commercial"
-          ]
-        },
-        {
-          "title": "Trump admits the hyperscalers ‘need some PR help’ because the American taxpayer is on the hook for their data centers",
-          "url": "https://fortune.com/2026/03/06/trump-data-centers-big-tech-hyperscalers-need-some-pr-help-affordability/",
-          "source": "Fortune",
-          "published_at": "2026-03-06T14:45:11Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "“Trump is trying to cover up his mistakes with a photo op,” said Lena Moffitt, executive director of Evergreen Action, an environmental group.",
-          "impact_score": 40,
-          "themes": [
             "commercial"
           ]
         }
@@ -3283,12 +3084,12 @@
       },
       {
         "ticker": "HD",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-06",
+        "open": 357.625,
         "close": 357.92,
-        "prev_close": 361.68,
-        "change": -3.76,
-        "change_pct": -1.0396
+        "change": 0.2950000000000159,
+        "change_pct": 0.08248864033555146
       },
       {
         "ticker": "LOW",
@@ -3301,12 +3102,12 @@
       },
       {
         "ticker": "VMC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-06",
-        "open": 282.05,
         "close": 274.99,
-        "change": -7.060000000000002,
-        "change_pct": -2.5031022868285775
+        "prev_close": 287.23,
+        "change": -12.24,
+        "change_pct": -4.2614
       },
       {
         "ticker": "MLM",
@@ -3337,12 +3138,12 @@
       },
       {
         "ticker": "OC",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-06",
+        "open": 109.32,
         "close": 109.75,
-        "prev_close": 111.52,
-        "change": -1.77,
-        "change_pct": -1.5872
+        "change": 0.4300000000000068,
+        "change_pct": 0.3933406512989452
       },
       {
         "ticker": "EXP",
@@ -3406,7 +3207,7 @@
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -2.391019929444507
+        "avg_change_pct": -2.353979439756587
       },
       "distribution": {
         "count": 1,
@@ -3418,7 +3219,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": -0.20017076990690913
+        "avg_change_pct": 0.36087355026086665
       }
     },
     "stock_pressure_overlay": 5,
@@ -3501,7 +3302,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-09T07:17:26.961Z",
+    "generated_at_utc": "2026-03-09T13:39:55.866Z",
     "regime_history": {
       "current_regime_duration_days": 6,
       "previous_regime": null,
