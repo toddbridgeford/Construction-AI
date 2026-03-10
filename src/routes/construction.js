@@ -2433,10 +2433,16 @@ async function tryReadMarketRadar(env) {
 }
 
 async function tryBuildForecast(request, env, terminal = null) {
-  const activeTerminal = terminal || await buildTerminalPayload(request, env);
-  const scoredMarkets = await loadScoredMarketsFromAssets(env);
-  if (isSubsectionFailure(scoredMarkets)) return scoredMarkets;
-  return buildForecastFromMarkets(scoredMarkets, activeTerminal);
+  try {
+    const activeTerminal = terminal || await buildTerminalPayload(request, env);
+    const scoredMarkets = await loadScoredMarketsFromAssets(env);
+    if (isSubsectionFailure(scoredMarkets)) return scoredMarkets;
+    return buildForecastFromMarkets(scoredMarkets, activeTerminal);
+  } catch (e) {
+    return subsectionError("FORECAST_FAILED", "Unable to build forecast", {
+      message: e?.message || String(e),
+    });
+  }
 }
 
 async function buildTerminalPayload(request, env) {
@@ -2551,8 +2557,8 @@ async function buildTerminalPayload(request, env) {
   }
 
   const forecast = await tryBuildForecast(request, env, terminal);
+  terminal.forecast = forecast;
   if (!isSubsectionFailure(forecast)) {
-    terminal.forecast = forecast;
     terminal.forecast_summary = {
       strongest_market: forecast.strongest_next_12_months[0]?.market || "unknown",
       weakest_market: forecast.weakest_next_12_months[0]?.market || "unknown",
