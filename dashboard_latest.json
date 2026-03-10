@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-09T19:10:11.748Z",
+  "generated_at": "2026-03-10T02:49:49.678Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -12,10 +12,6 @@
     "delta_3m": -1,
     "momentum": "Stable",
     "history": [
-      {
-        "date": "2026-03-07",
-        "value": 48
-      },
       {
         "date": "2026-03-07",
         "value": 47
@@ -58,6 +54,10 @@
       },
       {
         "date": "2026-03-09",
+        "value": 46
+      },
+      {
+        "date": "2026-03-10",
         "value": 46
       }
     ],
@@ -100,12 +100,12 @@
       "capital_score": 39,
       "pipeline_score": 47,
       "flip_trigger": null,
-      "duration_days": 6,
+      "duration_days": 7,
       "status": "Active"
     }
   ],
   "regime_history_display": {
-    "current_regime_duration_days": 6,
+    "current_regime_duration_days": 7,
     "previous_regime": null,
     "last_flip_date": null,
     "regime_stability": "🟢 Stable"
@@ -195,18 +195,144 @@
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 26,
-      "newsapi:everything": 74
+      "newsapi:top_headlines": 28,
+      "newsapi:everything": 75
     },
     "news_unified": [
       {
-        "title": "Dow Jones Futures Eye Oil Prices. Trump Says Iran War 'More Popular' Than Ever With MAGA Base. - Investor's Business Daily",
-        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-oil-prices-iran-war-supreme-leader/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-08T18:15:40Z",
+        "title": "Dow futures tumble 800 points as U.S. oil tops $100 a barrel to begin the week's trading: Live updates - CNBC",
+        "url": "https://www.cnbc.com/2026/03/08/stock-market-today-live-updates.html",
+        "source": "CNBC",
+        "published_at": "2026-03-09T00:17:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The Dow recorded its worst week since President Trump unveiled his tariff policy in April."
+      },
+      {
+        "title": "Bond Traders Already Had Their Hands Full, ‘Then a War Breaks Out’ - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/bond-traders-already-had-hands-133000660.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-09T00:11:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "With AI-related jitters reverberating through markets and private credit tremors setting off alarms, the chief investment officer at Pimco and manager of the..."
+      },
+      {
+        "title": "Stock and Bond Traders Eye Another Volatile Open - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-08/stock-and-bond-traders-eye-another-volatile-open-markets-wrap",
+        "source": "Bloomberg",
+        "published_at": "2026-03-08T21:22:29Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Escalating hostilities in the Middle East and widening stress on oil shipping and infrastructure had global investors braced for more turbulence when trading resumes Sunday."
+      },
+      {
+        "title": "OpenAI robotics leader resigns over concerns about Pentagon AI deal - NPR",
+        "url": "https://www.npr.org/2026/03/08/nx-s1-5741779/openai-resigns-ai-pentagon-guardrails-military",
+        "source": "NPR",
+        "published_at": "2026-03-08T20:44:11Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A senior member of OpenAI's robotics team said guardrails around certain AI uses were not sufficiently defined before OpenAI announced an agreement with the Pentagon."
+      },
+      {
+        "title": "War escalation, jobs report fallout, and Oracle earnings: What to watch this week - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/war-escalation-jobs-report-fallout-and-oracle-earnings-what-to-watch-this-week-114534070.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-08T19:59:46Z",
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": null
+      },
+      {
+        "title": "War disruptions may send oil to $150 to $200 a barrel. Here's my advice for stock investors - CNBC",
+        "url": "https://www.cnbc.com/2026/03/08/jim-cramers-advice-for-investors-during-us-iran-war-oil-surge.html",
+        "source": "CNBC",
+        "published_at": "2026-03-08T19:27:51Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "In his Sunday column for Investing Club subscribers, Jim Cramer explains how investors should navigate a continued surge in oil prices."
+      },
+      {
+        "title": "Philadelphia food stand overwhelmed when 600 tubs of onion dip mysteriously appear, prompting investigation - Fox Business",
+        "url": "https://www.foxbusiness.com/retail/philadelphia-food-stand-overwhelmed-when-600-tubs-onion-dip-mysteriously-appear-prompting-investigation",
+        "source": "Fox Business",
+        "published_at": "2026-03-08T19:05:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A Philadelphia food stand owner says she received 600 tubs of French onion dip she never ordered."
+      },
+      {
+        "title": "Video shows Southwest flight passengers holding hands up during security scare - KTLA",
+        "url": "https://ktla.com/news/nationworld/video-shows-southwest-flight-passengers-holding-hands-up-during-security-scare/",
+        "source": "KTLA Los Angeles",
+        "published_at": "2026-03-08T18:38:30Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A Southwest Airlines flight headed from Nashville to Fort Lauderdale was diverted to Atlanta Friday night after a possible security scare prompted authorities to respond and remove a passenger from the aircraft, footage shows. Video obtained by KTLA shows a t…"
+      },
+      {
+        "title": "Actor and former 'SNL' star slams major airline for his seat downgrade: ‘I paid for first class’ - Fox News",
+        "url": "https://www.foxnews.com/travel/actor-former-snl-star-slams-major-airline-seat-downgrade-i-paid-first-class",
+        "source": "Fox News",
+        "published_at": "2026-03-08T18:15:37Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "An actor and comedian has alleged that American Airlines downgraded him from first class to economy on a red-eye flight, sparking controversy over airline practices."
+      },
+      {
+        "title": "The changing goalposts of AGI and timelines - Hacker News",
+        "url": "https://news.ycombinator.com/item?id%5C%5Cu003d47299009=",
+        "source": "Hacker News",
+        "published_at": "2026-03-08T18:01:14Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
+      {
+        "title": "Is AI productivity prompting burnout? Study finds new pattern of \"AI brain fry\" - CBS News",
+        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQZ3FSYzJiSGRRQXdHRmt2WGY0Z0hqcEZWcndHdUtCTUZhY01lYUlKV3FNNWVWMmJvcEpUc0RkaGdHUFNlME5UaGFDOVppdklMQmljM2FFS0FTWUctaEE1TmxHUk5BWmJMS1Y4bVBTSjY2eVh1ZHJLa1VGekFfRm9xZnhXUEdlYWgzT2tWMVRreXA2SWt2Z2NDdU5iRTdCWG1rVVRjSlV3NDBiZ9IBrwFBVV95cUxQV3Z1NWlLZU9PcXRaeVRxWEUxZHBPMGtYQXNpblRkLTZpb0Q3VnhmTU5vOHpaeUphMDNLU3hTUXpBMWR5c2c2TEtnSU0xd24xaFRCWmlhZHlybG9vdDZZYUNxWEpMbl9ES01PLUt0bEZSTWE3ZndkNWVFaGhoaHdjenhXYWJrdDdQR2d3SFZXdk9BU3Zqek5OWHkyakJwSjk3WldhanBvVjdkRVd6Wk5N?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-08T17:56:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
+      {
+        "title": "Schumer calls on Trump to release oil from reserve to lower gas prices - Axios",
+        "url": "https://www.axios.com/2026/03/08/schumer-republicans-trump-oil-reserve-gas-prices",
+        "source": "Axios",
+        "published_at": "2026-03-08T17:42:43Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Republicans have been slow to embrace the idea."
+      },
+      {
+        "title": "Swiss vote places right to use cash in country’s constitution - politico.eu",
+        "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1lbFQyMlo0c21sT3B4TE15UFh5aWRpakl4QjcwTUdKdEtkZFd0SXFOYmxFLWZIazBRa2RHUXJoZmVQQ0xZSUh1Y0RLc3lCLVVzaVFBUkVMcDRveHRfSzUxdjQ3X3VBQnF0RjJwU3JERFlrWDB6NjhSUkJ0TFBZZw?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-08T17:18:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
+      {
+        "title": "Analyzing the SpaceX IPO: What would it take to justify a $1.5 trillion market cap? - Fortune",
+        "url": "https://fortune.com/2026/03/08/is-space-x-profitable-ipo-stock-date-earnings-outlook/",
+        "source": "Fortune",
+        "published_at": "2026-03-08T16:32:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The real moonshoot? Hitting the financial targets it would take to justify the market cap Elon Musk has been musing about."
+      },
+      {
+        "title": "TechCrunch Mobility: Rivian’s R2 gambit - TechCrunch",
+        "url": "https://techcrunch.com/2026/03/08/techcrunch-mobility-rivians-r2-gambit/",
+        "source": "TechCrunch",
+        "published_at": "2026-03-08T16:03:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Welcome back to TechCrunch Mobility, your hub for all things “future of transportation.”"
       },
       {
         "title": "Why do airlines hate basic economy passengers? - The Washington Post",
@@ -218,40 +344,49 @@
         "description": "Major airlines are cutting frequent-flier miles for basic economy passengers, with United, American and Delta implementing changes."
       },
       {
-        "title": "Oil market prepares for $100 a barrel as Middle East producers cut output - Financial Times",
-        "url": "https://www.ft.com/content/56a01aa5-98af-48f0-b580-89e7bb4f59f6",
-        "source": "Financial Times",
-        "published_at": "2026-03-08T15:39:18Z",
+        "title": "America’s Natural-Gas Bounty Is Cushioning U.S. Markets From Global Shocks - WSJ",
+        "url": "https://www.wsj.com/finance/commodities-futures/americas-natural-gas-bounty-is-cushioning-u-s-markets-from-global-shocks-4085f589",
+        "source": "The Wall Street Journal",
+        "published_at": "2026-03-08T16:00:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": null
       },
       {
-        "title": "War escalation, jobs report fallout, and Oracle earnings: What to watch this week - Yahoo Finance",
-        "url": "https://finance.yahoo.com/news/war-escalation-jobs-report-fallout-and-oracle-earnings-what-to-watch-this-week-114534070.html",
-        "source": "Yahoo Entertainment",
-        "published_at": "2026-03-08T14:58:10Z",
+        "title": "I Wrote A Resume For A $180,000 Job Using ChatGPT 5.4. This Happened - Forbes",
+        "url": "https://www.forbes.com/sites/rachelwells/2026/03/08/i-wrote-a-resume-for-a-180000-job-using-chatgpt-54-this-happened/",
+        "source": "Forbes",
+        "published_at": "2026-03-08T15:14:34Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "US equities ended the week starkly in the red as the war in Iran and the ensuing surge in global oil prices have rankled the global economy."
+        "description": "How do you write a resume using AI? I tested ChatGPT 5.4 and compared it to ChatGPT 5.2, to create an executive resume for a project director job. Here's what happened."
       },
       {
-        "title": "Oil Market Chaos Set to Deepen as More Gulf Giants Cut Output - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-08/oil-market-chaos-set-to-deepen-as-more-gulf-giants-cut-output",
+        "title": "5 lessons from Vinay Prasad’s turbulent tenure at the FDA - statnews.com",
+        "url": "https://www.statnews.com/2026/03/08/vinay-prasad-fda-lessons-from-tenure/",
+        "source": "STAT",
+        "published_at": "2026-03-08T15:12:06Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Vinay Prasad's unique ability to attract criticism — even when his bosses, including the president, wanted him to keep his head low — did him in at the FDA."
+      },
+      {
+        "title": "Trump’s Canada Trade War Hits Jack Daniel’s and Jim Beam With a 'Devastating' $143 Million Loss - inc.com",
+        "url": "https://www.inc.com/leila-sheridan/trumps-canada-trade-war-hits-jack-daniels-and-jim-beam-with-a-devastating-143-million-loss/91313385",
+        "source": "Inc.",
+        "published_at": "2026-03-08T14:31:36Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "From #2 to #6: America’s whiskey export market in Canada has collapsed by 70%. As Jim Beam shutters its main distillery for 2026 and Jack Daniel’s vanishes from shelves, U.S. distillers warn the $143 million fallout is just the beginning."
+      },
+      {
+        "title": "Aramco Shares Surge Most Since 2023 as War Roils Energy Markets - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-08/aramco-shares-surge-most-since-2023-as-war-roils-energy-markets",
         "source": "Bloomberg",
-        "published_at": "2026-03-08T13:32:09Z",
+        "published_at": "2026-03-08T13:21:53Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Oil markets are set for yet more chaos on Monday as the war in Iran unleashes unprecedented disruption: major producers are curbing output as storage fills up and the most important waterway for global energy markets remains all but closed."
-      },
-      {
-        "title": "OpenAI hardware leader resigns after deal with the Pentagon - CNBC",
-        "url": "https://www.cnbc.com/2026/03/08/openai-hardware-leader-resigns-after-deal-with-the-pentagon.html",
-        "source": "CNBC",
-        "published_at": "2026-03-08T12:43:30Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Kalinowski wrote she has \"deep respect\" for OpenAI CEO Sam Altman and the team, but the company announced the ⁠Pentagon deal \"without the guardrails defined.\""
+        "description": "Saudi Aramco jumped the most since April 2023 on Sunday as the Iran war entered its second week, prompting supply disruptions that may send oil prices higher when global markets reopen."
       },
       {
         "title": "Target stores face deeper issues than new CEO realizes - thestreet.com",
@@ -269,7 +404,16 @@
         "published_at": "2026-03-08T12:30:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null
+        "description": "Shoppers who’ve tried the Activscience Triple Firming Neck Cream say it reduces crepiness, tightens skin, and smooths out turkey neck in less than two weeks. Shop the anti-aging retinol neck cream for only $25 on Amazon."
+      },
+      {
+        "title": "Grocery Outlet To Close 36 Stores: What To Know - Newsweek",
+        "url": "https://www.newsweek.com/grocery-outlet-closure-stores-11641147",
+        "source": "Newsweek",
+        "published_at": "2026-03-08T12:21:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Grocery Outlet plans to close 36 underperforming stores in 2026 after expanding too quickly, while still opening to 33 new locations."
       },
       {
         "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show - AP News",
@@ -281,157 +425,175 @@
         "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth. Instead it's kicked off with job losses, rising gasoline prices and more uncertainty about America’s future. In his recent State of the Union address, Trump said \"the roarin…"
       },
       {
-        "title": "Iran war muddles expectations of likely Federal Reserve interest rate cuts - Financial Times",
-        "url": "https://www.ft.com/content/176a8568-5982-459a-a36a-d2cbf577568a",
-        "source": "Financial Times",
-        "published_at": "2026-03-08T11:00:05Z",
+        "title": "REI’s weekend sale features up to 50% off Patagonia, Arc’teryx and Brooks — here’s 17 deals I’d jump on - Tom's Guide",
+        "url": "https://www.tomsguide.com/wellness/fitness/reis-weekend-sale-features-up-to-50-percent-off-patagonia-arcteryx-and-brooks-heres-17-deals-id-jump-on",
+        "source": "Tom's Guide",
+        "published_at": "2026-03-08T11:30:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Oil price surge and a softening labour market complicate US central bank’s ability to boost output while containing inflation"
+        "description": "Refresh your spring wardrobe this weekend"
       },
       {
-        "title": "KKR eyes multibillion-dollar sale of data centre cooling company - Financial Times",
-        "url": "https://www.ft.com/content/b1784f74-7a91-4e04-b507-cc5b13920f51",
-        "source": "Financial Times",
-        "published_at": "2026-03-08T10:00:05Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Private capital firm seeks big return on investment in CoolIT Systems as AI boom boosts valuations"
-      },
-      {
-        "title": "Millions of jobs vulnerable as ‘silver tsunami’ looms over US small businesses, experts warn - Fox Business",
-        "url": "https://www.foxbusiness.com/small-business/millions-jobs-vulnerable-silver-tsunami-looms-us-small-businesses-experts-warn",
-        "source": "Fox Business",
-        "published_at": "2026-03-08T09:30:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Nearly half of U.S. small-business owners are 55 or older, and with many lacking succession plans, jobs and local economies could face disruptions in the coming decade, experts warn."
-      },
-      {
-        "title": "Prediction: The Trump Bull Market Will Soon End -- and More Than 150 Years of Historical Precedent Explains Why - The Motley Fool",
-        "url": "https://www.fool.com/investing/2026/03/08/prediction-trump-bull-market-end-150-years-history/",
-        "source": "Motley Fool",
-        "published_at": "2026-03-08T09:06:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Wall Street's bull market rally under Trump is running on borrowed time."
-      },
-      {
-        "title": "At a lobster-themed event for AI enthusiasts, exuberance with a side of cocktail sauce - NBC News",
-        "url": "https://www.nbcnews.com/tech/tech-news/lobster-themed-event-ai-enthusiasts-exuberance-side-cocktail-sauce-rcna261892",
+        "title": "This case keeps all your cords organized while you travel and it’s currently on sale for under $9 - NBC News",
+        "url": "https://www.nbcnews.com/select/shopping/fyy-cable-organizer-deal-rcna262182",
         "source": "NBC News",
-        "published_at": "2026-03-08T09:00:41Z",
+        "published_at": "2026-03-08T11:00:39Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "NEW YORK — As a man wearing a neon-blue jellyfish hat fought off draping tentacles to scroll through his phone and find the latest message from his personal AI assistant, three people wearing Pegasus wings flitted through a sweaty Manhattan apartment-turned-b…"
+        "description": "NBC Select editors love the FYY Cable Organizer as a way of staying organized while traveling and right now it is 31% off"
       },
       {
-        "title": "Iran war fallout grows as China struggles to import vital fertiliser chemical - South China Morning Post",
-        "url": "https://www.scmp.com/economy/china-economy/article/3345761/iran-war-hits-chinas-sulphur-imports-economic-fallout-conflict-grows",
-        "source": "Post Magazine",
-        "published_at": "2026-03-08T09:00:08Z",
+        "title": "Ford builds one-of-a-kind Explorer for Pope Leo XIV - Fox Business",
+        "url": "https://www.foxbusiness.com/lifestyle/ford-builds-one-of-a-kind-explorer-pope-leo-xiv",
+        "source": "Fox Business",
+        "published_at": "2026-03-08T11:00:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Supplies of sulphur – a key fertiliser ingredient – are tightening in China just as the spring planting season begins."
+        "description": "Ford CEO Jim Farley and wife Lia gifted Pope Leo XIV a customized Explorer SUV during a private Vatican audience on Feb. 28, featuring Chicago-themed details and a hybrid powertrain."
       },
       {
-        "title": "A New Generation of Mall Rats Has Arrived - WSJ",
-        "url": "https://www.wsj.com/business/retail/gen-z-shopping-mall-visits-15716009",
-        "source": "The Wall Street Journal",
-        "published_at": "2026-03-08T06:03:20Z",
+        "title": "hamon added to PyPI",
+        "url": "https://pypi.org/project/hamon/",
+        "source": "Pypi.org",
+        "published_at": "2026-03-09T01:54:34Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": null
+        "feed": "everything",
+        "description": "JAX-native thermal sampling for discrete energy-based models"
       },
       {
-        "title": "Gas prices jump across Southern California, with Los Angeles County seeing average of $5.17 per gallon, amid war in Iran - ABC7 Los Angeles",
-        "url": "https://abc7.com/post/gas-prices-jump-southern-california-los-angeles-county-seeing-average-517-gallon-amid-war-iran/18691262/",
-        "source": "KABC-TV",
-        "published_at": "2026-03-08T05:40:12Z",
+        "title": "Smartplay Signed a White Paper on Multi-Field Data Cooperation with Relevant Institutions in Taiwan",
+        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251489/0/en/Smartplay-Signed-a-White-Paper-on-Multi-Field-Data-Cooperation-with-Relevant-Institutions-in-Taiwan.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-09T01:39:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The statewide average climbed above $5 per gallon and some drivers encountered prices more than $8 at the pump."
+        "feed": "everything",
+        "description": "EDGEWATER PARK, N.J., March 08, 2026 (GLOBE NEWSWIRE) -- Smartplay International, Inc., a leading global provider of lottery drawing systems and random number generation technologies, today announced that it has formally signed “High-Value Industry Data Coope…"
       },
       {
-        "title": "Report: Cincinnati sees largest spike in gas prices anywhere in the US since start of Iran war - WLWT",
-        "url": "https://www.wlwt.com/article/cincinnati-drivers-see-largest-spike-in-gas-prices-in-nation/70650799",
-        "source": "WLWT Cincinnati",
-        "published_at": "2026-03-08T02:10:00Z",
+        "title": "Beijing warns of more chip supply worries after Nexperia China claims it was cut off from SAP",
+        "url": "https://www.theregister.com/2026/03/09/asia_tech_news_roundup/",
+        "source": "Theregister.com",
+        "published_at": "2026-03-09T01:13:48Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "As drivers have headed to the pump across the country over the past week, a new report indicates that no other metro area has been hit harder than Cincinnati since the start of the U.S.-Iran war."
+        "feed": "everything",
+        "description": "PLUS: Indonesia joins kids social media ban; China frets about AI job impacts; India’s PC market fails to launch, again; And more\nChina’s Ministry of Commerce has warned of further disruption to the global semiconductor supply chain after Dutch chipmaker Nexp…"
       },
       {
-        "title": "War to force Gulf producers to stop energy exports within days, push oil to $150, Qatar minister says - Seeking Alpha",
-        "url": "https://seekingalpha.com/news/4562067-war-will-force-gulf-producers-to-stop-energy-exports-within-days-qatar-energy-minister-says",
-        "source": "Seeking Alpha",
-        "published_at": "2026-03-08T01:25:25Z",
+        "title": "Trump's 'roaring' economy meets a rough start to 2026: What the latest numbers show",
+        "url": "https://economictimes.indiatimes.com/news/international/global-trends/trumps-roaring-economy-meets-a-rough-start-to-2026-what-the-latest-numbers-show/articleshow/129300699.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-09T01:07:59Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Qatar's energy minister said the Middle East war could \"bring down the economies of the world,\" all Persian Gulf energy exporters would shut down production within days and drive oil to $150"
+        "feed": "everything",
+        "description": "President Trump's predictions of a booming economy in 2026 are being challenged by recent data showing job losses, rising gas prices, and stock market declines. Despite his optimistic rhetoric, economic indicators suggest a volatile start to the year, potenti…"
       },
       {
-        "title": "Paramount Eyes Changes to Historic Studio Lot Following Warner Bros. Merger - The Hollywood Reporter",
-        "url": "http://www.hollywoodreporter.com/business/business-news/paramount-studio-lot-changes-warner-bros-merger-1236524430/",
-        "source": "Hollywood Reporter",
-        "published_at": "2026-03-08T00:30:14Z",
+        "title": "India Should Read This Book On The Chinese 'Engineering State'",
+        "url": "https://swarajyamag.com/books/india-should-read-this-book-on-the-chinese-engineering-state",
+        "source": "Swarajya",
+        "published_at": "2026-03-09T00:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The lot has hosted productions for films such as 'The Godfather,' 'Titanic' and the 'Mission: Impossible' franchise."
+        "feed": "everything",
+        "description": "Hoover Institution fellow Dan Wang is a Canadian of Chinese origin who spent his early childhood and then a few years inside China during the Covid pandemic."
       },
       {
-        "title": "'Potential security threat' diverts Southwest flight from Nashville, passenger removed - The Tennessean",
-        "url": "https://www.tennessean.com/story/news/crime/2026/03/07/bna-southwest-flight-diverted-to-atlanta-potential-security-threat/89036039007/",
-        "source": "Tennessean",
-        "published_at": "2026-03-08T00:24:00Z",
+        "title": "Bragar Eagel & Squire, P.C. Reminds Investors That Class Action Lawsuits Have Been Filed Against BlackRock TCP and Plug Power and Encourages Investors to Contact the Firm",
+        "url": "https://www.globenewswire.com/news-release/2026/03/08/3251482/0/en/Bragar-Eagel-Squire-P-C-Reminds-Investors-That-Class-Action-Lawsuits-Have-Been-Filed-Against-BlackRock-TCP-and-Plug-Power-and-Encourages-Investors-to-Contact-the-Firm.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-08T23:39:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Passengers traveling from Nashville to Fort Lauderdale arrived at their destination in the wee hours of the morning March 7, due to a potential security threat."
+        "feed": "everything",
+        "description": "NEW YORK, March 08, 2026 (GLOBE NEWSWIRE) -- Bragar Eagel & Squire, P.C., a nationally recognized shareholder rights law firm, reminds investors that class actions have been commenced on behalf of stockholders of BlackRock TCP Capital Corp. (NASDAQ:TCPC) and …"
       },
       {
-        "title": "Hims And Hers Surges 40% On Deal To Sell Novo Nordisk Obesity Drugs - Investor's Business Daily",
-        "url": "https://www.investors.com/news/hims-and-hers-stock-surges-40-deal-sell-novo-nordisk-obesity-drugs/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-07T21:57:00Z",
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show",
+        "url": "https://japantoday.com/category/business/trump%E2%80%99s-%E2%80%98roaring%E2%80%99-economy-meets-a-rough-start-to-2026-what-the-latest-numbers-show",
+        "source": "Japan Today",
+        "published_at": "2026-03-08T21:33:28Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Novo Nordisk reportedly will sell its weight-loss drugs via the online pharmacy."
+        "feed": "everything",
+        "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth, but instead it has kicked off with job losses, rising gasoline prices and more uncertainty about America's future. In his State of the Union address less than two weeks ago,…"
       },
       {
-        "title": "Fast food brands get snarky after McDonald's CEO burger tasting mishap - USA Today",
-        "url": "https://www.usatoday.com/story/money/food/2026/03/07/mcdonalds-ceo-taste-videos/89036141007/",
-        "source": "USA Today",
-        "published_at": "2026-03-07T21:25:00Z",
+        "title": "The Economic Impact Of This Horrifying War With Iran Is Not Going To Be Pretty",
+        "url": "http://theeconomiccollapseblog.com/the-economic-impact-of-this-horrifying-war-with-iran-is-not-going-to-be-pretty/",
+        "source": "Theeconomiccollapseblog.com",
+        "published_at": "2026-03-08T21:25:17Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "After McDonald's posted a widely mocked video of its CEO, competitors took to social media with videos, jokes and unrelated fights."
+        "feed": "everything",
+        "description": "There is no way to get around it. We are facing a major global economic disruption, and the longer this war goes on the worse it will get. As I have reminded my readers on numerous occasions, our entire way of life is predicated on cheap energy, and the Middl…"
       },
       {
-        "title": "Coinbase says new U.S. tax-reporting rules for crypto are cluttered, confusing - CoinDesk",
-        "url": "https://www.coindesk.com/policy/2026/03/07/coinbase-says-new-u-s-tax-reporting-rules-for-crypto-are-wasteful-onerous",
-        "source": "CoinDesk",
-        "published_at": "2026-03-07T21:01:29Z",
+        "title": "Pro-American Groups Welcome Trump's DHS Pick Markwayne Mullin",
+        "url": "https://www.breitbart.com/economy/2026/03/08/pro-american-groups-praise-trumps-dhs-pick-markwayne-mullin/",
+        "source": "Breitbart News",
+        "published_at": "2026-03-08T21:09:06Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The IRS’s 1099-DA tax form for reporting digital asset gains comes with a burden of over-reporting, Coinbase's tax experts warned."
+        "feed": "everything",
+        "description": "Pro-American lobby groups cautiously praised President Donald Trump's decision to pick Sen. Markwayne Mullin as the new Secretary of the Department of Homeland Security.\nThe post Pro-American Groups Welcome Trump’s DHS Pick Markwayne Mullin appeared first on …"
       },
       {
-        "title": "A Bizarre International War Inside One Chip Company Threatens the Global Automotive Industry - Gizmodo",
-        "url": "https://gizmodo.com/a-bizarre-international-war-inside-one-chip-company-threatens-the-global-automotive-industry-2000729914",
-        "source": "Gizmodo.com",
-        "published_at": "2026-03-07T20:06:36Z",
+        "title": "‘They See Great Opportunity’: Interior Secretary Burgum Shows How US-Venezuela Partnership Is Already Paying Dividends",
+        "url": "https://dailycaller.com/2026/03/08/great-opportunity-doug-burgum-shows-united-states-venezuela-partnership-paying-dividends-fox-news-sunday-briefing-peter-doocy/",
+        "source": "The Daily Caller",
+        "published_at": "2026-03-08T21:00:35Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The international divisions at Nexperia seem to hate each other so much that Chinese-Dutch international diplomacy has failed to smoothed things over."
+        "feed": "everything",
+        "description": "Interior Secretary Doug Burgum said Sunday that, since the capture of dictator Nicolás Maduro, the U.S. has benefitted from its new partnership with Venezuela."
       },
       {
-        "title": "Ford recalls 1.74 million of its cars over rearview display issues - AP News",
-        "url": "https://apnews.com/article/ford-car-recall-rearview-camera-display-69a846973b55f00b8e7b584c7b25cd6b",
-        "source": "Associated Press",
-        "published_at": "2026-03-07T20:06:00Z",
+        "title": "Europe’s Most Expensive and Cheapest Countries for Hotels and Restaurants in 2026",
+        "url": "https://johnnyjet.com/europes-most-expensive-and-cheapest-countries-for-hotels-and-restaurants-in-2026/",
+        "source": "Johnnyjet.com",
+        "published_at": "2026-03-08T20:58:29Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Ford has issued two recalls affecting nearly 1.74 million of its cars in the U.S., due to software issues impacting the vehicles’ rearview camera displays that could increase crash risks. According to notices published by the National Highway Traffic Safety A…"
+        "feed": "everything",
+        "description": "Planning a trip to Europe in 2026? Your travel budget may stretch much further or disappear much faster depending on where you go. A recent analysis highlighted by Euronews, using...\nThe post Europe’s Most Expensive and Cheapest Countries for Hotels and Resta…"
+      },
+      {
+        "title": "Tesla opens its first Megacharger station to Semi customers in California",
+        "url": "http://electrek.co/2026/03/08/tesla-opens-first-megacharger-ontario-california-semi-customers/",
+        "source": "Electrek",
+        "published_at": "2026-03-08T20:54:43Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Tesla has opened its first Megacharger station to Semi customers at a new location in Ontario, California, marking a significant milestone in its push to build a charging network for electric trucks.\n\n\n\nThe opening comes as Tesla ramps up Semi production at i…"
+      },
+      {
+        "title": "20×9″ and 20×11″ Carbon-Fiber Wheels for Ferrari",
+        "url": "https://bringatrailer.com/listing/wheels-443/",
+        "source": "Bringatrailer.com",
+        "published_at": "2026-03-08T20:40:10Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "These 20″ wheels were produced by Carbon Revolution in Australia for use on Ferrari F8s. They measure 9″ and 11″ in width and feature carbon-fiber construction, a 10-spoke design, and an exposed carbon-fiber finish. Stickers applied to the inner barrels indic…"
+      },
+      {
+        "title": "Climate lawfare is handing gifts to Moscow, Beijing",
+        "url": "https://www.wnd.com/2026/03/climate-lawfare-is-handing-gifts-moscow-beijing/",
+        "source": "Wnd.com",
+        "published_at": "2026-03-08T19:44:56Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Litigation risks doing what rival powers long have sought, undermining foundation of America's economic strength"
+      },
+      {
+        "title": "Why America must win the AI race",
+        "url": "https://www.wnd.com/2026/03/why-america-must-win-ai-race/",
+        "source": "Wnd.com",
+        "published_at": "2026-03-08T19:32:20Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Trump proposed a paradigm shift: 'May we be as bold to embrace it as he was to propose it'"
+      },
+      {
+        "title": "GitHub - ruvnet/RuView: π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
+        "url": "https://github.com/ruvnet/RuView?tab=readme-ov-file",
+        "source": "Github.com",
+        "published_at": "2026-03-08T19:21:21Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Instead of relying on cameras or cloud models, it observes whatever signals exist in a space such as WiFi, radio waves across the spectrum, motion patterns, vibration, sound, or other sensory inputs and builds an understanding of what is happening locally. Bu…"
       },
       {
         "title": "Ep 196: Do Architects Retire",
@@ -938,15 +1100,6 @@
         "description": "Rep. Joyce Beatty of Ohio filed an emergency motion Friday, warning that Trump may not revive the memorial and performing arts center\nThe post Democratic Congresswoman Sues Trump Over Kennedy Center Closure appeared first on TheWrap."
       },
       {
-        "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
-        "url": "https://www.nature.com/articles/s41467-026-70501-4",
-        "source": "Nature.com",
-        "published_at": "2026-03-07T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …"
-      },
-      {
         "title": "Discovery of van Hove singularities: electronic fingerprints of 3Q magnetic order in a van der Waals quantum magnet",
         "url": "https://www.nature.com/articles/s41467-026-70063-5",
         "source": "Nature.com",
@@ -956,6 +1109,15 @@
         "description": "Cobalt intercalated TaS2 has recently been found to host 3Q antiferromagnetic order. This 3Q state occurs coexists with a very large anomalous hall effect, and shows strong sensitivity to Cobalt concentration. Here, Luo and coauthors perform doping dependent …"
       },
       {
+        "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
+        "url": "https://www.nature.com/articles/s41467-026-70501-4",
+        "source": "Nature.com",
+        "published_at": "2026-03-07T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …"
+      },
+      {
         "title": "How the Iran War Could Consolidate China’s Energy Dominance",
         "url": "http://foreignpolicy.com/2026/03/06/iran-china-green-energy-oil-gas-hormuz-solar-electricity/",
         "source": "Foreign Policy",
@@ -963,153 +1125,200 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Amid global oil and gas disruptions, China stands prepared for the electrostate era."
-      },
-      {
-        "title": "Show HN: PlateSpinner – A Kanban board that orchestrates AI coding agents",
-        "url": "https://github.com/moridinamael/platespinner",
-        "source": "Github.com",
-        "published_at": "2026-03-06T21:57:55Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "PlateSpinner is a local web app that manages AI coding agents through a kanban board. You point it at a project directory, describe what you want, and it spawns headless Claude Code / Codex / Gemini sessions to generate tasks, plan implementations, and write …"
-      },
-      {
-        "title": "The case for scrubbing the seas to save the climate",
-        "url": "https://www.vox.com/climate/481882/ocean-marine-climate-co2-carbon-removal-acidification",
-        "source": "Vox",
-        "published_at": "2026-03-06T21:49:17Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "We’ve painted ourselves into a corner on climate change — our planet is going to exceed 1.5 degrees Celsius of warming. And while greenhouse gas emissions aren’t rising as fast as they used to, we’re still emitting carbon dioxide at record-high levels, so fur…"
-      },
-      {
-        "title": "Why gay conversion therapy survivor Mathew Shurka says people like him are needed in Congress",
-        "url": "https://www.advocate.com/politics/national/mathew-shurka-conversion-therapy-congress",
-        "source": "Advocate.com",
-        "published_at": "2026-03-06T21:46:08Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Mathew Shurka says it’s time for a conversion therapy\r\n survivor to serve in Congress. Shurka is the cofounder of the anti-conversion therapy project Born Perfect."
-      },
-      {
-        "title": "Stratton Capital Group Closes $38 Million Bridge Loan for Class-A Multifamily Development in Fort Lauderdale",
-        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251338/0/en/Stratton-Capital-Group-Closes-38-Million-Bridge-Loan-for-Class-A-Multifamily-Development-in-Fort-Lauderdale.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-06T21:42:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "FORT LAUDERDALE, Fla., March 06, 2026 (GLOBE NEWSWIRE) -- Stratton Capital Group announced today the successful closing of a $38 million bridge loan for the development and stabilization of a Class-A multifamily community in Fort Lauderdale’s rapidly expandin…"
-      },
-      {
-        "title": "Japan, U.S. advance preparations for Takaichi-Trump summit",
-        "url": "https://japantoday.com/category/politics/update1-japan-u.s.-advance-preparations-for-takaichi-trump-summit",
-        "source": "Japan Today",
-        "published_at": "2026-03-06T21:41:09Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Japan's industry minister Ryosei Akazawa on Friday discussed the next round of joint business projects with U.S. Commerce Secretary Howard Lutnick, as part of preparations for a planned meeting between the two countries' leaders later this month. Before Japan…"
-      },
-      {
-        "title": "The death of diversity",
-        "url": "http://chicagoreader.com/news/feature-news-politics/trump-universities-dei-illnois-ui-northwestern/",
-        "source": "Chicago Reader",
-        "published_at": "2026-03-06T20:56:35Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The University of Illinois (UI) system’s administration emailed department heads on October 14 that it was pulling funding for scholarships awarded to students based on race. Jeremiah Abiade, head of a program created to support Black students pursuing career…"
-      },
-      {
-        "title": "Ahead Of ‘Hoppers,’ Take A Look At Animation’s Greatest Beavers",
-        "url": "https://www.cartoonbrew.com/cartoon-study/animations-greatest-beavers-hoppers-259330.html",
-        "source": "Cartoon Brew",
-        "published_at": "2026-03-06T20:20:39Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "From Golden Age shorts to Nickelodeon and beyond, a tour through the most memorable dam-building characters in animation history."
-      },
-      {
-        "title": "The tunnel that could double NYC rail capacity is finally back under construction",
-        "url": "https://www.timeout.com/newyork/news/the-tunnel-that-could-double-nyc-rail-capacity-is-finally-back-under-construction-030626",
-        "source": "Time Out",
-        "published_at": "2026-03-06T20:18:47Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "After a February funding scare shut down work and sent 1,000 workers home, construction has resumed on the long-delayed Hudson River rail tunnel."
-      },
-      {
-        "title": "War, Revolt, and Iran’s Unfinished Struggle",
-        "url": "https://dissentmagazine.org/online_articles/war-revolt-and-irans-unfinished-struggle/",
-        "source": "Dissentmagazine.org",
-        "published_at": "2026-03-06T20:12:34Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The protests and repression that preceded the U.S.–Israeli bombing campaign exposed both the fragility of the Iranian governing elite and the organizational weakness of Iranian civil society—dynamics that will continue to shape the country in the months to co…"
-      },
-      {
-        "title": "Georgia Black Neighborhoods, OpenAI, Claude, More: Friday Afternoon ResearchBuzz, March 6, 2026",
-        "url": "https://researchbuzz.me/2026/03/06/georgia-black-neighborhoods-openai-claude-more-friday-afternoon-researchbuzz-march-6-2026/",
-        "source": "Researchbuzz.me",
-        "published_at": "2026-03-06T19:58:05Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "NEW RESOURCES WUGA: New website documents historic displacement of Black neighborhoods in Downtown Athens . “R-51 displaced nearly 400 households and demolished community structures in the 1960s in Downtown Athens. The displacement […]"
-      },
-      {
-        "title": "Homecoming: The Tokyo Series Documentary",
-        "url": "https://www.truebluela.com/los-angeles-dodgers-television-media/110508/homecoming-the-tokyo-series-documentary-march-27-cnn",
-        "source": "True Blue LA",
-        "published_at": "2026-03-06T19:03:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "A reivew of the documentary covering baseball in Japan and the 2025 Tokyo Series hits streaming on March 27."
-      },
-      {
-        "title": "Eric Schmidt: big tech should power its own AI ambitions",
-        "url": "https://fortune.com/2026/03/06/eric-schmidt-former-google-ceo-big-tech-data-centers-grid-ai-utility-bills/",
-        "source": "Fortune",
-        "published_at": "2026-03-06T18:48:49Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Tech leaders should respond to the momentum coming from the White House."
-      },
-      {
-        "title": "New Toll Brothers Luxury Townhome Community Coming Soon to Redondo Beach, California",
-        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251223/1924/en/New-Toll-Brothers-Luxury-Townhome-Community-Coming-Soon-to-Redondo-Beach-California.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-06T18:16:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Toll Brothers at Redondo Beach offers exclusive three-story residences in a prime coastal location Toll Brothers at Redondo Beach offers exclusive three-story residences in a prime coastal location"
-      },
-      {
-        "title": "Gulf nations pessimistic about what Trump will leave behind",
-        "url": "https://www.abc.net.au/news/2026-03-07/gulf-states-pessimistic-about-what-trump-will-leave-behind/106418872",
-        "source": "ABC News (AU)",
-        "published_at": "2026-03-06T18:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "While the cabaret of outlandish and contradictory statements and claims continues in Washington, there is considerable pragmatic pessimism in the Gulf about the mess Donald Trump will leave behind."
-      },
-      {
-        "title": "When The Cloud Comes To Town: How Energy, Communities, And Accountability Need A Rethink",
-        "url": "https://www.forrester.com/blogs/when-the-cloud-comes-to-town-how-energy-communities-and-accountability-need-a-rethink/",
-        "source": "Forrester.com",
-        "published_at": "2026-03-06T17:53:07Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The rapid expansion of AI-driven data centers transforms what once seemed like invisible, back-end digital infrastructure into a highly visible, very localized challenge. According to Forrester’s US Tech Market Forecast, 2025 To 2030, AI could add 1.3 to 1.7 …"
       }
     ],
     "news_with_impact": [
       {
-        "title": "Dow Jones Futures Eye Oil Prices. Trump Says Iran War 'More Popular' Than Ever With MAGA Base. - Investor's Business Daily",
-        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-oil-prices-iran-war-supreme-leader/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-08T18:15:40Z",
+        "title": "Dow futures tumble 800 points as U.S. oil tops $100 a barrel to begin the week's trading: Live updates - CNBC",
+        "url": "https://www.cnbc.com/2026/03/08/stock-market-today-live-updates.html",
+        "source": "CNBC",
+        "published_at": "2026-03-09T00:17:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The Dow recorded its worst week since President Trump unveiled his tariff policy in April.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Bond Traders Already Had Their Hands Full, ‘Then a War Breaks Out’ - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/bond-traders-already-had-hands-133000660.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-09T00:11:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "With AI-related jitters reverberating through markets and private credit tremors setting off alarms, the chief investment officer at Pimco and manager of the...",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Stock and Bond Traders Eye Another Volatile Open - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-08/stock-and-bond-traders-eye-another-volatile-open-markets-wrap",
+        "source": "Bloomberg",
+        "published_at": "2026-03-08T21:22:29Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Escalating hostilities in the Middle East and widening stress on oil shipping and infrastructure had global investors braced for more turbulence when trading resumes Sunday.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "OpenAI robotics leader resigns over concerns about Pentagon AI deal - NPR",
+        "url": "https://www.npr.org/2026/03/08/nx-s1-5741779/openai-resigns-ai-pentagon-guardrails-military",
+        "source": "NPR",
+        "published_at": "2026-03-08T20:44:11Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A senior member of OpenAI's robotics team said guardrails around certain AI uses were not sufficiently defined before OpenAI announced an agreement with the Pentagon.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "War escalation, jobs report fallout, and Oracle earnings: What to watch this week - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/war-escalation-jobs-report-fallout-and-oracle-earnings-what-to-watch-this-week-114534070.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-08T19:59:46Z",
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "War disruptions may send oil to $150 to $200 a barrel. Here's my advice for stock investors - CNBC",
+        "url": "https://www.cnbc.com/2026/03/08/jim-cramers-advice-for-investors-during-us-iran-war-oil-surge.html",
+        "source": "CNBC",
+        "published_at": "2026-03-08T19:27:51Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "In his Sunday column for Investing Club subscribers, Jim Cramer explains how investors should navigate a continued surge in oil prices.",
         "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Philadelphia food stand overwhelmed when 600 tubs of onion dip mysteriously appear, prompting investigation - Fox Business",
+        "url": "https://www.foxbusiness.com/retail/philadelphia-food-stand-overwhelmed-when-600-tubs-onion-dip-mysteriously-appear-prompting-investigation",
+        "source": "Fox Business",
+        "published_at": "2026-03-08T19:05:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A Philadelphia food stand owner says she received 600 tubs of French onion dip she never ordered.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Video shows Southwest flight passengers holding hands up during security scare - KTLA",
+        "url": "https://ktla.com/news/nationworld/video-shows-southwest-flight-passengers-holding-hands-up-during-security-scare/",
+        "source": "KTLA Los Angeles",
+        "published_at": "2026-03-08T18:38:30Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A Southwest Airlines flight headed from Nashville to Fort Lauderdale was diverted to Atlanta Friday night after a possible security scare prompted authorities to respond and remove a passenger from the aircraft, footage shows. Video obtained by KTLA shows a t…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Actor and former 'SNL' star slams major airline for his seat downgrade: ‘I paid for first class’ - Fox News",
+        "url": "https://www.foxnews.com/travel/actor-former-snl-star-slams-major-airline-seat-downgrade-i-paid-first-class",
+        "source": "Fox News",
+        "published_at": "2026-03-08T18:15:37Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "An actor and comedian has alleged that American Airlines downgraded him from first class to economy on a red-eye flight, sparking controversy over airline practices.",
+        "impact_score": 65,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "The changing goalposts of AGI and timelines - Hacker News",
+        "url": "https://news.ycombinator.com/item?id%5C%5Cu003d47299009=",
+        "source": "Hacker News",
+        "published_at": "2026-03-08T18:01:14Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Is AI productivity prompting burnout? Study finds new pattern of \"AI brain fry\" - CBS News",
+        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQZ3FSYzJiSGRRQXdHRmt2WGY0Z0hqcEZWcndHdUtCTUZhY01lYUlKV3FNNWVWMmJvcEpUc0RkaGdHUFNlME5UaGFDOVppdklMQmljM2FFS0FTWUctaEE1TmxHUk5BWmJMS1Y4bVBTSjY2eVh1ZHJLa1VGekFfRm9xZnhXUEdlYWgzT2tWMVRreXA2SWt2Z2NDdU5iRTdCWG1rVVRjSlV3NDBiZ9IBrwFBVV95cUxQV3Z1NWlLZU9PcXRaeVRxWEUxZHBPMGtYQXNpblRkLTZpb0Q3VnhmTU5vOHpaeUphMDNLU3hTUXpBMWR5c2c2TEtnSU0xd24xaFRCWmlhZHlybG9vdDZZYUNxWEpMbl9ES01PLUt0bEZSTWE3ZndkNWVFaGhoaHdjenhXYWJrdDdQR2d3SFZXdk9BU3Zqek5OWHkyakJwSjk3WldhanBvVjdkRVd6Wk5N?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-08T17:56:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Schumer calls on Trump to release oil from reserve to lower gas prices - Axios",
+        "url": "https://www.axios.com/2026/03/08/schumer-republicans-trump-oil-reserve-gas-prices",
+        "source": "Axios",
+        "published_at": "2026-03-08T17:42:43Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Republicans have been slow to embrace the idea.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Swiss vote places right to use cash in country’s constitution - politico.eu",
+        "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1lbFQyMlo0c21sT3B4TE15UFh5aWRpakl4QjcwTUdKdEtkZFd0SXFOYmxFLWZIazBRa2RHUXJoZmVQQ0xZSUh1Y0RLc3lCLVVzaVFBUkVMcDRveHRfSzUxdjQ3X3VBQnF0RjJwU3JERFlrWDB6NjhSUkJ0TFBZZw?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-08T17:18:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Analyzing the SpaceX IPO: What would it take to justify a $1.5 trillion market cap? - Fortune",
+        "url": "https://fortune.com/2026/03/08/is-space-x-profitable-ipo-stock-date-earnings-outlook/",
+        "source": "Fortune",
+        "published_at": "2026-03-08T16:32:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The real moonshoot? Hitting the financial targets it would take to justify the market cap Elon Musk has been musing about.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "TechCrunch Mobility: Rivian’s R2 gambit - TechCrunch",
+        "url": "https://techcrunch.com/2026/03/08/techcrunch-mobility-rivians-r2-gambit/",
+        "source": "TechCrunch",
+        "published_at": "2026-03-08T16:03:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Welcome back to TechCrunch Mobility, your hub for all things “future of transportation.”",
+        "impact_score": 40,
         "themes": [
           "other"
         ]
@@ -1128,55 +1337,68 @@
         ]
       },
       {
-        "title": "Oil market prepares for $100 a barrel as Middle East producers cut output - Financial Times",
-        "url": "https://www.ft.com/content/56a01aa5-98af-48f0-b580-89e7bb4f59f6",
-        "source": "Financial Times",
-        "published_at": "2026-03-08T15:39:18Z",
+        "title": "America’s Natural-Gas Bounty Is Cushioning U.S. Markets From Global Shocks - WSJ",
+        "url": "https://www.wsj.com/finance/commodities-futures/americas-natural-gas-bounty-is-cushioning-u-s-markets-from-global-shocks-4085f589",
+        "source": "The Wall Street Journal",
+        "published_at": "2026-03-08T16:00:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": null,
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "War escalation, jobs report fallout, and Oracle earnings: What to watch this week - Yahoo Finance",
-        "url": "https://finance.yahoo.com/news/war-escalation-jobs-report-fallout-and-oracle-earnings-what-to-watch-this-week-114534070.html",
-        "source": "Yahoo Entertainment",
-        "published_at": "2026-03-08T14:58:10Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "US equities ended the week starkly in the red as the war in Iran and the ensuing surge in global oil prices have rankled the global economy.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Oil Market Chaos Set to Deepen as More Gulf Giants Cut Output - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-08/oil-market-chaos-set-to-deepen-as-more-gulf-giants-cut-output",
+        "title": "I Wrote A Resume For A $180,000 Job Using ChatGPT 5.4. This Happened - Forbes",
+        "url": "https://www.forbes.com/sites/rachelwells/2026/03/08/i-wrote-a-resume-for-a-180000-job-using-chatgpt-54-this-happened/",
+        "source": "Forbes",
+        "published_at": "2026-03-08T15:14:34Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "How do you write a resume using AI? I tested ChatGPT 5.4 and compared it to ChatGPT 5.2, to create an executive resume for a project director job. Here's what happened.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "5 lessons from Vinay Prasad’s turbulent tenure at the FDA - statnews.com",
+        "url": "https://www.statnews.com/2026/03/08/vinay-prasad-fda-lessons-from-tenure/",
+        "source": "STAT",
+        "published_at": "2026-03-08T15:12:06Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Vinay Prasad's unique ability to attract criticism — even when his bosses, including the president, wanted him to keep his head low — did him in at the FDA.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Trump’s Canada Trade War Hits Jack Daniel’s and Jim Beam With a 'Devastating' $143 Million Loss - inc.com",
+        "url": "https://www.inc.com/leila-sheridan/trumps-canada-trade-war-hits-jack-daniels-and-jim-beam-with-a-devastating-143-million-loss/91313385",
+        "source": "Inc.",
+        "published_at": "2026-03-08T14:31:36Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "From #2 to #6: America’s whiskey export market in Canada has collapsed by 70%. As Jim Beam shutters its main distillery for 2026 and Jack Daniel’s vanishes from shelves, U.S. distillers warn the $143 million fallout is just the beginning.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Aramco Shares Surge Most Since 2023 as War Roils Energy Markets - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-08/aramco-shares-surge-most-since-2023-as-war-roils-energy-markets",
         "source": "Bloomberg",
-        "published_at": "2026-03-08T13:32:09Z",
+        "published_at": "2026-03-08T13:21:53Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Oil markets are set for yet more chaos on Monday as the war in Iran unleashes unprecedented disruption: major producers are curbing output as storage fills up and the most important waterway for global energy markets remains all but closed.",
+        "description": "Saudi Aramco jumped the most since April 2023 on Sunday as the Iran war entered its second week, prompting supply disruptions that may send oil prices higher when global markets reopen.",
         "impact_score": 55,
         "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "OpenAI hardware leader resigns after deal with the Pentagon - CNBC",
-        "url": "https://www.cnbc.com/2026/03/08/openai-hardware-leader-resigns-after-deal-with-the-pentagon.html",
-        "source": "CNBC",
-        "published_at": "2026-03-08T12:43:30Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Kalinowski wrote she has \"deep respect\" for OpenAI CEO Sam Altman and the team, but the company announced the ⁠Pentagon deal \"without the guardrails defined.\"",
-        "impact_score": 40,
-        "themes": [
-          "other"
+          "materials"
         ]
       },
       {
@@ -1199,7 +1421,20 @@
         "published_at": "2026-03-08T12:30:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
+        "description": "Shoppers who’ve tried the Activscience Triple Firming Neck Cream say it reduces crepiness, tightens skin, and smooths out turkey neck in less than two weeks. Shop the anti-aging retinol neck cream for only $25 on Amazon.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Grocery Outlet To Close 36 Stores: What To Know - Newsweek",
+        "url": "https://www.newsweek.com/grocery-outlet-closure-stores-11641147",
+        "source": "Newsweek",
+        "published_at": "2026-03-08T12:21:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Grocery Outlet plans to close 36 underperforming stores in 2026 after expanding too quickly, while still opening to 33 new locations.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1219,221 +1454,247 @@
         ]
       },
       {
-        "title": "Iran war muddles expectations of likely Federal Reserve interest rate cuts - Financial Times",
-        "url": "https://www.ft.com/content/176a8568-5982-459a-a36a-d2cbf577568a",
-        "source": "Financial Times",
-        "published_at": "2026-03-08T11:00:05Z",
+        "title": "REI’s weekend sale features up to 50% off Patagonia, Arc’teryx and Brooks — here’s 17 deals I’d jump on - Tom's Guide",
+        "url": "https://www.tomsguide.com/wellness/fitness/reis-weekend-sale-features-up-to-50-percent-off-patagonia-arcteryx-and-brooks-heres-17-deals-id-jump-on",
+        "source": "Tom's Guide",
+        "published_at": "2026-03-08T11:30:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Oil price surge and a softening labour market complicate US central bank’s ability to boost output while containing inflation",
-        "impact_score": 55,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "KKR eyes multibillion-dollar sale of data centre cooling company - Financial Times",
-        "url": "https://www.ft.com/content/b1784f74-7a91-4e04-b507-cc5b13920f51",
-        "source": "Financial Times",
-        "published_at": "2026-03-08T10:00:05Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Private capital firm seeks big return on investment in CoolIT Systems as AI boom boosts valuations",
-        "impact_score": 30,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Millions of jobs vulnerable as ‘silver tsunami’ looms over US small businesses, experts warn - Fox Business",
-        "url": "https://www.foxbusiness.com/small-business/millions-jobs-vulnerable-silver-tsunami-looms-us-small-businesses-experts-warn",
-        "source": "Fox Business",
-        "published_at": "2026-03-08T09:30:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Nearly half of U.S. small-business owners are 55 or older, and with many lacking succession plans, jobs and local economies could face disruptions in the coming decade, experts warn.",
+        "description": "Refresh your spring wardrobe this weekend",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Prediction: The Trump Bull Market Will Soon End -- and More Than 150 Years of Historical Precedent Explains Why - The Motley Fool",
-        "url": "https://www.fool.com/investing/2026/03/08/prediction-trump-bull-market-end-150-years-history/",
-        "source": "Motley Fool",
-        "published_at": "2026-03-08T09:06:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Wall Street's bull market rally under Trump is running on borrowed time.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "At a lobster-themed event for AI enthusiasts, exuberance with a side of cocktail sauce - NBC News",
-        "url": "https://www.nbcnews.com/tech/tech-news/lobster-themed-event-ai-enthusiasts-exuberance-side-cocktail-sauce-rcna261892",
+        "title": "This case keeps all your cords organized while you travel and it’s currently on sale for under $9 - NBC News",
+        "url": "https://www.nbcnews.com/select/shopping/fyy-cable-organizer-deal-rcna262182",
         "source": "NBC News",
-        "published_at": "2026-03-08T09:00:41Z",
+        "published_at": "2026-03-08T11:00:39Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "NEW YORK — As a man wearing a neon-blue jellyfish hat fought off draping tentacles to scroll through his phone and find the latest message from his personal AI assistant, three people wearing Pegasus wings flitted through a sweaty Manhattan apartment-turned-b…",
+        "description": "NBC Select editors love the FYY Cable Organizer as a way of staying organized while traveling and right now it is 31% off",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Iran war fallout grows as China struggles to import vital fertiliser chemical - South China Morning Post",
-        "url": "https://www.scmp.com/economy/china-economy/article/3345761/iran-war-hits-chinas-sulphur-imports-economic-fallout-conflict-grows",
-        "source": "Post Magazine",
-        "published_at": "2026-03-08T09:00:08Z",
+        "title": "Ford builds one-of-a-kind Explorer for Pope Leo XIV - Fox Business",
+        "url": "https://www.foxbusiness.com/lifestyle/ford-builds-one-of-a-kind-explorer-pope-leo-xiv",
+        "source": "Fox Business",
+        "published_at": "2026-03-08T11:00:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Supplies of sulphur – a key fertiliser ingredient – are tightening in China just as the spring planting season begins.",
+        "description": "Ford CEO Jim Farley and wife Lia gifted Pope Leo XIV a customized Explorer SUV during a private Vatican audience on Feb. 28, featuring Chicago-themed details and a hybrid powertrain.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "A New Generation of Mall Rats Has Arrived - WSJ",
-        "url": "https://www.wsj.com/business/retail/gen-z-shopping-mall-visits-15716009",
-        "source": "The Wall Street Journal",
-        "published_at": "2026-03-08T06:03:20Z",
+        "title": "hamon added to PyPI",
+        "url": "https://pypi.org/project/hamon/",
+        "source": "Pypi.org",
+        "published_at": "2026-03-09T01:54:34Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": null,
+        "feed": "everything",
+        "description": "JAX-native thermal sampling for discrete energy-based models",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Gas prices jump across Southern California, with Los Angeles County seeing average of $5.17 per gallon, amid war in Iran - ABC7 Los Angeles",
-        "url": "https://abc7.com/post/gas-prices-jump-southern-california-los-angeles-county-seeing-average-517-gallon-amid-war-iran/18691262/",
-        "source": "KABC-TV",
-        "published_at": "2026-03-08T05:40:12Z",
+        "title": "Smartplay Signed a White Paper on Multi-Field Data Cooperation with Relevant Institutions in Taiwan",
+        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251489/0/en/Smartplay-Signed-a-White-Paper-on-Multi-Field-Data-Cooperation-with-Relevant-Institutions-in-Taiwan.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-09T01:39:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The statewide average climbed above $5 per gallon and some drivers encountered prices more than $8 at the pump.",
+        "feed": "everything",
+        "description": "EDGEWATER PARK, N.J., March 08, 2026 (GLOBE NEWSWIRE) -- Smartplay International, Inc., a leading global provider of lottery drawing systems and random number generation technologies, today announced that it has formally signed “High-Value Industry Data Coope…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Report: Cincinnati sees largest spike in gas prices anywhere in the US since start of Iran war - WLWT",
-        "url": "https://www.wlwt.com/article/cincinnati-drivers-see-largest-spike-in-gas-prices-in-nation/70650799",
-        "source": "WLWT Cincinnati",
-        "published_at": "2026-03-08T02:10:00Z",
+        "title": "Beijing warns of more chip supply worries after Nexperia China claims it was cut off from SAP",
+        "url": "https://www.theregister.com/2026/03/09/asia_tech_news_roundup/",
+        "source": "Theregister.com",
+        "published_at": "2026-03-09T01:13:48Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "As drivers have headed to the pump across the country over the past week, a new report indicates that no other metro area has been hit harder than Cincinnati since the start of the U.S.-Iran war.",
+        "feed": "everything",
+        "description": "PLUS: Indonesia joins kids social media ban; China frets about AI job impacts; India’s PC market fails to launch, again; And more\nChina’s Ministry of Commerce has warned of further disruption to the global semiconductor supply chain after Dutch chipmaker Nexp…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "War to force Gulf producers to stop energy exports within days, push oil to $150, Qatar minister says - Seeking Alpha",
-        "url": "https://seekingalpha.com/news/4562067-war-will-force-gulf-producers-to-stop-energy-exports-within-days-qatar-energy-minister-says",
-        "source": "Seeking Alpha",
-        "published_at": "2026-03-08T01:25:25Z",
+        "title": "Trump's 'roaring' economy meets a rough start to 2026: What the latest numbers show",
+        "url": "https://economictimes.indiatimes.com/news/international/global-trends/trumps-roaring-economy-meets-a-rough-start-to-2026-what-the-latest-numbers-show/articleshow/129300699.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-09T01:07:59Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Qatar's energy minister said the Middle East war could \"bring down the economies of the world,\" all Persian Gulf energy exporters would shut down production within days and drive oil to $150",
-        "impact_score": 55,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "Paramount Eyes Changes to Historic Studio Lot Following Warner Bros. Merger - The Hollywood Reporter",
-        "url": "http://www.hollywoodreporter.com/business/business-news/paramount-studio-lot-changes-warner-bros-merger-1236524430/",
-        "source": "Hollywood Reporter",
-        "published_at": "2026-03-08T00:30:14Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The lot has hosted productions for films such as 'The Godfather,' 'Titanic' and the 'Mission: Impossible' franchise.",
+        "feed": "everything",
+        "description": "President Trump's predictions of a booming economy in 2026 are being challenged by recent data showing job losses, rising gas prices, and stock market declines. Despite his optimistic rhetoric, economic indicators suggest a volatile start to the year, potenti…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "'Potential security threat' diverts Southwest flight from Nashville, passenger removed - The Tennessean",
-        "url": "https://www.tennessean.com/story/news/crime/2026/03/07/bna-southwest-flight-diverted-to-atlanta-potential-security-threat/89036039007/",
-        "source": "Tennessean",
-        "published_at": "2026-03-08T00:24:00Z",
+        "title": "India Should Read This Book On The Chinese 'Engineering State'",
+        "url": "https://swarajyamag.com/books/india-should-read-this-book-on-the-chinese-engineering-state",
+        "source": "Swarajya",
+        "published_at": "2026-03-09T00:00:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Passengers traveling from Nashville to Fort Lauderdale arrived at their destination in the wee hours of the morning March 7, due to a potential security threat.",
+        "feed": "everything",
+        "description": "Hoover Institution fellow Dan Wang is a Canadian of Chinese origin who spent his early childhood and then a few years inside China during the Covid pandemic.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Hims And Hers Surges 40% On Deal To Sell Novo Nordisk Obesity Drugs - Investor's Business Daily",
-        "url": "https://www.investors.com/news/hims-and-hers-stock-surges-40-deal-sell-novo-nordisk-obesity-drugs/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-07T21:57:00Z",
+        "title": "Bragar Eagel & Squire, P.C. Reminds Investors That Class Action Lawsuits Have Been Filed Against BlackRock TCP and Plug Power and Encourages Investors to Contact the Firm",
+        "url": "https://www.globenewswire.com/news-release/2026/03/08/3251482/0/en/Bragar-Eagel-Squire-P-C-Reminds-Investors-That-Class-Action-Lawsuits-Have-Been-Filed-Against-BlackRock-TCP-and-Plug-Power-and-Encourages-Investors-to-Contact-the-Firm.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-08T23:39:00Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Novo Nordisk reportedly will sell its weight-loss drugs via the online pharmacy.",
+        "feed": "everything",
+        "description": "NEW YORK, March 08, 2026 (GLOBE NEWSWIRE) -- Bragar Eagel & Squire, P.C., a nationally recognized shareholder rights law firm, reminds investors that class actions have been commenced on behalf of stockholders of BlackRock TCP Capital Corp. (NASDAQ:TCPC) and …",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Fast food brands get snarky after McDonald's CEO burger tasting mishap - USA Today",
-        "url": "https://www.usatoday.com/story/money/food/2026/03/07/mcdonalds-ceo-taste-videos/89036141007/",
-        "source": "USA Today",
-        "published_at": "2026-03-07T21:25:00Z",
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show",
+        "url": "https://japantoday.com/category/business/trump%E2%80%99s-%E2%80%98roaring%E2%80%99-economy-meets-a-rough-start-to-2026-what-the-latest-numbers-show",
+        "source": "Japan Today",
+        "published_at": "2026-03-08T21:33:28Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "After McDonald's posted a widely mocked video of its CEO, competitors took to social media with videos, jokes and unrelated fights.",
+        "feed": "everything",
+        "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth, but instead it has kicked off with job losses, rising gasoline prices and more uncertainty about America's future. In his State of the Union address less than two weeks ago,…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Coinbase says new U.S. tax-reporting rules for crypto are cluttered, confusing - CoinDesk",
-        "url": "https://www.coindesk.com/policy/2026/03/07/coinbase-says-new-u-s-tax-reporting-rules-for-crypto-are-wasteful-onerous",
-        "source": "CoinDesk",
-        "published_at": "2026-03-07T21:01:29Z",
+        "title": "The Economic Impact Of This Horrifying War With Iran Is Not Going To Be Pretty",
+        "url": "http://theeconomiccollapseblog.com/the-economic-impact-of-this-horrifying-war-with-iran-is-not-going-to-be-pretty/",
+        "source": "Theeconomiccollapseblog.com",
+        "published_at": "2026-03-08T21:25:17Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The IRS’s 1099-DA tax form for reporting digital asset gains comes with a burden of over-reporting, Coinbase's tax experts warned.",
+        "feed": "everything",
+        "description": "There is no way to get around it. We are facing a major global economic disruption, and the longer this war goes on the worse it will get. As I have reminded my readers on numerous occasions, our entire way of life is predicated on cheap energy, and the Middl…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "A Bizarre International War Inside One Chip Company Threatens the Global Automotive Industry - Gizmodo",
-        "url": "https://gizmodo.com/a-bizarre-international-war-inside-one-chip-company-threatens-the-global-automotive-industry-2000729914",
-        "source": "Gizmodo.com",
-        "published_at": "2026-03-07T20:06:36Z",
+        "title": "Pro-American Groups Welcome Trump's DHS Pick Markwayne Mullin",
+        "url": "https://www.breitbart.com/economy/2026/03/08/pro-american-groups-praise-trumps-dhs-pick-markwayne-mullin/",
+        "source": "Breitbart News",
+        "published_at": "2026-03-08T21:09:06Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The international divisions at Nexperia seem to hate each other so much that Chinese-Dutch international diplomacy has failed to smoothed things over.",
+        "feed": "everything",
+        "description": "Pro-American lobby groups cautiously praised President Donald Trump's decision to pick Sen. Markwayne Mullin as the new Secretary of the Department of Homeland Security.\nThe post Pro-American Groups Welcome Trump’s DHS Pick Markwayne Mullin appeared first on …",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Ford recalls 1.74 million of its cars over rearview display issues - AP News",
-        "url": "https://apnews.com/article/ford-car-recall-rearview-camera-display-69a846973b55f00b8e7b584c7b25cd6b",
-        "source": "Associated Press",
-        "published_at": "2026-03-07T20:06:00Z",
+        "title": "‘They See Great Opportunity’: Interior Secretary Burgum Shows How US-Venezuela Partnership Is Already Paying Dividends",
+        "url": "https://dailycaller.com/2026/03/08/great-opportunity-doug-burgum-shows-united-states-venezuela-partnership-paying-dividends-fox-news-sunday-briefing-peter-doocy/",
+        "source": "The Daily Caller",
+        "published_at": "2026-03-08T21:00:35Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Ford has issued two recalls affecting nearly 1.74 million of its cars in the U.S., due to software issues impacting the vehicles’ rearview camera displays that could increase crash risks. According to notices published by the National Highway Traffic Safety A…",
+        "feed": "everything",
+        "description": "Interior Secretary Doug Burgum said Sunday that, since the capture of dictator Nicolás Maduro, the U.S. has benefitted from its new partnership with Venezuela.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Europe’s Most Expensive and Cheapest Countries for Hotels and Restaurants in 2026",
+        "url": "https://johnnyjet.com/europes-most-expensive-and-cheapest-countries-for-hotels-and-restaurants-in-2026/",
+        "source": "Johnnyjet.com",
+        "published_at": "2026-03-08T20:58:29Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Planning a trip to Europe in 2026? Your travel budget may stretch much further or disappear much faster depending on where you go. A recent analysis highlighted by Euronews, using...\nThe post Europe’s Most Expensive and Cheapest Countries for Hotels and Resta…",
+        "impact_score": 40,
+        "themes": [
+          "commercial"
+        ]
+      },
+      {
+        "title": "Tesla opens its first Megacharger station to Semi customers in California",
+        "url": "http://electrek.co/2026/03/08/tesla-opens-first-megacharger-ontario-california-semi-customers/",
+        "source": "Electrek",
+        "published_at": "2026-03-08T20:54:43Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Tesla has opened its first Megacharger station to Semi customers at a new location in Ontario, California, marking a significant milestone in its push to build a charging network for electric trucks.\n\n\n\nThe opening comes as Tesla ramps up Semi production at i…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "20×9″ and 20×11″ Carbon-Fiber Wheels for Ferrari",
+        "url": "https://bringatrailer.com/listing/wheels-443/",
+        "source": "Bringatrailer.com",
+        "published_at": "2026-03-08T20:40:10Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "These 20″ wheels were produced by Carbon Revolution in Australia for use on Ferrari F8s. They measure 9″ and 11″ in width and feature carbon-fiber construction, a 10-spoke design, and an exposed carbon-fiber finish. Stickers applied to the inner barrels indic…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Climate lawfare is handing gifts to Moscow, Beijing",
+        "url": "https://www.wnd.com/2026/03/climate-lawfare-is-handing-gifts-moscow-beijing/",
+        "source": "Wnd.com",
+        "published_at": "2026-03-08T19:44:56Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Litigation risks doing what rival powers long have sought, undermining foundation of America's economic strength",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Why America must win the AI race",
+        "url": "https://www.wnd.com/2026/03/why-america-must-win-ai-race/",
+        "source": "Wnd.com",
+        "published_at": "2026-03-08T19:32:20Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Trump proposed a paradigm shift: 'May we be as bold to embrace it as he was to propose it'",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "GitHub - ruvnet/RuView: π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
+        "url": "https://github.com/ruvnet/RuView?tab=readme-ov-file",
+        "source": "Github.com",
+        "published_at": "2026-03-08T19:21:21Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Instead of relying on cameras or cloud models, it observes whatever signals exist in a space such as WiFi, radio waves across the spectrum, motion patterns, vibration, sound, or other sensory inputs and builds an understanding of what is happening locally. Bu…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2170,19 +2431,6 @@
         ]
       },
       {
-        "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
-        "url": "https://www.nature.com/articles/s41467-026-70501-4",
-        "source": "Nature.com",
-        "published_at": "2026-03-07T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Discovery of van Hove singularities: electronic fingerprints of 3Q magnetic order in a van der Waals quantum magnet",
         "url": "https://www.nature.com/articles/s41467-026-70063-5",
         "source": "Nature.com",
@@ -2190,6 +2438,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "Cobalt intercalated TaS2 has recently been found to host 3Q antiferromagnetic order. This 3Q state occurs coexists with a very large anomalous hall effect, and shows strong sensitivity to Cobalt concentration. Here, Luo and coauthors perform doping dependent …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Ligand engineering tailors hydrophobic microenvironments for efficient electrocatalytic oxidation of fatty alcohol",
+        "url": "https://www.nature.com/articles/s41467-026-70501-4",
+        "source": "Nature.com",
+        "published_at": "2026-03-07T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Electrocatalytic oxidation of fatty alcohols in aqueous media is limited by mass transport due to their low solubility. Here, the authors propose ligand engineering to create hydrophobic microenvironments in Nickel MOFs, enabling efficient oxidation to fatty …",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2207,204 +2468,22 @@
         "themes": [
           "materials"
         ]
-      },
+      }
+    ],
+    "top_high_impact": [
       {
-        "title": "Show HN: PlateSpinner – A Kanban board that orchestrates AI coding agents",
-        "url": "https://github.com/moridinamael/platespinner",
-        "source": "Github.com",
-        "published_at": "2026-03-06T21:57:55Z",
+        "title": "Actor and former 'SNL' star slams major airline for his seat downgrade: ‘I paid for first class’ - Fox News",
+        "url": "https://www.foxnews.com/travel/actor-former-snl-star-slams-major-airline-seat-downgrade-i-paid-first-class",
+        "source": "Fox News",
+        "published_at": "2026-03-08T18:15:37Z",
         "provider": "newsapi",
-        "feed": "everything",
-        "description": "PlateSpinner is a local web app that manages AI coding agents through a kanban board. You point it at a project directory, describe what you want, and it spawns headless Claude Code / Codex / Gemini sessions to generate tasks, plan implementations, and write …",
-        "impact_score": 40,
+        "feed": "top_headlines",
+        "description": "An actor and comedian has alleged that American Airlines downgraded him from first class to economy on a red-eye flight, sparking controversy over airline practices.",
+        "impact_score": 65,
         "themes": [
           "capital"
         ]
       },
-      {
-        "title": "The case for scrubbing the seas to save the climate",
-        "url": "https://www.vox.com/climate/481882/ocean-marine-climate-co2-carbon-removal-acidification",
-        "source": "Vox",
-        "published_at": "2026-03-06T21:49:17Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "We’ve painted ourselves into a corner on climate change — our planet is going to exceed 1.5 degrees Celsius of warming. And while greenhouse gas emissions aren’t rising as fast as they used to, we’re still emitting carbon dioxide at record-high levels, so fur…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Why gay conversion therapy survivor Mathew Shurka says people like him are needed in Congress",
-        "url": "https://www.advocate.com/politics/national/mathew-shurka-conversion-therapy-congress",
-        "source": "Advocate.com",
-        "published_at": "2026-03-06T21:46:08Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Mathew Shurka says it’s time for a conversion therapy\r\n survivor to serve in Congress. Shurka is the cofounder of the anti-conversion therapy project Born Perfect.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Stratton Capital Group Closes $38 Million Bridge Loan for Class-A Multifamily Development in Fort Lauderdale",
-        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251338/0/en/Stratton-Capital-Group-Closes-38-Million-Bridge-Loan-for-Class-A-Multifamily-Development-in-Fort-Lauderdale.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-06T21:42:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "FORT LAUDERDALE, Fla., March 06, 2026 (GLOBE NEWSWIRE) -- Stratton Capital Group announced today the successful closing of a $38 million bridge loan for the development and stabilization of a Class-A multifamily community in Fort Lauderdale’s rapidly expandin…",
-        "impact_score": 40,
-        "themes": [
-          "residential"
-        ]
-      },
-      {
-        "title": "Japan, U.S. advance preparations for Takaichi-Trump summit",
-        "url": "https://japantoday.com/category/politics/update1-japan-u.s.-advance-preparations-for-takaichi-trump-summit",
-        "source": "Japan Today",
-        "published_at": "2026-03-06T21:41:09Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Japan's industry minister Ryosei Akazawa on Friday discussed the next round of joint business projects with U.S. Commerce Secretary Howard Lutnick, as part of preparations for a planned meeting between the two countries' leaders later this month. Before Japan…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "The death of diversity",
-        "url": "http://chicagoreader.com/news/feature-news-politics/trump-universities-dei-illnois-ui-northwestern/",
-        "source": "Chicago Reader",
-        "published_at": "2026-03-06T20:56:35Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The University of Illinois (UI) system’s administration emailed department heads on October 14 that it was pulling funding for scholarships awarded to students based on race. Jeremiah Abiade, head of a program created to support Black students pursuing career…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Ahead Of ‘Hoppers,’ Take A Look At Animation’s Greatest Beavers",
-        "url": "https://www.cartoonbrew.com/cartoon-study/animations-greatest-beavers-hoppers-259330.html",
-        "source": "Cartoon Brew",
-        "published_at": "2026-03-06T20:20:39Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "From Golden Age shorts to Nickelodeon and beyond, a tour through the most memorable dam-building characters in animation history.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "The tunnel that could double NYC rail capacity is finally back under construction",
-        "url": "https://www.timeout.com/newyork/news/the-tunnel-that-could-double-nyc-rail-capacity-is-finally-back-under-construction-030626",
-        "source": "Time Out",
-        "published_at": "2026-03-06T20:18:47Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "After a February funding scare shut down work and sent 1,000 workers home, construction has resumed on the long-delayed Hudson River rail tunnel.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "War, Revolt, and Iran’s Unfinished Struggle",
-        "url": "https://dissentmagazine.org/online_articles/war-revolt-and-irans-unfinished-struggle/",
-        "source": "Dissentmagazine.org",
-        "published_at": "2026-03-06T20:12:34Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The protests and repression that preceded the U.S.–Israeli bombing campaign exposed both the fragility of the Iranian governing elite and the organizational weakness of Iranian civil society—dynamics that will continue to shape the country in the months to co…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Georgia Black Neighborhoods, OpenAI, Claude, More: Friday Afternoon ResearchBuzz, March 6, 2026",
-        "url": "https://researchbuzz.me/2026/03/06/georgia-black-neighborhoods-openai-claude-more-friday-afternoon-researchbuzz-march-6-2026/",
-        "source": "Researchbuzz.me",
-        "published_at": "2026-03-06T19:58:05Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "NEW RESOURCES WUGA: New website documents historic displacement of Black neighborhoods in Downtown Athens . “R-51 displaced nearly 400 households and demolished community structures in the 1960s in Downtown Athens. The displacement […]",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Homecoming: The Tokyo Series Documentary",
-        "url": "https://www.truebluela.com/los-angeles-dodgers-television-media/110508/homecoming-the-tokyo-series-documentary-march-27-cnn",
-        "source": "True Blue LA",
-        "published_at": "2026-03-06T19:03:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "A reivew of the documentary covering baseball in Japan and the 2025 Tokyo Series hits streaming on March 27.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Eric Schmidt: big tech should power its own AI ambitions",
-        "url": "https://fortune.com/2026/03/06/eric-schmidt-former-google-ceo-big-tech-data-centers-grid-ai-utility-bills/",
-        "source": "Fortune",
-        "published_at": "2026-03-06T18:48:49Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Tech leaders should respond to the momentum coming from the White House.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "New Toll Brothers Luxury Townhome Community Coming Soon to Redondo Beach, California",
-        "url": "https://www.globenewswire.com/news-release/2026/03/06/3251223/1924/en/New-Toll-Brothers-Luxury-Townhome-Community-Coming-Soon-to-Redondo-Beach-California.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-06T18:16:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Toll Brothers at Redondo Beach offers exclusive three-story residences in a prime coastal location Toll Brothers at Redondo Beach offers exclusive three-story residences in a prime coastal location",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Gulf nations pessimistic about what Trump will leave behind",
-        "url": "https://www.abc.net.au/news/2026-03-07/gulf-states-pessimistic-about-what-trump-will-leave-behind/106418872",
-        "source": "ABC News (AU)",
-        "published_at": "2026-03-06T18:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "While the cabaret of outlandish and contradictory statements and claims continues in Washington, there is considerable pragmatic pessimism in the Gulf about the mess Donald Trump will leave behind.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "When The Cloud Comes To Town: How Energy, Communities, And Accountability Need A Rethink",
-        "url": "https://www.forrester.com/blogs/when-the-cloud-comes-to-town-how-energy-communities-and-accountability-need-a-rethink/",
-        "source": "Forrester.com",
-        "published_at": "2026-03-06T17:53:07Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The rapid expansion of AI-driven data centers transforms what once seemed like invisible, back-end digital infrastructure into a highly visible, very localized challenge. According to Forrester’s US Tech Market Forecast, 2025 To 2030, AI could add 1.3 to 1.7 …",
-        "impact_score": 40,
-        "themes": [
-          "materials"
-        ]
-      }
-    ],
-    "top_high_impact": [
       {
         "title": "US to offer services in illegal West Bank settlements as Israel pushes for annexation",
         "url": "https://www.globalsecurity.org/military/library/news/2026/03/mil-260306-presstv02.htm",
@@ -2432,65 +2511,52 @@
         ]
       },
       {
-        "title": "Dow Jones Futures Eye Oil Prices. Trump Says Iran War 'More Popular' Than Ever With MAGA Base. - Investor's Business Daily",
-        "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-oil-prices-iran-war-supreme-leader/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-08T18:15:40Z",
+        "title": "Dow futures tumble 800 points as U.S. oil tops $100 a barrel to begin the week's trading: Live updates - CNBC",
+        "url": "https://www.cnbc.com/2026/03/08/stock-market-today-live-updates.html",
+        "source": "CNBC",
+        "published_at": "2026-03-09T00:17:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
+        "description": "The Dow recorded its worst week since President Trump unveiled his tariff policy in April.",
         "impact_score": 55,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Oil market prepares for $100 a barrel as Middle East producers cut output - Financial Times",
-        "url": "https://www.ft.com/content/56a01aa5-98af-48f0-b580-89e7bb4f59f6",
-        "source": "Financial Times",
-        "published_at": "2026-03-08T15:39:18Z",
+        "title": "War disruptions may send oil to $150 to $200 a barrel. Here's my advice for stock investors - CNBC",
+        "url": "https://www.cnbc.com/2026/03/08/jim-cramers-advice-for-investors-during-us-iran-war-oil-surge.html",
+        "source": "CNBC",
+        "published_at": "2026-03-08T19:27:51Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": null,
+        "description": "In his Sunday column for Investing Club subscribers, Jim Cramer explains how investors should navigate a continued surge in oil prices.",
         "impact_score": 55,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Oil Market Chaos Set to Deepen as More Gulf Giants Cut Output - Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-08/oil-market-chaos-set-to-deepen-as-more-gulf-giants-cut-output",
+        "title": "Schumer calls on Trump to release oil from reserve to lower gas prices - Axios",
+        "url": "https://www.axios.com/2026/03/08/schumer-republicans-trump-oil-reserve-gas-prices",
+        "source": "Axios",
+        "published_at": "2026-03-08T17:42:43Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Republicans have been slow to embrace the idea.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Aramco Shares Surge Most Since 2023 as War Roils Energy Markets - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-08/aramco-shares-surge-most-since-2023-as-war-roils-energy-markets",
         "source": "Bloomberg",
-        "published_at": "2026-03-08T13:32:09Z",
+        "published_at": "2026-03-08T13:21:53Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Oil markets are set for yet more chaos on Monday as the war in Iran unleashes unprecedented disruption: major producers are curbing output as storage fills up and the most important waterway for global energy markets remains all but closed.",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Iran war muddles expectations of likely Federal Reserve interest rate cuts - Financial Times",
-        "url": "https://www.ft.com/content/176a8568-5982-459a-a36a-d2cbf577568a",
-        "source": "Financial Times",
-        "published_at": "2026-03-08T11:00:05Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Oil price surge and a softening labour market complicate US central bank’s ability to boost output while containing inflation",
-        "impact_score": 55,
-        "themes": [
-          "capital"
-        ]
-      },
-      {
-        "title": "War to force Gulf producers to stop energy exports within days, push oil to $150, Qatar minister says - Seeking Alpha",
-        "url": "https://seekingalpha.com/news/4562067-war-will-force-gulf-producers-to-stop-energy-exports-within-days-qatar-energy-minister-says",
-        "source": "Seeking Alpha",
-        "published_at": "2026-03-08T01:25:25Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Qatar's energy minister said the Middle East war could \"bring down the economies of the world,\" all Persian Gulf energy exporters would shut down production within days and drive oil to $150",
+        "description": "Saudi Aramco jumped the most since April 2023 on Sunday as the Iran war entered its second week, prompting supply disruptions that may send oil prices higher when global markets reopen.",
         "impact_score": 55,
         "themes": [
           "materials"
@@ -2523,13 +2589,13 @@
         ]
       },
       {
-        "title": "Why do airlines hate basic economy passengers? - The Washington Post",
-        "url": "https://www.washingtonpost.com/travel/2026/03/08/airlines-miles-basic-economy-budget/",
-        "source": "The Washington Post",
-        "published_at": "2026-03-08T16:02:39Z",
+        "title": "Bond Traders Already Had Their Hands Full, ‘Then a War Breaks Out’ - Yahoo Finance",
+        "url": "https://finance.yahoo.com/news/bond-traders-already-had-hands-133000660.html",
+        "source": "Yahoo Entertainment",
+        "published_at": "2026-03-09T00:11:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Major airlines are cutting frequent-flier miles for basic economy passengers, with United, American and Delta implementing changes.",
+        "description": "With AI-related jitters reverberating through markets and private credit tremors setting off alarms, the chief investment officer at Pimco and manager of the...",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2540,14 +2606,14 @@
     "news_clusters": {
       "capital": [
         {
-          "title": "Iran war muddles expectations of likely Federal Reserve interest rate cuts - Financial Times",
-          "url": "https://www.ft.com/content/176a8568-5982-459a-a36a-d2cbf577568a",
-          "source": "Financial Times",
-          "published_at": "2026-03-08T11:00:05Z",
+          "title": "Actor and former 'SNL' star slams major airline for his seat downgrade: ‘I paid for first class’ - Fox News",
+          "url": "https://www.foxnews.com/travel/actor-former-snl-star-slams-major-airline-seat-downgrade-i-paid-first-class",
+          "source": "Fox News",
+          "published_at": "2026-03-08T18:15:37Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Oil price surge and a softening labour market complicate US central bank’s ability to boost output while containing inflation",
-          "impact_score": 55,
+          "description": "An actor and comedian has alleged that American Airlines downgraded him from first class to economy on a red-eye flight, sparking controversy over airline practices.",
+          "impact_score": 65,
           "themes": [
             "capital"
           ]
@@ -2617,19 +2683,6 @@
           "themes": [
             "capital"
           ]
-        },
-        {
-          "title": "Show HN: PlateSpinner – A Kanban board that orchestrates AI coding agents",
-          "url": "https://github.com/moridinamael/platespinner",
-          "source": "Github.com",
-          "published_at": "2026-03-06T21:57:55Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "PlateSpinner is a local web app that manages AI coding agents through a kanban board. You point it at a project directory, describe what you want, and it spawns headless Claude Code / Codex / Gemini sessions to generate tasks, plan implementations, and write …",
-          "impact_score": 40,
-          "themes": [
-            "capital"
-          ]
         }
       ],
       "pipeline": [],
@@ -2650,13 +2703,13 @@
       ],
       "materials": [
         {
-          "title": "War to force Gulf producers to stop energy exports within days, push oil to $150, Qatar minister says - Seeking Alpha",
-          "url": "https://seekingalpha.com/news/4562067-war-will-force-gulf-producers-to-stop-energy-exports-within-days-qatar-energy-minister-says",
-          "source": "Seeking Alpha",
-          "published_at": "2026-03-08T01:25:25Z",
+          "title": "Aramco Shares Surge Most Since 2023 as War Roils Energy Markets - Bloomberg",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-08/aramco-shares-surge-most-since-2023-as-war-roils-energy-markets",
+          "source": "Bloomberg",
+          "published_at": "2026-03-08T13:21:53Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Qatar's energy minister said the Middle East war could \"bring down the economies of the world,\" all Persian Gulf energy exporters would shut down production within days and drive oil to $150",
+          "description": "Saudi Aramco jumped the most since April 2023 on Sunday as the Iran war entered its second week, prompting supply disruptions that may send oil prices higher when global markets reopen.",
           "impact_score": 55,
           "themes": [
             "materials"
@@ -2709,19 +2762,6 @@
           "provider": "newsapi",
           "feed": "everything",
           "description": "Amid global oil and gas disruptions, China stands prepared for the electrostate era.",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
-        },
-        {
-          "title": "When The Cloud Comes To Town: How Energy, Communities, And Accountability Need A Rethink",
-          "url": "https://www.forrester.com/blogs/when-the-cloud-comes-to-town-how-energy-communities-and-accountability-need-a-rethink/",
-          "source": "Forrester.com",
-          "published_at": "2026-03-06T17:53:07Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "The rapid expansion of AI-driven data centers transforms what once seemed like invisible, back-end digital infrastructure into a highly visible, very localized challenge. According to Forrester’s US Tech Market Forecast, 2025 To 2030, AI could add 1.3 to 1.7 …",
           "impact_score": 40,
           "themes": [
             "materials"
@@ -2789,40 +2829,53 @@
       "land": [],
       "other": [
         {
-          "title": "Dow Jones Futures Eye Oil Prices. Trump Says Iran War 'More Popular' Than Ever With MAGA Base. - Investor's Business Daily",
-          "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-oil-prices-iran-war-supreme-leader/",
-          "source": "Investor's Business Daily",
-          "published_at": "2026-03-08T18:15:40Z",
+          "title": "Dow futures tumble 800 points as U.S. oil tops $100 a barrel to begin the week's trading: Live updates - CNBC",
+          "url": "https://www.cnbc.com/2026/03/08/stock-market-today-live-updates.html",
+          "source": "CNBC",
+          "published_at": "2026-03-09T00:17:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
+          "description": "The Dow recorded its worst week since President Trump unveiled his tariff policy in April.",
           "impact_score": 55,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Why do airlines hate basic economy passengers? - The Washington Post",
-          "url": "https://www.washingtonpost.com/travel/2026/03/08/airlines-miles-basic-economy-budget/",
-          "source": "The Washington Post",
-          "published_at": "2026-03-08T16:02:39Z",
+          "title": "Bond Traders Already Had Their Hands Full, ‘Then a War Breaks Out’ - Yahoo Finance",
+          "url": "https://finance.yahoo.com/news/bond-traders-already-had-hands-133000660.html",
+          "source": "Yahoo Entertainment",
+          "published_at": "2026-03-09T00:11:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Major airlines are cutting frequent-flier miles for basic economy passengers, with United, American and Delta implementing changes.",
+          "description": "With AI-related jitters reverberating through markets and private credit tremors setting off alarms, the chief investment officer at Pimco and manager of the...",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Oil market prepares for $100 a barrel as Middle East producers cut output - Financial Times",
-          "url": "https://www.ft.com/content/56a01aa5-98af-48f0-b580-89e7bb4f59f6",
-          "source": "Financial Times",
-          "published_at": "2026-03-08T15:39:18Z",
+          "title": "Stock and Bond Traders Eye Another Volatile Open - Bloomberg",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-08/stock-and-bond-traders-eye-another-volatile-open-markets-wrap",
+          "source": "Bloomberg",
+          "published_at": "2026-03-08T21:22:29Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": null,
-          "impact_score": 55,
+          "description": "Escalating hostilities in the Middle East and widening stress on oil shipping and infrastructure had global investors braced for more turbulence when trading resumes Sunday.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "OpenAI robotics leader resigns over concerns about Pentagon AI deal - NPR",
+          "url": "https://www.npr.org/2026/03/08/nx-s1-5741779/openai-resigns-ai-pentagon-guardrails-military",
+          "source": "NPR",
+          "published_at": "2026-03-08T20:44:11Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "A senior member of OpenAI's robotics team said guardrails around certain AI uses were not sufficiently defined before OpenAI announced an agreement with the Pentagon.",
+          "impact_score": 40,
           "themes": [
             "other"
           ]
@@ -2831,59 +2884,7 @@
           "title": "War escalation, jobs report fallout, and Oracle earnings: What to watch this week - Yahoo Finance",
           "url": "https://finance.yahoo.com/news/war-escalation-jobs-report-fallout-and-oracle-earnings-what-to-watch-this-week-114534070.html",
           "source": "Yahoo Entertainment",
-          "published_at": "2026-03-08T14:58:10Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "US equities ended the week starkly in the red as the war in Iran and the ensuing surge in global oil prices have rankled the global economy.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Oil Market Chaos Set to Deepen as More Gulf Giants Cut Output - Bloomberg",
-          "url": "https://www.bloomberg.com/news/articles/2026-03-08/oil-market-chaos-set-to-deepen-as-more-gulf-giants-cut-output",
-          "source": "Bloomberg",
-          "published_at": "2026-03-08T13:32:09Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Oil markets are set for yet more chaos on Monday as the war in Iran unleashes unprecedented disruption: major producers are curbing output as storage fills up and the most important waterway for global energy markets remains all but closed.",
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "OpenAI hardware leader resigns after deal with the Pentagon - CNBC",
-          "url": "https://www.cnbc.com/2026/03/08/openai-hardware-leader-resigns-after-deal-with-the-pentagon.html",
-          "source": "CNBC",
-          "published_at": "2026-03-08T12:43:30Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Kalinowski wrote she has \"deep respect\" for OpenAI CEO Sam Altman and the team, but the company announced the ⁠Pentagon deal \"without the guardrails defined.\"",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Target stores face deeper issues than new CEO realizes - thestreet.com",
-          "url": "https://www.thestreet.com/retail/target-stores-face-deeper-issues-than-new-ceo-realizes",
-          "source": "TheStreet",
-          "published_at": "2026-03-08T12:33:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Target’s new CEO plans investments amid persistent store problems.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "A 60-Year-Old Shopper With a \"Turkey Wattle Neck\" Saw Tighter Skin After Adding This $25 Cream to Their Routine - instyle.com",
-          "url": "https://www.instyle.com/activscience-triple-firming-neck-cream-amazon-11919795",
-          "source": "InStyle",
-          "published_at": "2026-03-08T12:30:00Z",
+          "published_at": "2026-03-08T19:59:46Z",
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": null,
@@ -2893,52 +2894,91 @@
           ]
         },
         {
-          "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show - AP News",
-          "url": "https://apnews.com/article/trump-economy-iran-inflation-jobs-gas-prices-7fbd5e99e3b6023963dd3de226aee4e4",
-          "source": "Associated Press",
-          "published_at": "2026-03-08T11:32:17Z",
+          "title": "War disruptions may send oil to $150 to $200 a barrel. Here's my advice for stock investors - CNBC",
+          "url": "https://www.cnbc.com/2026/03/08/jim-cramers-advice-for-investors-during-us-iran-war-oil-surge.html",
+          "source": "CNBC",
+          "published_at": "2026-03-08T19:27:51Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth. Instead it's kicked off with job losses, rising gasoline prices and more uncertainty about America’s future. In his recent State of the Union address, Trump said \"the roarin…",
-          "impact_score": 40,
+          "description": "In his Sunday column for Investing Club subscribers, Jim Cramer explains how investors should navigate a continued surge in oil prices.",
+          "impact_score": 55,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "KKR eyes multibillion-dollar sale of data centre cooling company - Financial Times",
-          "url": "https://www.ft.com/content/b1784f74-7a91-4e04-b507-cc5b13920f51",
-          "source": "Financial Times",
-          "published_at": "2026-03-08T10:00:05Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Private capital firm seeks big return on investment in CoolIT Systems as AI boom boosts valuations",
-          "impact_score": 30,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Millions of jobs vulnerable as ‘silver tsunami’ looms over US small businesses, experts warn - Fox Business",
-          "url": "https://www.foxbusiness.com/small-business/millions-jobs-vulnerable-silver-tsunami-looms-us-small-businesses-experts-warn",
+          "title": "Philadelphia food stand overwhelmed when 600 tubs of onion dip mysteriously appear, prompting investigation - Fox Business",
+          "url": "https://www.foxbusiness.com/retail/philadelphia-food-stand-overwhelmed-when-600-tubs-onion-dip-mysteriously-appear-prompting-investigation",
           "source": "Fox Business",
-          "published_at": "2026-03-08T09:30:00Z",
+          "published_at": "2026-03-08T19:05:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Nearly half of U.S. small-business owners are 55 or older, and with many lacking succession plans, jobs and local economies could face disruptions in the coming decade, experts warn.",
+          "description": "A Philadelphia food stand owner says she received 600 tubs of French onion dip she never ordered.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Prediction: The Trump Bull Market Will Soon End -- and More Than 150 Years of Historical Precedent Explains Why - The Motley Fool",
-          "url": "https://www.fool.com/investing/2026/03/08/prediction-trump-bull-market-end-150-years-history/",
-          "source": "Motley Fool",
-          "published_at": "2026-03-08T09:06:00Z",
+          "title": "Video shows Southwest flight passengers holding hands up during security scare - KTLA",
+          "url": "https://ktla.com/news/nationworld/video-shows-southwest-flight-passengers-holding-hands-up-during-security-scare/",
+          "source": "KTLA Los Angeles",
+          "published_at": "2026-03-08T18:38:30Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Wall Street's bull market rally under Trump is running on borrowed time.",
+          "description": "A Southwest Airlines flight headed from Nashville to Fort Lauderdale was diverted to Atlanta Friday night after a possible security scare prompted authorities to respond and remove a passenger from the aircraft, footage shows. Video obtained by KTLA shows a t…",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "The changing goalposts of AGI and timelines - Hacker News",
+          "url": "https://news.ycombinator.com/item?id%5C%5Cu003d47299009=",
+          "source": "Hacker News",
+          "published_at": "2026-03-08T18:01:14Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Is AI productivity prompting burnout? Study finds new pattern of \"AI brain fry\" - CBS News",
+          "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQZ3FSYzJiSGRRQXdHRmt2WGY0Z0hqcEZWcndHdUtCTUZhY01lYUlKV3FNNWVWMmJvcEpUc0RkaGdHUFNlME5UaGFDOVppdklMQmljM2FFS0FTWUctaEE1TmxHUk5BWmJMS1Y4bVBTSjY2eVh1ZHJLa1VGekFfRm9xZnhXUEdlYWgzT2tWMVRreXA2SWt2Z2NDdU5iRTdCWG1rVVRjSlV3NDBiZ9IBrwFBVV95cUxQV3Z1NWlLZU9PcXRaeVRxWEUxZHBPMGtYQXNpblRkLTZpb0Q3VnhmTU5vOHpaeUphMDNLU3hTUXpBMWR5c2c2TEtnSU0xd24xaFRCWmlhZHlybG9vdDZZYUNxWEpMbl9ES01PLUt0bEZSTWE3ZndkNWVFaGhoaHdjenhXYWJrdDdQR2d3SFZXdk9BU3Zqek5OWHkyakJwSjk3WldhanBvVjdkRVd6Wk5N?oc=5",
+          "source": "Google News",
+          "published_at": "2026-03-08T17:56:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Schumer calls on Trump to release oil from reserve to lower gas prices - Axios",
+          "url": "https://www.axios.com/2026/03/08/schumer-republicans-trump-oil-reserve-gas-prices",
+          "source": "Axios",
+          "published_at": "2026-03-08T17:42:43Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Republicans have been slow to embrace the idea.",
+          "impact_score": 55,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Swiss vote places right to use cash in country’s constitution - politico.eu",
+          "url": "https://news.google.com/rss/articles/CBMifkFVX3lxTE1lbFQyMlo0c21sT3B4TE15UFh5aWRpakl4QjcwTUdKdEtkZFd0SXFOYmxFLWZIazBRa2RHUXJoZmVQQ0xZSUh1Y0RLc3lCLVVzaVFBUkVMcDRveHRfSzUxdjQ3X3VBQnF0RjJwU3JERFlrWDB6NjhSUkJ0TFBZZw?oc=5",
+          "source": "Google News",
+          "published_at": "2026-03-08T17:18:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
           "impact_score": 40,
           "themes": [
             "other"
@@ -2946,6 +2986,19 @@
         }
       ],
       "commercial": [
+        {
+          "title": "Europe’s Most Expensive and Cheapest Countries for Hotels and Restaurants in 2026",
+          "url": "https://johnnyjet.com/europes-most-expensive-and-cheapest-countries-for-hotels-and-restaurants-in-2026/",
+          "source": "Johnnyjet.com",
+          "published_at": "2026-03-08T20:58:29Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Planning a trip to Europe in 2026? Your travel budget may stretch much further or disappear much faster depending on where you go. A recent analysis highlighted by Euronews, using...\nThe post Europe’s Most Expensive and Cheapest Countries for Hotels and Resta…",
+          "impact_score": 40,
+          "themes": [
+            "commercial"
+          ]
+        },
         {
           "title": "It’s not just data centers. New power lines for AI are also stirring local anger and turned one man’s 40 acres of paradise into ‘hell’",
           "url": "https://fortune.com/2026/03/08/ai-data-centers-high-volt-power-lines-local-backlash-hyperscalers-capex/",
@@ -2973,21 +3026,6 @@
             "commercial"
           ]
         }
-      ],
-      "residential": [
-        {
-          "title": "Stratton Capital Group Closes $38 Million Bridge Loan for Class-A Multifamily Development in Fort Lauderdale",
-          "url": "https://www.globenewswire.com/news-release/2026/03/06/3251338/0/en/Stratton-Capital-Group-Closes-38-Million-Bridge-Loan-for-Class-A-Multifamily-Development-in-Fort-Lauderdale.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-06T21:42:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "FORT LAUDERDALE, Fla., March 06, 2026 (GLOBE NEWSWIRE) -- Stratton Capital Group announced today the successful closing of a $38 million bridge loan for the development and stabilization of a Class-A multifamily community in Fort Lauderdale’s rapidly expandin…",
-          "impact_score": 40,
-          "themes": [
-            "residential"
-          ]
-        }
       ]
     },
     "land_tracker": {
@@ -3004,192 +3042,192 @@
       {
         "ticker": "DHI",
         "source": "alphavantage",
-        "date": "2026-03-06",
-        "close": 147.26,
-        "prev_close": 149.88,
-        "change": -2.62,
-        "change_pct": -1.7481
+        "date": "2026-03-09",
+        "close": 147.69,
+        "prev_close": 147.26,
+        "change": 0.43,
+        "change_pct": 0.292
       },
       {
         "ticker": "PHM",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 125.195,
-        "close": 125.265,
-        "change": 0.07000000000000739,
-        "change_pct": 0.05591277606933775
+        "close": 126.66,
+        "change": 1.4650000000000034,
+        "change_pct": 1.1701745277367335
       },
       {
         "ticker": "LEN",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 99.015,
-        "close": 98.52,
-        "change": -0.49500000000000455,
-        "change_pct": -0.4999242539009287
+        "close": 99.94,
+        "change": 0.9249999999999972,
+        "change_pct": 0.934201888602734
       },
       {
         "ticker": "NVR",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 6844.11,
-        "close": 6806.153,
-        "change": -37.956999999999425,
-        "change_pct": -0.5545936579043795
+        "close": 6872.03,
+        "change": 27.920000000000073,
+        "change_pct": 0.407942011452184
       },
       {
         "ticker": "TOL",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 144.47,
-        "close": 145.105,
-        "change": 0.6349999999999909,
-        "change_pct": 0.4395376202671772
+        "close": 147.13,
+        "change": 2.6599999999999966,
+        "change_pct": 1.841212708520798
       },
       {
         "ticker": "HD",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 356.49,
-        "close": 349.3518,
-        "change": -7.1381999999999834,
-        "change_pct": -2.0023563073297943
+        "close": 353.56,
+        "change": -2.930000000000007,
+        "change_pct": -0.8219024376560371
       },
       {
         "ticker": "LOW",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 250,
-        "close": 247.07,
-        "change": -2.930000000000007,
-        "change_pct": -1.1720000000000028
+        "close": 250.22,
+        "change": 0.21999999999999886,
+        "change_pct": 0.08799999999999955
       },
       {
         "ticker": "VMC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-09",
-        "open": 270,
-        "close": 269.94,
-        "change": -0.060000000000002274,
-        "change_pct": -0.022222222222223063
+        "close": 274.33,
+        "prev_close": 274.4697,
+        "change": -0.1397,
+        "change_pct": -0.0509
       },
       {
         "ticker": "MLM",
-        "source": "alphavantage",
-        "date": "2026-03-06",
-        "close": 609.99,
-        "prev_close": 632.93,
-        "change": -22.94,
-        "change_pct": -3.6244
+        "source": "stooq",
+        "date": "2026-03-09",
+        "open": 604.07,
+        "close": 612.52,
+        "change": 8.449999999999932,
+        "change_pct": 1.3988445047759253
       },
       {
         "ticker": "BLDR",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 91.65,
-        "close": 92.59,
-        "change": 0.9399999999999977,
-        "change_pct": 1.025641025641023
+        "close": 94.95,
+        "change": 3.299999999999997,
+        "change_pct": 3.6006546644844484
       },
       {
         "ticker": "FBIN",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 44.96,
-        "close": 44.29,
-        "change": -0.6700000000000017,
-        "change_pct": -1.4902135231316762
+        "close": 45.6,
+        "change": 0.6400000000000006,
+        "change_pct": 1.4234875444839872
       },
       {
         "ticker": "OC",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 106.02,
-        "close": 104.2625,
-        "change": -1.7574999999999932,
-        "change_pct": -1.6577060931899579
+        "close": 107.25,
+        "change": 1.230000000000004,
+        "change_pct": 1.1601584606678024
       },
       {
         "ticker": "EXP",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 192.57,
-        "close": 192.76,
-        "change": 0.18999999999999773,
-        "change_pct": 0.09866542036661874
+        "close": 196.49,
+        "change": 3.920000000000016,
+        "change_pct": 2.0356234096692196
       },
       {
         "ticker": "CAT",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 665.46,
-        "close": 691.985,
-        "change": 26.524999999999977,
-        "change_pct": 3.985964595918609
+        "close": 704.82,
+        "change": 39.360000000000014,
+        "change_pct": 5.914705617167074
       },
       {
         "ticker": "DE",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 585.2,
-        "close": 592.91,
-        "change": 7.709999999999923,
-        "change_pct": 1.3174982911824884
+        "close": 599.48,
+        "change": 14.279999999999973,
+        "change_pct": 2.440191387559804
       },
       {
         "ticker": "URI",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 798.63,
-        "close": 800.37,
-        "change": 1.740000000000009,
-        "change_pct": 0.21787310769693213
+        "close": 820.68,
+        "change": 22.049999999999955,
+        "change_pct": 2.760978175124896
       },
       {
         "ticker": "TPC",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 72.15,
-        "close": 69.38,
-        "change": -2.7700000000000102,
-        "change_pct": -3.8392238392238527
+        "close": 72.04,
+        "change": -0.10999999999999943,
+        "change_pct": -0.15246015246015165
       },
       {
         "ticker": "CRH",
         "source": "stooq",
         "date": "2026-03-09",
         "open": 103.26,
-        "close": 103.575,
-        "change": 0.3149999999999977,
-        "change_pct": 0.3050552004648438
+        "close": 106.46,
+        "change": 3.1999999999999886,
+        "change_pct": 3.0989734650396947
       }
     ],
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": -0.46143350309375863
+        "avg_change_pct": 0.9291062272624899
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -1.0651368696187324
+        "avg_change_pct": 1.5110312307727716
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": 1.025641025641023
+        "avg_change_pct": 3.6006546644844484
       },
       "equipment": {
         "count": 3,
-        "avg_change_pct": 1.8404453315993434
+        "avg_change_pct": 3.705291726617258
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": -1.5871781536648986
+        "avg_change_pct": -0.3669512188280188
       }
     },
     "stock_pressure_overlay": 0,
     "sam_gov": {
       "enabled": true,
-      "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=%5BREDACTED%5D&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-27",
+      "error": "Fetch failed 404 for https://api.sam.gov/opportunities/v2/search?api_key=%5BREDACTED%5D&limit=50&q=%22construction%22+OR+%22renovation%22+OR+%22design-build%22+OR+%22general+contractor%22+OR+%22roofing%22+OR+%22HVAC%22+OR+%22electrical%22+OR+%22plumbing%22+OR+%22concrete%22+OR+%22civil%22&postedFrom=2026-02-28",
       "items": []
     },
     "usaspending": {
@@ -3266,9 +3304,9 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-09T19:10:11.748Z",
+    "generated_at_utc": "2026-03-10T02:49:49.678Z",
     "regime_history": {
-      "current_regime_duration_days": 6,
+      "current_regime_duration_days": 7,
       "previous_regime": null,
       "last_flip_date": null,
       "regime_stability": "🟢 Stable"
@@ -4634,14 +4672,10 @@
         "series_id": "DGS2",
         "ok": true,
         "latest": {
-          "date": "2026-03-05",
-          "value": 3.57
+          "date": "2026-03-06",
+          "value": 3.56
         },
         "history": [
-          {
-            "date": "2025-12-30",
-            "value": 3.45
-          },
           {
             "date": "2025-12-31",
             "value": 3.47
@@ -4829,6 +4863,10 @@
           {
             "date": "2026-03-05",
             "value": 3.57
+          },
+          {
+            "date": "2026-03-06",
+            "value": 3.56
           }
         ]
       },
@@ -4836,14 +4874,10 @@
         "series_id": "DGS10",
         "ok": true,
         "latest": {
-          "date": "2026-03-05",
-          "value": 4.13
+          "date": "2026-03-06",
+          "value": 4.15
         },
         "history": [
-          {
-            "date": "2025-12-30",
-            "value": 4.14
-          },
           {
             "date": "2025-12-31",
             "value": 4.18
@@ -5031,6 +5065,10 @@
           {
             "date": "2026-03-05",
             "value": 4.13
+          },
+          {
+            "date": "2026-03-06",
+            "value": 4.15
           }
         ]
       },
