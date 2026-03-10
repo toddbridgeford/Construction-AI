@@ -2624,33 +2624,39 @@ async function buildTerminalPayload(request, env) {
 }
 
 async function readSpendingSummary(request, env) {
-  const spendingResponse = await handleSpendingYtdSummary(request, env);
-  if (!(spendingResponse instanceof Response)) {
-    return subsectionError("INTERNAL", "Unexpected spending summary response type");
-  }
+  try {
+    const spendingResponse = await handleSpendingYtdSummary(request, env);
+    if (!(spendingResponse instanceof Response)) {
+      return subsectionError("INTERNAL", "Unexpected spending summary response type");
+    }
 
-  if (spendingResponse.status >= 400) {
+    if (spendingResponse.status >= 400) {
+      const payload = await safeJsonResponseBody(spendingResponse);
+      return subsectionError(
+        payload?.error?.code || "SPENDING_SUMMARY_FAILED",
+        payload?.error?.message || "Unable to compute spending summary",
+        payload?.error?.details || { status: spendingResponse.status }
+      );
+    }
+
     const payload = await safeJsonResponseBody(spendingResponse);
-    return subsectionError(
-      payload?.error?.code || "SPENDING_SUMMARY_FAILED",
-      payload?.error?.message || "Unable to compute spending summary",
-      payload?.error?.details || { status: spendingResponse.status }
-    );
+    const commercial = payload?.summary?.commercial;
+    const housing = payload?.summary?.housing;
+
+    if (!commercial || !housing) {
+      return subsectionError("SPENDING_SUMMARY_INVALID", "Spending summary payload missing commercial/housing segments");
+    }
+
+    return {
+      ok: true,
+      commercial,
+      housing,
+    };
+  } catch (e) {
+    return subsectionError("SPENDING_SUMMARY_FAILED", "Unable to compute spending summary", {
+      message: e?.message || String(e),
+    });
   }
-
-  const payload = await safeJsonResponseBody(spendingResponse);
-  const commercial = payload?.summary?.commercial;
-  const housing = payload?.summary?.housing;
-
-  if (!commercial || !housing) {
-    return subsectionError("SPENDING_SUMMARY_INVALID", "Spending summary payload missing commercial/housing segments");
-  }
-
-  return {
-    ok: true,
-    commercial,
-    housing,
-  };
 }
 
 function toRadarMarketEntry(market) {

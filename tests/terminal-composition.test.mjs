@@ -60,3 +60,38 @@ test('terminal returns forecast partial-failure object when forecast asset fetch
   assert.equal(typeof body?.terminal?.watchlist_summary, 'string');
   assert.ok(body?.terminal?.watchlist_summary.length > 0);
 });
+
+test('terminal returns spending partial-failure object when spending summary throws', async () => {
+  const env = makeEnv({
+    ASSETS: {
+      async fetch(url) {
+        const parsed = new URL(url);
+        if (parsed.pathname === '/dist/markets/index.json') {
+          return new Response(JSON.stringify({ markets: [] }), { status: 200 });
+        }
+        return new Response('not found', { status: 404 });
+      },
+    },
+    CPI_SNAPSHOTS: {
+      async get() {
+        throw new Error('kv offline');
+      },
+      async put() {},
+    },
+  });
+
+  const request = {
+    get url() {
+      throw new Error('request url read failed');
+    },
+  };
+  const res = await handleConstructionTerminal(request, env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(body?.terminal?.spending?.ok, false);
+  assert.equal(body?.terminal?.spending?.error?.code, 'SPENDING_SUMMARY_FAILED');
+  assert.match(body?.terminal?.spending?.error?.message || '', /Unable to compute spending summary/);
+  assert.equal(typeof body?.terminal?.watchlist_summary, 'string');
+  assert.ok(body?.terminal?.watchlist_summary.length > 0);
+});
