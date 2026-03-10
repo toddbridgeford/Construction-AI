@@ -22,38 +22,45 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 
 `cloudflare/worker/` is legacy context only. Do not deploy from that folder.
 
-## Worker routes (live + documented)
+## Public API surface
 
-- `GET /` (alias of `/health`)
+### Canonical public product endpoints
+
+- `GET /construction/terminal` (top-level product object)
+- `GET /construction/dashboard`
+- `GET /construction/morning-brief`
+- `GET /construction/alerts`
+- `GET /construction/forecast`
+- `GET /construction/heatmap`
+- `GET /construction/watchlist/custom`
+- `GET|POST /construction/settings`
+
+### Deprecated compatibility aliases (still supported)
+
+- `GET /` → use `GET /health`
+- `POST /construction/settings/active-profile` → use `POST /construction/settings/profiles/activate`
+- `GET /ytd/commercial` → use `GET /spending/ytd?segment=commercial`
+- `GET /ytd/housing` → use `GET /spending/ytd?segment=housing`
+- `GET /ytd/summary` → use `GET /spending/ytd/summary`
+
+### Lower-level advanced model endpoints
+
+These are stable public endpoints but are lower-level model outputs compared with the product hub routes above.
+
+- Core macro/model: `GET /signal`, `GET /regime`, `GET /liquidity`, `GET /construction-index`, `GET /risk-score`
+- Forward/cycle models: `GET /construction/nowcast`, `GET /construction/stress-index`, `GET /construction/early-warning`, `GET /construction/recession-probability`
+- Market/operator models: `GET /construction/power`, `GET /construction/market-radar`, `GET /construction/capital-flows`, `GET /construction/migration-index`
+- Portfolio/risk models: `GET /construction/materials-shock`, `GET /construction/labor-shock`, `GET /construction/margin-pressure`, `GET /construction/bid-intensity`, `GET /construction/backlog-quality`, `GET /construction/project-risk`, `GET /construction/receivables-risk`, `GET /construction/payment-delay-risk`, `GET /construction/collections-stress`, `GET /construction/owner-risk`, `GET /construction/developer-fragility`, `GET /construction/lender-pullback-risk`, `GET /construction/counterparty-quality`, `GET /construction/metro-concentration-risk`, `GET /construction/counterparty-concentration-risk`, `GET /construction/project-mix-exposure`, `GET /construction/portfolio-risk`
+
+### Other public utility endpoints
+
 - `GET /health`
 - `GET /cpi`
 - `GET /fred/observations`
 - `GET /notion/series`
 - `GET /bundle`
-- `GET /signal`
-- `GET /regime`
-- `GET /liquidity`
-- `GET /construction-index`
-- `GET /risk-score`
-- `GET /construction/dashboard`
-- `GET /construction/terminal`
-- `GET /construction/market-radar`
-- `GET /construction/power`
-- `GET /construction/heatmap`
-- `GET /construction/nowcast`
-- `GET /construction/forecast`
-- `GET /construction/morning-brief`
-- `GET /construction/alerts`
-- `GET /construction/recession-probability`
-- `GET /construction/stress-index`
-- `GET /construction/early-warning`
-- `GET /construction/capital-flows`
-- `GET /construction/migration-index`
 - `GET /spending/ytd`
 - `GET /spending/ytd/summary`
-- `GET /ytd/commercial`
-- `GET /ytd/housing`
-- `GET /ytd/summary`
 
 ## Actions Integration (Custom GPT)
 

@@ -37,3 +37,14 @@ test('OpenAPI settings write request schemas allow runtime partial payloads', as
   assert.match(raw, /ConstructionSettingsProfileCreateRequest:[\s\S]*?settings:[\s\S]*?ConstructionSettingsPatchModel/);
   assert.match(raw, /ConstructionSettingsPatchModel:[\s\S]*?additionalProperties:\s*false/);
 });
+
+test('OpenAPI explicitly separates canonical product routes from deprecated compatibility aliases', async () => {
+  const raw = await fs.readFile(new URL('../openapi.yaml', import.meta.url), 'utf8');
+
+  assert.match(raw, /x-endpoint-groups:[\s\S]*?canonical_public_product_endpoints:[\s\S]*?- \/construction\/terminal/);
+  assert.match(raw, /x-endpoint-groups:[\s\S]*?deprecated_compatibility_aliases:[\s\S]*?- \/ytd\/commercial/);
+  assert.match(raw, /"\/ytd\/commercial":[\s\S]*?deprecated:\s*true/);
+  assert.match(raw, /"\/ytd\/housing":[\s\S]*?deprecated:\s*true/);
+  assert.match(raw, /"\/ytd\/summary":[\s\S]*?deprecated:\s*true/);
+  assert.match(raw, /"\/construction\/settings\/active-profile":[\s\S]*?post:[\s\S]*?deprecated:\s*true/);
+});

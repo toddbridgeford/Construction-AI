@@ -5,6 +5,51 @@ info:
   version: 1.1.0
   description: Canonical API for the construction-ai Cloudflare Worker (no /terminal;
     Action matches live routes).
+x-endpoint-groups:
+  canonical_public_product_endpoints:
+  - /construction/terminal
+  - /construction/dashboard
+  - /construction/morning-brief
+  - /construction/alerts
+  - /construction/forecast
+  - /construction/heatmap
+  - /construction/watchlist/custom
+  - /construction/settings
+  deprecated_compatibility_aliases:
+  - /
+  - /ytd/commercial
+  - /ytd/housing
+  - /ytd/summary
+  - /construction/settings/active-profile
+  lower_level_advanced_model_endpoints:
+  - /signal
+  - /regime
+  - /liquidity
+  - /construction-index
+  - /risk-score
+  - /construction/power
+  - /construction/nowcast
+  - /construction/stress-index
+  - /construction/early-warning
+  - /construction/capital-flows
+  - /construction/migration-index
+  - /construction/materials-shock
+  - /construction/labor-shock
+  - /construction/margin-pressure
+  - /construction/bid-intensity
+  - /construction/backlog-quality
+  - /construction/project-risk
+  - /construction/receivables-risk
+  - /construction/payment-delay-risk
+  - /construction/collections-stress
+  - /construction/owner-risk
+  - /construction/developer-fragility
+  - /construction/lender-pullback-risk
+  - /construction/counterparty-quality
+  - /construction/metro-concentration-risk
+  - /construction/counterparty-concentration-risk
+  - /construction/project-mix-exposure
+  - /construction/portfolio-risk
 servers:
 - url: https://construction-ai.toddbridgeford.workers.dev
   description: Cloudflare Worker (canonical)
@@ -13,6 +58,7 @@ paths:
     get:
       operationId: root
       summary: Root (alias of health)
+      deprecated: true
       responses:
         '200':
           description: OK
@@ -369,6 +415,7 @@ paths:
     post:
       operationId: constructionSettingsActiveProfileSet
       summary: Set active settings profile by profile_id (backward-compatible endpoint)
+      deprecated: true
       requestBody:
         required: true
         content:
@@ -479,6 +526,60 @@ paths:
     get:
       operationId: spendingYtdSummary
       summary: Combined commercial + housing YTD/PYTD response
+      parameters:
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: YTD/PYTD summary response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SpendingYtdSummaryResponse"
+  "/ytd/commercial":
+    get:
+      operationId: ytdCommercialLegacy
+      summary: Deprecated compatibility alias for /spending/ytd?segment=commercial
+      deprecated: true
+      parameters:
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: YTD/PYTD commercial response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SpendingYtdResponse"
+  "/ytd/housing":
+    get:
+      operationId: ytdHousingLegacy
+      summary: Deprecated compatibility alias for /spending/ytd?segment=housing
+      deprecated: true
+      parameters:
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: YTD/PYTD housing response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SpendingYtdResponse"
+  "/ytd/summary":
+    get:
+      operationId: ytdSummaryLegacy
+      summary: Deprecated compatibility alias for /spending/ytd/summary
+      deprecated: true
       parameters:
       - name: year
         in: query
