@@ -40,7 +40,7 @@
       "value": 46,
       "direction": "→",
       "zone": "Compression Phase",
-      "delta_3m": -1,
+      "delta_3m": 0,
       "momentum_band": "Stable",
       "risk_state": "🟢",
       "drivers": {
@@ -158,7 +158,7 @@
     "display": {
       "cpi_value": 46,
       "zone": "Compression Phase",
-      "delta_3m": -1,
+      "delta_3m": 0,
       "risk_state": "🟢"
     }
   },
