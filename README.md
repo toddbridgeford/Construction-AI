@@ -24,7 +24,7 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 
 ## Worker routes (live + documented)
 
-### Canonical public endpoints
+### Canonical Product endpoints
 
 - `GET /` (alias of `/health`)
 - `GET /health`
@@ -62,7 +62,7 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `GET /spending/ytd`
 - `GET /spending/ytd/summary`
 
-### Deprecated compatibility aliases (still supported)
+### Compatibility Alias endpoints (deprecated, still supported)
 
 - `GET /ytd/commercial` → use `GET /spending/ytd?segment=commercial`
 - `GET /ytd/housing` → use `GET /spending/ytd?segment=housing`
@@ -108,6 +108,13 @@ Notes:
 - `/construction/recession-probability` — deterministic next-12-month construction slowdown risk estimate.
 
 ## Advanced Intelligence Layer
+
+OpenAPI operation tagging classifies these model-specific routes as **Advanced Model** endpoints:
+
+- `GET /construction/power`
+- `GET /construction/heatmap`
+- `GET /construction/nowcast`
+- `GET /construction/forecast`
 
 - **Construction Power Index** (`/construction/power`) — quantifies who controls margin and terms across general contractors, subcontractors, distributors, manufacturers, developers, and lenders.
 - **Metro Heatmap Engine** (`/construction/heatmap`) — ranks strongest vs weakest markets from canonical market artifact files using deterministic scoring.
