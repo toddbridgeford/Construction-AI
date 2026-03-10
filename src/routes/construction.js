@@ -1562,6 +1562,9 @@ function validatePartialSettingsPayload(input = {}) {
           continue;
         }
         if (!Number.isFinite(value)) errors.push(`thresholds.${key} must be numeric`);
+        if (Number.isFinite(value) && (value < 0 || value > 100)) {
+          errors.push(`thresholds.${key} must be between 0 and 100`);
+        }
       }
     }
   }
@@ -1586,6 +1589,52 @@ function validatePartialSettingsPayload(input = {}) {
 
 function validateProfileName(name) {
   return typeof name === "string" && name.trim().length > 0;
+}
+
+function validateProfileActionPayload(body, {
+  envelopeCode,
+  envelopeMessage,
+  requiredCode,
+  requiredMessage,
+}) {
+  if (body === null || typeof body !== "object" || Array.isArray(body)) {
+    return {
+      ok: false,
+      response: {
+        status: 400,
+        code: envelopeCode,
+        message: envelopeMessage,
+        details: { errors: ["payload must be an object"] },
+      },
+    };
+  }
+
+  const unknownFields = Object.keys(body).filter((key) => key !== "profile_id");
+  if (unknownFields.length > 0) {
+    return {
+      ok: false,
+      response: {
+        status: 400,
+        code: envelopeCode,
+        message: envelopeMessage,
+        details: { errors: unknownFields.map((key) => `unknown field: ${key}`) },
+      },
+    };
+  }
+
+  const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
+  if (!profileId) {
+    return {
+      ok: false,
+      response: {
+        status: 400,
+        code: requiredCode,
+        message: requiredMessage,
+      },
+    };
+  }
+
+  return { ok: true, profileId };
 }
 
 function profileModelFromPreset(preset, isActive = false) {
@@ -3180,24 +3229,20 @@ export async function handleConstructionSettingsActiveProfile(request, env) {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
     if (body === null) return error(env, 400, "ACTIVE_PROFILE_INVALID_JSON", "Malformed JSON body");
-    if (body === null || typeof body !== "object" || Array.isArray(body)) {
-      return error(env, 400, "ACTIVE_PROFILE_VALIDATION_FAILED", "Invalid active profile payload", {
-        errors: ["payload must be an object"],
-      });
+    const validation = validateProfileActionPayload(body, {
+      envelopeCode: "ACTIVE_PROFILE_VALIDATION_FAILED",
+      envelopeMessage: "Invalid active profile payload",
+      requiredCode: "PROFILE_ID_REQUIRED",
+      requiredMessage: "profile_id is required",
+    });
+    if (!validation.ok) {
+      const details = validation.response.details;
+      return details
+        ? error(env, validation.response.status, validation.response.code, validation.response.message, details)
+        : error(env, validation.response.status, validation.response.code, validation.response.message);
     }
 
-    const unknownFields = Object.keys(body).filter((key) => key !== "profile_id");
-    if (unknownFields.length > 0) {
-      return error(env, 400, "ACTIVE_PROFILE_VALIDATION_FAILED", "Invalid active profile payload", {
-        errors: unknownFields.map((key) => `unknown field: ${key}`),
-      });
-    }
-
-    const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
-
-    if (!profileId) {
-      return error(env, 400, "PROFILE_ID_REQUIRED", "profile_id is required");
-    }
+    const profileId = validation.profileId;
 
     const resolved = await setActiveProfileId(env, profileId);
     if (!resolved) {
@@ -3223,21 +3268,20 @@ export async function handleConstructionSettingsProfilesActivate(request, env) {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
     if (body === null) return error(env, 400, "SETTINGS_PROFILE_ACTIVATE_INVALID_JSON", "Malformed JSON body");
-    if (body === null || typeof body !== "object" || Array.isArray(body)) {
-      return error(env, 400, "SETTINGS_PROFILE_ACTIVATE_VALIDATION_FAILED", "Invalid settings profile payload", {
-        errors: ["payload must be an object"],
-      });
+    const validation = validateProfileActionPayload(body, {
+      envelopeCode: "SETTINGS_PROFILE_ACTIVATE_VALIDATION_FAILED",
+      envelopeMessage: "Invalid settings profile payload",
+      requiredCode: "SETTINGS_PROFILE_ID_REQUIRED",
+      requiredMessage: "profile_id is required",
+    });
+    if (!validation.ok) {
+      const details = validation.response.details;
+      return details
+        ? error(env, validation.response.status, validation.response.code, validation.response.message, details)
+        : error(env, validation.response.status, validation.response.code, validation.response.message);
     }
 
-    const unknownFields = Object.keys(body).filter((key) => key !== "profile_id");
-    if (unknownFields.length > 0) {
-      return error(env, 400, "SETTINGS_PROFILE_ACTIVATE_VALIDATION_FAILED", "Invalid settings profile payload", {
-        errors: unknownFields.map((key) => `unknown field: ${key}`),
-      });
-    }
-
-    const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
-    if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
+    const profileId = validation.profileId;
 
     const resolved = await setActiveProfileId(env, profileId);
     if (!resolved) return error(env, 404, "SETTINGS_PROFILE_NOT_FOUND", "Settings profile not found", { profile_id: profileId });
@@ -3255,21 +3299,20 @@ export async function handleConstructionSettingsProfilesDelete(request, env) {
     if (request.method !== "POST") return error(env, 405, "METHOD_NOT_ALLOWED", "Method not allowed");
     const body = await readJsonBody(request);
     if (body === null) return error(env, 400, "SETTINGS_PROFILE_DELETE_INVALID_JSON", "Malformed JSON body");
-    if (body === null || typeof body !== "object" || Array.isArray(body)) {
-      return error(env, 400, "SETTINGS_PROFILE_DELETE_VALIDATION_FAILED", "Invalid settings profile payload", {
-        errors: ["payload must be an object"],
-      });
+    const validation = validateProfileActionPayload(body, {
+      envelopeCode: "SETTINGS_PROFILE_DELETE_VALIDATION_FAILED",
+      envelopeMessage: "Invalid settings profile payload",
+      requiredCode: "SETTINGS_PROFILE_ID_REQUIRED",
+      requiredMessage: "profile_id is required",
+    });
+    if (!validation.ok) {
+      const details = validation.response.details;
+      return details
+        ? error(env, validation.response.status, validation.response.code, validation.response.message, details)
+        : error(env, validation.response.status, validation.response.code, validation.response.message);
     }
 
-    const unknownFields = Object.keys(body).filter((key) => key !== "profile_id");
-    if (unknownFields.length > 0) {
-      return error(env, 400, "SETTINGS_PROFILE_DELETE_VALIDATION_FAILED", "Invalid settings profile payload", {
-        errors: unknownFields.map((key) => `unknown field: ${key}`),
-      });
-    }
-
-    const profileId = typeof body?.profile_id === "string" ? body.profile_id.trim() : "";
-    if (!profileId) return error(env, 400, "SETTINGS_PROFILE_ID_REQUIRED", "profile_id is required");
+    const profileId = validation.profileId;
 
     const envelope = await readSettingsProfilesModel(env);
     if (profileId === envelope.active_profile_id) {
