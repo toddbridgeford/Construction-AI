@@ -301,6 +301,32 @@ test('settings POST updates active profile with partial merge and validation', a
 });
 
 
+
+
+test('settings POST rejects out-of-domain threshold values while preserving validation envelope', async () => {
+  const env = makeEnv();
+
+  const tooLowRes = await handleConstructionSettings(new Request('https://example.com/construction/settings', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ thresholds: { labor_shock_elevated_threshold: -1 } }),
+  }), env);
+  const tooLowBody = await json(tooLowRes);
+  assert.equal(tooLowRes.status, 400);
+  assert.equal(tooLowBody.error.code, 'SETTINGS_WRITE_VALIDATION_FAILED');
+  assert.match(tooLowBody.error.details.errors[0], /must be between 0 and 100/);
+
+  const tooHighRes = await handleConstructionSettings(new Request('https://example.com/construction/settings', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ thresholds: { weakest_metro_threshold: 101 } }),
+  }), env);
+  const tooHighBody = await json(tooHighRes);
+  assert.equal(tooHighRes.status, 400);
+  assert.equal(tooHighBody.error.code, 'SETTINGS_WRITE_VALIDATION_FAILED');
+  assert.match(tooHighBody.error.details.errors[0], /must be between 0 and 100/);
+});
+
 test('settings POST rejects unknown updated_at field to prevent false-success writes', async () => {
   const env = makeEnv();
   const res = await handleConstructionSettings(new Request('https://example.com/construction/settings', {
@@ -686,6 +712,32 @@ test('activate and delete endpoints accept trimmed profile ids', async () => {
     body: JSON.stringify({ profile_id: `  ${created.profile_id}  ` }),
   }), env);
   assert.equal(deleteRes.status, 200);
+});
+
+
+
+test('activate and delete endpoints reject non-object payloads with endpoint-specific validation envelopes', async () => {
+  const env = makeEnv();
+
+  const activateRes = await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(['balanced-operator']),
+  }), env);
+  const activateBody = await json(activateRes);
+  assert.equal(activateRes.status, 400);
+  assert.equal(activateBody.error.code, 'SETTINGS_PROFILE_ACTIVATE_VALIDATION_FAILED');
+  assert.match(activateBody.error.details.errors[0], /payload must be an object/);
+
+  const deleteRes = await handleConstructionSettingsProfilesDelete(new Request('https://example.com/construction/settings/profiles/delete', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(['aggressive-growth']),
+  }), env);
+  const deleteBody = await json(deleteRes);
+  assert.equal(deleteRes.status, 400);
+  assert.equal(deleteBody.error.code, 'SETTINGS_PROFILE_DELETE_VALIDATION_FAILED');
+  assert.match(deleteBody.error.details.errors[0], /payload must be an object/);
 });
 
 test('activate and delete endpoints reject unknown fields to prevent false-success writes', async () => {
