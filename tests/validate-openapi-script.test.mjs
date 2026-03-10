@@ -37,3 +37,31 @@ test('OpenAPI settings write request schemas allow runtime partial payloads', as
   assert.match(raw, /ConstructionSettingsProfileCreateRequest:[\s\S]*?settings:[\s\S]*?ConstructionSettingsPatchModel/);
   assert.match(raw, /ConstructionSettingsPatchModel:[\s\S]*?additionalProperties:\s*false/);
 });
+
+
+test('OpenAPI operations declare explicit route-group tags and preserve deprecated aliases', async () => {
+  const raw = await fs.readFile(new URL('../openapi.yaml', import.meta.url), 'utf8');
+
+  const assertTag = (path, method, expectedTag) => {
+    const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const pattern = new RegExp(`\"${escapedPath}\":[\\s\\S]*?\\n\\s{4}${method}:[\\s\\S]*?\\n\\s{6}tags:[\\s\\S]*?\\n\\s{6}- ${expectedTag}`);
+    assert.match(raw, pattern);
+  };
+
+  assertTag('/', 'get', 'Canonical Product');
+  assertTag('/health', 'get', 'Canonical Product');
+  assertTag('/construction/settings', 'post', 'Canonical Product');
+
+  assertTag('/construction/power', 'get', 'Advanced Model');
+  assertTag('/construction/heatmap', 'get', 'Advanced Model');
+  assertTag('/construction/nowcast', 'get', 'Advanced Model');
+  assertTag('/construction/forecast', 'get', 'Advanced Model');
+
+  assertTag('/ytd/commercial', 'get', 'Compatibility Alias');
+  assertTag('/ytd/housing', 'get', 'Compatibility Alias');
+  assertTag('/ytd/summary', 'get', 'Compatibility Alias');
+
+  assert.match(raw, /"\/ytd\/commercial":[\s\S]*?deprecated:\s*true/);
+  assert.match(raw, /"\/ytd\/housing":[\s\S]*?deprecated:\s*true/);
+  assert.match(raw, /"\/ytd\/summary":[\s\S]*?deprecated:\s*true/);
+});

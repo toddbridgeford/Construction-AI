@@ -10,15 +10,17 @@ servers:
 - url: https://construction-ai.toddbridgeford.workers.dev
   description: Cloudflare Worker (canonical)
 tags:
-- name: canonical
+- name: Canonical Product
   description: Canonical public endpoints for clients and GPT Actions.
-- name: advanced-models
-  description: Advanced deterministic model endpoints under /construction/*.
-- name: compatibility-aliases
+- name: Advanced Model
+  description: Advanced deterministic model endpoints.
+- name: Compatibility Alias
   description: Backward-compatible deprecated aliases retained for existing integrations.
 paths:
   "/":
     get:
+      tags:
+      - Canonical Product
       operationId: root
       summary: Root (alias of health)
       responses:
@@ -30,6 +32,8 @@ paths:
                 "$ref": "#/components/schemas/HealthResponse"
   "/health":
     get:
+      tags:
+      - Canonical Product
       operationId: health
       summary: Health check
       responses:
@@ -41,6 +45,8 @@ paths:
                 "$ref": "#/components/schemas/HealthResponse"
   "/cpi":
     get:
+      tags:
+      - Canonical Product
       operationId: getCpi
       summary: Latest CPI (KV snapshot with FRED fallback)
       responses:
@@ -52,6 +58,8 @@ paths:
                 "$ref": "#/components/schemas/GenericOkObject"
   "/fred/observations":
     get:
+      tags:
+      - Canonical Product
       operationId: getFred
       summary: Fetch FRED observations for a single series
       parameters:
@@ -76,6 +84,8 @@ paths:
                 "$ref": "#/components/schemas/FredObservationsEnvelope"
   "/notion/series":
     get:
+      tags:
+      - Canonical Product
       operationId: listNotionSeries
       summary: Query Notion database and return pages/properties (if configured)
       responses:
@@ -87,6 +97,8 @@ paths:
                 "$ref": "#/components/schemas/GenericOkObject"
   "/bundle":
     get:
+      tags:
+      - Canonical Product
       operationId: macroBundle
       summary: Macro bundle
       parameters:
@@ -112,6 +124,8 @@ paths:
                 "$ref": "#/components/schemas/GenericOkObject"
   "/signal":
     get:
+      tags:
+      - Canonical Product
       operationId: macroSignal
       summary: Construction macro signal
       responses:
@@ -123,6 +137,8 @@ paths:
                 "$ref": "#/components/schemas/GenericOkObject"
   "/regime":
     get:
+      tags:
+      - Canonical Product
       operationId: macroRegime
       summary: Determine macro regime
       responses:
@@ -134,6 +150,8 @@ paths:
                 "$ref": "#/components/schemas/GenericOkObject"
   "/liquidity":
     get:
+      tags:
+      - Canonical Product
       operationId: macroLiquidity
       summary: Credit liquidity state
       responses:
@@ -145,6 +163,8 @@ paths:
                 "$ref": "#/components/schemas/GenericOkObject"
   "/construction-index":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionIndex
       summary: Construction cycle strength
       responses:
@@ -156,6 +176,8 @@ paths:
                 "$ref": "#/components/schemas/GenericOkObject"
   "/risk-score":
     get:
+      tags:
+      - Canonical Product
       operationId: macroRiskScore
       summary: Combined macro risk score
       responses:
@@ -167,6 +189,8 @@ paths:
                 "$ref": "#/components/schemas/GenericOkObject"
   "/construction/dashboard":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionDashboard
       summary: Canonical construction dashboard payload
       responses:
@@ -178,6 +202,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionDashboardResponse"
   "/construction/terminal":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionTerminal
       summary: One-call operator intelligence terminal
       responses:
@@ -190,7 +216,7 @@ paths:
   "/construction/power":
     get:
       tags:
-      - advanced-models
+      - Advanced Model
       operationId: constructionPower
       summary: Construction Power Index (pricing/margin leverage by actor)
       responses:
@@ -203,7 +229,7 @@ paths:
   "/construction/heatmap":
     get:
       tags:
-      - advanced-models
+      - Advanced Model
       operationId: constructionHeatmap
       summary: Metro heatmap engine for strongest and weakest markets
       responses:
@@ -216,7 +242,7 @@ paths:
   "/construction/nowcast":
     get:
       tags:
-      - advanced-models
+      - Advanced Model
       operationId: constructionNowcast
       summary: Forward construction cycle nowcast (6-12 month direction)
       responses:
@@ -229,7 +255,7 @@ paths:
   "/construction/forecast":
     get:
       tags:
-      - advanced-models
+      - Advanced Model
       operationId: constructionForecast
       summary: Forecasted strongest and weakest construction markets over next 12
         months
@@ -242,6 +268,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionForecastResponse"
   "/construction/market-radar":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionMarketRadar
       summary: Hottest and weakest construction markets
       responses:
@@ -253,6 +281,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionMarketRadarResponse"
   "/construction/morning-brief":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionMorningBrief
       summary: Daily operator-grade construction morning briefing
       responses:
@@ -264,6 +294,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionMorningBriefResponse"
   "/construction/scenarios":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionScenarios
       summary: Deterministic base/downside/upside scenario engine
       responses:
@@ -275,6 +307,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionScenariosResponse"
   "/construction/watchlist":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionWatchlist
       summary: Deterministic operator watchlist alerts
       responses:
@@ -286,6 +320,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionWatchlistResponse"
   "/construction/watchlist/custom":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionWatchlistCustom
       summary: Settings-aware custom watchlist alerts
       responses:
@@ -297,6 +333,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionCustomWatchlistResponse"
   "/construction/settings":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsGet
       summary: Read active construction alert settings profile
       responses:
@@ -307,6 +345,8 @@ paths:
               schema:
                 "$ref": "#/components/schemas/ConstructionSettingsResponse"
     post:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsSave
       summary: Update active construction alert settings profile
       requestBody:
@@ -324,6 +364,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionSettingsWriteResponse"
   "/construction/settings/defaults":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsDefaults
       summary: Read safe default construction settings
       responses:
@@ -335,6 +377,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionSettingsDefaultsResponse"
   "/construction/settings/reset":
     post:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsReset
       summary: Reset app-level construction settings to defaults
       responses:
@@ -346,6 +390,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionSettingsResetResponse"
   "/construction/settings/profiles":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsProfiles
       summary: List saved settings profiles and active profile
       responses:
@@ -356,6 +402,8 @@ paths:
               schema:
                 "$ref": "#/components/schemas/ConstructionSettingsProfilesResponse"
     post:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsProfilesCreate
       summary: Create a new settings profile (from provided settings or clone active)
       requestBody:
@@ -373,6 +421,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionSettingsWriteResponse"
   "/construction/settings/active-profile":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsActiveProfileGet
       summary: Read the active settings profile metadata and resolved settings
       responses:
@@ -383,6 +433,8 @@ paths:
               schema:
                 "$ref": "#/components/schemas/ConstructionSettingsResponse"
     post:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsActiveProfileSet
       summary: Set active settings profile by profile_id (backward-compatible endpoint)
       requestBody:
@@ -400,6 +452,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionSettingsResponse"
   "/construction/settings/profiles/activate":
     post:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsProfilesActivate
       summary: Activate a settings profile by profile_id
       requestBody:
@@ -417,6 +471,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionSettingsWriteResponse"
   "/construction/settings/profiles/delete":
     post:
+      tags:
+      - Canonical Product
       operationId: constructionSettingsProfilesDelete
       summary: Delete a non-active settings profile by profile_id
       requestBody:
@@ -434,6 +490,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionSettingsWriteResponse"
   "/construction/morning-brief/v2":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionMorningBriefV2
       summary: Changed-conditions morning brief with watchlist integration
       responses:
@@ -445,6 +503,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionMorningBriefV2Response"
   "/construction/alerts":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionAlerts
       summary: Deterministic active construction alert cards
       responses:
@@ -456,6 +516,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionAlertsResponse"
   "/construction/recession-probability":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionRecessionProbability
       summary: Deterministic next-12-month slowdown probability
       responses:
@@ -467,6 +529,8 @@ paths:
                 "$ref": "#/components/schemas/RecessionProbabilityResponse"
   "/spending/ytd":
     get:
+      tags:
+      - Canonical Product
       operationId: spendingYtd
       summary: Commercial or housing YTD vs PYTD using FRED SAAR monthly-equivalent
         totals
@@ -493,6 +557,8 @@ paths:
                 "$ref": "#/components/schemas/SpendingYtdResponse"
   "/spending/ytd/summary":
     get:
+      tags:
+      - Canonical Product
       operationId: spendingYtdSummary
       summary: Combined commercial + housing YTD/PYTD response
       parameters:
@@ -511,7 +577,7 @@ paths:
   "/ytd/commercial":
     get:
       tags:
-      - compatibility-aliases
+      - Compatibility Alias
       operationId: spendingYtdCommercialAlias
       summary: Deprecated alias for /spending/ytd?segment=commercial
       deprecated: true
@@ -531,7 +597,7 @@ paths:
   "/ytd/housing":
     get:
       tags:
-      - compatibility-aliases
+      - Compatibility Alias
       operationId: spendingYtdHousingAlias
       summary: Deprecated alias for /spending/ytd?segment=housing
       deprecated: true
@@ -551,7 +617,7 @@ paths:
   "/ytd/summary":
     get:
       tags:
-      - compatibility-aliases
+      - Compatibility Alias
       operationId: spendingYtdSummaryAlias
       summary: Deprecated alias for /spending/ytd/summary
       deprecated: true
@@ -570,6 +636,8 @@ paths:
                 "$ref": "#/components/schemas/SpendingYtdSummaryResponse"
   "/construction/stress-index":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionStressIndex
       summary: Deterministic construction stress index
       responses:
@@ -581,6 +649,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionStressIndexResponse"
   "/construction/early-warning":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionEarlyWarning
       summary: Deterministic cycle-risk early warning
       responses:
@@ -592,6 +662,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionEarlyWarningResponse"
   "/construction/capital-flows":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionCapitalFlows
       summary: Capital allocation posture for operators and lenders
       responses:
@@ -603,6 +675,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionCapitalFlowsResponse"
   "/construction/migration-index":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionMigrationIndex
       summary: Structural market migration index from heatmap and forecast
       responses:
@@ -615,6 +689,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionMigrationIndexResponse"
   "/construction/materials-shock":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionMaterialsShock
       summary: Deterministic materials inflation pressure model
       responses:
@@ -626,6 +702,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionMaterialsShockResponse"
   "/construction/labor-shock":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionLaborShock
       summary: Deterministic labor tightness pressure model
       responses:
@@ -637,6 +715,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionLaborShockResponse"
   "/construction/margin-pressure":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionMarginPressure
       summary: Deterministic combined margin pressure model
       responses:
@@ -648,6 +728,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionMarginPressureResponse"
   "/construction/bid-intensity":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionBidIntensity
       summary: Deterministic bid intensity model for pursuit crowding
       responses:
@@ -659,6 +741,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionBidIntensityResponse"
   "/construction/backlog-quality":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionBacklogQuality
       summary: Deterministic backlog quality model
       responses:
@@ -670,6 +754,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionBacklogQualityResponse"
   "/construction/project-risk":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionProjectRisk
       summary: Deterministic project delay and cancellation risk model
       responses:
@@ -681,6 +767,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionProjectRiskResponse"
   "/construction/receivables-risk":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionReceivablesRisk
       summary: Deterministic receivables conversion and counterparty quality risk model
       responses:
@@ -692,6 +780,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionReceivablesRiskResponse"
   "/construction/payment-delay-risk":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionPaymentDelayRisk
       summary: Deterministic payment delay risk across lenders and project chain
       responses:
@@ -703,6 +793,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionPaymentDelayRiskResponse"
   "/construction/collections-stress":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionCollectionsStress
       summary: Deterministic collections stress and working-capital pressure model
       responses:
@@ -714,6 +806,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionCollectionsStressResponse"
   "/construction/owner-risk":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionOwnerRisk
       summary: Deterministic owner counterparty risk model
       responses:
@@ -725,6 +819,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionOwnerRiskResponse"
   "/construction/developer-fragility":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionDeveloperFragility
       summary: Deterministic developer fragility model
       responses:
@@ -736,6 +832,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionDeveloperFragilityResponse"
   "/construction/lender-pullback-risk":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionLenderPullbackRisk
       summary: Deterministic lender pullback risk model
       responses:
@@ -747,6 +845,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionLenderPullbackRiskResponse"
   "/construction/counterparty-quality":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionCounterpartyQuality
       summary: Deterministic counterparty quality model
       responses:
@@ -758,6 +858,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionCounterpartyQualityResponse"
   "/construction/metro-concentration-risk":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionMetroConcentrationRisk
       summary: Deterministic metro concentration risk model
       responses:
@@ -769,6 +871,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionMetroConcentrationRiskResponse"
   "/construction/counterparty-concentration-risk":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionCounterpartyConcentrationRisk
       summary: Deterministic counterparty concentration risk model
       responses:
@@ -780,6 +884,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionCounterpartyConcentrationRiskResponse"
   "/construction/project-mix-exposure":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionProjectMixExposure
       summary: Deterministic project mix exposure model
       responses:
@@ -791,6 +897,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionProjectMixExposureResponse"
   "/construction/portfolio-risk":
     get:
+      tags:
+      - Canonical Product
       operationId: constructionPortfolioRisk
       summary: Deterministic portfolio risk model
       responses:
