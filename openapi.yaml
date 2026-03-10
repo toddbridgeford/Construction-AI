@@ -492,6 +492,60 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/SpendingYtdSummaryResponse"
+  "/ytd/commercial":
+    get:
+      operationId: spendingYtdCommercialAlias
+      summary: Deprecated alias for /spending/ytd?segment=commercial
+      deprecated: true
+      parameters:
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: YTD/PYTD response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SpendingYtdResponse"
+  "/ytd/housing":
+    get:
+      operationId: spendingYtdHousingAlias
+      summary: Deprecated alias for /spending/ytd?segment=housing
+      deprecated: true
+      parameters:
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: YTD/PYTD response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SpendingYtdResponse"
+  "/ytd/summary":
+    get:
+      operationId: spendingYtdSummaryAlias
+      summary: Deprecated alias for /spending/ytd/summary
+      deprecated: true
+      parameters:
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: YTD/PYTD summary response
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/SpendingYtdSummaryResponse"
   "/construction/stress-index":
     get:
       operationId: constructionStressIndex
