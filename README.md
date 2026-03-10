@@ -24,6 +24,8 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 
 ## Worker routes (live + documented)
 
+### Canonical public endpoints
+
 - `GET /` (alias of `/health`)
 - `GET /health`
 - `GET /cpi`
@@ -38,10 +40,6 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `GET /construction/dashboard`
 - `GET /construction/terminal`
 - `GET /construction/market-radar`
-- `GET /construction/power`
-- `GET /construction/heatmap`
-- `GET /construction/nowcast`
-- `GET /construction/forecast`
 - `GET /construction/morning-brief`
 - `GET /construction/alerts`
 - `GET /construction/recession-probability`
@@ -49,11 +47,26 @@ Canonical Cloudflare Worker + artifact pipelines for Construction AI.
 - `GET /construction/early-warning`
 - `GET /construction/capital-flows`
 - `GET /construction/migration-index`
+- `GET /construction/scenarios`
+- `GET /construction/watchlist`
+- `GET /construction/watchlist/custom`
+- `GET /construction/settings`
+- `POST /construction/settings`
+- `GET /construction/settings/defaults`
+- `POST /construction/settings/reset`
+- `GET /construction/settings/profiles`
+- `POST /construction/settings/profiles`
+- `POST /construction/settings/profiles/activate`
+- `POST /construction/settings/profiles/delete`
+- `POST /construction/settings/active-profile`
 - `GET /spending/ytd`
 - `GET /spending/ytd/summary`
-- `GET /ytd/commercial`
-- `GET /ytd/housing`
-- `GET /ytd/summary`
+
+### Deprecated compatibility aliases (still supported)
+
+- `GET /ytd/commercial` → use `GET /spending/ytd?segment=commercial`
+- `GET /ytd/housing` → use `GET /spending/ytd?segment=housing`
+- `GET /ytd/summary` → use `GET /spending/ytd/summary`
 
 ## Actions Integration (Custom GPT)
 

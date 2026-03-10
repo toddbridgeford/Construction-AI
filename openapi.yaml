@@ -3,11 +3,19 @@ openapi: 3.1.0
 info:
   title: Construction AI Terminal
   version: 1.1.0
-  description: Canonical API for the construction-ai Cloudflare Worker (no /terminal;
-    Action matches live routes).
+  description: Canonical API for the construction-ai Cloudflare Worker. Canonical public
+    endpoints are listed directly, deprecated compatibility aliases remain marked as
+    deprecated, and advanced model endpoints are included under /construction/*.
 servers:
 - url: https://construction-ai.toddbridgeford.workers.dev
   description: Cloudflare Worker (canonical)
+tags:
+- name: canonical
+  description: Canonical public endpoints for clients and GPT Actions.
+- name: advanced-models
+  description: Advanced deterministic model endpoints under /construction/*.
+- name: compatibility-aliases
+  description: Backward-compatible deprecated aliases retained for existing integrations.
 paths:
   "/":
     get:
@@ -181,6 +189,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionTerminalResponse"
   "/construction/power":
     get:
+      tags:
+      - advanced-models
       operationId: constructionPower
       summary: Construction Power Index (pricing/margin leverage by actor)
       responses:
@@ -192,6 +202,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionPowerResponse"
   "/construction/heatmap":
     get:
+      tags:
+      - advanced-models
       operationId: constructionHeatmap
       summary: Metro heatmap engine for strongest and weakest markets
       responses:
@@ -203,6 +215,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionHeatmapResponse"
   "/construction/nowcast":
     get:
+      tags:
+      - advanced-models
       operationId: constructionNowcast
       summary: Forward construction cycle nowcast (6-12 month direction)
       responses:
@@ -214,6 +228,8 @@ paths:
                 "$ref": "#/components/schemas/ConstructionNowcastResponse"
   "/construction/forecast":
     get:
+      tags:
+      - advanced-models
       operationId: constructionForecast
       summary: Forecasted strongest and weakest construction markets over next 12
         months
@@ -494,6 +510,8 @@ paths:
                 "$ref": "#/components/schemas/SpendingYtdSummaryResponse"
   "/ytd/commercial":
     get:
+      tags:
+      - compatibility-aliases
       operationId: spendingYtdCommercialAlias
       summary: Deprecated alias for /spending/ytd?segment=commercial
       deprecated: true
@@ -512,6 +530,8 @@ paths:
                 "$ref": "#/components/schemas/SpendingYtdResponse"
   "/ytd/housing":
     get:
+      tags:
+      - compatibility-aliases
       operationId: spendingYtdHousingAlias
       summary: Deprecated alias for /spending/ytd?segment=housing
       deprecated: true
@@ -530,6 +550,8 @@ paths:
                 "$ref": "#/components/schemas/SpendingYtdResponse"
   "/ytd/summary":
     get:
+      tags:
+      - compatibility-aliases
       operationId: spendingYtdSummaryAlias
       summary: Deprecated alias for /spending/ytd/summary
       deprecated: true
