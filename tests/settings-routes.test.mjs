@@ -514,7 +514,6 @@ test('terminal read path does not persist scenario snapshot in KV', async () => 
   assert.ok(body?.terminal?.morning_brief_v2);
   assert.equal(kvWrites.some((entry) => entry.key === 'construction:terminal:scenario-watchlist:v1'), false);
 });
-
 test('morning brief v2 endpoint persists scenario snapshot in KV', async () => {
   const kvWrites = [];
   const store = new Map();
