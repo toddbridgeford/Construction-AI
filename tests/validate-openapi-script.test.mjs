@@ -39,6 +39,13 @@ test('OpenAPI settings write request schemas allow runtime partial payloads', as
 });
 
 
+
+test('OpenAPI terminal schema models runtime subsection failures for market_radar and forecast', async () => {
+  const raw = await fs.readFile(new URL('../openapi.yaml', import.meta.url), 'utf8');
+  assert.match(raw, /ConstructionTerminalResponse:[\s\S]*?market_radar:[\s\S]*?oneOf:[\s\S]*?ConstructionSubsectionError/);
+  assert.match(raw, /ConstructionTerminalResponse:[\s\S]*?forecast:[\s\S]*?oneOf:[\s\S]*?ConstructionSubsectionError/);
+});
+
 test('OpenAPI operations declare explicit route-group tags and preserve deprecated aliases', async () => {
   const raw = await fs.readFile(new URL('../openapi.yaml', import.meta.url), 'utf8');
 
