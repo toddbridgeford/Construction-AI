@@ -37,19 +37,19 @@
   },
   "indices": {
     "pressure_index": {
-      "value": 48,
-      "direction": "↑",
+      "value": 46,
+      "direction": "↓",
       "zone": "Compression Phase",
-      "delta_3m": 2,
+      "delta_3m": 0,
       "momentum_band": "Stable",
       "risk_state": "🟢",
       "drivers": {
-        "capital": 44,
-        "pipeline": 49,
+        "capital": 40,
+        "pipeline": 47,
         "trade": 50,
         "materials": 50,
         "regulatory": 50,
-        "macro": 49
+        "macro": 43
       },
       "subindices": {
         "cpi_sf": null,
@@ -60,13 +60,13 @@
         "cpi_i": null
       },
       "divergences": {
-        "r_minus_i": -1,
-        "sf_minus_mf": -1,
+        "r_minus_i": -2,
+        "sf_minus_mf": 0,
         "inst_minus_infra": 0
       }
     },
     "capital_stress_index": {
-      "value": 44,
+      "value": 40,
       "risk_state": "🟢",
       "overlays": {
         "active_triggers": [],
@@ -156,9 +156,9 @@
     "active": false,
     "trigger_reason": [],
     "display": {
-      "cpi_value": 48,
+      "cpi_value": 46,
       "zone": "Compression Phase",
-      "delta_3m": 2,
+      "delta_3m": 0,
       "risk_state": "🟢"
     }
   },
@@ -167,7 +167,7 @@
     "regions": [
       {
         "name": "National",
-        "velocity": "↑",
+        "velocity": "↓",
         "pressure": "🟢",
         "capital": "🟢",
         "residential": "🟡",
