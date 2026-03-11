@@ -95,3 +95,40 @@ test('terminal returns spending partial-failure object when spending summary thr
   assert.equal(typeof body?.terminal?.watchlist_summary, 'string');
   assert.ok(body?.terminal?.watchlist_summary.length > 0);
 });
+
+test('terminal keeps composing when market radar helper throws unexpectedly', async () => {
+  const env = makeEnv({
+    ASSETS: {
+      async fetch() {
+        throw new Error('asset read failed');
+      },
+    },
+    CPI_SNAPSHOTS: {
+      async get() {
+        return null;
+      },
+      async put() {},
+    },
+  });
+
+  Object.defineProperty(env, 'SERVICE_NAME', {
+    configurable: true,
+    get() {
+      const stack = new Error().stack || '';
+      if (stack.includes('handleConstructionMarketRadar')) {
+        throw new Error('service name unavailable');
+      }
+      return 'construction-ai-test';
+    },
+  });
+
+  const res = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(body?.terminal?.market_radar?.ok, false);
+  assert.equal(body?.terminal?.market_radar?.error?.code, 'MARKET_RADAR_FAILED');
+  assert.match(body?.terminal?.market_radar?.error?.message || '', /Unable to build market radar/);
+  assert.equal(typeof body?.terminal?.watchlist_summary, 'string');
+  assert.ok(body?.terminal?.watchlist_summary.length > 0);
+});

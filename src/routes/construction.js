@@ -2415,21 +2415,27 @@ function buildMarketTape(terminal) {
 }
 
 async function tryReadMarketRadar(env) {
-  const radarResponse = await handleConstructionMarketRadar(env);
-  if (!(radarResponse instanceof Response)) {
-    return subsectionError("MARKET_RADAR_FAILED", "Unexpected market radar response type");
-  }
-  if (radarResponse.status >= 400) {
-    const payload = await safeJsonResponseBody(radarResponse);
-    return subsectionError(
-      payload?.error?.code || "MARKET_RADAR_FAILED",
-      payload?.error?.message || "Unable to build market radar",
-      payload?.error?.details || { status: radarResponse.status }
-    );
-  }
+  try {
+    const radarResponse = await handleConstructionMarketRadar(env);
+    if (!(radarResponse instanceof Response)) {
+      return subsectionError("MARKET_RADAR_FAILED", "Unexpected market radar response type");
+    }
+    if (radarResponse.status >= 400) {
+      const payload = await safeJsonResponseBody(radarResponse);
+      return subsectionError(
+        payload?.error?.code || "MARKET_RADAR_FAILED",
+        payload?.error?.message || "Unable to build market radar",
+        payload?.error?.details || { status: radarResponse.status }
+      );
+    }
 
-  const payload = await safeJsonResponseBody(radarResponse);
-  return payload?.radar || subsectionError("MARKET_RADAR_INVALID", "Market radar payload missing radar");
+    const payload = await safeJsonResponseBody(radarResponse);
+    return payload?.radar || subsectionError("MARKET_RADAR_INVALID", "Market radar payload missing radar");
+  } catch (e) {
+    return subsectionError("MARKET_RADAR_FAILED", "Unable to build market radar", {
+      message: e?.message || String(e),
+    });
+  }
 }
 
 async function tryBuildForecast(request, env, terminal = null) {
