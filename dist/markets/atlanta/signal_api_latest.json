@@ -3,14 +3,14 @@
     "system": "Construction Intelligence OS",
     "version": "signal_api_v1",
     "mode": "data_assisted",
-    "run_date": "2026-03-10",
+    "run_date": "2026-03-11",
     "region": {
       "name": "Atlanta-Sandy Springs-Roswell, GA MSA",
       "geo_id": "12060"
     }
   },
   "provenance": {
-    "generated_at": "2026-03-10T19:08:37.007Z",
+    "generated_at": "2026-03-11T02:49:19.660Z",
     "sources": [
       {
         "name": "FRED",
