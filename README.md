@@ -137,6 +137,12 @@ Run local OpenAPI checks:
 ruby scripts/validate_openapi.rb
 ```
 
+Run the deployment-confidence smoke checks for canonical public endpoints:
+
+```bash
+npm run test:smoke
+```
+
 ## YTD quick usage
 
 ```bash
