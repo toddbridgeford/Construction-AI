@@ -58,8 +58,24 @@ test('deployment-confidence smoke checks pass for canonical public endpoints', a
   const terminal = await assertJsonSuccess(env, '/construction/terminal');
   assert.equal(terminal.ok, true);
   assert.equal(typeof terminal.terminal, 'object');
-  for (const key of ['signal', 'regime', 'liquidity', 'risk', 'construction_index', 'spending', 'forecast', 'alerts']) {
+  for (const key of [
+    'signal',
+    'regime',
+    'liquidity',
+    'risk',
+    'forecast_summary',
+    'morning_brief_v2_summary',
+    'forecast',
+    'market_radar',
+  ]) {
     assert.ok(Object.hasOwn(terminal.terminal, key), `/construction/terminal missing subsection key: ${key}`);
+  }
+
+  const morningBriefV2 = await assertJsonSuccess(env, '/construction/morning-brief/v2');
+  assert.equal(morningBriefV2.ok, true);
+  assert.equal(typeof morningBriefV2.brief, 'object');
+  for (const key of ['title', 'changed_conditions', 'top_risks', 'top_opportunities', 'operator_focus', 'watchlist']) {
+    assert.ok(Object.hasOwn(morningBriefV2.brief, key), `/construction/morning-brief/v2 missing brief key: ${key}`);
   }
 
   const dashboard = await assertJsonSuccess(env, '/construction/dashboard');
