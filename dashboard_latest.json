@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-11T02:49:19.456Z",
+  "generated_at": "2026-03-11T07:12:17.453Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -17,10 +17,6 @@
         "value": 47
       },
       {
-        "date": "2026-03-08",
-        "value": 47
-      },
-      {
         "date": "2026-03-09",
         "value": 47
       },
@@ -54,6 +50,10 @@
       },
       {
         "date": "2026-03-10",
+        "value": 46
+      },
+      {
+        "date": "2026-03-11",
         "value": 46
       },
       {
@@ -195,36 +195,72 @@
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 18,
+      "newsapi:top_headlines": 27,
       "newsapi:everything": 79
     },
     "news_unified": [
       {
-        "title": "Oil Drops as Trump Signals Iran Conflict Near End: Markets Wrap - Bloomberg.com",
+        "title": "Oil Drops as Trump Signals Iran Conflict Near End: Markets Wrap - Bloomberg",
         "url": "https://www.bloomberg.com/news/articles/2026-03-09/oil-drops-as-trump-signals-iran-conflict-near-end-markets-wrap",
         "source": "Bloomberg",
-        "published_at": "2026-03-10T00:59:00Z",
+        "published_at": "2026-03-10T06:03:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Asian stocks rebounded from Monday’s selloff and crude oil fell, as President Donald Trump signaled the Iran war may be nearing an end, boosting investor sentiment."
+        "description": "Asian stocks rose and crude oil fell as President Donald Trump signaled the Iran war may be nearing an end, helping boost sentiment after Monday’s selloff in risk assets."
       },
       {
-        "title": "Oil prices sink, stocks jump in dramatic reversal - NBC News",
-        "url": "https://www.nbcnews.com/business/energy/iran-oil-surges-markets-rcna262395",
-        "source": "NBC News",
-        "published_at": "2026-03-09T22:56:31Z",
+        "title": "FAA grounds all JetBlue flights after request from airline - AP News",
+        "url": "https://apnews.com/article/faa-ground-stop-jetblue-e990b118812f467d904d92375b984d71",
+        "source": "Associated Press",
+        "published_at": "2026-03-10T05:54:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Oil prices fell and stocks rose Monday on hopes that the U.S. war in Iran would be over soon."
+        "description": "The Federal Aviation Administration briefly grounded all JetBlue flights due to a request from the airline, the agency said in a notice posted to its website early Tuesday morning. It was not immediately clear why JetBlue requested the ground stop, which was …"
       },
       {
-        "title": "Electric air taxis are about to take flight in 26 states - TechCrunch",
-        "url": "https://techcrunch.com/2026/03/09/electric-air-taxis-are-about-to-take-flight-in-26-states/",
-        "source": "TechCrunch",
-        "published_at": "2026-03-09T22:30:35Z",
+        "title": "Yann LeCun’s AMI Labs raises $1.03 billion to build world models - TechCrunch",
+        "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxObER1eGxPbkVSWG5oVExEXzIxZHUxbDJkc2puSk1GM3NqRE1malBDT0FHTUU1b2xROFRYZ2RsZW5MazF1U1FObi1sVnpWb3dIVXAxYnFaLW9pa013THcwZmUzT3dDWEN1XzlCQVBQd1F6ZlBpMDRmQ0t6ZXNNOHFlNmYwcjV5R0MtM0M2WWEzenh4Y05LWUVlLXhJOHJJdw?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-10T05:00:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The federal government has selected eight proposals to test electric aircraft across 26 states."
+        "description": null
+      },
+      {
+        "title": "China exports sharply beat expectations as trade surplus in the first two months surges to highest on record - CNBC",
+        "url": "https://www.cnbc.com/2026/03/10/china-trade-balance-surplus-record-exports-tariffs-imports.html",
+        "source": "CNBC",
+        "published_at": "2026-03-10T03:13:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "China typically combines January and February trade data to smooth distortions from the shifting Lunar New Year holiday."
+      },
+      {
+        "title": "Trump sons investing in domestic drone production businesses - abcnews.com",
+        "url": "https://abcnews.com/US/trump-sons-investing-domestic-drone-production-businesses/story?id%5C%5Cu003d130908416=",
+        "source": "Abcnews.com",
+        "published_at": "2026-03-09T23:52:29Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
+      },
+      {
+        "title": "JPMorgan’s shocking Iran forecast could change oil’s next move - thestreet.com",
+        "url": "https://www.thestreet.com/economy/jpmorgans-shocking-iran-forecast-could-change-oils-next-move",
+        "source": "TheStreet",
+        "published_at": "2026-03-09T23:33:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "JPMorgan’s Iran call puts a surprise clock on $110 oil."
+      },
+      {
+        "title": "‘Flying Cars’ Will Take Off in American Skies This Summer - WIRED",
+        "url": "https://www.wired.com/story/flying-cars-will-take-off-in-american-skies-this-summer/",
+        "source": "Wired",
+        "published_at": "2026-03-09T22:39:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The federal government announced a new pilot program designed to get new kinds of ultralight vehicles and “eVTOLs” up and running around the country—even if they’re not fully FAA-certified."
       },
       {
         "title": "Amy Klobuchar Slams Live Nation Settlement: ‘Every Sign Points to a Backroom Deal’ - Rolling Stone",
@@ -234,6 +270,15 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Senator Amy Klobuchar expressed her frustration with the DOJ's settlement with Live Nation, saying 'every single sign points to a backroom deal.'"
+      },
+      {
+        "title": "Oil Prices Will Remain High as Iran War Continues - The New York Times",
+        "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5pU2o1S2J3Zi1ENkFKRVFGdVpEZ3JkSGJaVEw5azkwRTNSbC1uSlFVZ3hJWGVZaXZRUV9iSGp0OGp1bUxxWEdWX3dqZ0JyRWk0ZEhlWDJrdVhjaEs0dDlFTFY1VDh6TS1xaEFzQWc3OF8tZXBIeGZ2S0pHQ2U?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-09T22:29:13Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null
       },
       {
         "title": "Why This Biotech, Up 47%, Could Spark The Next Buyout Frenzy - Investor's Business Daily",
@@ -263,13 +308,13 @@
         "description": "Treasuries gained late in New York trading after President Donald Trump signaled the war with Iran may end soon, capping a volatile day for global bond markets."
       },
       {
-        "title": "Lockheed, RTX, Northrop, Stocks Slip. Watch This Trump-Backed Drone Company. - Barron's",
-        "url": "https://www.barrons.com/articles/lockheed-rtx-defense-stocks-trump-drones-5807c2bd",
-        "source": "Barron's",
-        "published_at": "2026-03-09T20:20:00Z",
+        "title": "Microsoft launches AI tool that competes with Anthropic - Axios",
+        "url": "https://www.axios.com/2026/03/09/microsoft-copilot-cowork-anthropic",
+        "source": "Axios",
+        "published_at": "2026-03-09T20:20:39Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": ""
+        "description": "Anthropic invented the product that threatened to kill Microsoft's software business, then Microsoft took the name and turned it into a Copilot feature."
       },
       {
         "title": "50 years of oil-price shocks have taught us that only 2 things matter to markets right now - MarketWatch",
@@ -281,6 +326,15 @@
         "description": "The first, and most important, variable: How long will it take prices to fall back?"
       },
       {
+        "title": "There's another energy market that may get hit harder than oil by Strait of Hormuz closure - CNBC",
+        "url": "https://www.cnbc.com/2026/03/09/theres-another-energy-market-that-may-get-hit-harder-than-oil-by-strait-of-hormuz-closure.html",
+        "source": "CNBC",
+        "published_at": "2026-03-09T17:54:06Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Roughly 20% of global liquefied natural gas flows through the Strait."
+      },
+      {
         "title": "Hims & Hers Stock Soars. Its Weight-Loss Drug Battle With Novo Nordisk Takes a Surprising Twist. - Barron's",
         "url": "https://www.barrons.com/articles/hims-hers-stock-novo-nordisk-truce-9b8b5e7c",
         "source": "Barron's",
@@ -290,31 +344,13 @@
         "description": ""
       },
       {
-        "title": "Microsoft announces Copilot Cowork with help from Anthropic — a cloud-powered AI agent that works across M365 apps - VentureBeat",
-        "url": "https://venturebeat.com/orchestration/microsoft-announces-copilot-cowork-with-help-from-anthropic-a-cloud-powered",
-        "source": "VentureBeat",
-        "published_at": "2026-03-09T15:55:19Z",
+        "title": "How the Iran energy shock could bring lasting geopolitical change - Axios",
+        "url": "https://www.axios.com/2026/03/09/iran-energy-shock-lasting-change",
+        "source": "Axios",
+        "published_at": "2026-03-09T13:09:16Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Copilot Cowork operates in the cloud, inside Microsoft 365's infrastructure, and draws on something Claude Cowork simply cannot access: the full graph of a user's enterprise work data."
-      },
-      {
-        "title": "Statement by IEA Executive Director Fatih Birol on his participation in a meeting of G7 Finance Ministers - IEA – International Energy Agency",
-        "url": "https://www.iea.org/news/statement-by-iea-executive-director-fatih-birol-on-his-participation-in-a-meeting-of-g7-finance-ministers",
-        "source": "Iea.org",
-        "published_at": "2026-03-09T14:01:13Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Statement by IEA Executive Director Fatih Birol on his participation in a meeting of G7 Finance Ministers - News from the International Energy Agency"
-      },
-      {
-        "title": "Uber's women-only option goes nationwide in the US - abcnews.com",
-        "url": "https://abcnews.com/US/wireStory/ubers-women-option-nationwide-us-130898520",
-        "source": "Abcnews.com",
-        "published_at": "2026-03-09T13:38:55Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Uber is launching a feature that will allow both women riders and drivers across the U.S. to be matched with other women for trips, expanding a pilot program aimed at addressing concerns about the safety of its riding-hailing platform"
+        "description": "Analysts are starting to look beyond the immediate market shock."
       },
       {
         "title": "Chevrolet killed it then brought it back, now we drive it: The 2027 Bolt - Ars Technica",
@@ -326,6 +362,42 @@
         "description": "Faster charging, more modern infotainment, and a new LFP battery are highlights."
       },
       {
+        "title": "Uber Expands Female Driver Option in the US Amid Mounting Assault Cases - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-09/uber-expands-female-driver-option-in-the-us-amid-mounting-assault-cases",
+        "source": "Bloomberg",
+        "published_at": "2026-03-09T12:45:02Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Uber Technologies Inc. said that a feature designed to match female riders and drivers will be available nationwide, expanding access to a safety measure as it seeks to resolve thousands of sexual assault complaints from passengers in the US."
+      },
+      {
+        "title": "When it comes to the war in Iran don't go betting on the TACO trade, says top JPMorgan investment strategist - Fortune",
+        "url": "https://fortune.com/2026/03/09/iran-taco-trade-jp-morgan-investment-analysis/",
+        "source": "Fortune",
+        "published_at": "2026-03-09T12:40:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "JPMorgan's Jake Manoukian on which assets provide portfolio balance as tensions between Iran and the U.S. persist.t"
+      },
+      {
+        "title": "Roche's oral SERD flunks phase 3 trial in 1st-line breast cancer, raising questions of mechanism's limits - Fierce Biotech",
+        "url": "https://www.fiercebiotech.com/biotech/roches-oral-serd-flunks-phase-3-trial-first-line-breast-cancer",
+        "source": "FierceBiotech",
+        "published_at": "2026-03-09T10:40:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A phase 3 trial of Roche’s giredestrant in first-line breast cancer patients has missed its primary endpoi | A phase 3 trial of Roche’s giredestrant in first-line breast cancer patients has missed its primary endpoint, tarnishing the record of a drug candidat…"
+      },
+      {
+        "title": "China Inflation Takes Off After Holiday Boost as Oil Shock Looms - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-09/china-consumer-prices-rebound-driven-by-record-holiday-spending",
+        "source": "Bloomberg",
+        "published_at": "2026-03-09T10:10:57Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "China’s consumer-price growth accelerated to the quickest in over three years and factory deflation moderated again, after a rally in energy markets and as household spending boomed during a later-than-usual Lunar New Year holiday."
+      },
+      {
         "title": "World shares tumble as Iran war pushes crude prices over $110 a barrel - NPR",
         "url": "https://www.npr.org/2026/03/09/nx-s1-5742307/world-shares-tumble-iran-war",
         "source": "NPR",
@@ -335,31 +407,103 @@
         "description": "World shares tumbled on Monday, with Japan's benchmark Nikkei 225 index plunging more than 5%, after oil prices spiked at nearly $120 a barrel."
       },
       {
-        "title": "[Ad hoc announcement pursuant to Art. 53 LR] Roche provides update on phase III persevERA study in ER-positive advanced breast cancer - Roche",
-        "url": "https://www.roche.com/investors/updates/inv-update-2026-03-09",
-        "source": "Roche.com",
-        "published_at": "2026-03-09T09:20:27Z",
+        "title": "China’s OpenClaw-Tied Stocks Rise on Policy Support, Adoption - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-09/china-s-openclaw-tied-stocks-rise-on-policy-support-adoption",
+        "source": "Bloomberg",
+        "published_at": "2026-03-09T07:41:36Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "persevERA Breast Cancer study did not meet the primary objective of a statistically significant improvement in progression-free survival, but a numerical improvement was observed Giredestrant plus..."
+        "description": "Chinese software shares surged Monday after local government agencies joined tech leaders such as Tencent Holdings Ltd. in promoting viral AI software OpenClaw, spurring hopes of a fresh wave of sectoral development."
       },
       {
-        "title": "Dow futures sink more than 1,000 points, oil prices surge up to 30% as Iran conflict rages - MarketWatch",
-        "url": "https://www.marketwatch.com/story/u-s-stock-futures-sink-after-oil-surges-above-100-a-barrel-as-iran-conflict-rages-3f1fbfe7",
-        "source": "MarketWatch",
-        "published_at": "2026-03-09T05:57:00Z",
+        "title": "Oil Surges, Asian Equities Slump Amid Growing Middle East Conflict - WSJ",
+        "url": "https://www.wsj.com/finance/stocks/oil-surges-asian-equities-slump-amid-growing-middle-east-conflict-9603f76c",
+        "source": "The Wall Street Journal",
+        "published_at": "2026-03-09T04:36:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": null
       },
       {
-        "title": "5 lessons from Vinay Prasad’s turbulent tenure at the FDA - statnews.com",
-        "url": "https://www.statnews.com/2026/03/08/vinay-prasad-fda-lessons-from-tenure/",
-        "source": "STAT",
-        "published_at": "2026-03-08T15:12:06Z",
+        "title": "Schumer calls on Trump to release oil from reserve to lower gas prices - Axios",
+        "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNaEtaMDlXU1NNZ05iQTVYbkIwd3hGYkV6TXREM0tmbXRJbExWdnhTVHV1UTZPU3U3T0hELXQ1dTVNUXdhdWtFdm92M3Zsb0hrM3oxYTdoT1dpdVBKSWJoX2NfdGhGZFZHN1FlZlZBLWdkNHg5OGZXWEdCUGZNbk95NzV3bzdDRk1z?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-09T03:12:34Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Vinay Prasad's unique ability to attract criticism — even when his bosses, including the president, wanted him to keep his head low — did him in at the FDA."
+        "description": null
+      },
+      {
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show - AP News",
+        "url": "https://apnews.com/article/trump-economy-iran-inflation-jobs-gas-prices-7fbd5e99e3b6023963dd3de226aee4e4",
+        "source": "Associated Press",
+        "published_at": "2026-03-09T00:26:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth. Instead it's kicked off with job losses, rising gasoline prices and more uncertainty about America’s future. In his recent State of the Union address, Trump said \"the roarin…"
+      },
+      {
+        "title": "Skyworks Demonstrates Advanced Connectivity and Power Solutions at Embedded World 2026",
+        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252462/0/en/Skyworks-Demonstrates-Advanced-Connectivity-and-Power-Solutions-at-Embedded-World-2026.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-10T07:01:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Highlighting the Path to 6G, Precision Timing, and Data Center Power from Automotive to the Intelligent Edge Highlighting the Path to 6G, Precision Timing, and Data Center Power from Automotive to the Intelligent Edge"
+      },
+      {
+        "title": "Iran conflict threatens Gulf data center boom as attacks mount",
+        "url": "https://www.digitimes.com/news/a20260310VL212/middle-east-war-aws-data-center-infrastructure.html",
+        "source": "Digitimes",
+        "published_at": "2026-03-10T06:57:07Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The widening conflict involving Iran is beginning to ripple through the global AI industry, raising new questions about the security of Gulf-backed data center projects and the resilience of regional cloud infrastructure. Gulf states are expected to invest mo…"
+      },
+      {
+        "title": "ruvnet/RuView: π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
+        "url": "https://github.com/ruvnet/RuView",
+        "source": "Github.com",
+        "published_at": "2026-03-10T05:47:01Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.  - ruvnet/RuView"
+      },
+      {
+        "title": "Trump says war could be over soon – but defiant Iran to step up attacks; Tánaiste says EU ‘urgently’ needs energy independence",
+        "url": "https://www.independent.ie/world-news/middle-east/trump-says-war-could-be-over-soon-but-defiant-iran-to-step-up-attacks-tanaiste-says-eu-urgently-needs-energy-independence/a1936793771.html",
+        "source": "Independent.ie",
+        "published_at": "2026-03-10T05:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "US president Donald Trump on Monday predicted the war in the Middle East could be over soon, even as Iran’s hardliners staged a show of loyalty to new supreme leader Mojtaba Khamenei in a sign that the country was not prepared to back down any time soon."
+      },
+      {
+        "title": "Donald Trump says war could be over soon – but defiant Iran to step up attacks",
+        "url": "https://www.independent.ie/world-news/middle-east/donald-trump-says-war-could-be-over-soon-but-defiant-iran-to-step-up-attacks/a1936793771.html",
+        "source": "Independent.ie",
+        "published_at": "2026-03-10T05:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "US president Donald Trump on Monday predicted the war in the Middle East could be over soon, even as Iran’s hardliners staged a show of loyalty to new supreme leader Mojtaba Khamenei in a sign that the country was not prepared to back down any time soon."
+      },
+      {
+        "title": "Oil and gas prices drop as Trump says war could be over soon; Iran rallies behind new hardline leader",
+        "url": "https://www.independent.ie/world-news/middle-east/oil-and-gas-prices-drop-as-trump-says-war-could-be-over-soon-iran-rallies-behind-new-hardline-leader/a1936793771.html",
+        "source": "Independent.ie",
+        "published_at": "2026-03-10T05:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "US president Donald Trump on Monday predicted the war in the Middle East could be over soon, even as Iran’s hardliners staged a show of loyalty to new supreme leader Mojtaba Khamenei in a sign that the country was not prepared to back down any time soon."
+      },
+      {
+        "title": "She Let Her Brother Stay With Her, But When He Wouldn’t Get A Job, She Kicked Him Out",
+        "url": "http://twistedsifter.com/2026/03/she-let-her-brother-stay-with-her-but-when-he-wouldnt-get-a-job-she-kicked-him-out/",
+        "source": "Twistedsifter.com",
+        "published_at": "2026-03-10T02:55:14Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Some people won't change unless you force them to."
       },
       {
         "title": "How long does it take an eagle to build a nest?",
@@ -902,13 +1046,13 @@
         "description": "Author summary Antimicrobial resistance is often assumed to come at the cost of virulence, with resistant bacteria paying a fitness price that limits their ability to cause disease. Our work shows that this assumption does not hold for contemporary Vibrio cho…"
       },
       {
-        "title": "Computing the effects of excitatory-inhibitory balance on neuronal input-output properties",
-        "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1013958",
+        "title": "Alanine-scanning mutagenesis library of MreB reveals distinct roles for regulating cell shape and viability",
+        "url": "https://journals.plos.org/plosgenetics/article?id=10.1371%2Fjournal.pgen.1012070",
         "source": "Plos.org",
         "published_at": "2026-03-09T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Author summary Sensory stimuli activate networks of excitatory and inhibitory neurons whose interactions shape how the brain represents information. An individual neuron’s response therefore depends not only on the strength of excitatory input, but also on ho…"
+        "description": "Author summary The actin homolog MreB is believed to be the main scaffolding protein of the Rod system. Previously it was shown MreB is essential for viability and shape regulation but our understanding of how it operates is limited due the difficulty of in v…"
       },
       {
         "title": "Long-term intensive golf training induces reconfiguration of brain structural covariance networks",
@@ -920,13 +1064,13 @@
         "description": "Long-term motor training is thought to reshape brain organization, yet how golf expertise influences large-scale brain networks remains unclear. Using T1-weighted MRI and an individualized structural covariance network (SCN) approach, we compared 20 expert go…"
       },
       {
-        "title": "Alanine-scanning mutagenesis library of MreB reveals distinct roles for regulating cell shape and viability",
-        "url": "https://journals.plos.org/plosgenetics/article?id=10.1371%2Fjournal.pgen.1012070",
+        "title": "Computing the effects of excitatory-inhibitory balance on neuronal input-output properties",
+        "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1013958",
         "source": "Plos.org",
         "published_at": "2026-03-09T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Author summary The actin homolog MreB is believed to be the main scaffolding protein of the Rod system. Previously it was shown MreB is essential for viability and shape regulation but our understanding of how it operates is limited due the difficulty of in v…"
+        "description": "Author summary Sensory stimuli activate networks of excitatory and inhibitory neurons whose interactions shape how the brain represents information. An individual neuron’s response therefore depends not only on the strength of excitatory input, but also on ho…"
       },
       {
         "title": "Man killed in crash northeast of Longmont; southbound I-25 closed",
@@ -1008,106 +1152,95 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "DENVER, March 09, 2026 (GLOBE NEWSWIRE) -- SHF Holdings, Inc., d/b/a Safe Harbor Financial\r\n (“Safe Harbor” or the “Company”) (NASDAQ: SHFS), a leading fintech platform serving the banking, lending, and financial services needs of the regulated cannabis and h…"
-      },
-      {
-        "title": "United States Decorative Lighting Market Report 2025-2033: Rising Social Media Influence, Interior Design Trends, and Expanding DIY Decor Culture Fueling the $56.72 Billion Industry",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251800/28124/en/United-States-Decorative-Lighting-Market-Report-2025-2033-Rising-Social-Media-Influence-Interior-Design-Trends-and-Expanding-DIY-Decor-Culture-Fueling-the-56-72-Billion-Industry.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T12:12:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Growth is fueled by burgeoning design trends, urbanization, and increasing consumer investment in interior aesthetics. Demand is bolstered by advancements in LED and smart lighting technologies, enhancing energy efficiency and design flexibility. Key drivers …"
-      },
-      {
-        "title": "Controlled Thermal Resources and Plum Acquisition Corp. IV Announce Definitive Business Combination Agreement to Advance U.S. Critical Minerals and Energy",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251750/0/en/Controlled-Thermal-Resources-and-Plum-Acquisition-Corp-IV-Announce-Definitive-Business-Combination-Agreement-to-Advance-U-S-Critical-Minerals-and-Energy.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T12:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "CTR to go public via merger with Plum Acquisition Corp. IV, valuing it at ~$4.7B to advance its Hell’s Kitchen geothermal and lithium project in California"
-      },
-      {
-        "title": "United States AI in Drone Market Research and Company Analysis Report 2025-2033 Featuring DroneShield, Skycatch, Dronehub.ai, Applied Aeronautics, AeroVironment, Skydio, DJI, Parrot Drones, Delair",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251740/28124/en/United-States-AI-in-Drone-Market-Research-and-Company-Analysis-Report-2025-2033-Featuring-DroneShield-Skycatch-Dronehub-ai-Applied-Aeronautics-AeroVironment-Skydio-DJI-Parrot-Drone.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T11:34:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The United States AI in Drone Market is set to experience significant growth, rising from USD 4.13 billion in 2025 to USD 12.64 billion by 2033, reflecting a CAGR of 14.99%. Key drivers include advancements in AI technology and increased applications across s…"
-      },
-      {
-        "title": "Calisa Acquisition Corp Announces Entering into Merger Agreement with GoodVision AI Inc",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251736/0/en/Calisa-Acquisition-Corp-Announces-Entering-into-Merger-Agreement-with-GoodVision-AI-Inc.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T11:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "New York, NY, March 09, 2026 (GLOBE NEWSWIRE) -- Calisa Acquisition Corp (NASDAQ: ALIS) (“ALIS”), a special purpose acquisition company, announced the execution of a Business Combination Agreement (the “Merger Agreement”) with GoodVision AI Inc (“GoodVision A…"
-      },
-      {
-        "title": "FuelCell Energy Delivers Strong Q1’26 Revenue Growth vs Q1’25; Advances Data Center Power Strategy",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251721/8041/en/FuelCell-Energy-Delivers-Strong-Q1-26-Revenue-Growth-vs-Q1-25-Advances-Data-Center-Power-Strategy.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T11:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "DANBURY, Conn., March 09, 2026 (GLOBE NEWSWIRE) -- FuelCell Energy, Inc. (NASDAQ: FCEL) today reported financial results for its first quarter ended January 31, 2026."
-      },
-      {
-        "title": "Bitfarms Expands Leadership Team with Seasoned U.S. Industry Experts to Support HPC/AI Infrastructure Development",
-        "url": "https://financialpost.com/globe-newswire/bitfarms-expands-leadership-team-with-seasoned-u-s-industry-experts-to-support-hpc-ai-infrastructure-development",
-        "source": "Financial Post",
-        "published_at": "2026-03-09T11:06:21Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "TORONTO and NEW YORK, March 09, 2026 (GLOBE NEWSWIRE) — Bitfarms Ltd. (NASDAQ/TSX: BITF), a North American digital infrastructure and energy company, today announced a series of strategic hires across its infrastructure and corporate teams. These additions br…"
-      },
-      {
-        "title": "Bitfarms Expands Leadership Team with Seasoned U.S. Industry Experts to Support HPC/AI Infrastructure Development",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251704/0/en/Bitfarms-Expands-Leadership-Team-with-Seasoned-U-S-Industry-Experts-to-Support-HPC-AI-Infrastructure-Development.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T11:05:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "TORONTO and NEW YORK, March 09, 2026 (GLOBE NEWSWIRE) -- Bitfarms Ltd. (NASDAQ/TSX: BITF), a North American digital infrastructure and energy company, today announced a series of strategic hires across its infrastructure and corporate teams. These additions b…"
       }
     ],
     "news_with_impact": [
       {
-        "title": "Oil Drops as Trump Signals Iran Conflict Near End: Markets Wrap - Bloomberg.com",
+        "title": "Oil Drops as Trump Signals Iran Conflict Near End: Markets Wrap - Bloomberg",
         "url": "https://www.bloomberg.com/news/articles/2026-03-09/oil-drops-as-trump-signals-iran-conflict-near-end-markets-wrap",
         "source": "Bloomberg",
-        "published_at": "2026-03-10T00:59:00Z",
+        "published_at": "2026-03-10T06:03:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Asian stocks rebounded from Monday’s selloff and crude oil fell, as President Donald Trump signaled the Iran war may be nearing an end, boosting investor sentiment.",
+        "description": "Asian stocks rose and crude oil fell as President Donald Trump signaled the Iran war may be nearing an end, helping boost sentiment after Monday’s selloff in risk assets.",
         "impact_score": 55,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Oil prices sink, stocks jump in dramatic reversal - NBC News",
-        "url": "https://www.nbcnews.com/business/energy/iran-oil-surges-markets-rcna262395",
-        "source": "NBC News",
-        "published_at": "2026-03-09T22:56:31Z",
+        "title": "FAA grounds all JetBlue flights after request from airline - AP News",
+        "url": "https://apnews.com/article/faa-ground-stop-jetblue-e990b118812f467d904d92375b984d71",
+        "source": "Associated Press",
+        "published_at": "2026-03-10T05:54:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Oil prices fell and stocks rose Monday on hopes that the U.S. war in Iran would be over soon.",
+        "description": "The Federal Aviation Administration briefly grounded all JetBlue flights due to a request from the airline, the agency said in a notice posted to its website early Tuesday morning. It was not immediately clear why JetBlue requested the ground stop, which was …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Yann LeCun’s AMI Labs raises $1.03 billion to build world models - TechCrunch",
+        "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxObER1eGxPbkVSWG5oVExEXzIxZHUxbDJkc2puSk1GM3NqRE1malBDT0FHTUU1b2xROFRYZ2RsZW5MazF1U1FObi1sVnpWb3dIVXAxYnFaLW9pa013THcwZmUzT3dDWEN1XzlCQVBQd1F6ZlBpMDRmQ0t6ZXNNOHFlNmYwcjV5R0MtM0M2WWEzenh4Y05LWUVlLXhJOHJJdw?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-10T05:00:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "China exports sharply beat expectations as trade surplus in the first two months surges to highest on record - CNBC",
+        "url": "https://www.cnbc.com/2026/03/10/china-trade-balance-surplus-record-exports-tariffs-imports.html",
+        "source": "CNBC",
+        "published_at": "2026-03-10T03:13:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "China typically combines January and February trade data to smooth distortions from the shifting Lunar New Year holiday.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Trump sons investing in domestic drone production businesses - abcnews.com",
+        "url": "https://abcnews.com/US/trump-sons-investing-domestic-drone-production-businesses/story?id%5C%5Cu003d130908416=",
+        "source": "Abcnews.com",
+        "published_at": "2026-03-09T23:52:29Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "JPMorgan’s shocking Iran forecast could change oil’s next move - thestreet.com",
+        "url": "https://www.thestreet.com/economy/jpmorgans-shocking-iran-forecast-could-change-oils-next-move",
+        "source": "TheStreet",
+        "published_at": "2026-03-09T23:33:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "JPMorgan’s Iran call puts a surprise clock on $110 oil.",
         "impact_score": 55,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Electric air taxis are about to take flight in 26 states - TechCrunch",
-        "url": "https://techcrunch.com/2026/03/09/electric-air-taxis-are-about-to-take-flight-in-26-states/",
-        "source": "TechCrunch",
-        "published_at": "2026-03-09T22:30:35Z",
+        "title": "‘Flying Cars’ Will Take Off in American Skies This Summer - WIRED",
+        "url": "https://www.wired.com/story/flying-cars-will-take-off-in-american-skies-this-summer/",
+        "source": "Wired",
+        "published_at": "2026-03-09T22:39:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The federal government has selected eight proposals to test electric aircraft across 26 states.",
+        "description": "The federal government announced a new pilot program designed to get new kinds of ultralight vehicles and “eVTOLs” up and running around the country—even if they’re not fully FAA-certified.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1122,6 +1255,19 @@
         "feed": "top_headlines",
         "description": "Senator Amy Klobuchar expressed her frustration with the DOJ's settlement with Live Nation, saying 'every single sign points to a backroom deal.'",
         "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Oil Prices Will Remain High as Iran War Continues - The New York Times",
+        "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5pU2o1S2J3Zi1ENkFKRVFGdVpEZ3JkSGJaVEw5azkwRTNSbC1uSlFVZ3hJWGVZaXZRUV9iSGp0OGp1bUxxWEdWX3dqZ0JyRWk0ZEhlWDJrdVhjaEs0dDlFTFY1VDh6TS1xaEFzQWc3OF8tZXBIeGZ2S0pHQ2U?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-09T22:29:13Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
+        "impact_score": 55,
         "themes": [
           "other"
         ]
@@ -1166,13 +1312,13 @@
         ]
       },
       {
-        "title": "Lockheed, RTX, Northrop, Stocks Slip. Watch This Trump-Backed Drone Company. - Barron's",
-        "url": "https://www.barrons.com/articles/lockheed-rtx-defense-stocks-trump-drones-5807c2bd",
-        "source": "Barron's",
-        "published_at": "2026-03-09T20:20:00Z",
+        "title": "Microsoft launches AI tool that competes with Anthropic - Axios",
+        "url": "https://www.axios.com/2026/03/09/microsoft-copilot-cowork-anthropic",
+        "source": "Axios",
+        "published_at": "2026-03-09T20:20:39Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "",
+        "description": "Anthropic invented the product that threatened to kill Microsoft's software business, then Microsoft took the name and turned it into a Copilot feature.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1192,6 +1338,19 @@
         ]
       },
       {
+        "title": "There's another energy market that may get hit harder than oil by Strait of Hormuz closure - CNBC",
+        "url": "https://www.cnbc.com/2026/03/09/theres-another-energy-market-that-may-get-hit-harder-than-oil-by-strait-of-hormuz-closure.html",
+        "source": "CNBC",
+        "published_at": "2026-03-09T17:54:06Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Roughly 20% of global liquefied natural gas flows through the Strait.",
+        "impact_score": 55,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
         "title": "Hims & Hers Stock Soars. Its Weight-Loss Drug Battle With Novo Nordisk Takes a Surprising Twist. - Barron's",
         "url": "https://www.barrons.com/articles/hims-hers-stock-novo-nordisk-truce-9b8b5e7c",
         "source": "Barron's",
@@ -1205,42 +1364,16 @@
         ]
       },
       {
-        "title": "Microsoft announces Copilot Cowork with help from Anthropic — a cloud-powered AI agent that works across M365 apps - VentureBeat",
-        "url": "https://venturebeat.com/orchestration/microsoft-announces-copilot-cowork-with-help-from-anthropic-a-cloud-powered",
-        "source": "VentureBeat",
-        "published_at": "2026-03-09T15:55:19Z",
+        "title": "How the Iran energy shock could bring lasting geopolitical change - Axios",
+        "url": "https://www.axios.com/2026/03/09/iran-energy-shock-lasting-change",
+        "source": "Axios",
+        "published_at": "2026-03-09T13:09:16Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Copilot Cowork operates in the cloud, inside Microsoft 365's infrastructure, and draws on something Claude Cowork simply cannot access: the full graph of a user's enterprise work data.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Statement by IEA Executive Director Fatih Birol on his participation in a meeting of G7 Finance Ministers - IEA – International Energy Agency",
-        "url": "https://www.iea.org/news/statement-by-iea-executive-director-fatih-birol-on-his-participation-in-a-meeting-of-g7-finance-ministers",
-        "source": "Iea.org",
-        "published_at": "2026-03-09T14:01:13Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Statement by IEA Executive Director Fatih Birol on his participation in a meeting of G7 Finance Ministers - News from the International Energy Agency",
+        "description": "Analysts are starting to look beyond the immediate market shock.",
         "impact_score": 40,
         "themes": [
           "materials"
-        ]
-      },
-      {
-        "title": "Uber's women-only option goes nationwide in the US - abcnews.com",
-        "url": "https://abcnews.com/US/wireStory/ubers-women-option-nationwide-us-130898520",
-        "source": "Abcnews.com",
-        "published_at": "2026-03-09T13:38:55Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Uber is launching a feature that will allow both women riders and drivers across the U.S. to be matched with other women for trips, expanding a pilot program aimed at addressing concerns about the safety of its riding-hailing platform",
-        "impact_score": 40,
-        "themes": [
-          "other"
         ]
       },
       {
@@ -1257,6 +1390,58 @@
         ]
       },
       {
+        "title": "Uber Expands Female Driver Option in the US Amid Mounting Assault Cases - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-09/uber-expands-female-driver-option-in-the-us-amid-mounting-assault-cases",
+        "source": "Bloomberg",
+        "published_at": "2026-03-09T12:45:02Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Uber Technologies Inc. said that a feature designed to match female riders and drivers will be available nationwide, expanding access to a safety measure as it seeks to resolve thousands of sexual assault complaints from passengers in the US.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "When it comes to the war in Iran don't go betting on the TACO trade, says top JPMorgan investment strategist - Fortune",
+        "url": "https://fortune.com/2026/03/09/iran-taco-trade-jp-morgan-investment-analysis/",
+        "source": "Fortune",
+        "published_at": "2026-03-09T12:40:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "JPMorgan's Jake Manoukian on which assets provide portfolio balance as tensions between Iran and the U.S. persist.t",
+        "impact_score": 40,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Roche's oral SERD flunks phase 3 trial in 1st-line breast cancer, raising questions of mechanism's limits - Fierce Biotech",
+        "url": "https://www.fiercebiotech.com/biotech/roches-oral-serd-flunks-phase-3-trial-first-line-breast-cancer",
+        "source": "FierceBiotech",
+        "published_at": "2026-03-09T10:40:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "A phase 3 trial of Roche’s giredestrant in first-line breast cancer patients has missed its primary endpoi | A phase 3 trial of Roche’s giredestrant in first-line breast cancer patients has missed its primary endpoint, tarnishing the record of a drug candidat…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "China Inflation Takes Off After Holiday Boost as Oil Shock Looms - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-09/china-consumer-prices-rebound-driven-by-record-holiday-spending",
+        "source": "Bloomberg",
+        "published_at": "2026-03-09T10:10:57Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "China’s consumer-price growth accelerated to the quickest in over three years and factory deflation moderated again, after a rally in energy markets and as household spending boomed during a later-than-usual Lunar New Year holiday.",
+        "impact_score": 55,
+        "themes": [
+          "macro"
+        ]
+      },
+      {
         "title": "World shares tumble as Iran war pushes crude prices over $110 a barrel - NPR",
         "url": "https://www.npr.org/2026/03/09/nx-s1-5742307/world-shares-tumble-iran-war",
         "source": "NPR",
@@ -1270,23 +1455,23 @@
         ]
       },
       {
-        "title": "[Ad hoc announcement pursuant to Art. 53 LR] Roche provides update on phase III persevERA study in ER-positive advanced breast cancer - Roche",
-        "url": "https://www.roche.com/investors/updates/inv-update-2026-03-09",
-        "source": "Roche.com",
-        "published_at": "2026-03-09T09:20:27Z",
+        "title": "China’s OpenClaw-Tied Stocks Rise on Policy Support, Adoption - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-09/china-s-openclaw-tied-stocks-rise-on-policy-support-adoption",
+        "source": "Bloomberg",
+        "published_at": "2026-03-09T07:41:36Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "persevERA Breast Cancer study did not meet the primary objective of a statistically significant improvement in progression-free survival, but a numerical improvement was observed Giredestrant plus...",
-        "impact_score": 55,
+        "description": "Chinese software shares surged Monday after local government agencies joined tech leaders such as Tencent Holdings Ltd. in promoting viral AI software OpenClaw, spurring hopes of a fresh wave of sectoral development.",
+        "impact_score": 40,
         "themes": [
-          "materials"
+          "other"
         ]
       },
       {
-        "title": "Dow futures sink more than 1,000 points, oil prices surge up to 30% as Iran conflict rages - MarketWatch",
-        "url": "https://www.marketwatch.com/story/u-s-stock-futures-sink-after-oil-surges-above-100-a-barrel-as-iran-conflict-rages-3f1fbfe7",
-        "source": "MarketWatch",
-        "published_at": "2026-03-09T05:57:00Z",
+        "title": "Oil Surges, Asian Equities Slump Amid Growing Middle East Conflict - WSJ",
+        "url": "https://www.wsj.com/finance/stocks/oil-surges-asian-equities-slump-amid-growing-middle-east-conflict-9603f76c",
+        "source": "The Wall Street Journal",
+        "published_at": "2026-03-09T04:36:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": null,
@@ -1296,13 +1481,117 @@
         ]
       },
       {
-        "title": "5 lessons from Vinay Prasad’s turbulent tenure at the FDA - statnews.com",
-        "url": "https://www.statnews.com/2026/03/08/vinay-prasad-fda-lessons-from-tenure/",
-        "source": "STAT",
-        "published_at": "2026-03-08T15:12:06Z",
+        "title": "Schumer calls on Trump to release oil from reserve to lower gas prices - Axios",
+        "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNaEtaMDlXU1NNZ05iQTVYbkIwd3hGYkV6TXREM0tmbXRJbExWdnhTVHV1UTZPU3U3T0hELXQ1dTVNUXdhdWtFdm92M3Zsb0hrM3oxYTdoT1dpdVBKSWJoX2NfdGhGZFZHN1FlZlZBLWdkNHg5OGZXWEdCUGZNbk95NzV3bzdDRk1z?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-09T03:12:34Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Vinay Prasad's unique ability to attract criticism — even when his bosses, including the president, wanted him to keep his head low — did him in at the FDA.",
+        "description": null,
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Trump’s ‘roaring’ economy meets a rough start to 2026: What the latest numbers show - AP News",
+        "url": "https://apnews.com/article/trump-economy-iran-inflation-jobs-gas-prices-7fbd5e99e3b6023963dd3de226aee4e4",
+        "source": "Associated Press",
+        "published_at": "2026-03-09T00:26:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "President Donald Trump promised that 2026 would be a bumper year for economic growth. Instead it's kicked off with job losses, rising gasoline prices and more uncertainty about America’s future. In his recent State of the Union address, Trump said \"the roarin…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Skyworks Demonstrates Advanced Connectivity and Power Solutions at Embedded World 2026",
+        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252462/0/en/Skyworks-Demonstrates-Advanced-Connectivity-and-Power-Solutions-at-Embedded-World-2026.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-10T07:01:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Highlighting the Path to 6G, Precision Timing, and Data Center Power from Automotive to the Intelligent Edge Highlighting the Path to 6G, Precision Timing, and Data Center Power from Automotive to the Intelligent Edge",
+        "impact_score": 40,
+        "themes": [
+          "capital"
+        ]
+      },
+      {
+        "title": "Iran conflict threatens Gulf data center boom as attacks mount",
+        "url": "https://www.digitimes.com/news/a20260310VL212/middle-east-war-aws-data-center-infrastructure.html",
+        "source": "Digitimes",
+        "published_at": "2026-03-10T06:57:07Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "The widening conflict involving Iran is beginning to ripple through the global AI industry, raising new questions about the security of Gulf-backed data center projects and the resilience of regional cloud infrastructure. Gulf states are expected to invest mo…",
+        "impact_score": 40,
+        "themes": [
+          "commercial"
+        ]
+      },
+      {
+        "title": "ruvnet/RuView: π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.",
+        "url": "https://github.com/ruvnet/RuView",
+        "source": "Github.com",
+        "published_at": "2026-03-10T05:47:01Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "π RuView: WiFi DensePose turns commodity WiFi signals into real-time human pose estimation, vital sign monitoring, and presence detection — all without a single pixel of video.  - ruvnet/RuView",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Trump says war could be over soon – but defiant Iran to step up attacks; Tánaiste says EU ‘urgently’ needs energy independence",
+        "url": "https://www.independent.ie/world-news/middle-east/trump-says-war-could-be-over-soon-but-defiant-iran-to-step-up-attacks-tanaiste-says-eu-urgently-needs-energy-independence/a1936793771.html",
+        "source": "Independent.ie",
+        "published_at": "2026-03-10T05:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "US president Donald Trump on Monday predicted the war in the Middle East could be over soon, even as Iran’s hardliners staged a show of loyalty to new supreme leader Mojtaba Khamenei in a sign that the country was not prepared to back down any time soon.",
+        "impact_score": 40,
+        "themes": [
+          "materials"
+        ]
+      },
+      {
+        "title": "Donald Trump says war could be over soon – but defiant Iran to step up attacks",
+        "url": "https://www.independent.ie/world-news/middle-east/donald-trump-says-war-could-be-over-soon-but-defiant-iran-to-step-up-attacks/a1936793771.html",
+        "source": "Independent.ie",
+        "published_at": "2026-03-10T05:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "US president Donald Trump on Monday predicted the war in the Middle East could be over soon, even as Iran’s hardliners staged a show of loyalty to new supreme leader Mojtaba Khamenei in a sign that the country was not prepared to back down any time soon.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Oil and gas prices drop as Trump says war could be over soon; Iran rallies behind new hardline leader",
+        "url": "https://www.independent.ie/world-news/middle-east/oil-and-gas-prices-drop-as-trump-says-war-could-be-over-soon-iran-rallies-behind-new-hardline-leader/a1936793771.html",
+        "source": "Independent.ie",
+        "published_at": "2026-03-10T05:30:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "US president Donald Trump on Monday predicted the war in the Middle East could be over soon, even as Iran’s hardliners staged a show of loyalty to new supreme leader Mojtaba Khamenei in a sign that the country was not prepared to back down any time soon.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "She Let Her Brother Stay With Her, But When He Wouldn’t Get A Job, She Kicked Him Out",
+        "url": "http://twistedsifter.com/2026/03/she-let-her-brother-stay-with-her-but-when-he-wouldnt-get-a-job-she-kicked-him-out/",
+        "source": "Twistedsifter.com",
+        "published_at": "2026-03-10T02:55:14Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Some people won't change unless you force them to.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2090,13 +2379,13 @@
         ]
       },
       {
-        "title": "Computing the effects of excitatory-inhibitory balance on neuronal input-output properties",
-        "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1013958",
+        "title": "Alanine-scanning mutagenesis library of MreB reveals distinct roles for regulating cell shape and viability",
+        "url": "https://journals.plos.org/plosgenetics/article?id=10.1371%2Fjournal.pgen.1012070",
         "source": "Plos.org",
         "published_at": "2026-03-09T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Author summary Sensory stimuli activate networks of excitatory and inhibitory neurons whose interactions shape how the brain represents information. An individual neuron’s response therefore depends not only on the strength of excitatory input, but also on ho…",
+        "description": "Author summary The actin homolog MreB is believed to be the main scaffolding protein of the Rod system. Previously it was shown MreB is essential for viability and shape regulation but our understanding of how it operates is limited due the difficulty of in v…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2116,13 +2405,13 @@
         ]
       },
       {
-        "title": "Alanine-scanning mutagenesis library of MreB reveals distinct roles for regulating cell shape and viability",
-        "url": "https://journals.plos.org/plosgenetics/article?id=10.1371%2Fjournal.pgen.1012070",
+        "title": "Computing the effects of excitatory-inhibitory balance on neuronal input-output properties",
+        "url": "https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1013958",
         "source": "Plos.org",
         "published_at": "2026-03-09T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Author summary The actin homolog MreB is believed to be the main scaffolding protein of the Rod system. Previously it was shown MreB is essential for viability and shape regulation but our understanding of how it operates is limited due the difficulty of in v…",
+        "description": "Author summary Sensory stimuli activate networks of excitatory and inhibitory neurons whose interactions shape how the brain represents information. An individual neuron’s response therefore depends not only on the strength of excitatory input, but also on ho…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2244,99 +2533,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "United States Decorative Lighting Market Report 2025-2033: Rising Social Media Influence, Interior Design Trends, and Expanding DIY Decor Culture Fueling the $56.72 Billion Industry",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251800/28124/en/United-States-Decorative-Lighting-Market-Report-2025-2033-Rising-Social-Media-Influence-Interior-Design-Trends-and-Expanding-DIY-Decor-Culture-Fueling-the-56-72-Billion-Industry.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T12:12:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Growth is fueled by burgeoning design trends, urbanization, and increasing consumer investment in interior aesthetics. Demand is bolstered by advancements in LED and smart lighting technologies, enhancing energy efficiency and design flexibility. Key drivers …",
-        "impact_score": 40,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "Controlled Thermal Resources and Plum Acquisition Corp. IV Announce Definitive Business Combination Agreement to Advance U.S. Critical Minerals and Energy",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251750/0/en/Controlled-Thermal-Resources-and-Plum-Acquisition-Corp-IV-Announce-Definitive-Business-Combination-Agreement-to-Advance-U-S-Critical-Minerals-and-Energy.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T12:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "CTR to go public via merger with Plum Acquisition Corp. IV, valuing it at ~$4.7B to advance its Hell’s Kitchen geothermal and lithium project in California",
-        "impact_score": 40,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "United States AI in Drone Market Research and Company Analysis Report 2025-2033 Featuring DroneShield, Skycatch, Dronehub.ai, Applied Aeronautics, AeroVironment, Skydio, DJI, Parrot Drones, Delair",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251740/28124/en/United-States-AI-in-Drone-Market-Research-and-Company-Analysis-Report-2025-2033-Featuring-DroneShield-Skycatch-Dronehub-ai-Applied-Aeronautics-AeroVironment-Skydio-DJI-Parrot-Drone.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T11:34:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "The United States AI in Drone Market is set to experience significant growth, rising from USD 4.13 billion in 2025 to USD 12.64 billion by 2033, reflecting a CAGR of 14.99%. Key drivers include advancements in AI technology and increased applications across s…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Calisa Acquisition Corp Announces Entering into Merger Agreement with GoodVision AI Inc",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251736/0/en/Calisa-Acquisition-Corp-Announces-Entering-into-Merger-Agreement-with-GoodVision-AI-Inc.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T11:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "New York, NY, March 09, 2026 (GLOBE NEWSWIRE) -- Calisa Acquisition Corp (NASDAQ: ALIS) (“ALIS”), a special purpose acquisition company, announced the execution of a Business Combination Agreement (the “Merger Agreement”) with GoodVision AI Inc (“GoodVision A…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "FuelCell Energy Delivers Strong Q1’26 Revenue Growth vs Q1’25; Advances Data Center Power Strategy",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251721/8041/en/FuelCell-Energy-Delivers-Strong-Q1-26-Revenue-Growth-vs-Q1-25-Advances-Data-Center-Power-Strategy.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T11:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "DANBURY, Conn., March 09, 2026 (GLOBE NEWSWIRE) -- FuelCell Energy, Inc. (NASDAQ: FCEL) today reported financial results for its first quarter ended January 31, 2026.",
-        "impact_score": 40,
-        "themes": [
-          "capital",
-          "materials",
-          "commercial"
-        ]
-      },
-      {
-        "title": "Bitfarms Expands Leadership Team with Seasoned U.S. Industry Experts to Support HPC/AI Infrastructure Development",
-        "url": "https://financialpost.com/globe-newswire/bitfarms-expands-leadership-team-with-seasoned-u-s-industry-experts-to-support-hpc-ai-infrastructure-development",
-        "source": "Financial Post",
-        "published_at": "2026-03-09T11:06:21Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "TORONTO and NEW YORK, March 09, 2026 (GLOBE NEWSWIRE) — Bitfarms Ltd. (NASDAQ/TSX: BITF), a North American digital infrastructure and energy company, today announced a series of strategic hires across its infrastructure and corporate teams. These additions br…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Bitfarms Expands Leadership Team with Seasoned U.S. Industry Experts to Support HPC/AI Infrastructure Development",
-        "url": "https://www.globenewswire.com/news-release/2026/03/09/3251704/0/en/Bitfarms-Expands-Leadership-Team-with-Seasoned-U-S-Industry-Experts-to-Support-HPC-AI-Infrastructure-Development.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-09T11:05:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "TORONTO and NEW YORK, March 09, 2026 (GLOBE NEWSWIRE) -- Bitfarms Ltd. (NASDAQ/TSX: BITF), a North American digital infrastructure and energy company, today announced a series of strategic hires across its infrastructure and corporate teams. These additions b…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2367,26 +2563,39 @@
         ]
       },
       {
-        "title": "Oil Drops as Trump Signals Iran Conflict Near End: Markets Wrap - Bloomberg.com",
+        "title": "Oil Drops as Trump Signals Iran Conflict Near End: Markets Wrap - Bloomberg",
         "url": "https://www.bloomberg.com/news/articles/2026-03-09/oil-drops-as-trump-signals-iran-conflict-near-end-markets-wrap",
         "source": "Bloomberg",
-        "published_at": "2026-03-10T00:59:00Z",
+        "published_at": "2026-03-10T06:03:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Asian stocks rebounded from Monday’s selloff and crude oil fell, as President Donald Trump signaled the Iran war may be nearing an end, boosting investor sentiment.",
+        "description": "Asian stocks rose and crude oil fell as President Donald Trump signaled the Iran war may be nearing an end, helping boost sentiment after Monday’s selloff in risk assets.",
         "impact_score": 55,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Oil prices sink, stocks jump in dramatic reversal - NBC News",
-        "url": "https://www.nbcnews.com/business/energy/iran-oil-surges-markets-rcna262395",
-        "source": "NBC News",
-        "published_at": "2026-03-09T22:56:31Z",
+        "title": "JPMorgan’s shocking Iran forecast could change oil’s next move - thestreet.com",
+        "url": "https://www.thestreet.com/economy/jpmorgans-shocking-iran-forecast-could-change-oils-next-move",
+        "source": "TheStreet",
+        "published_at": "2026-03-09T23:33:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Oil prices fell and stocks rose Monday on hopes that the U.S. war in Iran would be over soon.",
+        "description": "JPMorgan’s Iran call puts a surprise clock on $110 oil.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Oil Prices Will Remain High as Iran War Continues - The New York Times",
+        "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5pU2o1S2J3Zi1ENkFKRVFGdVpEZ3JkSGJaVEw5azkwRTNSbC1uSlFVZ3hJWGVZaXZRUV9iSGp0OGp1bUxxWEdWX3dqZ0JyRWk0ZEhlWDJrdVhjaEs0dDlFTFY1VDh6TS1xaEFzQWc3OF8tZXBIeGZ2S0pHQ2U?oc=5",
+        "source": "Google News",
+        "published_at": "2026-03-09T22:29:13Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": null,
         "impact_score": 55,
         "themes": [
           "other"
@@ -2419,53 +2628,40 @@
         ]
       },
       {
-        "title": "[Ad hoc announcement pursuant to Art. 53 LR] Roche provides update on phase III persevERA study in ER-positive advanced breast cancer - Roche",
-        "url": "https://www.roche.com/investors/updates/inv-update-2026-03-09",
-        "source": "Roche.com",
-        "published_at": "2026-03-09T09:20:27Z",
+        "title": "There's another energy market that may get hit harder than oil by Strait of Hormuz closure - CNBC",
+        "url": "https://www.cnbc.com/2026/03/09/theres-another-energy-market-that-may-get-hit-harder-than-oil-by-strait-of-hormuz-closure.html",
+        "source": "CNBC",
+        "published_at": "2026-03-09T17:54:06Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "persevERA Breast Cancer study did not meet the primary objective of a statistically significant improvement in progression-free survival, but a numerical improvement was observed Giredestrant plus...",
+        "description": "Roughly 20% of global liquefied natural gas flows through the Strait.",
         "impact_score": 55,
         "themes": [
           "materials"
         ]
       },
       {
-        "title": "Dow futures sink more than 1,000 points, oil prices surge up to 30% as Iran conflict rages - MarketWatch",
-        "url": "https://www.marketwatch.com/story/u-s-stock-futures-sink-after-oil-surges-above-100-a-barrel-as-iran-conflict-rages-3f1fbfe7",
-        "source": "MarketWatch",
-        "published_at": "2026-03-09T05:57:00Z",
+        "title": "China Inflation Takes Off After Holiday Boost as Oil Shock Looms - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-09/china-consumer-prices-rebound-driven-by-record-holiday-spending",
+        "source": "Bloomberg",
+        "published_at": "2026-03-09T10:10:57Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "China’s consumer-price growth accelerated to the quickest in over three years and factory deflation moderated again, after a rally in energy markets and as household spending boomed during a later-than-usual Lunar New Year holiday.",
+        "impact_score": 55,
+        "themes": [
+          "macro"
+        ]
+      },
+      {
+        "title": "Oil Surges, Asian Equities Slump Amid Growing Middle East Conflict - WSJ",
+        "url": "https://www.wsj.com/finance/stocks/oil-surges-asian-equities-slump-amid-growing-middle-east-conflict-9603f76c",
+        "source": "The Wall Street Journal",
+        "published_at": "2026-03-09T04:36:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": null,
         "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Electric air taxis are about to take flight in 26 states - TechCrunch",
-        "url": "https://techcrunch.com/2026/03/09/electric-air-taxis-are-about-to-take-flight-in-26-states/",
-        "source": "TechCrunch",
-        "published_at": "2026-03-09T22:30:35Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The federal government has selected eight proposals to test electric aircraft across 26 states.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Amy Klobuchar Slams Live Nation Settlement: ‘Every Sign Points to a Backroom Deal’ - Rolling Stone",
-        "url": "http://www.rollingstone.com/music/music-news/amy-klobuchar-live-nation-settlement-reaction-1235527586/",
-        "source": "Rolling Stone",
-        "published_at": "2026-03-09T22:29:51Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Senator Amy Klobuchar expressed her frustration with the DOJ's settlement with Live Nation, saying 'every single sign points to a backroom deal.'",
-        "impact_score": 40,
         "themes": [
           "other"
         ]
@@ -2482,6 +2678,32 @@
           "provider": "newsapi",
           "feed": "top_headlines",
           "description": "Fears that AI advances will upend the software industry have driven demand for new ways to place wagers",
+          "impact_score": 40,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "When it comes to the war in Iran don't go betting on the TACO trade, says top JPMorgan investment strategist - Fortune",
+          "url": "https://fortune.com/2026/03/09/iran-taco-trade-jp-morgan-investment-analysis/",
+          "source": "Fortune",
+          "published_at": "2026-03-09T12:40:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "JPMorgan's Jake Manoukian on which assets provide portfolio balance as tensions between Iran and the U.S. persist.t",
+          "impact_score": 40,
+          "themes": [
+            "capital"
+          ]
+        },
+        {
+          "title": "Skyworks Demonstrates Advanced Connectivity and Power Solutions at Embedded World 2026",
+          "url": "https://www.globenewswire.com/news-release/2026/03/10/3252462/0/en/Skyworks-Demonstrates-Advanced-Connectivity-and-Power-Solutions-at-Embedded-World-2026.html",
+          "source": "GlobeNewswire",
+          "published_at": "2026-03-10T07:01:00Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "Highlighting the Path to 6G, Precision Timing, and Data Center Power from Automotive to the Intelligent Edge Highlighting the Path to 6G, Precision Timing, and Data Center Power from Automotive to the Intelligent Edge",
           "impact_score": 40,
           "themes": [
             "capital"
@@ -2552,48 +2774,46 @@
           "themes": [
             "capital"
           ]
-        },
-        {
-          "title": "FuelCell Energy Delivers Strong Q1’26 Revenue Growth vs Q1’25; Advances Data Center Power Strategy",
-          "url": "https://www.globenewswire.com/news-release/2026/03/09/3251721/8041/en/FuelCell-Energy-Delivers-Strong-Q1-26-Revenue-Growth-vs-Q1-25-Advances-Data-Center-Power-Strategy.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-09T11:30:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "DANBURY, Conn., March 09, 2026 (GLOBE NEWSWIRE) -- FuelCell Energy, Inc. (NASDAQ: FCEL) today reported financial results for its first quarter ended January 31, 2026.",
-          "impact_score": 40,
-          "themes": [
-            "capital",
-            "materials",
-            "commercial"
-          ]
         }
       ],
       "pipeline": [],
       "trade": [],
       "materials": [
         {
-          "title": "Statement by IEA Executive Director Fatih Birol on his participation in a meeting of G7 Finance Ministers - IEA – International Energy Agency",
-          "url": "https://www.iea.org/news/statement-by-iea-executive-director-fatih-birol-on-his-participation-in-a-meeting-of-g7-finance-ministers",
-          "source": "Iea.org",
-          "published_at": "2026-03-09T14:01:13Z",
+          "title": "There's another energy market that may get hit harder than oil by Strait of Hormuz closure - CNBC",
+          "url": "https://www.cnbc.com/2026/03/09/theres-another-energy-market-that-may-get-hit-harder-than-oil-by-strait-of-hormuz-closure.html",
+          "source": "CNBC",
+          "published_at": "2026-03-09T17:54:06Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Statement by IEA Executive Director Fatih Birol on his participation in a meeting of G7 Finance Ministers - News from the International Energy Agency",
+          "description": "Roughly 20% of global liquefied natural gas flows through the Strait.",
+          "impact_score": 55,
+          "themes": [
+            "materials"
+          ]
+        },
+        {
+          "title": "How the Iran energy shock could bring lasting geopolitical change - Axios",
+          "url": "https://www.axios.com/2026/03/09/iran-energy-shock-lasting-change",
+          "source": "Axios",
+          "published_at": "2026-03-09T13:09:16Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Analysts are starting to look beyond the immediate market shock.",
           "impact_score": 40,
           "themes": [
             "materials"
           ]
         },
         {
-          "title": "[Ad hoc announcement pursuant to Art. 53 LR] Roche provides update on phase III persevERA study in ER-positive advanced breast cancer - Roche",
-          "url": "https://www.roche.com/investors/updates/inv-update-2026-03-09",
-          "source": "Roche.com",
-          "published_at": "2026-03-09T09:20:27Z",
+          "title": "Trump says war could be over soon – but defiant Iran to step up attacks; Tánaiste says EU ‘urgently’ needs energy independence",
+          "url": "https://www.independent.ie/world-news/middle-east/trump-says-war-could-be-over-soon-but-defiant-iran-to-step-up-attacks-tanaiste-says-eu-urgently-needs-energy-independence/a1936793771.html",
+          "source": "Independent.ie",
+          "published_at": "2026-03-10T05:30:00Z",
           "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "persevERA Breast Cancer study did not meet the primary objective of a statistically significant improvement in progression-free survival, but a numerical improvement was observed Giredestrant plus...",
-          "impact_score": 55,
+          "feed": "everything",
+          "description": "US president Donald Trump on Monday predicted the war in the Middle East could be over soon, even as Iran’s hardliners staged a show of loyalty to new supreme leader Mojtaba Khamenei in a sign that the country was not prepared to back down any time soon.",
+          "impact_score": 40,
           "themes": [
             "materials"
           ]
@@ -2636,87 +2856,112 @@
           "themes": [
             "materials"
           ]
-        },
-        {
-          "title": "United States Decorative Lighting Market Report 2025-2033: Rising Social Media Influence, Interior Design Trends, and Expanding DIY Decor Culture Fueling the $56.72 Billion Industry",
-          "url": "https://www.globenewswire.com/news-release/2026/03/09/3251800/28124/en/United-States-Decorative-Lighting-Market-Report-2025-2033-Rising-Social-Media-Influence-Interior-Design-Trends-and-Expanding-DIY-Decor-Culture-Fueling-the-56-72-Billion-Industry.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-09T12:12:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Growth is fueled by burgeoning design trends, urbanization, and increasing consumer investment in interior aesthetics. Demand is bolstered by advancements in LED and smart lighting technologies, enhancing energy efficiency and design flexibility. Key drivers …",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
-        },
-        {
-          "title": "Controlled Thermal Resources and Plum Acquisition Corp. IV Announce Definitive Business Combination Agreement to Advance U.S. Critical Minerals and Energy",
-          "url": "https://www.globenewswire.com/news-release/2026/03/09/3251750/0/en/Controlled-Thermal-Resources-and-Plum-Acquisition-Corp-IV-Announce-Definitive-Business-Combination-Agreement-to-Advance-U-S-Critical-Minerals-and-Energy.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-09T12:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "CTR to go public via merger with Plum Acquisition Corp. IV, valuing it at ~$4.7B to advance its Hell’s Kitchen geothermal and lithium project in California",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
-        },
-        {
-          "title": "FuelCell Energy Delivers Strong Q1’26 Revenue Growth vs Q1’25; Advances Data Center Power Strategy",
-          "url": "https://www.globenewswire.com/news-release/2026/03/09/3251721/8041/en/FuelCell-Energy-Delivers-Strong-Q1-26-Revenue-Growth-vs-Q1-25-Advances-Data-Center-Power-Strategy.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-09T11:30:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "DANBURY, Conn., March 09, 2026 (GLOBE NEWSWIRE) -- FuelCell Energy, Inc. (NASDAQ: FCEL) today reported financial results for its first quarter ended January 31, 2026.",
-          "impact_score": 40,
-          "themes": [
-            "capital",
-            "materials",
-            "commercial"
-          ]
         }
       ],
       "regulatory": [],
-      "macro": [],
+      "macro": [
+        {
+          "title": "China Inflation Takes Off After Holiday Boost as Oil Shock Looms - Bloomberg",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-09/china-consumer-prices-rebound-driven-by-record-holiday-spending",
+          "source": "Bloomberg",
+          "published_at": "2026-03-09T10:10:57Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "China’s consumer-price growth accelerated to the quickest in over three years and factory deflation moderated again, after a rally in energy markets and as household spending boomed during a later-than-usual Lunar New Year holiday.",
+          "impact_score": 55,
+          "themes": [
+            "macro"
+          ]
+        }
+      ],
       "land": [],
       "other": [
         {
-          "title": "Oil Drops as Trump Signals Iran Conflict Near End: Markets Wrap - Bloomberg.com",
+          "title": "Oil Drops as Trump Signals Iran Conflict Near End: Markets Wrap - Bloomberg",
           "url": "https://www.bloomberg.com/news/articles/2026-03-09/oil-drops-as-trump-signals-iran-conflict-near-end-markets-wrap",
           "source": "Bloomberg",
-          "published_at": "2026-03-10T00:59:00Z",
+          "published_at": "2026-03-10T06:03:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Asian stocks rebounded from Monday’s selloff and crude oil fell, as President Donald Trump signaled the Iran war may be nearing an end, boosting investor sentiment.",
+          "description": "Asian stocks rose and crude oil fell as President Donald Trump signaled the Iran war may be nearing an end, helping boost sentiment after Monday’s selloff in risk assets.",
           "impact_score": 55,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Oil prices sink, stocks jump in dramatic reversal - NBC News",
-          "url": "https://www.nbcnews.com/business/energy/iran-oil-surges-markets-rcna262395",
-          "source": "NBC News",
-          "published_at": "2026-03-09T22:56:31Z",
+          "title": "FAA grounds all JetBlue flights after request from airline - AP News",
+          "url": "https://apnews.com/article/faa-ground-stop-jetblue-e990b118812f467d904d92375b984d71",
+          "source": "Associated Press",
+          "published_at": "2026-03-10T05:54:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Oil prices fell and stocks rose Monday on hopes that the U.S. war in Iran would be over soon.",
+          "description": "The Federal Aviation Administration briefly grounded all JetBlue flights due to a request from the airline, the agency said in a notice posted to its website early Tuesday morning. It was not immediately clear why JetBlue requested the ground stop, which was …",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Yann LeCun’s AMI Labs raises $1.03 billion to build world models - TechCrunch",
+          "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxObER1eGxPbkVSWG5oVExEXzIxZHUxbDJkc2puSk1GM3NqRE1malBDT0FHTUU1b2xROFRYZ2RsZW5MazF1U1FObi1sVnpWb3dIVXAxYnFaLW9pa013THcwZmUzT3dDWEN1XzlCQVBQd1F6ZlBpMDRmQ0t6ZXNNOHFlNmYwcjV5R0MtM0M2WWEzenh4Y05LWUVlLXhJOHJJdw?oc=5",
+          "source": "Google News",
+          "published_at": "2026-03-10T05:00:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "China exports sharply beat expectations as trade surplus in the first two months surges to highest on record - CNBC",
+          "url": "https://www.cnbc.com/2026/03/10/china-trade-balance-surplus-record-exports-tariffs-imports.html",
+          "source": "CNBC",
+          "published_at": "2026-03-10T03:13:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "China typically combines January and February trade data to smooth distortions from the shifting Lunar New Year holiday.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Trump sons investing in domestic drone production businesses - abcnews.com",
+          "url": "https://abcnews.com/US/trump-sons-investing-domestic-drone-production-businesses/story?id%5C%5Cu003d130908416=",
+          "source": "Abcnews.com",
+          "published_at": "2026-03-09T23:52:29Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "JPMorgan’s shocking Iran forecast could change oil’s next move - thestreet.com",
+          "url": "https://www.thestreet.com/economy/jpmorgans-shocking-iran-forecast-could-change-oils-next-move",
+          "source": "TheStreet",
+          "published_at": "2026-03-09T23:33:00Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "JPMorgan’s Iran call puts a surprise clock on $110 oil.",
           "impact_score": 55,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Electric air taxis are about to take flight in 26 states - TechCrunch",
-          "url": "https://techcrunch.com/2026/03/09/electric-air-taxis-are-about-to-take-flight-in-26-states/",
-          "source": "TechCrunch",
-          "published_at": "2026-03-09T22:30:35Z",
+          "title": "‘Flying Cars’ Will Take Off in American Skies This Summer - WIRED",
+          "url": "https://www.wired.com/story/flying-cars-will-take-off-in-american-skies-this-summer/",
+          "source": "Wired",
+          "published_at": "2026-03-09T22:39:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "The federal government has selected eight proposals to test electric aircraft across 26 states.",
+          "description": "The federal government announced a new pilot program designed to get new kinds of ultralight vehicles and “eVTOLs” up and running around the country—even if they’re not fully FAA-certified.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -2731,6 +2976,19 @@
           "feed": "top_headlines",
           "description": "Senator Amy Klobuchar expressed her frustration with the DOJ's settlement with Live Nation, saying 'every single sign points to a backroom deal.'",
           "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Oil Prices Will Remain High as Iran War Continues - The New York Times",
+          "url": "https://news.google.com/rss/articles/CBMifEFVX3lxTE5pU2o1S2J3Zi1ENkFKRVFGdVpEZ3JkSGJaVEw5azkwRTNSbC1uSlFVZ3hJWGVZaXZRUV9iSGp0OGp1bUxxWEdWX3dqZ0JyRWk0ZEhlWDJrdVhjaEs0dDlFTFY1VDh6TS1xaEFzQWc3OF8tZXBIeGZ2S0pHQ2U?oc=5",
+          "source": "Google News",
+          "published_at": "2026-03-09T22:29:13Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": null,
+          "impact_score": 55,
           "themes": [
             "other"
           ]
@@ -2762,78 +3020,13 @@
           ]
         },
         {
-          "title": "Lockheed, RTX, Northrop, Stocks Slip. Watch This Trump-Backed Drone Company. - Barron's",
-          "url": "https://www.barrons.com/articles/lockheed-rtx-defense-stocks-trump-drones-5807c2bd",
-          "source": "Barron's",
-          "published_at": "2026-03-09T20:20:00Z",
+          "title": "Microsoft launches AI tool that competes with Anthropic - Axios",
+          "url": "https://www.axios.com/2026/03/09/microsoft-copilot-cowork-anthropic",
+          "source": "Axios",
+          "published_at": "2026-03-09T20:20:39Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "50 years of oil-price shocks have taught us that only 2 things matter to markets right now - MarketWatch",
-          "url": "https://www.marketwatch.com/story/50-years-of-oil-price-shocks-have-taught-us-that-only-2-things-matter-to-markets-right-now-2b8361cd",
-          "source": "MarketWatch",
-          "published_at": "2026-03-09T20:13:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The first, and most important, variable: How long will it take prices to fall back?",
-          "impact_score": 55,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Hims & Hers Stock Soars. Its Weight-Loss Drug Battle With Novo Nordisk Takes a Surprising Twist. - Barron's",
-          "url": "https://www.barrons.com/articles/hims-hers-stock-novo-nordisk-truce-9b8b5e7c",
-          "source": "Barron's",
-          "published_at": "2026-03-09T17:48:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Microsoft announces Copilot Cowork with help from Anthropic — a cloud-powered AI agent that works across M365 apps - VentureBeat",
-          "url": "https://venturebeat.com/orchestration/microsoft-announces-copilot-cowork-with-help-from-anthropic-a-cloud-powered",
-          "source": "VentureBeat",
-          "published_at": "2026-03-09T15:55:19Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Copilot Cowork operates in the cloud, inside Microsoft 365's infrastructure, and draws on something Claude Cowork simply cannot access: the full graph of a user's enterprise work data.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Uber's women-only option goes nationwide in the US - abcnews.com",
-          "url": "https://abcnews.com/US/wireStory/ubers-women-option-nationwide-us-130898520",
-          "source": "Abcnews.com",
-          "published_at": "2026-03-09T13:38:55Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Uber is launching a feature that will allow both women riders and drivers across the U.S. to be matched with other women for trips, expanding a pilot program aimed at addressing concerns about the safety of its riding-hailing platform",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Chevrolet killed it then brought it back, now we drive it: The 2027 Bolt - Ars Technica",
-          "url": "https://arstechnica.com/cars/2026/03/new-battery-new-motor-but-the-2027-chevrolet-bolt-keeps-its-charm/",
-          "source": "Ars Technica",
-          "published_at": "2026-03-09T13:00:45Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Faster charging, more modern infotainment, and a new LFP battery are highlights.",
+          "description": "Anthropic invented the product that threatened to kill Microsoft's software business, then Microsoft took the name and turned it into a Copilot feature.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -2841,6 +3034,19 @@
         }
       ],
       "commercial": [
+        {
+          "title": "Iran conflict threatens Gulf data center boom as attacks mount",
+          "url": "https://www.digitimes.com/news/a20260310VL212/middle-east-war-aws-data-center-infrastructure.html",
+          "source": "Digitimes",
+          "published_at": "2026-03-10T06:57:07Z",
+          "provider": "newsapi",
+          "feed": "everything",
+          "description": "The widening conflict involving Iran is beginning to ripple through the global AI industry, raising new questions about the security of Gulf-backed data center projects and the resilience of regional cloud infrastructure. Gulf states are expected to invest mo…",
+          "impact_score": 40,
+          "themes": [
+            "commercial"
+          ]
+        },
         {
           "title": "New Mexico’s first Aloft Hotel under construction near Albuquerque Sunport",
           "url": "https://www.abqjournal.com/business/new-mexicos-first-aloft-hotel-under-construction-near-sunport/2996843",
@@ -2893,21 +3099,6 @@
           "themes": [
             "commercial"
           ]
-        },
-        {
-          "title": "FuelCell Energy Delivers Strong Q1’26 Revenue Growth vs Q1’25; Advances Data Center Power Strategy",
-          "url": "https://www.globenewswire.com/news-release/2026/03/09/3251721/8041/en/FuelCell-Energy-Delivers-Strong-Q1-26-Revenue-Growth-vs-Q1-25-Advances-Data-Center-Power-Strategy.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-09T11:30:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "DANBURY, Conn., March 09, 2026 (GLOBE NEWSWIRE) -- FuelCell Energy, Inc. (NASDAQ: FCEL) today reported financial results for its first quarter ended January 31, 2026.",
-          "impact_score": 40,
-          "themes": [
-            "capital",
-            "materials",
-            "commercial"
-          ]
         }
       ]
     },
@@ -2935,19 +3126,19 @@
         "ticker": "PHM",
         "source": "stooq",
         "date": "2026-03-10",
-        "open": 125.94,
+        "open": 126.59,
         "close": 124.39,
-        "change": -1.5499999999999972,
-        "change_pct": -1.2307447991106855
+        "change": -2.200000000000003,
+        "change_pct": -1.7378939884667057
       },
       {
         "ticker": "LEN",
         "source": "stooq",
         "date": "2026-03-10",
-        "open": 99.505,
+        "open": 99.75,
         "close": 98.72,
-        "change": -0.7849999999999966,
-        "change_pct": -0.7889050801467229
+        "change": -1.0300000000000011,
+        "change_pct": -1.0325814536340863
       },
       {
         "ticker": "NVR",
@@ -2969,30 +3160,30 @@
       },
       {
         "ticker": "HD",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-10",
-        "open": 352.945,
         "close": 357.15,
-        "change": 4.204999999999984,
-        "change_pct": 1.191403759792598
+        "prev_close": 353.56,
+        "change": 3.59,
+        "change_pct": 1.0154
       },
       {
         "ticker": "LOW",
         "source": "stooq",
         "date": "2026-03-10",
-        "open": 249.265,
+        "open": 249,
         "close": 251.11,
-        "change": 1.8450000000000273,
-        "change_pct": 0.7401761177863027
+        "change": 2.1100000000000136,
+        "change_pct": 0.8473895582329373
       },
       {
         "ticker": "VMC",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-10",
+        "open": 272.78,
         "close": 272,
-        "prev_close": 274.33,
-        "change": -2.33,
-        "change_pct": -0.8493
+        "change": -0.7799999999999727,
+        "change_pct": -0.2859447173546348
       },
       {
         "ticker": "MLM",
@@ -3023,21 +3214,21 @@
       },
       {
         "ticker": "OC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-10",
-        "open": 107.69,
         "close": 106.26,
-        "change": -1.4299999999999926,
-        "change_pct": -1.327885597548512
+        "prev_close": 107.25,
+        "change": -0.99,
+        "change_pct": -0.9231
       },
       {
         "ticker": "EXP",
         "source": "stooq",
         "date": "2026-03-10",
-        "open": 195.635,
+        "open": 195.69,
         "close": 193.82,
-        "change": -1.8149999999999977,
-        "change_pct": -0.9277481023334259
+        "change": -1.8700000000000045,
+        "change_pct": -0.9555930297920203
       },
       {
         "ticker": "CAT",
@@ -3070,10 +3261,10 @@
         "ticker": "TPC",
         "source": "stooq",
         "date": "2026-03-10",
-        "open": 71.71,
+        "open": 71.94,
         "close": 71.29,
-        "change": -0.4199999999999875,
-        "change_pct": -0.5856923720540894
+        "change": -0.6499999999999915,
+        "change_pct": -0.9035307200444697
       },
       {
         "ticker": "CRH",
@@ -3088,11 +3279,11 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": -0.7844506076371102
+        "avg_change_pct": -0.9346157202057868
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -0.6231880202800267
+        "avg_change_pct": -0.4664720281574796
       },
       "distribution": {
         "count": 1,
@@ -3104,7 +3295,7 @@
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": 0.9657899387894503
+        "avg_change_pct": 0.9313947791164687
       }
     },
     "stock_pressure_overlay": 0,
@@ -3187,7 +3378,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-11T02:49:19.456Z",
+    "generated_at_utc": "2026-03-11T07:12:17.453Z",
     "regime_history": {
       "current_regime_duration_days": 8,
       "previous_regime": null,
