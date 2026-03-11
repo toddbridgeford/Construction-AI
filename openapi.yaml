@@ -1311,6 +1311,35 @@ components:
               - confidence
               - drivers
               additionalProperties: false
+            market_radar:
+              oneOf:
+              - type: object
+                properties:
+                  hottest_markets:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/ConstructionMarketItem"
+                  weakest_markets:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/ConstructionMarketItem"
+                  summary:
+                    type: object
+                    properties:
+                      top_strength_theme:
+                        type: string
+                      top_weakness_theme:
+                        type: string
+                    required:
+                    - top_strength_theme
+                    - top_weakness_theme
+                    additionalProperties: false
+                required:
+                - hottest_markets
+                - weakest_markets
+                - summary
+                additionalProperties: false
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
             heatmap_summary:
               type: object
               properties:
@@ -1336,6 +1365,38 @@ components:
               - weakest_market
               - headline
               additionalProperties: false
+            forecast:
+              oneOf:
+              - type: object
+                properties:
+                  strongest_next_12_months:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/ForecastMarketItem"
+                  weakest_next_12_months:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/ForecastMarketItem"
+                  summary:
+                    type: object
+                    properties:
+                      top_strength_theme:
+                        type: string
+                      top_weakness_theme:
+                        type: string
+                      headline:
+                        type: string
+                    required:
+                    - top_strength_theme
+                    - top_weakness_theme
+                    - headline
+                    additionalProperties: false
+                required:
+                - strongest_next_12_months
+                - weakest_next_12_months
+                - summary
+                additionalProperties: false
+              - "$ref": "#/components/schemas/ConstructionSubsectionError"
             alerts:
               type: array
               items:
@@ -1478,7 +1539,9 @@ components:
           - power_index
           - power_summary
           - nowcast
+          - market_radar
           - forecast_summary
+          - forecast
           - alerts
           - recession_probability
           - heatmap_summary
