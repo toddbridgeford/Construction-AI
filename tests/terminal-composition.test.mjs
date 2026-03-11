@@ -191,3 +191,36 @@ test('terminal keeps composing when active settings profile read throws unexpect
   assert.equal(typeof body?.terminal?.saved_profiles_summary, 'string');
   assert.match(body?.terminal?.saved_profiles_summary || '', /^1 saved profiles available/);
 });
+
+test('terminal priority summaries remain present and action-oriented', async () => {
+  const env = makeEnv({
+    ASSETS: {
+      async fetch(url) {
+        const parsed = new URL(url);
+        if (parsed.pathname === '/dist/markets/index.json') {
+          return new Response(JSON.stringify({
+            markets: [
+              { market: 'Austin', score: 62, signal: 'bullish', regime: 'growth' },
+              { market: 'Boston', score: 41, signal: 'bearish', regime: 'downturn' },
+              { market: 'Phoenix', score: 55, signal: 'neutral', regime: 'stable' },
+            ],
+          }), { status: 200 });
+        }
+        return new Response('not found', { status: 404 });
+      },
+    },
+  });
+
+  const res = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(typeof body?.terminal?.forecast_summary?.headline, 'string');
+  assert.ok((body?.terminal?.forecast_summary?.headline || '').length > 0);
+  assert.equal(typeof body?.terminal?.migration_summary, 'string');
+  assert.ok((body?.terminal?.migration_summary || '').length > 0);
+  assert.match(body?.terminal?.watchlist_summary || '', /watchlist alerts active|No active watchlist alerts/);
+  assert.match(body?.terminal?.stress_index_summary || '', /keep bid gates and cash controls/i);
+  assert.match(body?.terminal?.capital_flows_summary || '', /prioritize funded, higher-certainty work/i);
+  assert.match(body?.terminal?.morning_brief_v2_summary || '', /Focus:/);
+});
