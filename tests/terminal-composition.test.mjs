@@ -226,3 +226,56 @@ test('terminal priority summaries remain present and action-oriented', async () 
   assert.match(body?.terminal?.morning_brief_v2_summary || '', /Opportunity:/);
   assert.match(body?.terminal?.morning_brief_v2_summary || '', /Focus:/);
 });
+
+
+test('terminal top-level keys prioritize operator scan order', async () => {
+  const env = makeEnv({
+    ASSETS: {
+      async fetch() {
+        return new Response(JSON.stringify({ markets: [] }), { status: 200 });
+      },
+    },
+  });
+
+  const res = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  const keys = Object.keys(body?.terminal || {});
+  assert.deepEqual(keys.slice(0, 6), [
+    'signal',
+    'regime',
+    'liquidity',
+    'risk',
+    'construction_index',
+    'cycle_interpretation',
+  ]);
+
+  const operatorActionsIndex = keys.indexOf('operator_actions');
+  const cycleIndex = keys.indexOf('cycle');
+  const activityTrendsIndex = keys.indexOf('activity_trends');
+  const forecastSummaryIndex = keys.indexOf('forecast_summary');
+  const migrationSummaryIndex = keys.indexOf('migration_summary');
+  const heatmapSummaryIndex = keys.indexOf('heatmap_summary');
+  const settingsSummaryIndex = keys.indexOf('settings_summary');
+  const marketRadarIndex = keys.indexOf('market_radar');
+  const forecastIndex = keys.indexOf('forecast');
+  const migrationIndex = keys.indexOf('migration_index');
+  const watchlistIndex = keys.indexOf('watchlist');
+  const customWatchlistIndex = keys.indexOf('custom_watchlist');
+  const spendingIndex = keys.indexOf('spending');
+
+  assert.ok(operatorActionsIndex > -1);
+  if (cycleIndex > -1) assert.ok(cycleIndex < operatorActionsIndex);
+  if (activityTrendsIndex > -1) assert.ok(activityTrendsIndex < operatorActionsIndex);
+  assert.ok(forecastSummaryIndex > operatorActionsIndex);
+  assert.ok(migrationSummaryIndex > forecastSummaryIndex);
+  assert.ok(heatmapSummaryIndex > migrationSummaryIndex);
+  assert.ok(settingsSummaryIndex > heatmapSummaryIndex);
+  assert.ok(marketRadarIndex > settingsSummaryIndex);
+  assert.ok(forecastIndex > marketRadarIndex);
+  assert.ok(migrationIndex > forecastIndex);
+  assert.ok(watchlistIndex > migrationIndex);
+  assert.ok(customWatchlistIndex > watchlistIndex);
+  assert.ok(spendingIndex > customWatchlistIndex);
+});

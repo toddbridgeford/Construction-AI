@@ -2738,7 +2738,101 @@ async function buildTerminalPayload(request, env) {
 
   terminal.market_tape = buildMarketTape(terminal);
 
-  return terminal;
+  return reorderTerminalPayloadForOperatorScanability(terminal);
+}
+
+function reorderTerminalPayloadForOperatorScanability(terminal) {
+  const ordered = {};
+  const preferredTopLevelOrder = [
+    "signal",
+    "regime",
+    "liquidity",
+    "risk",
+    "construction_index",
+    "cycle_interpretation",
+    "cycle",
+    "activity_trends",
+    "operator_actions",
+    "alerts",
+    "watchlist_summary",
+    "forecast_summary",
+    "migration_summary",
+    "heatmap_summary",
+    "settings_summary",
+    "morning_brief_v2_summary",
+    "market_radar",
+    "forecast",
+    "migration_index",
+    "watchlist",
+    "custom_watchlist",
+    "custom_watchlist_summary",
+    "active_settings_profile_id",
+    "active_settings_profile",
+    "saved_profiles_summary",
+    "morning_brief_v2",
+    "market_tape",
+    "spending",
+    "power_index",
+    "power_summary",
+    "nowcast",
+    "recession_probability",
+    "stress_index",
+    "stress_index_summary",
+    "early_warning",
+    "early_warning_summary",
+    "capital_flows",
+    "capital_flows_summary",
+    "materials_shock",
+    "materials_shock_summary",
+    "labor_shock",
+    "labor_shock_summary",
+    "margin_pressure",
+    "margin_pressure_summary",
+    "backlog_quality",
+    "backlog_quality_summary",
+    "bid_intensity",
+    "bid_intensity_summary",
+    "project_risk",
+    "project_risk_summary",
+    "receivables_risk",
+    "receivables_risk_summary",
+    "payment_delay_risk",
+    "payment_delay_risk_summary",
+    "collections_stress",
+    "collections_stress_summary",
+    "owner_risk",
+    "owner_risk_summary",
+    "developer_fragility",
+    "developer_fragility_summary",
+    "lender_pullback_risk",
+    "lender_pullback_risk_summary",
+    "counterparty_quality",
+    "counterparty_quality_summary",
+    "metro_concentration_risk",
+    "metro_concentration_risk_summary",
+    "counterparty_concentration_risk",
+    "counterparty_concentration_risk_summary",
+    "project_mix_exposure",
+    "project_mix_exposure_summary",
+    "portfolio_risk",
+    "portfolio_risk_summary",
+    "scenarios",
+    "scenarios_summary",
+  ];
+
+  for (const key of preferredTopLevelOrder) {
+    if (Object.prototype.hasOwnProperty.call(terminal, key)) {
+      ordered[key] = terminal[key];
+    }
+  }
+
+  for (const [key, value] of Object.entries(terminal)) {
+    if (!Object.prototype.hasOwnProperty.call(ordered, key)) {
+      ordered[key] = value;
+    }
+  }
+
+  return ordered;
 }
 
 async function readSpendingSummary(request, env) {
