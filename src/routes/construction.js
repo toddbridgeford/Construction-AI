@@ -2066,10 +2066,12 @@ function buildWatchlistAlerts(terminal, settings = cloneDefaultConstructionSetti
     addAlert("BID_INTENSITY_MISMATCH", "high", "Bid intensity elevated with weak backlog quality", `Pursuit intensity is high while backlog quality is weak, increasing win-at-any-cost risk (threshold ${bidMismatchThreshold.toFixed(1)}).`, "Pause thin-bid pursuit in weak metros and enforce minimum margin/quality gates.", "bid_intensity");
   }
 
+  const primaryAlert = alerts[0] || null;
+
   return {
     alerts,
     summary: alerts.length
-      ? `${alerts.filter((a) => a.severity === "high").length} high and ${alerts.filter((a) => a.severity === "medium").length} medium watchlist alerts active.`
+      ? `${alerts.filter((a) => a.severity === "high").length} high and ${alerts.filter((a) => a.severity === "medium").length} medium watchlist alerts active. ${primaryAlert?.trigger || "Primary alert"}: ${primaryAlert?.operator_action || "Run standard risk controls."}`
       : "No active watchlist alerts.",
   };
 }
@@ -2146,6 +2148,27 @@ function fallbackMorningBriefV2(terminal) {
     operator_focus: "Maintain selective bid discipline, watch concentration limits, and protect cash conversion quality.",
     watchlist: [],
   };
+}
+
+function buildStressIndexSummary(stressIndex) {
+  const score = Number.isFinite(stressIndex?.score) ? stressIndex.score.toFixed(1) : "n/a";
+  const state = stressIndex?.state || "unknown";
+  const trend = stressIndex?.trend || "stable";
+  const leadDriver = stressIndex?.drivers?.[0] || "mixed inputs";
+  return `Stress ${state} (${score}; ${trend}) led by ${leadDriver}; keep bid gates and cash controls aligned to current risk.`;
+}
+
+function buildCapitalFlowsSummary(capitalFlows) {
+  const lending = capitalFlows?.lending_growth || "stable";
+  const privateCapital = capitalFlows?.private_development_capital || "balanced";
+  const manufacturing = capitalFlows?.manufacturing_investment || "cautious";
+  return `Capital flows are ${lending} with private capital ${privateCapital} and manufacturing ${manufacturing}; prioritize funded, higher-certainty work.`;
+}
+
+function buildMorningBriefV2Summary(brief) {
+  const topRisk = brief?.top_risks?.[0] || "No urgent new risk detected.";
+  const focus = brief?.operator_focus || "Maintain selective bid discipline.";
+  return `${topRisk} Focus: ${focus}`;
 }
 
 async function buildMorningBriefV2(
@@ -2396,7 +2419,7 @@ function buildMigrationIndex(heatmap, forecast) {
   return {
     inbound_markets,
     outbound_markets,
-    headline: `Relative demand momentum favors ${topInbound} over ${topOutbound}.`,
+    headline: `Migration momentum favors ${topInbound} over ${topOutbound}; prioritize staffing and pursuit in stronger metros while tightening exposure in weaker metros.`,
   };
 }
 
@@ -2536,11 +2559,11 @@ async function buildTerminalPayload(request, env) {
   terminal.alerts = buildConstructionAlerts(terminal);
   terminal.recession_probability = buildRecessionProbability(terminal);
   terminal.stress_index = buildStressIndex(terminal);
-  terminal.stress_index_summary = terminal.stress_index.explanation;
+  terminal.stress_index_summary = buildStressIndexSummary(terminal.stress_index);
   terminal.early_warning = buildEarlyWarning(terminal);
   terminal.early_warning_summary = terminal.early_warning.explanation;
   terminal.capital_flows = buildCapitalFlows(terminal);
-  terminal.capital_flows_summary = terminal.capital_flows.explanation;
+  terminal.capital_flows_summary = buildCapitalFlowsSummary(terminal.capital_flows);
   terminal.materials_shock = buildMaterialsShockModel(terminal);
   terminal.materials_shock_summary = terminal.materials_shock.explanation;
   terminal.labor_shock = buildLaborShockModel(terminal);
@@ -2655,7 +2678,7 @@ async function buildTerminalPayload(request, env) {
   } catch {
     terminal.morning_brief_v2 = fallbackMorningBriefV2(terminal);
   }
-  terminal.morning_brief_v2_summary = terminal.morning_brief_v2.operator_focus;
+  terminal.morning_brief_v2_summary = buildMorningBriefV2Summary(terminal.morning_brief_v2);
 
   if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated" || terminal.collections_stress.state === "elevated" || terminal.collections_stress.state === "severe" || terminal.owner_risk.state === "elevated" || terminal.owner_risk.state === "severe" || terminal.developer_fragility.state === "elevated" || terminal.developer_fragility.state === "severe" || terminal.lender_pullback_risk.state === "elevated" || terminal.lender_pullback_risk.state === "severe" || terminal.counterparty_quality.state === "weak" || terminal.metro_concentration_risk.state === "elevated" || terminal.metro_concentration_risk.state === "severe" || terminal.counterparty_concentration_risk.state === "elevated" || terminal.counterparty_concentration_risk.state === "severe" || terminal.project_mix_exposure.state === "elevated" || terminal.project_mix_exposure.state === "severe" || terminal.portfolio_risk.state === "elevated" || terminal.portfolio_risk.state === "severe") {
     terminal.operator_actions.gc = "Diversify metro exposure, tighten customer selection, and stress-test backlog conversion by metro and sponsor bucket.";
@@ -2823,7 +2846,7 @@ function buildForecastSummary(strongest, weakest) {
   const topStrengthTheme = topStrong?.drivers?.[0] || "Strength is concentrated in markets with resilient current conditions.";
   const topWeaknessTheme = topWeak?.drivers?.[0] || "Weakness is concentrated in markets exposed to restrictive macro conditions.";
   const headline = topStrong && topWeak
-    ? `${topStrong.market} screens as the most likely strengthening market while ${topWeak.market} screens as the most likely to soften over the next 12 months.`
+    ? `${topStrong.market} leads 12-month upside while ${topWeak.market} leads downside risk; tilt pursuit toward relative strength and tighten underwriting in weaker metros.`
     : "Insufficient market coverage for a full strongest-vs-weakest split; forecast reflects available deterministic market signals.";
 
   return {
