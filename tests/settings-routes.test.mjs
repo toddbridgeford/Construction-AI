@@ -542,6 +542,62 @@ test('morning brief v2 endpoint persists scenario snapshot in KV', async () => {
   assert.ok(typeof snapshotWrite.value === 'string');
   assert.doesNotThrow(() => JSON.parse(snapshotWrite.value));
 });
+
+
+test('morning brief v2 uses operator-priority title, ordered changed conditions, and aligned summary fields', async () => {
+  const store = new Map();
+  store.set('construction:terminal:scenario-watchlist:v1', JSON.stringify({
+    recession_probability: 20,
+    stress_index: 45,
+    early_warning: 40,
+    labor_shock: 40,
+    materials_shock: 40,
+    margin_pressure: 40,
+    project_risk: 40,
+    collections_stress: 40,
+    portfolio_risk: 40,
+    counterparty_quality: 40,
+    strongest_market: 'Austin',
+    weakest_market: 'Boston',
+  }));
+
+  const env = makeEnv({
+    CPI_SNAPSHOTS: {
+      async get(key, opts = {}) {
+        if (!store.has(key)) return null;
+        const value = store.get(key);
+        if (opts.type === 'json') return JSON.parse(value);
+        return value;
+      },
+      async put(key, value) {
+        store.set(key, value);
+      },
+    },
+  });
+
+  const briefRes = await handleConstructionMorningBriefV2(new Request('https://example.com/construction/morning-brief-v2'), env);
+  const briefBody = await json(briefRes);
+  assert.equal(briefRes.status, 200);
+  assert.equal(briefBody?.brief?.title, 'Construction Morning Brief v2 — Operator Priorities');
+  assert.match(briefBody?.brief?.operator_focus || '', /^Primary focus: /);
+  assert.ok(Array.isArray(briefBody?.brief?.changed_conditions));
+  assert.match(briefBody?.brief?.changed_conditions?.[0] || '', /^(Portfolio risk|Project risk|Collections stress|Counterparty quality|Stress index|Recession probability)/);
+  assert.ok(Array.isArray(briefBody?.brief?.top_risks));
+  assert.ok(Array.isArray(briefBody?.brief?.top_opportunities));
+  assert.ok((briefBody?.brief?.top_risks?.length || 0) >= 1);
+  assert.ok((briefBody?.brief?.top_opportunities?.length || 0) >= 1);
+
+  const terminalRes = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
+  const terminalBody = await json(terminalRes);
+  assert.equal(terminalRes.status, 200);
+  const summary = terminalBody?.terminal?.morning_brief_v2_summary || '';
+  assert.match(summary, /^Risk: /);
+  assert.match(summary, / Opportunity: /);
+  assert.match(summary, / Focus: /);
+  assert.ok(summary.includes(briefBody?.brief?.top_risks?.[0] || ''));
+  assert.ok(summary.includes(briefBody?.brief?.top_opportunities?.[0] || ''));
+  assert.ok(summary.includes(briefBody?.brief?.operator_focus || ''));
+});
 test('custom watchlist and terminal include profile-aware metadata', async () => {
   const env = makeEnv();
   await handleConstructionSettingsProfilesActivate(new Request('https://example.com/construction/settings/profiles/activate', {

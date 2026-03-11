@@ -2139,15 +2139,62 @@ function terminalSnapshotState(terminal) {
 
 function fallbackMorningBriefV2(terminal) {
   return {
-    title: "Construction Morning Brief v2",
+    title: "Construction Morning Brief v2 — Operator Priorities",
     changed_conditions: ["Morning brief fallback is active because trend deltas could not be computed in this run."],
     top_risks: [terminal?.portfolio_risk_summary || "No urgent new risk detected."],
     top_opportunities: [
       `${terminal?.migration_index?.inbound_markets?.[0]?.market || "top metros"} resilience supports selective expansion if underwriting discipline is preserved.`,
     ],
-    operator_focus: "Maintain selective bid discipline, watch concentration limits, and protect cash conversion quality.",
+    operator_focus: "Primary focus: maintain selective bid discipline, enforce concentration limits, and protect cash conversion quality.",
     watchlist: [],
   };
+}
+
+const MORNING_BRIEF_CHANGED_CONDITION_PRIORITY = [
+  "Portfolio risk",
+  "Project risk",
+  "Collections stress",
+  "Counterparty quality",
+  "Stress index",
+  "Recession probability",
+  "Labor shock",
+  "Materials shock",
+  "Early warning",
+  "Weakest metro rotated",
+  "Strongest metro rotated",
+];
+
+function changedConditionPriority(entry) {
+  const index = MORNING_BRIEF_CHANGED_CONDITION_PRIORITY.findIndex((prefix) => entry.startsWith(prefix));
+  return index >= 0 ? index : MORNING_BRIEF_CHANGED_CONDITION_PRIORITY.length;
+}
+
+function buildMorningBriefTopRisks(terminal, watchlistAlerts) {
+  const severityRank = { high: 0, medium: 1, low: 2 };
+  const ranked = (Array.isArray(watchlistAlerts) ? watchlistAlerts : [])
+    .filter((alert) => typeof alert?.message === "string" && alert.message.trim().length > 0)
+    .sort((a, b) => {
+      const severityDelta = (severityRank[a.severity] ?? 9) - (severityRank[b.severity] ?? 9);
+      if (severityDelta !== 0) return severityDelta;
+      return String(a.code || "").localeCompare(String(b.code || ""));
+    })
+    .map((alert) => alert.message.trim());
+
+  const unique = [...new Set(ranked)].slice(0, 3);
+  if (unique.length > 0) return unique;
+  return [terminal?.portfolio_risk_summary || "No urgent new risk detected."];
+}
+
+function buildMorningBriefTopOpportunities(terminal) {
+  const candidates = [
+    terminal?.scenarios?.upside_case?.operator_implication,
+    terminal?.scenarios?.base_case?.operator_implication,
+    `${terminal?.migration_index?.inbound_markets?.[0]?.market || "Top metro"} relative strength supports selective expansion where underwriting quality is holding.`,
+  ]
+    .filter((value) => typeof value === "string" && value.trim().length > 0)
+    .map((value) => value.trim());
+
+  return [...new Set(candidates)].slice(0, 3);
 }
 
 function buildStressIndexSummary(stressIndex) {
@@ -2167,8 +2214,9 @@ function buildCapitalFlowsSummary(capitalFlows) {
 
 function buildMorningBriefV2Summary(brief) {
   const topRisk = brief?.top_risks?.[0] || "No urgent new risk detected.";
+  const topOpportunity = brief?.top_opportunities?.[0] || "No immediate expansion signal identified.";
   const focus = brief?.operator_focus || "Maintain selective bid discipline.";
-  return `${topRisk} Focus: ${focus}`;
+  return `Risk: ${topRisk} Opportunity: ${topOpportunity} Focus: ${focus}`;
 }
 
 async function buildMorningBriefV2(
@@ -2205,22 +2253,22 @@ async function buildMorningBriefV2(
   }
 
   const watchlist = buildWatchlistAlerts(terminal, settings);
-  const topRisk = watchlist.alerts.find((alert) => alert.severity === "high")?.message
-    || terminal?.portfolio_risk_summary
-    || "No urgent new risk detected.";
-
-  const topOpportunity = terminal?.scenarios?.upside_case?.operator_implication
-    || `${terminal?.migration_index?.inbound_markets?.[0]?.market || "top metros"} resilience supports selective expansion if underwriting discipline is preserved.`;
+  const topRisks = buildMorningBriefTopRisks(terminal, watchlist.alerts);
+  const topOpportunities = buildMorningBriefTopOpportunities(terminal);
 
   const operatorFocus = watchlist.alerts.length
-    ? watchlist.alerts[0].operator_action
-    : "Maintain selective bid discipline, watch concentration limits, and protect cash conversion quality.";
+    ? `Primary focus: ${watchlist.alerts[0].operator_action}`
+    : "Primary focus: maintain selective bid discipline, enforce concentration limits, and protect cash conversion quality.";
+
+  const changedConditions = changed
+    .sort((a, b) => changedConditionPriority(a) - changedConditionPriority(b) || a.localeCompare(b))
+    .slice(0, 8);
 
   return {
-    title: "Construction Morning Brief v2",
-    changed_conditions: changed.length ? changed.slice(0, 8) : ["No material metric shifts crossed alert thresholds since the prior run."],
-    top_risks: [topRisk],
-    top_opportunities: [topOpportunity],
+    title: "Construction Morning Brief v2 — Operator Priorities",
+    changed_conditions: changedConditions.length ? changedConditions : ["No material metric shifts crossed alert thresholds since the prior run."],
+    top_risks: topRisks,
+    top_opportunities: topOpportunities,
     operator_focus: operatorFocus,
     watchlist: watchlist.alerts,
   };
