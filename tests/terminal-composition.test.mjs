@@ -222,5 +222,7 @@ test('terminal priority summaries remain present and action-oriented', async () 
   assert.match(body?.terminal?.watchlist_summary || '', /watchlist alerts active|No active watchlist alerts/);
   assert.match(body?.terminal?.stress_index_summary || '', /keep bid gates and cash controls/i);
   assert.match(body?.terminal?.capital_flows_summary || '', /prioritize funded, higher-certainty work/i);
+  assert.match(body?.terminal?.morning_brief_v2_summary || '', /Risk:/);
+  assert.match(body?.terminal?.morning_brief_v2_summary || '', /Opportunity:/);
   assert.match(body?.terminal?.morning_brief_v2_summary || '', /Focus:/);
 });
