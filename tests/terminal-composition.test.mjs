@@ -132,3 +132,62 @@ test('terminal keeps composing when market radar helper throws unexpectedly', as
   assert.equal(typeof body?.terminal?.watchlist_summary, 'string');
   assert.ok(body?.terminal?.watchlist_summary.length > 0);
 });
+
+test('terminal keeps composing when dashboard helper throws unexpectedly', async () => {
+  const env = makeEnv({
+    ASSETS: {
+      async fetch() {
+        return new Response(JSON.stringify({ markets: [] }), { status: 200 });
+      },
+    },
+    CPI_SNAPSHOTS: {
+      async get() {
+        return null;
+      },
+      async put() {},
+    },
+  });
+
+  Object.defineProperty(env, 'FRED_API_KEY', {
+    configurable: true,
+    get() {
+      throw new Error('fred key unavailable');
+    },
+  });
+
+  const res = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(body?.terminal?.signal?.ok, false);
+  assert.equal(body?.terminal?.signal?.error?.code, 'DASHBOARD_FAILED');
+  assert.match(body?.terminal?.signal?.error?.message || '', /Unable to compute dashboard/);
+  assert.equal(typeof body?.terminal?.watchlist_summary, 'string');
+  assert.ok(body?.terminal?.watchlist_summary.length > 0);
+});
+
+test('terminal keeps composing when active settings profile read throws unexpectedly', async () => {
+  const env = makeEnv({
+    ASSETS: {
+      async fetch() {
+        return new Response(JSON.stringify({ markets: [] }), { status: 200 });
+      },
+    },
+  });
+
+  Object.defineProperty(env, 'CPI_SNAPSHOTS', {
+    configurable: true,
+    get() {
+      throw new Error('kv binding unavailable');
+    },
+  });
+
+  const res = await handleConstructionTerminal(new Request('https://example.com/construction/terminal'), env);
+  const body = await json(res);
+
+  assert.equal(res.status, 200);
+  assert.equal(body?.terminal?.active_settings_profile_id, 'balanced-operator');
+  assert.equal(body?.terminal?.active_settings_profile, 'Balanced Operator');
+  assert.equal(typeof body?.terminal?.saved_profiles_summary, 'string');
+  assert.match(body?.terminal?.saved_profiles_summary || '', /^1 saved profiles available/);
+});

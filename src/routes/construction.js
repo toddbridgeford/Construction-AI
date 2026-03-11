@@ -2135,6 +2135,19 @@ function terminalSnapshotState(terminal) {
   };
 }
 
+function fallbackMorningBriefV2(terminal) {
+  return {
+    title: "Construction Morning Brief v2",
+    changed_conditions: ["Morning brief fallback is active because trend deltas could not be computed in this run."],
+    top_risks: [terminal?.portfolio_risk_summary || "No urgent new risk detected."],
+    top_opportunities: [
+      `${terminal?.migration_index?.inbound_markets?.[0]?.market || "top metros"} resilience supports selective expansion if underwriting discipline is preserved.`,
+    ],
+    operator_focus: "Maintain selective bid discipline, watch concentration limits, and protect cash conversion quality.",
+    watchlist: [],
+  };
+}
+
 async function buildMorningBriefV2(
   terminal,
   env,
@@ -2452,9 +2465,33 @@ async function tryBuildForecast(request, env, terminal = null) {
 }
 
 async function buildTerminalPayload(request, env) {
-  const { envelope: settingsEnvelope, activeProfile } = await readActiveSettingsProfile(env);
+  let settingsEnvelope;
+  let activeProfile;
+  try {
+    ({ envelope: settingsEnvelope, activeProfile } = await readActiveSettingsProfile(env));
+  } catch {
+    activeProfile = {
+      profile_id: "balanced-operator",
+      profile_name: "Balanced Operator",
+      settings: cloneDefaultConstructionSettings(),
+    };
+    settingsEnvelope = {
+      active_profile_id: activeProfile.profile_id,
+      profiles: [activeProfile],
+    };
+  }
   const settings = sanitizeConstructionSettings(activeProfile?.settings || {});
-  const dashboardResult = await buildConstructionDashboard(env);
+  let dashboardResult;
+  try {
+    dashboardResult = await buildConstructionDashboard(env);
+  } catch (e) {
+    dashboardResult = {
+      failed: true,
+      response: error(env, 500, "DASHBOARD_FAILED", "Unable to compute dashboard", {
+        message: e?.message || String(e),
+      }),
+    };
+  }
   const spending = await readSpendingSummary(request, env);
 
   const terminal = {
@@ -2613,7 +2650,11 @@ async function buildTerminalPayload(request, env) {
   terminal.custom_watchlist = buildCustomWatchlist(terminal, settings);
   terminal.custom_watchlist_summary = terminal.custom_watchlist.summary;
   terminal.saved_profiles_summary = `${settingsEnvelope.profiles.length} saved profiles available; active profile is ${terminal.active_settings_profile}.`;
-  terminal.morning_brief_v2 = await buildMorningBriefV2(terminal, env, settings);
+  try {
+    terminal.morning_brief_v2 = await buildMorningBriefV2(terminal, env, settings);
+  } catch {
+    terminal.morning_brief_v2 = fallbackMorningBriefV2(terminal);
+  }
   terminal.morning_brief_v2_summary = terminal.morning_brief_v2.operator_focus;
 
   if (terminal.project_risk.state === "severe" || terminal.project_risk.state === "elevated" || terminal.collections_stress.state === "elevated" || terminal.collections_stress.state === "severe" || terminal.owner_risk.state === "elevated" || terminal.owner_risk.state === "severe" || terminal.developer_fragility.state === "elevated" || terminal.developer_fragility.state === "severe" || terminal.lender_pullback_risk.state === "elevated" || terminal.lender_pullback_risk.state === "severe" || terminal.counterparty_quality.state === "weak" || terminal.metro_concentration_risk.state === "elevated" || terminal.metro_concentration_risk.state === "severe" || terminal.counterparty_concentration_risk.state === "elevated" || terminal.counterparty_concentration_risk.state === "severe" || terminal.project_mix_exposure.state === "elevated" || terminal.project_mix_exposure.state === "severe" || terminal.portfolio_risk.state === "elevated" || terminal.portfolio_risk.state === "severe") {
