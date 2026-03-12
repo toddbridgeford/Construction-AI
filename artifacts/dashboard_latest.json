@@ -1,6 +1,6 @@
 {
   "schema_version": "4.4.0",
-  "generated_at": "2026-03-12T03:11:47.928Z",
+  "generated_at": "2026-03-12T07:13:40.841Z",
   "executive": {
     "headline": "Construction Intelligence",
     "confidence": "medium",
@@ -9,13 +9,9 @@
   "cpi": {
     "headline": 46,
     "zone": "Slowdown",
-    "delta_3m": 0,
+    "delta_3m": -2,
     "momentum": "Stable",
     "history": [
-      {
-        "date": "2026-03-09",
-        "value": 47
-      },
       {
         "date": "2026-03-09",
         "value": 46
@@ -54,6 +50,10 @@
       },
       {
         "date": "2026-03-11",
+        "value": 46
+      },
+      {
+        "date": "2026-03-12",
         "value": 46
       },
       {
@@ -187,7 +187,7 @@
     "heat_strip": {
       "cpi": 46,
       "zone": "Slowdown",
-      "delta_3m": 0,
+      "delta_3m": -2,
       "momentum": "Stable",
       "risk_thermometer_mode": false,
       "freeze_risk": false
@@ -195,27 +195,36 @@
   },
   "market_intel": {
     "news_sources": {
-      "newsapi:top_headlines": 30,
-      "newsapi:everything": 78
+      "newsapi:top_headlines": 27,
+      "newsapi:everything": 77
     },
     "news_unified": [
       {
-        "title": "Trump says U.S. will build first refinery in 50 years with investment by India's Reliance Industries - CNBC",
-        "url": "https://www.cnbc.com/2026/03/11/trump-us-oil-refinery-reliance-ambani-texas-india-shale-wti.html",
-        "source": "CNBC",
-        "published_at": "2026-03-11T02:17:00Z",
+        "title": "Trump Says US to Get New Oil Refinery With Reliance Backing - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-10/trump-says-us-to-get-new-oil-refinery-with-reliance-backing",
+        "source": "Bloomberg",
+        "published_at": "2026-03-11T06:40:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "U.S. President said India's largest private energy company Reliance Industries is investing in a $300-billion refinery project in Texas."
+        "description": "President Donald Trump said the US will get its first new oil refinery in 50 years with the help of investment from India’s Reliance Industries Ltd."
       },
       {
-        "title": "Asian Stocks Poised for Gains, Oil Swings Higher: Markets Wrap - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-10/asian-stocks-poised-for-gains-oil-swings-higher-markets-wrap",
-        "source": "Bloomberg",
-        "published_at": "2026-03-11T01:59:00Z",
+        "title": "Facebook owner Meta buys 'social media network for AI' Moltbook - BBC",
+        "url": "https://www.bbc.com/news/articles/cvg1x788dreo",
+        "source": "BBC News",
+        "published_at": "2026-03-11T05:46:49Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Stocks rose and oil held below $90 a barrel after a report on the proposed release of oil reserves, aimed at easing higher energy prices, boosted market confidence after a surge in volatility across assets."
+        "description": "The forum-style app has sparked interest by showing how AI bots interact without human involvement."
+      },
+      {
+        "title": "Asia stocks extend gains on lower oil prices; Iran war concerns persist - Investing.com",
+        "url": "https://www.investing.com/news/stock-market-news/asia-stocks-extend-gains-on-lower-oil-prices-iran-war-concerns-persist-4553533",
+        "source": "Investing.com",
+        "published_at": "2026-03-11T02:59:19Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Asia stocks extend gains on lower oil prices; Iran war concerns persist"
       },
       {
         "title": "Stock Market News, March 10, 2026: Oil Extends Slide; Dow Slips - WSJ",
@@ -227,31 +236,31 @@
         "description": null
       },
       {
-        "title": "IEA Proposes Largest Ever Oil Stockpile Release, WSJ Says - Bloomberg.com",
+        "title": "IEA Proposes Largest Ever Oil Stockpile Release, WSJ Says - Bloomberg",
         "url": "https://www.bloomberg.com/news/articles/2026-03-11/iea-proposes-largest-ever-oil-release-from-reserves-wsj-says",
         "source": "Bloomberg",
         "published_at": "2026-03-11T01:36:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The International Energy Agency has proposed the largest ever release of oil reserves, according to the Wall Street Journal, as governments seek to contain a spike in energy prices driven by the Middle East war."
+        "description": "The International Energy Agency is proposing a release of emergency oil reserves, according to a person with knowledge of the matter, as governments seek to contain a spike in energy prices driven by the Middle East war."
       },
       {
-        "title": "'Icky and heartbreaking': Life as an OnlyFans 'chatter' - BBC",
-        "url": "https://www.bbc.com/news/articles/cq571g9gd4lo",
+        "title": "'Investing in people': Can China's new push to boost spending revive the economy? - BBC",
+        "url": "https://www.bbc.com/news/articles/c70n5xllp1do",
         "source": "BBC News",
-        "published_at": "2026-03-11T00:00:50Z",
+        "published_at": "2026-03-10T23:33:10Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The BBC talks to a Philippines-based woman paid to pretend to be an OnlyFans star in online chats."
+        "description": "Beijing has spent decades relying on exports and innovation but that model is now under strain."
       },
       {
-        "title": "US homes sales bounced back in February as homebuyers seized on easing mortgage rates - abcnews.com",
-        "url": "https://abcnews.com/Business/wireStory/us-homes-sales-bounced-back-february-homebuyers-seized-130932324",
-        "source": "Abcnews.com",
-        "published_at": "2026-03-10T22:47:59Z",
+        "title": "FDA contradicts Trump admin, declines to approve generic drug for autism - Ars Technica",
+        "url": "https://arstechnica.com/health/2026/03/fda-contradicts-trump-admin-declines-to-approve-generic-drug-for-autism/",
+        "source": "Ars Technica",
+        "published_at": "2026-03-10T22:12:35Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Sales of previously occupied U.S. homes bounced back in February as home shoppers benefited from easing mortgage rates and a modest increase in properties on the market heading into the spring homebuying season"
+        "description": "In the end, the FDA only approved the drug for a rare genetic condition with clearer data."
       },
       {
         "title": "Amazon orders 90-day reset after code mishaps cause millions of lost orders - Business Insider",
@@ -272,6 +281,24 @@
         "description": null
       },
       {
+        "title": "Next-generation electric aircraft cleared for takeoff in FAA test program - Axios",
+        "url": "https://www.axios.com/2026/03/09/faa-program-china",
+        "source": "Axios",
+        "published_at": "2026-03-10T21:56:57Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The FAA announced eight pilot projects to test innovative electric aircraft across 26 states."
+      },
+      {
+        "title": "Microsoft March 2026 Patch Tuesday fixes 2 zero-days, 79 flaws - BleepingComputer",
+        "url": "https://www.bleepingcomputer.com/news/microsoft/microsoft-march-2026-patch-tuesday-fixes-2-zero-days-79-flaws/",
+        "source": "BleepingComputer",
+        "published_at": "2026-03-10T21:49:57Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Today is Microsoft's March 2026 Patch Tuesday with security updates for 79 flaws, including 2 publicly disclosed zero-day vulnerabilities."
+      },
+      {
         "title": "Oracle Stock Jumps After Earnings Beat Expectations. Why It ‘Will Not Be’ Disrupted. - Barron's",
         "url": "https://www.barrons.com/articles/oracle-earnings-stock-price-04a16ce2",
         "source": "Barron's",
@@ -279,15 +306,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": ""
-      },
-      {
-        "title": "Ford launches new AI to grow multibillion-dollar Pro commercial business - CNBC",
-        "url": "https://www.cnbc.com/2026/03/10/ford-pro-ai.html",
-        "source": "CNBC",
-        "published_at": "2026-03-10T21:30:01Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Ford CEO Jim Farley last month said diversifying Pro's revenue — specifically in software — is a crucial growth area for the company."
       },
       {
         "title": "'Swinging into action:' The Saudi Arabian pipeline designed to bypass Hormuz - Middle East Eye",
@@ -299,22 +317,40 @@
         "description": "Saudi Arabia is pumping oil to the Red Sea, but this new route will not address fuel shortages and puts the Houthis back in play"
       },
       {
-        "title": "FAA Names Partners For Air Taxi Pilot Projects, Coming This Summer - Investor's Business Daily",
-        "url": "https://www.investors.com/news/joby-faa-air-taxi-evtol-pilot-program-partners-summer-2026-beta-archer/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-10T21:14:00Z",
+        "title": "Big tech has defeated everything for 30 years, but for the first time faces something it can't control: a jury - Fortune",
+        "url": "https://fortune.com/2026/03/10/big-tech-social-media-addiction-jury-first-time/",
+        "source": "Fortune",
+        "published_at": "2026-03-10T21:28:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The FAA will roll out air taxi, eVTOL pilot projects covering 26 states this summer. Joby, Archer, BETA Technologies named partners."
+        "description": "And this is a bellwether trial, meaning the court chose it as a representative test case to help determine verdicts across all connected cases."
       },
       {
-        "title": "Live Nation and states ordered to hold settlement negotiations in antitrust case - NBC News",
-        "url": "https://www.nbcnews.com/business/business-news/live-nation-judge-settlement-negotiations-antitrust-case-rcna262762",
-        "source": "NBC News",
-        "published_at": "2026-03-10T20:19:53Z",
+        "title": "LAX board approves major Uber, Lyft fee increase - ABC7 Los Angeles",
+        "url": "https://abc7.com/post/lax-board-approves-major-uber-lyft-fee-increase/18700320/",
+        "source": "KABC-TV",
+        "published_at": "2026-03-10T21:24:27Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "A federal judge ordered Live Nation to engage in settlement talks with a group of state attorneys general who accuse the live entertainment behemoth of illegally dominating the industry."
+        "description": "LAX is raising its fees for rideshare drivers, a move officials say is aimed at reducing traffic in the airport's central terminal."
+      },
+      {
+        "title": "BioNTech Crumbles 22% As Co-Founders Plot Their Exit - Investor's Business Daily",
+        "url": "https://www.investors.com/news/technology/biontech-stock-co-founders-ugur-sahin-ozlem-tureci/",
+        "source": "Investor's Business Daily",
+        "published_at": "2026-03-10T21:15:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "BioNTech stock crumbled Tuesday after the husband-wife team who co-founded the German biotech announced their looming exit."
+      },
+      {
+        "title": "The national debt was already ballooning under Trump. Then came a $1 billion-a-day war with Iran - Fortune",
+        "url": "https://fortune.com/2026/03/10/national-debt-trump-impact-war-iran/",
+        "source": "Fortune",
+        "published_at": "2026-03-10T20:45:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Where will you be in the third quarter of 2027?"
       },
       {
         "title": "Ohio judge rules that Kalshi is sports betting and must adhere to state law - NBC News",
@@ -326,22 +362,13 @@
         "description": "An Ohio federal judge on Monday said she's obligated to \"avoid absurdity\" and ruled that Kalshi's prediction markets in sports amount to acts of gambling — which should come under state regulations"
       },
       {
-        "title": "FDA approves leucovorin for rare genetic condition, but not autism - KSL.com",
-        "url": "https://www.ksl.com/article/51459793/fda-approves-leucovorin-for-rare-genetic-condition-but-not-autism",
-        "source": "KSL.com",
-        "published_at": "2026-03-10T19:06:03Z",
+        "title": "Rejoice: This Luxurious Mercedes-Benz Minivan Is Coming To America - Motor1.com",
+        "url": "https://www.motor1.com/news/789580/mercedes-benz-vle-electric-luxury-van-specs-details/",
+        "source": "Motor1 ",
+        "published_at": "2026-03-10T19:15:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The prescription drug leucovorin is getting a label update, but it's not what that the US Food and Drug Administration suggested during a White House briefing in September."
-      },
-      {
-        "title": "Meta acquires Moltbook, the AI agent social network - Ars Technica",
-        "url": "https://arstechnica.com/ai/2026/03/meta-acquires-moltbook-the-ai-agent-social-network/",
-        "source": "Ars Technica",
-        "published_at": "2026-03-10T19:02:55Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The viral social network project was created with OpenClaw."
+        "description": "The Mercedes-Benz VLE is a new electric luxury minivan with cutting-edge technology and features. A version is coming to America. This is what we know."
       },
       {
         "title": "ExxonMobil moves to reincorporate in Texas from New Jersey - The Texas Tribune",
@@ -360,15 +387,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Tech giant Amazon ($AMZN) is seeing enormous investor demand for its latest U.S. bond offering, with orders reportedly reaching about $126 billion. As a result, it has become one of"
-      },
-      {
-        "title": "Move Over, Mercedes S-Class, Your Next Black Car Seats Eight and It’s an Electric Van - The Drive",
-        "url": "http://www.thedrive.com/news/move-over-mercedes-s-class-your-next-black-car-seats-eight-and-its-an-electric-van",
-        "source": "The Drive",
-        "published_at": "2026-03-10T18:15:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "School run or VIP pickup? The Mercedes-Benz VLE is aiming for both."
       },
       {
         "title": "Judge orders Perplexity to stop AI agents from shopping on Amazon - The Verge",
@@ -398,76 +416,112 @@
         "description": "After nearly half a century, Yamaha Motor Co. is leaving California and heading to the Peach State."
       },
       {
-        "title": "In a time of war with Iran, Americans unite in aggravation over sticker shock at the gas pump - AP News",
-        "url": "https://apnews.com/article/iran-war-gas-prices-trump-voters-648000c2a4ffe03f8d647b8e7371bb13",
-        "source": "Associated Press",
-        "published_at": "2026-03-10T16:58:00Z",
+        "title": "5 takeaways from Nvidia CEO Jensen Huang's rare insider blog post on AI - Axios",
+        "url": "https://www.axios.com/2026/03/10/jensen-huang-ais-biggest-buildout-is-still-ahead",
+        "source": "Axios",
+        "published_at": "2026-03-10T17:11:37Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "It seems that a country divided on many fronts is finding common ground at the gas pumps. There, the cost of the Iran war is hitting Americans squarely in the wallet and aggravating people across the political spectrum. That was the message from Associated Pr…"
+        "description": "Huang made the case that AI is essential as the internet and electricity."
       },
       {
-        "title": "FDA Warns Novo Nordisk Over Potential Unreported Ozempic Side Effects, Deaths - Forbes",
-        "url": "https://www.forbes.com/sites/martinadilicosa/2026/03/10/fda-warns-novo-nordisk-over-potential-unreported-ozempic-side-effects-deaths/",
-        "source": "Forbes",
-        "published_at": "2026-03-10T16:09:36Z",
+        "title": "FDA Warns Novo Nordisk of Unreported Side Effects Tied to GLP-1 Patients - WSJ",
+        "url": "https://www.wsj.com/health/pharma/fda-warns-novo-nordisk-of-unreported-side-effects-tied-to-glp-1-patients-c97d810e",
+        "source": "The Wall Street Journal",
+        "published_at": "2026-03-10T16:33:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The previously unreported events include two deaths and a suicide, cases that the Ozempic maker says have been assessed."
+        "description": null
       },
       {
-        "title": "‘This cannot be sustainable’: The U.S. borrowed $50 billion a week for the past five months, the CBO says - Fortune",
-        "url": "https://fortune.com/2026/03/10/treasury-debt-borrowing-five-months-deficit-warning/",
-        "source": "Fortune",
-        "published_at": "2026-03-10T15:52:00Z",
+        "title": "Taco Bell Reveals Massive 2026 Menu Lineup Including New Mexican Pizzas And A Baja Blast Midnight Pie - Foodbeast",
+        "url": "https://www.foodbeast.com/news/taco-bell-reveals-massive-2026-menu-lineup-including-new-mexican-pizzas-and-a-baja-blast-midnight-pie/",
+        "source": "Foodbeast.com",
+        "published_at": "2026-03-10T16:17:35Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The Congressional Budget Office (CBO) reporting that the federal deficit added another $1 trillion in the first five months of the year."
+        "description": "Taco Bell just gave fans a look at what the future of the menu looks like, and it’s stacked. At Live Más LIVE: A Night…"
       },
       {
-        "title": "Gas prices pass $3.50 per gallon to highest level since 2024 amid U.S.-Iran war - CNBC",
-        "url": "https://www.cnbc.com/2026/03/10/aaa-gas-prices-iran-affordability-trump.html",
-        "source": "CNBC",
-        "published_at": "2026-03-10T15:33:03Z",
+        "title": "A Senegal boarding school that drew students from the US is at the center of an abuse investigation",
+        "url": "https://abcnews.com/International/wireStory/senegal-boarding-school-drew-students-us-center-abuse-130958640",
+        "source": "Abcnews.com",
+        "published_at": "2026-03-11T07:12:23Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Prices are up 21% from a month ago with the oil market roiled by the U.S.-Iran war."
+        "feed": "everything",
+        "description": "The American Dara Academy in Senegal is at the center of abuse allegations after students describe harsh punishments in a room they call the “magic room.”"
       },
       {
-        "title": "Boeing reworking 737 MAXs after newly disclosed issue stalls deliveries - The Seattle Times",
-        "url": "https://www.seattletimes.com/business/boeing-aerospace/boeing-is-reworking-some-737-max-planes-to-fix-scratches-on-wires/",
-        "source": "The Seattle Times",
-        "published_at": "2026-03-10T15:05:00Z",
+        "title": "HiLITE Group to invest ₹570 crore in two IT complexes at Kozhikode Cyberpark",
+        "url": "https://www.thehindubusinessline.com/info-tech/hilite-group-to-invest-570-crore-in-two-it-complexes-at-kozhikode-cyberpark/article70729776.ece",
+        "source": "BusinessLine",
+        "published_at": "2026-03-11T06:08:14Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Boeing is repairing some 737 MAX planes that have yet to be delivered to fix small scratches on wires. The company said the issue does not present a safety risk,"
+        "feed": "everything",
+        "description": "Construction of the HiLITE Cyber Hub has already begun, while formal agreements for the HiLITE Cyber Tower have been exchanged and work is expected to begin in the next phase"
       },
       {
-        "title": "Vertex Pops On 'Remarkable' Late-Stage Results - Investor's Business Daily",
-        "url": "https://www.investors.com/news/technology/vertex-stock-chronic-kidney-disease-iga-nephropathy/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-10T14:33:00Z",
+        "title": "John McManus: We need a retrofit reality check; the figures don’t stack up and we can’t be bothered",
+        "url": "https://www.irishtimes.com/business/2026/03/11/we-need-a-retrofit-reality-check-the-figures-dont-stack-up-and-we-cant-be-bothered/",
+        "source": "The Irish Times",
+        "published_at": "2026-03-11T06:00:01Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Vertex stock popped early Tuesday on promising test results."
+        "feed": "everything",
+        "description": "Most of us have concluded that retrofitting doesn’t make sense"
       },
       {
-        "title": "Chrysler Just Killed Off 50% Of Its Lineup For 2027 - CarBuzz",
-        "url": "https://carbuzz.com/2027-chrysler-pacifica-price-voyager-cancelled/",
-        "source": "CarBuzz",
-        "published_at": "2026-03-10T14:12:58Z",
+        "title": "China is rebuilding its grip on North Korea. Is Kim Jong Un ready to oblige?",
+        "url": "https://economictimes.indiatimes.com/news/international/world-news/china-is-rebuilding-its-grip-on-north-korea-is-kim-jong-un-ready-to-oblige/articleshow/129439832.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-11T05:36:30Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The 2027 Chrysler Pacifica loses its Voyager base trim, but the starting price barely changes, and higher trims are actually cheaper."
+        "feed": "everything",
+        "description": "China and North Korea are strengthening their bond. New infrastructure projects are underway along their shared border. This collaboration aims to boost trade and influence. North Korea's economy is seeing increased Chinese investment. This development comes …"
       },
       {
-        "title": "Polymarket taps Peter Thiel-backed Palantir to develop sports betting AI monitoring tool - The Block",
-        "url": "https://www.theblock.co/post/393009/polymarket-peter-thiel-palantir-develop-sports-betting-ai-monitoring-tool",
-        "source": "Theblock.co",
-        "published_at": "2026-03-10T13:44:44Z",
+        "title": "China reasserting its infuence on North Korea",
+        "url": "https://japantoday.com/category/world/china-is-rebuilding-its-grip-on-north-korea.-is-kim-jong-un-ready-to-oblige1",
+        "source": "Japan Today",
+        "published_at": "2026-03-11T05:29:30Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The sports betting integrity platform will use Vergence AI engine to help screen for anomalies like manipulation and insider activity in real-time."
+        "feed": "everything",
+        "description": "When Kim Jong Un arrived by armored train in Beijing for a military parade in September, the pageantry signaled a thaw in one of the world's most important relationships after several years of frosty ties. Behind the spectacle of tanks and fighter jets, North…"
+      },
+      {
+        "title": "Do barn swallows nest in bluebird houses?",
+        "url": "https://www.lifesciencesworld.com/do-barn-swallows-nest-in-bluebird-houses/",
+        "source": "Lifesciencesworld.com",
+        "published_at": "2026-03-11T05:11:54Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Do Barn Swallows Nest in Bluebird Houses? Exploring Nesting Preferences Do barn swallows nest in bluebird houses? The short answer is generally no. Barn swallows typically prefer open structures like barns, sheds, or bridges, not the enclosed cavities of blue…"
+      },
+      {
+        "title": "Japan aims to sell eight times more chips in 2040 as in 2020",
+        "url": "https://economictimes.indiatimes.com/news/international/business/japan-aims-to-sell-eight-times-more-chips-in-2040-as-in-2020/articleshow/129435551.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-11T03:48:54Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Japan is targeting a massive boost in its chip manufacturing sector. The nation aims for an eightfold increase in domestically produced microchip sales by 2040. This ambitious plan involves significant government investment in new factories. Japanese chipmake…"
+      },
+      {
+        "title": "15 stocks in focus as govt approves Rs 8.7 lakh crore Jal Jeevan Mission extension. Check full list",
+        "url": "https://economictimes.indiatimes.com/markets/stocks/news/15-stocks-in-focus-as-govt-approves-rs-8-7-lakh-crore-jal-jeevan-mission-extension-check-full-list/articleshow/129435043.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-11T03:42:14Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "As many as 15 stocks may be in focus after the Union Cabinet approved an extension of the Jal Jeevan Mission till 2028 with a total outlay of Rs 8.69 lakh crore. The decision is expected to benefit EPC firms, pump makers and pipe companies, reviving payments …"
+      },
+      {
+        "title": "Are there any birds that can see glass?",
+        "url": "https://www.lifesciencesworld.com/are-there-any-birds-that-can-see-glass/",
+        "source": "Lifesciencesworld.com",
+        "published_at": "2026-03-11T03:37:33Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Can Birds Actually See Glass? Understanding Avian Vision and Glass Collisions No, birds generally cannot perceive glass as a solid barrier, leading to frequent and often fatal collisions. This is due to their vision processing depth and reflection, rather tha…"
       },
       {
         "title": "Economic Digest: Nepal’s Business News in a Snap",
@@ -497,15 +551,6 @@
         "description": "When you cut your finger or twist your ankle, the redness, swelling, and warmth that follow are signs that your body is doing exactly what it should. Inflammation, in its acute form, is a necessary process in human biology. It's a rapid response that sends im…"
       },
       {
-        "title": "Catalytic Tango in Diatomic Catalysts: From Precision-Guided Pair Construction to Machine-Learning-Driven Identification and Design",
-        "url": "https://pubs.rsc.org/en/content/articlelanding/2026/nr/d5nr05121e",
-        "source": "Royal Society of Chemistry",
-        "published_at": "2026-03-11T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Nanoscale, 2026, Accepted ManuscriptDOI: 10.1039/D5NR05121E, Review ArticleBowen Jiang, Jishui Huang, Kuibo Yin, Litao SunDiatomic catalysts (DACs) are composed of two neighboring metal centers, each stabilized by its own coordination environment, that extend…"
-      },
-      {
         "title": "Universities have become property businesses. What does that mean for research?",
         "url": "https://www.nature.com/articles/d41586-025-04167-1",
         "source": "Nature.com",
@@ -513,6 +558,15 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "In the United States, United Kingdom, Australia and Singapore, universities are operating as developers and landlords. Where does science fit in?"
+      },
+      {
+        "title": "Catalytic Tango in Diatomic Catalysts: From Precision-Guided Pair Construction to Machine-Learning-Driven Identification and Design",
+        "url": "https://pubs.rsc.org/en/content/articlelanding/2026/nr/d5nr05121e",
+        "source": "Royal Society of Chemistry",
+        "published_at": "2026-03-11T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Nanoscale, 2026, Accepted ManuscriptDOI: 10.1039/D5NR05121E, Review ArticleBowen Jiang, Jishui Huang, Kuibo Yin, Litao SunDiatomic catalysts (DACs) are composed of two neighboring metal centers, each stabilized by its own coordination environment, that extend…"
       },
       {
         "title": "Will US get a new oil refinery for the first time in 50 years, and where will this facility come up? $300 billion refinery plan explained. Here's why the announcement is happening now",
@@ -911,15 +965,6 @@
         "description": "Clear cell renal cell carcinoma (ccRCC) represents the most prevalent form of kidney cancer, yet age-related molecular heterogeneity remains poorly characterized in clinical specimens. We performed comprehensive transcriptomic profiling of 73 formalin-fixed p…"
       },
       {
-        "title": "The retrieval of previously learned motor memories is facilitated by the reinstatement of default mode network manifold structures",
-        "url": "https://journals.plos.org/plosbiology/article?id=10.1371%2Fjournal.pbio.3003684",
-        "source": "Plos.org",
-        "published_at": "2026-03-10T14:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "How does the brain retrieve motor skills? This study shows that the default mode network actively reinstates past connectivity patterns to accelerate relearning, revealing a neural mechanism for preserving skills over time."
-      },
-      {
         "title": "Conceptions of food healthiness among nutrition and food science undergraduates: A mixed-methods study in a Spanish university",
         "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0344433",
         "source": "Plos.org",
@@ -929,13 +974,13 @@
         "description": "Understanding how future nutrition and food professionals conceptualize healthy food and eating is key to aligning university training and professional practice with public health and sustainability goals. This mixed-methods study explored how undergraduate s…"
       },
       {
-        "title": "Hensel Phelps Signs Enterprise Agreement with Track3D to Automate Progress Tracking Across 200+ Projects",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3253015/0/en/Hensel-Phelps-Signs-Enterprise-Agreement-with-Track3D-to-Automate-Progress-Tracking-Across-200-Projects.html",
-        "source": "GlobeNewswire",
+        "title": "The retrieval of previously learned motor memories is facilitated by the reinstatement of default mode network manifold structures",
+        "url": "https://journals.plos.org/plosbiology/article?id=10.1371%2Fjournal.pbio.3003684",
+        "source": "Plos.org",
         "published_at": "2026-03-10T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "After saving $342K and eliminating nearly 3,000 hours of manual work on a single project, Hensel Phelps will deploy Track3D's Reality Intelligence platform across 200+ active projects After saving $342K and eliminating nearly 3,000 hours of manual work on a s…"
+        "description": "How does the brain retrieve motor skills? This study shows that the default mode network actively reinstates past connectivity patterns to accelerate relearning, revealing a neural mechanism for preserving skills over time."
       },
       {
         "title": "Smart Grid Market to Reach $161.5 Billion, at a 16.9% CAGR by 2029 | MarketsandMarkets™",
@@ -947,13 +992,22 @@
         "description": "Delray Beach, FL, March 10, 2026 (GLOBE NEWSWIRE) -- The global Smart Grid Market size is projected to reach USD 161.1 billion by 2029, from USD 73.8 billion in 2024, at a CAGR of 16.9% according to a new report by MarketsandMarkets™. The demand for smart gri…"
       },
       {
-        "title": "Single-cell omics reveals arg-1 as a key regulator of age-dependent macrophage-mediated cartilage repair",
-        "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0344693",
+        "title": "Hensel Phelps Signs Enterprise Agreement with Track3D to Automate Progress Tracking Across 200+ Projects",
+        "url": "https://www.globenewswire.com/news-release/2026/03/10/3253015/0/en/Hensel-Phelps-Signs-Enterprise-Agreement-with-Track3D-to-Automate-Progress-Tracking-Across-200-Projects.html",
+        "source": "GlobeNewswire",
+        "published_at": "2026-03-10T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "After saving $342K and eliminating nearly 3,000 hours of manual work on a single project, Hensel Phelps will deploy Track3D's Reality Intelligence platform across 200+ active projects After saving $342K and eliminating nearly 3,000 hours of manual work on a s…"
+      },
+      {
+        "title": "A bacterial ecocline in Klebsiella pneumoniae may explain its backboned phylogeny",
+        "url": "https://journals.plos.org/plosbiology/article?id=10.1371%2Fjournal.pbio.3003672",
         "source": "Plos.org",
         "published_at": "2026-03-10T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Aging impairs cartilage repair, with young animals exhibiting superior regenerative capacity due to enhanced tissue repairing and reduced inflammation compared to aged counterparts. This study employed single-cell omics to dissect age-dependent immune cell he…"
+        "description": "Could the shape of phylogenetic trees contain hidden information? This study shows that the \"backbone\" shape of the phylogenetic tree of the important human pathogen Klebsiella pneumoniae may reveal a history of diversifying selection on an unknown trait."
       },
       {
         "title": "Odell Sets the Bar for Apartment Living in North Austin",
@@ -965,13 +1019,13 @@
         "description": "Austin, TX, March 10, 2026 (GLOBE NEWSWIRE) -- (March 10, 2025) — Greystar, a global leader in the investment, development, and management of real estate, is pleased to announce that it is currently taking pre-leases for Odell, an apartment community coming t…"
       },
       {
-        "title": "A bacterial ecocline in Klebsiella pneumoniae may explain its backboned phylogeny",
-        "url": "https://journals.plos.org/plosbiology/article?id=10.1371%2Fjournal.pbio.3003672",
+        "title": "Single-cell omics reveals arg-1 as a key regulator of age-dependent macrophage-mediated cartilage repair",
+        "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0344693",
         "source": "Plos.org",
         "published_at": "2026-03-10T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Could the shape of phylogenetic trees contain hidden information? This study shows that the \"backbone\" shape of the phylogenetic tree of the important human pathogen Klebsiella pneumoniae may reveal a history of diversifying selection on an unknown trait."
+        "description": "Aging impairs cartilage repair, with young animals exhibiting superior regenerative capacity due to enhanced tissue repairing and reduced inflammation compared to aged counterparts. This study employed single-cell omics to dissect age-dependent immune cell he…"
       },
       {
         "title": "An EU-wide housing plan has been voted through for the first time (but not everyone's happy)",
@@ -1080,120 +1134,43 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "First properties are expected to be completed by the end of 2028"
-      },
-      {
-        "title": "Mining the ocean floor: 5 deep-sea sources of critical minerals essential to technology, and the fragile marine life at risk",
-        "url": "https://theconversation.com/mining-the-ocean-floor-5-deep-sea-sources-of-critical-minerals-essential-to-technology-and-the-fragile-marine-life-at-risk-275804",
-        "source": "The Conversation Africa",
-        "published_at": "2026-03-10T12:40:46Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Critical minerals are found in several forms in the ocean, from potato-size nodules to brine pools. They are also in some of the least understood parts of our planet."
-      },
-      {
-        "title": "Cabinet approves two multi-tracking railway projects connecting West Bengal, Jharkhand",
-        "url": "https://economictimes.indiatimes.com/industry/transportation/railways/cabinet-approves-two-multi-tracking-railway-projects-connecting-west-bengal-jharkhand/articleshow/129396188.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-10T12:32:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "In a significant step towards modernising eastern India's transport infrastructure, the government has unveiled two ambitious railway projects linking West Bengal and Jharkhand. These initiatives promise to enhance rail capacity, streamline freight logistics,…"
-      },
-      {
-        "title": "Eagle Nuclear Energy Joins Uranium Producers of America",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252821/0/en/Eagle-Nuclear-Energy-Joins-Uranium-Producers-of-America.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-10T12:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Membership highlights Eagle’s commitment to strengthening America’s domestic uranium supply Membership highlights Eagle’s commitment to strengthening America’s domestic uranium supply"
-      },
-      {
-        "title": "ASP Isotopes to Participate in Canaccord Genuity’s 2nd Annual CG Virtual Sustainability Summit",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252774/0/en/ASP-Isotopes-to-Participate-in-Canaccord-Genuity-s-2nd-Annual-CG-Virtual-Sustainability-Summit.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-10T12:11:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "DALLAS, March 10, 2026 (GLOBE NEWSWIRE) -- ASP Isotopes Inc. (NASDAQ: ASPI) (“ASP Isotopes” or the “Company”), an advanced materials company focused on developing technologies and processes for the production of critical materials used in multiple industries,…"
-      },
-      {
-        "title": "Oil boon, Ukraine forgotten, Iran weakened: How does Russia win or lose from Mideast war",
-        "url": "https://economictimes.indiatimes.com/news/international/world-news/oil-boon-ukraine-forgotten-iran-weakened-how-does-russia-win-or-lose-from-mideast-war/articleshow/129394922.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-10T12:06:47Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Russia stands to both gain and lose from war in the Middle East, with the Kremlin boosted by rising oil prices and attention diverted from Ukraine, but facing a reputational hit for its inability to help a key ally. - Focus shifts from Ukraine - The Iran conf…"
-      },
-      {
-        "title": "LGI Homes Opens in Master-Planned Denver-Area Community, Farmstead",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252705/28788/en/LGI-Homes-Opens-in-Master-Planned-Denver-Area-Community-Farmstead.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-10T12:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "LGI Homes is opening a new community in Berthoud with homes starting in the high $460s...."
-      },
-      {
-        "title": "Tuesday: Hili dialogue",
-        "url": "https://whyevolutionistrue.com/2026/03/10/tuesday-hili-dialogue-570/",
-        "source": "Whyevolutionistrue.com",
-        "published_at": "2026-03-10T11:45:45Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Welcome to the Cruelest Day: Tuesday, March 10, 2026, and a celebration of everyone’s favorite instrument (not): International Bagpipe Day. Bagpipes aren’t just Irish or Scottish: they have been going for a while in different countries. Here’s a Wikipedia dra…"
-      },
-      {
-        "title": "Oracle earnings will show whether its expensive AI bet is starting to pay off",
-        "url": "https://www.cnbc.com/2026/03/10/oracle-orcl-stock-earnings-ai-data-center.html",
-        "source": "CNBC",
-        "published_at": "2026-03-10T11:00:02Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Oracle's $300 billion deal with OpenAI established it as a major player in AI cloud computing alongside Amazon, Google and Microsoft."
-      },
-      {
-        "title": "Reliance, Inc. Subsidiary AMI Metals, Inc. Awarded Significant Government Infrastructure and Defense Projects",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252588/0/en/Reliance-Inc-Subsidiary-AMI-Metals-Inc-Awarded-Significant-Government-Infrastructure-and-Defense-Projects.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-10T10:50:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "PHOENIX, March 10, 2026 (GLOBE NEWSWIRE) -- Reliance, Inc. (NYSE: RS) announced today that its wholly-owned subsidiary, AMI Metals, Inc. (“AMI”) has been awarded two significant contracts for United States government infrastructure and defense projects, reinf…"
-      },
-      {
-        "title": "Abia converts free green shuttle to fare service with 50% subsidy",
-        "url": "https://punchng.com/abia-converts-free-green-shuttle-to-fare-service-with-50-subsidy/",
-        "source": "The Punch",
-        "published_at": "2026-03-10T10:37:16Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Abia State transitions its Free Green Shuttle to a fare-paying transport service, offering a 50% subsidy to ensure long-term sustainability for commuters.\n\nRead More: https://punchng.com/abia-converts-free-green-shuttle-to-fare-service-with-50-subsidy/"
       }
     ],
     "news_with_impact": [
       {
-        "title": "Trump says U.S. will build first refinery in 50 years with investment by India's Reliance Industries - CNBC",
-        "url": "https://www.cnbc.com/2026/03/11/trump-us-oil-refinery-reliance-ambani-texas-india-shale-wti.html",
-        "source": "CNBC",
-        "published_at": "2026-03-11T02:17:00Z",
+        "title": "Trump Says US to Get New Oil Refinery With Reliance Backing - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-10/trump-says-us-to-get-new-oil-refinery-with-reliance-backing",
+        "source": "Bloomberg",
+        "published_at": "2026-03-11T06:40:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "U.S. President said India's largest private energy company Reliance Industries is investing in a $300-billion refinery project in Texas.",
+        "description": "President Donald Trump said the US will get its first new oil refinery in 50 years with the help of investment from India’s Reliance Industries Ltd.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Facebook owner Meta buys 'social media network for AI' Moltbook - BBC",
+        "url": "https://www.bbc.com/news/articles/cvg1x788dreo",
+        "source": "BBC News",
+        "published_at": "2026-03-11T05:46:49Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The forum-style app has sparked interest by showing how AI bots interact without human involvement.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Asian Stocks Poised for Gains, Oil Swings Higher: Markets Wrap - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-10/asian-stocks-poised-for-gains-oil-swings-higher-markets-wrap",
-        "source": "Bloomberg",
-        "published_at": "2026-03-11T01:59:00Z",
+        "title": "Asia stocks extend gains on lower oil prices; Iran war concerns persist - Investing.com",
+        "url": "https://www.investing.com/news/stock-market-news/asia-stocks-extend-gains-on-lower-oil-prices-iran-war-concerns-persist-4553533",
+        "source": "Investing.com",
+        "published_at": "2026-03-11T02:59:19Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Stocks rose and oil held below $90 a barrel after a report on the proposed release of oil reserves, aimed at easing higher energy prices, boosted market confidence after a surge in volatility across assets.",
+        "description": "Asia stocks extend gains on lower oil prices; Iran war concerns persist",
         "impact_score": 55,
         "themes": [
           "other"
@@ -1213,42 +1190,42 @@
         ]
       },
       {
-        "title": "IEA Proposes Largest Ever Oil Stockpile Release, WSJ Says - Bloomberg.com",
+        "title": "IEA Proposes Largest Ever Oil Stockpile Release, WSJ Says - Bloomberg",
         "url": "https://www.bloomberg.com/news/articles/2026-03-11/iea-proposes-largest-ever-oil-release-from-reserves-wsj-says",
         "source": "Bloomberg",
         "published_at": "2026-03-11T01:36:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The International Energy Agency has proposed the largest ever release of oil reserves, according to the Wall Street Journal, as governments seek to contain a spike in energy prices driven by the Middle East war.",
+        "description": "The International Energy Agency is proposing a release of emergency oil reserves, according to a person with knowledge of the matter, as governments seek to contain a spike in energy prices driven by the Middle East war.",
         "impact_score": 55,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "'Icky and heartbreaking': Life as an OnlyFans 'chatter' - BBC",
-        "url": "https://www.bbc.com/news/articles/cq571g9gd4lo",
+        "title": "'Investing in people': Can China's new push to boost spending revive the economy? - BBC",
+        "url": "https://www.bbc.com/news/articles/c70n5xllp1do",
         "source": "BBC News",
-        "published_at": "2026-03-11T00:00:50Z",
+        "published_at": "2026-03-10T23:33:10Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The BBC talks to a Philippines-based woman paid to pretend to be an OnlyFans star in online chats.",
+        "description": "Beijing has spent decades relying on exports and innovation but that model is now under strain.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "US homes sales bounced back in February as homebuyers seized on easing mortgage rates - abcnews.com",
-        "url": "https://abcnews.com/Business/wireStory/us-homes-sales-bounced-back-february-homebuyers-seized-130932324",
-        "source": "Abcnews.com",
-        "published_at": "2026-03-10T22:47:59Z",
+        "title": "FDA contradicts Trump admin, declines to approve generic drug for autism - Ars Technica",
+        "url": "https://arstechnica.com/health/2026/03/fda-contradicts-trump-admin-declines-to-approve-generic-drug-for-autism/",
+        "source": "Ars Technica",
+        "published_at": "2026-03-10T22:12:35Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Sales of previously occupied U.S. homes bounced back in February as home shoppers benefited from easing mortgage rates and a modest increase in properties on the market heading into the spring homebuying season",
-        "impact_score": 55,
+        "description": "In the end, the FDA only approved the drug for a rare genetic condition with clearer data.",
+        "impact_score": 40,
         "themes": [
-          "capital"
+          "other"
         ]
       },
       {
@@ -1278,6 +1255,32 @@
         ]
       },
       {
+        "title": "Next-generation electric aircraft cleared for takeoff in FAA test program - Axios",
+        "url": "https://www.axios.com/2026/03/09/faa-program-china",
+        "source": "Axios",
+        "published_at": "2026-03-10T21:56:57Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "The FAA announced eight pilot projects to test innovative electric aircraft across 26 states.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Microsoft March 2026 Patch Tuesday fixes 2 zero-days, 79 flaws - BleepingComputer",
+        "url": "https://www.bleepingcomputer.com/news/microsoft/microsoft-march-2026-patch-tuesday-fixes-2-zero-days-79-flaws/",
+        "source": "BleepingComputer",
+        "published_at": "2026-03-10T21:49:57Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Today is Microsoft's March 2026 Patch Tuesday with security updates for 79 flaws, including 2 publicly disclosed zero-day vulnerabilities.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
         "title": "Oracle Stock Jumps After Earnings Beat Expectations. Why It ‘Will Not Be’ Disrupted. - Barron's",
         "url": "https://www.barrons.com/articles/oracle-earnings-stock-price-04a16ce2",
         "source": "Barron's",
@@ -1285,19 +1288,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Ford launches new AI to grow multibillion-dollar Pro commercial business - CNBC",
-        "url": "https://www.cnbc.com/2026/03/10/ford-pro-ai.html",
-        "source": "CNBC",
-        "published_at": "2026-03-10T21:30:01Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Ford CEO Jim Farley last month said diversifying Pro's revenue — specifically in software — is a crucial growth area for the company.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1317,26 +1307,52 @@
         ]
       },
       {
-        "title": "FAA Names Partners For Air Taxi Pilot Projects, Coming This Summer - Investor's Business Daily",
-        "url": "https://www.investors.com/news/joby-faa-air-taxi-evtol-pilot-program-partners-summer-2026-beta-archer/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-10T21:14:00Z",
+        "title": "Big tech has defeated everything for 30 years, but for the first time faces something it can't control: a jury - Fortune",
+        "url": "https://fortune.com/2026/03/10/big-tech-social-media-addiction-jury-first-time/",
+        "source": "Fortune",
+        "published_at": "2026-03-10T21:28:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The FAA will roll out air taxi, eVTOL pilot projects covering 26 states this summer. Joby, Archer, BETA Technologies named partners.",
+        "description": "And this is a bellwether trial, meaning the court chose it as a representative test case to help determine verdicts across all connected cases.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Live Nation and states ordered to hold settlement negotiations in antitrust case - NBC News",
-        "url": "https://www.nbcnews.com/business/business-news/live-nation-judge-settlement-negotiations-antitrust-case-rcna262762",
-        "source": "NBC News",
-        "published_at": "2026-03-10T20:19:53Z",
+        "title": "LAX board approves major Uber, Lyft fee increase - ABC7 Los Angeles",
+        "url": "https://abc7.com/post/lax-board-approves-major-uber-lyft-fee-increase/18700320/",
+        "source": "KABC-TV",
+        "published_at": "2026-03-10T21:24:27Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "A federal judge ordered Live Nation to engage in settlement talks with a group of state attorneys general who accuse the live entertainment behemoth of illegally dominating the industry.",
+        "description": "LAX is raising its fees for rideshare drivers, a move officials say is aimed at reducing traffic in the airport's central terminal.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "BioNTech Crumbles 22% As Co-Founders Plot Their Exit - Investor's Business Daily",
+        "url": "https://www.investors.com/news/technology/biontech-stock-co-founders-ugur-sahin-ozlem-tureci/",
+        "source": "Investor's Business Daily",
+        "published_at": "2026-03-10T21:15:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "BioNTech stock crumbled Tuesday after the husband-wife team who co-founded the German biotech announced their looming exit.",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "The national debt was already ballooning under Trump. Then came a $1 billion-a-day war with Iran - Fortune",
+        "url": "https://fortune.com/2026/03/10/national-debt-trump-impact-war-iran/",
+        "source": "Fortune",
+        "published_at": "2026-03-10T20:45:00Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Where will you be in the third quarter of 2027?",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1356,26 +1372,13 @@
         ]
       },
       {
-        "title": "FDA approves leucovorin for rare genetic condition, but not autism - KSL.com",
-        "url": "https://www.ksl.com/article/51459793/fda-approves-leucovorin-for-rare-genetic-condition-but-not-autism",
-        "source": "KSL.com",
-        "published_at": "2026-03-10T19:06:03Z",
+        "title": "Rejoice: This Luxurious Mercedes-Benz Minivan Is Coming To America - Motor1.com",
+        "url": "https://www.motor1.com/news/789580/mercedes-benz-vle-electric-luxury-van-specs-details/",
+        "source": "Motor1 ",
+        "published_at": "2026-03-10T19:15:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The prescription drug leucovorin is getting a label update, but it's not what that the US Food and Drug Administration suggested during a White House briefing in September.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Meta acquires Moltbook, the AI agent social network - Ars Technica",
-        "url": "https://arstechnica.com/ai/2026/03/meta-acquires-moltbook-the-ai-agent-social-network/",
-        "source": "Ars Technica",
-        "published_at": "2026-03-10T19:02:55Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The viral social network project was created with OpenClaw.",
+        "description": "The Mercedes-Benz VLE is a new electric luxury minivan with cutting-edge technology and features. A version is coming to America. This is what we know.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1402,19 +1405,6 @@
         "provider": "newsapi",
         "feed": "top_headlines",
         "description": "Tech giant Amazon ($AMZN) is seeing enormous investor demand for its latest U.S. bond offering, with orders reportedly reaching about $126 billion. As a result, it has become one of",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Move Over, Mercedes S-Class, Your Next Black Car Seats Eight and It’s an Electric Van - The Drive",
-        "url": "http://www.thedrive.com/news/move-over-mercedes-s-class-your-next-black-car-seats-eight-and-its-an-electric-van",
-        "source": "The Drive",
-        "published_at": "2026-03-10T18:15:00Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "School run or VIP pickup? The Mercedes-Benz VLE is aiming for both.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1460,104 +1450,156 @@
         ]
       },
       {
-        "title": "In a time of war with Iran, Americans unite in aggravation over sticker shock at the gas pump - AP News",
-        "url": "https://apnews.com/article/iran-war-gas-prices-trump-voters-648000c2a4ffe03f8d647b8e7371bb13",
-        "source": "Associated Press",
-        "published_at": "2026-03-10T16:58:00Z",
+        "title": "5 takeaways from Nvidia CEO Jensen Huang's rare insider blog post on AI - Axios",
+        "url": "https://www.axios.com/2026/03/10/jensen-huang-ais-biggest-buildout-is-still-ahead",
+        "source": "Axios",
+        "published_at": "2026-03-10T17:11:37Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "It seems that a country divided on many fronts is finding common ground at the gas pumps. There, the cost of the Iran war is hitting Americans squarely in the wallet and aggravating people across the political spectrum. That was the message from Associated Pr…",
+        "description": "Huang made the case that AI is essential as the internet and electricity.",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "FDA Warns Novo Nordisk Over Potential Unreported Ozempic Side Effects, Deaths - Forbes",
-        "url": "https://www.forbes.com/sites/martinadilicosa/2026/03/10/fda-warns-novo-nordisk-over-potential-unreported-ozempic-side-effects-deaths/",
-        "source": "Forbes",
-        "published_at": "2026-03-10T16:09:36Z",
+        "title": "FDA Warns Novo Nordisk of Unreported Side Effects Tied to GLP-1 Patients - WSJ",
+        "url": "https://www.wsj.com/health/pharma/fda-warns-novo-nordisk-of-unreported-side-effects-tied-to-glp-1-patients-c97d810e",
+        "source": "The Wall Street Journal",
+        "published_at": "2026-03-10T16:33:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The previously unreported events include two deaths and a suicide, cases that the Ozempic maker says have been assessed.",
+        "description": null,
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "‘This cannot be sustainable’: The U.S. borrowed $50 billion a week for the past five months, the CBO says - Fortune",
-        "url": "https://fortune.com/2026/03/10/treasury-debt-borrowing-five-months-deficit-warning/",
-        "source": "Fortune",
-        "published_at": "2026-03-10T15:52:00Z",
+        "title": "Taco Bell Reveals Massive 2026 Menu Lineup Including New Mexican Pizzas And A Baja Blast Midnight Pie - Foodbeast",
+        "url": "https://www.foodbeast.com/news/taco-bell-reveals-massive-2026-menu-lineup-including-new-mexican-pizzas-and-a-baja-blast-midnight-pie/",
+        "source": "Foodbeast.com",
+        "published_at": "2026-03-10T16:17:35Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The Congressional Budget Office (CBO) reporting that the federal deficit added another $1 trillion in the first five months of the year.",
+        "description": "Taco Bell just gave fans a look at what the future of the menu looks like, and it’s stacked. At Live Más LIVE: A Night…",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Gas prices pass $3.50 per gallon to highest level since 2024 amid U.S.-Iran war - CNBC",
-        "url": "https://www.cnbc.com/2026/03/10/aaa-gas-prices-iran-affordability-trump.html",
-        "source": "CNBC",
-        "published_at": "2026-03-10T15:33:03Z",
+        "title": "A Senegal boarding school that drew students from the US is at the center of an abuse investigation",
+        "url": "https://abcnews.com/International/wireStory/senegal-boarding-school-drew-students-us-center-abuse-130958640",
+        "source": "Abcnews.com",
+        "published_at": "2026-03-11T07:12:23Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Prices are up 21% from a month ago with the oil market roiled by the U.S.-Iran war.",
+        "feed": "everything",
+        "description": "The American Dara Academy in Senegal is at the center of abuse allegations after students describe harsh punishments in a room they call the “magic room.”",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Boeing reworking 737 MAXs after newly disclosed issue stalls deliveries - The Seattle Times",
-        "url": "https://www.seattletimes.com/business/boeing-aerospace/boeing-is-reworking-some-737-max-planes-to-fix-scratches-on-wires/",
-        "source": "The Seattle Times",
-        "published_at": "2026-03-10T15:05:00Z",
+        "title": "HiLITE Group to invest ₹570 crore in two IT complexes at Kozhikode Cyberpark",
+        "url": "https://www.thehindubusinessline.com/info-tech/hilite-group-to-invest-570-crore-in-two-it-complexes-at-kozhikode-cyberpark/article70729776.ece",
+        "source": "BusinessLine",
+        "published_at": "2026-03-11T06:08:14Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Boeing is repairing some 737 MAX planes that have yet to be delivered to fix small scratches on wires. The company said the issue does not present a safety risk,",
+        "feed": "everything",
+        "description": "Construction of the HiLITE Cyber Hub has already begun, while formal agreements for the HiLITE Cyber Tower have been exchanged and work is expected to begin in the next phase",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Vertex Pops On 'Remarkable' Late-Stage Results - Investor's Business Daily",
-        "url": "https://www.investors.com/news/technology/vertex-stock-chronic-kidney-disease-iga-nephropathy/",
-        "source": "Investor's Business Daily",
-        "published_at": "2026-03-10T14:33:00Z",
+        "title": "John McManus: We need a retrofit reality check; the figures don’t stack up and we can’t be bothered",
+        "url": "https://www.irishtimes.com/business/2026/03/11/we-need-a-retrofit-reality-check-the-figures-dont-stack-up-and-we-cant-be-bothered/",
+        "source": "The Irish Times",
+        "published_at": "2026-03-11T06:00:01Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Vertex stock popped early Tuesday on promising test results.",
+        "feed": "everything",
+        "description": "Most of us have concluded that retrofitting doesn’t make sense",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Chrysler Just Killed Off 50% Of Its Lineup For 2027 - CarBuzz",
-        "url": "https://carbuzz.com/2027-chrysler-pacifica-price-voyager-cancelled/",
-        "source": "CarBuzz",
-        "published_at": "2026-03-10T14:12:58Z",
+        "title": "China is rebuilding its grip on North Korea. Is Kim Jong Un ready to oblige?",
+        "url": "https://economictimes.indiatimes.com/news/international/world-news/china-is-rebuilding-its-grip-on-north-korea-is-kim-jong-un-ready-to-oblige/articleshow/129439832.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-11T05:36:30Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The 2027 Chrysler Pacifica loses its Voyager base trim, but the starting price barely changes, and higher trims are actually cheaper.",
+        "feed": "everything",
+        "description": "China and North Korea are strengthening their bond. New infrastructure projects are underway along their shared border. This collaboration aims to boost trade and influence. North Korea's economy is seeing increased Chinese investment. This development comes …",
         "impact_score": 40,
         "themes": [
           "other"
         ]
       },
       {
-        "title": "Polymarket taps Peter Thiel-backed Palantir to develop sports betting AI monitoring tool - The Block",
-        "url": "https://www.theblock.co/post/393009/polymarket-peter-thiel-palantir-develop-sports-betting-ai-monitoring-tool",
-        "source": "Theblock.co",
-        "published_at": "2026-03-10T13:44:44Z",
+        "title": "China reasserting its infuence on North Korea",
+        "url": "https://japantoday.com/category/world/china-is-rebuilding-its-grip-on-north-korea.-is-kim-jong-un-ready-to-oblige1",
+        "source": "Japan Today",
+        "published_at": "2026-03-11T05:29:30Z",
         "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "The sports betting integrity platform will use Vergence AI engine to help screen for anomalies like manipulation and insider activity in real-time.",
+        "feed": "everything",
+        "description": "When Kim Jong Un arrived by armored train in Beijing for a military parade in September, the pageantry signaled a thaw in one of the world's most important relationships after several years of frosty ties. Behind the spectacle of tanks and fighter jets, North…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Do barn swallows nest in bluebird houses?",
+        "url": "https://www.lifesciencesworld.com/do-barn-swallows-nest-in-bluebird-houses/",
+        "source": "Lifesciencesworld.com",
+        "published_at": "2026-03-11T05:11:54Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Do Barn Swallows Nest in Bluebird Houses? Exploring Nesting Preferences Do barn swallows nest in bluebird houses? The short answer is generally no. Barn swallows typically prefer open structures like barns, sheds, or bridges, not the enclosed cavities of blue…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Japan aims to sell eight times more chips in 2040 as in 2020",
+        "url": "https://economictimes.indiatimes.com/news/international/business/japan-aims-to-sell-eight-times-more-chips-in-2040-as-in-2020/articleshow/129435551.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-11T03:48:54Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Japan is targeting a massive boost in its chip manufacturing sector. The nation aims for an eightfold increase in domestically produced microchip sales by 2040. This ambitious plan involves significant government investment in new factories. Japanese chipmake…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "15 stocks in focus as govt approves Rs 8.7 lakh crore Jal Jeevan Mission extension. Check full list",
+        "url": "https://economictimes.indiatimes.com/markets/stocks/news/15-stocks-in-focus-as-govt-approves-rs-8-7-lakh-crore-jal-jeevan-mission-extension-check-full-list/articleshow/129435043.cms",
+        "source": "The Times of India",
+        "published_at": "2026-03-11T03:42:14Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "As many as 15 stocks may be in focus after the Union Cabinet approved an extension of the Jal Jeevan Mission till 2028 with a total outlay of Rs 8.69 lakh crore. The decision is expected to benefit EPC firms, pump makers and pipe companies, reviving payments …",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Are there any birds that can see glass?",
+        "url": "https://www.lifesciencesworld.com/are-there-any-birds-that-can-see-glass/",
+        "source": "Lifesciencesworld.com",
+        "published_at": "2026-03-11T03:37:33Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Can Birds Actually See Glass? Understanding Avian Vision and Glass Collisions No, birds generally cannot perceive glass as a solid barrier, leading to frequent and often fatal collisions. This is due to their vision processing depth and reflection, rather tha…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -1603,19 +1645,6 @@
         ]
       },
       {
-        "title": "Catalytic Tango in Diatomic Catalysts: From Precision-Guided Pair Construction to Machine-Learning-Driven Identification and Design",
-        "url": "https://pubs.rsc.org/en/content/articlelanding/2026/nr/d5nr05121e",
-        "source": "Royal Society of Chemistry",
-        "published_at": "2026-03-11T00:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Nanoscale, 2026, Accepted ManuscriptDOI: 10.1039/D5NR05121E, Review ArticleBowen Jiang, Jishui Huang, Kuibo Yin, Litao SunDiatomic catalysts (DACs) are composed of two neighboring metal centers, each stabilized by its own coordination environment, that extend…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
         "title": "Universities have become property businesses. What does that mean for research?",
         "url": "https://www.nature.com/articles/d41586-025-04167-1",
         "source": "Nature.com",
@@ -1623,6 +1652,19 @@
         "provider": "newsapi",
         "feed": "everything",
         "description": "In the United States, United Kingdom, Australia and Singapore, universities are operating as developers and landlords. Where does science fit in?",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Catalytic Tango in Diatomic Catalysts: From Precision-Guided Pair Construction to Machine-Learning-Driven Identification and Design",
+        "url": "https://pubs.rsc.org/en/content/articlelanding/2026/nr/d5nr05121e",
+        "source": "Royal Society of Chemistry",
+        "published_at": "2026-03-11T00:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Nanoscale, 2026, Accepted ManuscriptDOI: 10.1039/D5NR05121E, Review ArticleBowen Jiang, Jishui Huang, Kuibo Yin, Litao SunDiatomic catalysts (DACs) are composed of two neighboring metal centers, each stabilized by its own coordination environment, that extend…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2201,6 +2243,19 @@
         ]
       },
       {
+        "title": "Conceptions of food healthiness among nutrition and food science undergraduates: A mixed-methods study in a Spanish university",
+        "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0344433",
+        "source": "Plos.org",
+        "published_at": "2026-03-10T14:00:00Z",
+        "provider": "newsapi",
+        "feed": "everything",
+        "description": "Understanding how future nutrition and food professionals conceptualize healthy food and eating is key to aligning university training and professional practice with public health and sustainability goals. This mixed-methods study explored how undergraduate s…",
+        "impact_score": 40,
+        "themes": [
+          "other"
+        ]
+      },
+      {
         "title": "The retrieval of previously learned motor memories is facilitated by the reinstatement of default mode network manifold structures",
         "url": "https://journals.plos.org/plosbiology/article?id=10.1371%2Fjournal.pbio.3003684",
         "source": "Plos.org",
@@ -2214,13 +2269,13 @@
         ]
       },
       {
-        "title": "Conceptions of food healthiness among nutrition and food science undergraduates: A mixed-methods study in a Spanish university",
-        "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0344433",
-        "source": "Plos.org",
+        "title": "Smart Grid Market to Reach $161.5 Billion, at a 16.9% CAGR by 2029 | MarketsandMarkets™",
+        "url": "https://www.globenewswire.com/news-release/2026/03/10/3253021/0/en/Smart-Grid-Market-to-Reach-161-5-Billion-at-a-16-9-CAGR-by-2029-MarketsandMarkets.html",
+        "source": "GlobeNewswire",
         "published_at": "2026-03-10T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Understanding how future nutrition and food professionals conceptualize healthy food and eating is key to aligning university training and professional practice with public health and sustainability goals. This mixed-methods study explored how undergraduate s…",
+        "description": "Delray Beach, FL, March 10, 2026 (GLOBE NEWSWIRE) -- The global Smart Grid Market size is projected to reach USD 161.1 billion by 2029, from USD 73.8 billion in 2024, at a CAGR of 16.9% according to a new report by MarketsandMarkets™. The demand for smart gri…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2240,26 +2295,13 @@
         ]
       },
       {
-        "title": "Smart Grid Market to Reach $161.5 Billion, at a 16.9% CAGR by 2029 | MarketsandMarkets™",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3253021/0/en/Smart-Grid-Market-to-Reach-161-5-Billion-at-a-16-9-CAGR-by-2029-MarketsandMarkets.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-10T14:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Delray Beach, FL, March 10, 2026 (GLOBE NEWSWIRE) -- The global Smart Grid Market size is projected to reach USD 161.1 billion by 2029, from USD 73.8 billion in 2024, at a CAGR of 16.9% according to a new report by MarketsandMarkets™. The demand for smart gri…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Single-cell omics reveals arg-1 as a key regulator of age-dependent macrophage-mediated cartilage repair",
-        "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0344693",
+        "title": "A bacterial ecocline in Klebsiella pneumoniae may explain its backboned phylogeny",
+        "url": "https://journals.plos.org/plosbiology/article?id=10.1371%2Fjournal.pbio.3003672",
         "source": "Plos.org",
         "published_at": "2026-03-10T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Aging impairs cartilage repair, with young animals exhibiting superior regenerative capacity due to enhanced tissue repairing and reduced inflammation compared to aged counterparts. This study employed single-cell omics to dissect age-dependent immune cell he…",
+        "description": "Could the shape of phylogenetic trees contain hidden information? This study shows that the \"backbone\" shape of the phylogenetic tree of the important human pathogen Klebsiella pneumoniae may reveal a history of diversifying selection on an unknown trait.",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2279,13 +2321,13 @@
         ]
       },
       {
-        "title": "A bacterial ecocline in Klebsiella pneumoniae may explain its backboned phylogeny",
-        "url": "https://journals.plos.org/plosbiology/article?id=10.1371%2Fjournal.pbio.3003672",
+        "title": "Single-cell omics reveals arg-1 as a key regulator of age-dependent macrophage-mediated cartilage repair",
+        "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0344693",
         "source": "Plos.org",
         "published_at": "2026-03-10T14:00:00Z",
         "provider": "newsapi",
         "feed": "everything",
-        "description": "Could the shape of phylogenetic trees contain hidden information? This study shows that the \"backbone\" shape of the phylogenetic tree of the important human pathogen Klebsiella pneumoniae may reveal a history of diversifying selection on an unknown trait.",
+        "description": "Aging impairs cartilage repair, with young animals exhibiting superior regenerative capacity due to enhanced tissue repairing and reduced inflammation compared to aged counterparts. This study employed single-cell omics to dissect age-dependent immune cell he…",
         "impact_score": 40,
         "themes": [
           "other"
@@ -2447,136 +2489,6 @@
         "themes": [
           "other"
         ]
-      },
-      {
-        "title": "Mining the ocean floor: 5 deep-sea sources of critical minerals essential to technology, and the fragile marine life at risk",
-        "url": "https://theconversation.com/mining-the-ocean-floor-5-deep-sea-sources-of-critical-minerals-essential-to-technology-and-the-fragile-marine-life-at-risk-275804",
-        "source": "The Conversation Africa",
-        "published_at": "2026-03-10T12:40:46Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Critical minerals are found in several forms in the ocean, from potato-size nodules to brine pools. They are also in some of the least understood parts of our planet.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Cabinet approves two multi-tracking railway projects connecting West Bengal, Jharkhand",
-        "url": "https://economictimes.indiatimes.com/industry/transportation/railways/cabinet-approves-two-multi-tracking-railway-projects-connecting-west-bengal-jharkhand/articleshow/129396188.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-10T12:32:50Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "In a significant step towards modernising eastern India's transport infrastructure, the government has unveiled two ambitious railway projects linking West Bengal and Jharkhand. These initiatives promise to enhance rail capacity, streamline freight logistics,…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Eagle Nuclear Energy Joins Uranium Producers of America",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252821/0/en/Eagle-Nuclear-Energy-Joins-Uranium-Producers-of-America.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-10T12:30:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Membership highlights Eagle’s commitment to strengthening America’s domestic uranium supply Membership highlights Eagle’s commitment to strengthening America’s domestic uranium supply",
-        "impact_score": 40,
-        "themes": [
-          "materials"
-        ]
-      },
-      {
-        "title": "ASP Isotopes to Participate in Canaccord Genuity’s 2nd Annual CG Virtual Sustainability Summit",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252774/0/en/ASP-Isotopes-to-Participate-in-Canaccord-Genuity-s-2nd-Annual-CG-Virtual-Sustainability-Summit.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-10T12:11:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "DALLAS, March 10, 2026 (GLOBE NEWSWIRE) -- ASP Isotopes Inc. (NASDAQ: ASPI) (“ASP Isotopes” or the “Company”), an advanced materials company focused on developing technologies and processes for the production of critical materials used in multiple industries,…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Oil boon, Ukraine forgotten, Iran weakened: How does Russia win or lose from Mideast war",
-        "url": "https://economictimes.indiatimes.com/news/international/world-news/oil-boon-ukraine-forgotten-iran-weakened-how-does-russia-win-or-lose-from-mideast-war/articleshow/129394922.cms",
-        "source": "The Times of India",
-        "published_at": "2026-03-10T12:06:47Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Russia stands to both gain and lose from war in the Middle East, with the Kremlin boosted by rising oil prices and attention diverted from Ukraine, but facing a reputational hit for its inability to help a key ally. - Focus shifts from Ukraine - The Iran conf…",
-        "impact_score": 55,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "LGI Homes Opens in Master-Planned Denver-Area Community, Farmstead",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252705/28788/en/LGI-Homes-Opens-in-Master-Planned-Denver-Area-Community-Farmstead.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-10T12:00:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "LGI Homes is opening a new community in Berthoud with homes starting in the high $460s....",
-        "impact_score": 50,
-        "themes": [
-          "land"
-        ]
-      },
-      {
-        "title": "Tuesday: Hili dialogue",
-        "url": "https://whyevolutionistrue.com/2026/03/10/tuesday-hili-dialogue-570/",
-        "source": "Whyevolutionistrue.com",
-        "published_at": "2026-03-10T11:45:45Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Welcome to the Cruelest Day: Tuesday, March 10, 2026, and a celebration of everyone’s favorite instrument (not): International Bagpipe Day. Bagpipes aren’t just Irish or Scottish: they have been going for a while in different countries. Here’s a Wikipedia dra…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Oracle earnings will show whether its expensive AI bet is starting to pay off",
-        "url": "https://www.cnbc.com/2026/03/10/oracle-orcl-stock-earnings-ai-data-center.html",
-        "source": "CNBC",
-        "published_at": "2026-03-10T11:00:02Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Oracle's $300 billion deal with OpenAI established it as a major player in AI cloud computing alongside Amazon, Google and Microsoft.",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Reliance, Inc. Subsidiary AMI Metals, Inc. Awarded Significant Government Infrastructure and Defense Projects",
-        "url": "https://www.globenewswire.com/news-release/2026/03/10/3252588/0/en/Reliance-Inc-Subsidiary-AMI-Metals-Inc-Awarded-Significant-Government-Infrastructure-and-Defense-Projects.html",
-        "source": "GlobeNewswire",
-        "published_at": "2026-03-10T10:50:00Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "PHOENIX, March 10, 2026 (GLOBE NEWSWIRE) -- Reliance, Inc. (NYSE: RS) announced today that its wholly-owned subsidiary, AMI Metals, Inc. (“AMI”) has been awarded two significant contracts for United States government infrastructure and defense projects, reinf…",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
-      },
-      {
-        "title": "Abia converts free green shuttle to fare service with 50% subsidy",
-        "url": "https://punchng.com/abia-converts-free-green-shuttle-to-fare-service-with-50-subsidy/",
-        "source": "The Punch",
-        "published_at": "2026-03-10T10:37:16Z",
-        "provider": "newsapi",
-        "feed": "everything",
-        "description": "Abia State transitions its Free Green Shuttle to a fare-paying transport service, offering a 50% subsidy to ensure long-term sustainability for commuters.\n\nRead More: https://punchng.com/abia-converts-free-green-shuttle-to-fare-service-with-50-subsidy/",
-        "impact_score": 40,
-        "themes": [
-          "other"
-        ]
       }
     ],
     "top_high_impact": [
@@ -2607,13 +2519,26 @@
         ]
       },
       {
-        "title": "Asian Stocks Poised for Gains, Oil Swings Higher: Markets Wrap - Bloomberg.com",
-        "url": "https://www.bloomberg.com/news/articles/2026-03-10/asian-stocks-poised-for-gains-oil-swings-higher-markets-wrap",
+        "title": "Trump Says US to Get New Oil Refinery With Reliance Backing - Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-03-10/trump-says-us-to-get-new-oil-refinery-with-reliance-backing",
         "source": "Bloomberg",
-        "published_at": "2026-03-11T01:59:00Z",
+        "published_at": "2026-03-11T06:40:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "Stocks rose and oil held below $90 a barrel after a report on the proposed release of oil reserves, aimed at easing higher energy prices, boosted market confidence after a surge in volatility across assets.",
+        "description": "President Donald Trump said the US will get its first new oil refinery in 50 years with the help of investment from India’s Reliance Industries Ltd.",
+        "impact_score": 55,
+        "themes": [
+          "other"
+        ]
+      },
+      {
+        "title": "Asia stocks extend gains on lower oil prices; Iran war concerns persist - Investing.com",
+        "url": "https://www.investing.com/news/stock-market-news/asia-stocks-extend-gains-on-lower-oil-prices-iran-war-concerns-persist-4553533",
+        "source": "Investing.com",
+        "published_at": "2026-03-11T02:59:19Z",
+        "provider": "newsapi",
+        "feed": "top_headlines",
+        "description": "Asia stocks extend gains on lower oil prices; Iran war concerns persist",
         "impact_score": 55,
         "themes": [
           "other"
@@ -2633,29 +2558,16 @@
         ]
       },
       {
-        "title": "IEA Proposes Largest Ever Oil Stockpile Release, WSJ Says - Bloomberg.com",
+        "title": "IEA Proposes Largest Ever Oil Stockpile Release, WSJ Says - Bloomberg",
         "url": "https://www.bloomberg.com/news/articles/2026-03-11/iea-proposes-largest-ever-oil-release-from-reserves-wsj-says",
         "source": "Bloomberg",
         "published_at": "2026-03-11T01:36:00Z",
         "provider": "newsapi",
         "feed": "top_headlines",
-        "description": "The International Energy Agency has proposed the largest ever release of oil reserves, according to the Wall Street Journal, as governments seek to contain a spike in energy prices driven by the Middle East war.",
+        "description": "The International Energy Agency is proposing a release of emergency oil reserves, according to a person with knowledge of the matter, as governments seek to contain a spike in energy prices driven by the Middle East war.",
         "impact_score": 55,
         "themes": [
           "other"
-        ]
-      },
-      {
-        "title": "US homes sales bounced back in February as homebuyers seized on easing mortgage rates - abcnews.com",
-        "url": "https://abcnews.com/Business/wireStory/us-homes-sales-bounced-back-february-homebuyers-seized-130932324",
-        "source": "Abcnews.com",
-        "published_at": "2026-03-10T22:47:59Z",
-        "provider": "newsapi",
-        "feed": "top_headlines",
-        "description": "Sales of previously occupied U.S. homes bounced back in February as home shoppers benefited from easing mortgage rates and a modest increase in properties on the market heading into the spring homebuying season",
-        "impact_score": 55,
-        "themes": [
-          "capital"
         ]
       },
       {
@@ -2714,19 +2626,6 @@
     "news_pressure_overlay": 0,
     "news_clusters": {
       "capital": [
-        {
-          "title": "US homes sales bounced back in February as homebuyers seized on easing mortgage rates - abcnews.com",
-          "url": "https://abcnews.com/Business/wireStory/us-homes-sales-bounced-back-february-homebuyers-seized-130932324",
-          "source": "Abcnews.com",
-          "published_at": "2026-03-10T22:47:59Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "Sales of previously occupied U.S. homes bounced back in February as home shoppers benefited from easing mortgage rates and a modest increase in properties on the market heading into the spring homebuying season",
-          "impact_score": 55,
-          "themes": [
-            "capital"
-          ]
-        },
         {
           "title": "ExxonMobil moves to reincorporate in Texas from New Jersey - The Texas Tribune",
           "url": "http://www.texastribune.org/2026/03/10/texas-exxon-mobil-move-incorporation-new-jersey/",
@@ -2876,19 +2775,6 @@
           "themes": [
             "materials"
           ]
-        },
-        {
-          "title": "Eagle Nuclear Energy Joins Uranium Producers of America",
-          "url": "https://www.globenewswire.com/news-release/2026/03/10/3252821/0/en/Eagle-Nuclear-Energy-Joins-Uranium-Producers-of-America.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-10T12:30:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "Membership highlights Eagle’s commitment to strengthening America’s domestic uranium supply Membership highlights Eagle’s commitment to strengthening America’s domestic uranium supply",
-          "impact_score": 40,
-          "themes": [
-            "materials"
-          ]
         }
       ],
       "regulatory": [
@@ -2959,43 +2845,43 @@
           "themes": [
             "land"
           ]
-        },
-        {
-          "title": "LGI Homes Opens in Master-Planned Denver-Area Community, Farmstead",
-          "url": "https://www.globenewswire.com/news-release/2026/03/10/3252705/28788/en/LGI-Homes-Opens-in-Master-Planned-Denver-Area-Community-Farmstead.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-10T12:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "LGI Homes is opening a new community in Berthoud with homes starting in the high $460s....",
-          "impact_score": 50,
-          "themes": [
-            "land"
-          ]
         }
       ],
       "other": [
         {
-          "title": "Trump says U.S. will build first refinery in 50 years with investment by India's Reliance Industries - CNBC",
-          "url": "https://www.cnbc.com/2026/03/11/trump-us-oil-refinery-reliance-ambani-texas-india-shale-wti.html",
-          "source": "CNBC",
-          "published_at": "2026-03-11T02:17:00Z",
+          "title": "Trump Says US to Get New Oil Refinery With Reliance Backing - Bloomberg",
+          "url": "https://www.bloomberg.com/news/articles/2026-03-10/trump-says-us-to-get-new-oil-refinery-with-reliance-backing",
+          "source": "Bloomberg",
+          "published_at": "2026-03-11T06:40:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "U.S. President said India's largest private energy company Reliance Industries is investing in a $300-billion refinery project in Texas.",
+          "description": "President Donald Trump said the US will get its first new oil refinery in 50 years with the help of investment from India’s Reliance Industries Ltd.",
+          "impact_score": 55,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Facebook owner Meta buys 'social media network for AI' Moltbook - BBC",
+          "url": "https://www.bbc.com/news/articles/cvg1x788dreo",
+          "source": "BBC News",
+          "published_at": "2026-03-11T05:46:49Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The forum-style app has sparked interest by showing how AI bots interact without human involvement.",
           "impact_score": 40,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "Asian Stocks Poised for Gains, Oil Swings Higher: Markets Wrap - Bloomberg.com",
-          "url": "https://www.bloomberg.com/news/articles/2026-03-10/asian-stocks-poised-for-gains-oil-swings-higher-markets-wrap",
-          "source": "Bloomberg",
-          "published_at": "2026-03-11T01:59:00Z",
+          "title": "Asia stocks extend gains on lower oil prices; Iran war concerns persist - Investing.com",
+          "url": "https://www.investing.com/news/stock-market-news/asia-stocks-extend-gains-on-lower-oil-prices-iran-war-concerns-persist-4553533",
+          "source": "Investing.com",
+          "published_at": "2026-03-11T02:59:19Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Stocks rose and oil held below $90 a barrel after a report on the proposed release of oil reserves, aimed at easing higher energy prices, boosted market confidence after a surge in volatility across assets.",
+          "description": "Asia stocks extend gains on lower oil prices; Iran war concerns persist",
           "impact_score": 55,
           "themes": [
             "other"
@@ -3015,26 +2901,39 @@
           ]
         },
         {
-          "title": "IEA Proposes Largest Ever Oil Stockpile Release, WSJ Says - Bloomberg.com",
+          "title": "IEA Proposes Largest Ever Oil Stockpile Release, WSJ Says - Bloomberg",
           "url": "https://www.bloomberg.com/news/articles/2026-03-11/iea-proposes-largest-ever-oil-release-from-reserves-wsj-says",
           "source": "Bloomberg",
           "published_at": "2026-03-11T01:36:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "The International Energy Agency has proposed the largest ever release of oil reserves, according to the Wall Street Journal, as governments seek to contain a spike in energy prices driven by the Middle East war.",
+          "description": "The International Energy Agency is proposing a release of emergency oil reserves, according to a person with knowledge of the matter, as governments seek to contain a spike in energy prices driven by the Middle East war.",
           "impact_score": 55,
           "themes": [
             "other"
           ]
         },
         {
-          "title": "'Icky and heartbreaking': Life as an OnlyFans 'chatter' - BBC",
-          "url": "https://www.bbc.com/news/articles/cq571g9gd4lo",
+          "title": "'Investing in people': Can China's new push to boost spending revive the economy? - BBC",
+          "url": "https://www.bbc.com/news/articles/c70n5xllp1do",
           "source": "BBC News",
-          "published_at": "2026-03-11T00:00:50Z",
+          "published_at": "2026-03-10T23:33:10Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "The BBC talks to a Philippines-based woman paid to pretend to be an OnlyFans star in online chats.",
+          "description": "Beijing has spent decades relying on exports and innovation but that model is now under strain.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "FDA contradicts Trump admin, declines to approve generic drug for autism - Ars Technica",
+          "url": "https://arstechnica.com/health/2026/03/fda-contradicts-trump-admin-declines-to-approve-generic-drug-for-autism/",
+          "source": "Ars Technica",
+          "published_at": "2026-03-10T22:12:35Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "In the end, the FDA only approved the drug for a rare genetic condition with clearer data.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3054,6 +2953,32 @@
           ]
         },
         {
+          "title": "Next-generation electric aircraft cleared for takeoff in FAA test program - Axios",
+          "url": "https://www.axios.com/2026/03/09/faa-program-china",
+          "source": "Axios",
+          "published_at": "2026-03-10T21:56:57Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "The FAA announced eight pilot projects to test innovative electric aircraft across 26 states.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
+          "title": "Microsoft March 2026 Patch Tuesday fixes 2 zero-days, 79 flaws - BleepingComputer",
+          "url": "https://www.bleepingcomputer.com/news/microsoft/microsoft-march-2026-patch-tuesday-fixes-2-zero-days-79-flaws/",
+          "source": "BleepingComputer",
+          "published_at": "2026-03-10T21:49:57Z",
+          "provider": "newsapi",
+          "feed": "top_headlines",
+          "description": "Today is Microsoft's March 2026 Patch Tuesday with security updates for 79 flaws, including 2 publicly disclosed zero-day vulnerabilities.",
+          "impact_score": 40,
+          "themes": [
+            "other"
+          ]
+        },
+        {
           "title": "Oracle Stock Jumps After Earnings Beat Expectations. Why It ‘Will Not Be’ Disrupted. - Barron's",
           "url": "https://www.barrons.com/articles/oracle-earnings-stock-price-04a16ce2",
           "source": "Barron's",
@@ -3067,65 +2992,13 @@
           ]
         },
         {
-          "title": "Ford launches new AI to grow multibillion-dollar Pro commercial business - CNBC",
-          "url": "https://www.cnbc.com/2026/03/10/ford-pro-ai.html",
-          "source": "CNBC",
-          "published_at": "2026-03-10T21:30:01Z",
+          "title": "Big tech has defeated everything for 30 years, but for the first time faces something it can't control: a jury - Fortune",
+          "url": "https://fortune.com/2026/03/10/big-tech-social-media-addiction-jury-first-time/",
+          "source": "Fortune",
+          "published_at": "2026-03-10T21:28:00Z",
           "provider": "newsapi",
           "feed": "top_headlines",
-          "description": "Ford CEO Jim Farley last month said diversifying Pro's revenue — specifically in software — is a crucial growth area for the company.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "FAA Names Partners For Air Taxi Pilot Projects, Coming This Summer - Investor's Business Daily",
-          "url": "https://www.investors.com/news/joby-faa-air-taxi-evtol-pilot-program-partners-summer-2026-beta-archer/",
-          "source": "Investor's Business Daily",
-          "published_at": "2026-03-10T21:14:00Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The FAA will roll out air taxi, eVTOL pilot projects covering 26 states this summer. Joby, Archer, BETA Technologies named partners.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Live Nation and states ordered to hold settlement negotiations in antitrust case - NBC News",
-          "url": "https://www.nbcnews.com/business/business-news/live-nation-judge-settlement-negotiations-antitrust-case-rcna262762",
-          "source": "NBC News",
-          "published_at": "2026-03-10T20:19:53Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "A federal judge ordered Live Nation to engage in settlement talks with a group of state attorneys general who accuse the live entertainment behemoth of illegally dominating the industry.",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "Ohio judge rules that Kalshi is sports betting and must adhere to state law - NBC News",
-          "url": "https://www.nbcnews.com/news/us-news/ohio-judge-rules-kalshi-sports-betting-must-adhere-state-law-rcna262721",
-          "source": "NBC News",
-          "published_at": "2026-03-10T19:39:57Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "An Ohio federal judge on Monday said she's obligated to \"avoid absurdity\" and ruled that Kalshi's prediction markets in sports amount to acts of gambling — which should come under state regulations",
-          "impact_score": 40,
-          "themes": [
-            "other"
-          ]
-        },
-        {
-          "title": "FDA approves leucovorin for rare genetic condition, but not autism - KSL.com",
-          "url": "https://www.ksl.com/article/51459793/fda-approves-leucovorin-for-rare-genetic-condition-but-not-autism",
-          "source": "KSL.com",
-          "published_at": "2026-03-10T19:06:03Z",
-          "provider": "newsapi",
-          "feed": "top_headlines",
-          "description": "The prescription drug leucovorin is getting a label update, but it's not what that the US Food and Drug Administration suggested during a White House briefing in September.",
+          "description": "And this is a bellwether trial, meaning the court chose it as a representative test case to help determine verdicts across all connected cases.",
           "impact_score": 40,
           "themes": [
             "other"
@@ -3256,12 +3129,12 @@
       ]
     },
     "land_tracker": {
-      "total_mentions": 2,
+      "total_mentions": 1,
       "purpose_breakdown": {
         "residential": 0,
         "commercial": 0,
         "mixed": 0,
-        "unknown": 2
+        "unknown": 1
       },
       "items": [
         {
@@ -3272,19 +3145,6 @@
           "provider": "newsapi",
           "feed": "everything",
           "description": "LADERA RANCH, Calif. — SmartStop Self Storage REIT, Inc. (“SmartStop”) (NYSE: SMA), an internally managed real estate investment trust and a premier owner and operator of self-storage facilities in the United States and Canada, announced it has acquired a 1.7…",
-          "impact_score": 50,
-          "themes": [
-            "land"
-          ]
-        },
-        {
-          "title": "LGI Homes Opens in Master-Planned Denver-Area Community, Farmstead",
-          "url": "https://www.globenewswire.com/news-release/2026/03/10/3252705/28788/en/LGI-Homes-Opens-in-Master-Planned-Denver-Area-Community-Farmstead.html",
-          "source": "GlobeNewswire",
-          "published_at": "2026-03-10T12:00:00Z",
-          "provider": "newsapi",
-          "feed": "everything",
-          "description": "LGI Homes is opening a new community in Berthoud with homes starting in the high $460s....",
           "impact_score": 50,
           "themes": [
             "land"
@@ -3324,28 +3184,28 @@
         "ticker": "NVR",
         "source": "stooq",
         "date": "2026-03-11",
-        "open": 6748.6,
+        "open": 6756.6,
         "close": 6610.91,
-        "change": -137.6900000000005,
-        "change_pct": -2.0402750200041564
+        "change": -145.6900000000005,
+        "change_pct": -2.156262025278994
       },
       {
         "ticker": "TOL",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-11",
+        "open": 145.085,
         "close": 143.24,
-        "prev_close": 145.65,
-        "change": -2.41,
-        "change_pct": -1.6547
+        "change": -1.8449999999999989,
+        "change_pct": -1.2716683323568934
       },
       {
         "ticker": "HD",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-11",
-        "open": 355.91,
         "close": 350.84,
-        "change": -5.07000000000005,
-        "change_pct": -1.4245174341828128
+        "prev_close": 357.15,
+        "change": -6.31,
+        "change_pct": -1.7668
       },
       {
         "ticker": "LOW",
@@ -3360,28 +3220,28 @@
         "ticker": "VMC",
         "source": "stooq",
         "date": "2026-03-11",
-        "open": 266.6,
+        "open": 271.18,
         "close": 266.6,
-        "change": 0,
-        "change_pct": 0
+        "change": -4.579999999999984,
+        "change_pct": -1.6889151117338976
       },
       {
         "ticker": "MLM",
         "source": "stooq",
         "date": "2026-03-11",
-        "open": 602.685,
+        "open": 603.79,
         "close": 597.59,
-        "change": -5.094999999999914,
-        "change_pct": -0.8453835751677765
+        "change": -6.199999999999932,
+        "change_pct": -1.0268470825949307
       },
       {
         "ticker": "BLDR",
-        "source": "alphavantage",
+        "source": "stooq",
         "date": "2026-03-11",
+        "open": 93.76,
         "close": 91.11,
-        "prev_close": 93.68,
-        "change": -2.57,
-        "change_pct": -2.7434
+        "change": -2.6500000000000057,
+        "change_pct": -2.8263651877133165
       },
       {
         "ticker": "FBIN",
@@ -3394,12 +3254,12 @@
       },
       {
         "ticker": "OC",
-        "source": "stooq",
+        "source": "alphavantage",
         "date": "2026-03-11",
-        "open": 106.465,
         "close": 107.33,
-        "change": 0.8649999999999949,
-        "change_pct": 0.8124735828676042
+        "prev_close": 106.26,
+        "change": 1.07,
+        "change_pct": 1.007
       },
       {
         "ticker": "EXP",
@@ -3414,10 +3274,10 @@
         "ticker": "CAT",
         "source": "stooq",
         "date": "2026-03-11",
-        "open": 714.905,
+        "open": 713.13,
         "close": 707.59,
-        "change": -7.314999999999941,
-        "change_pct": -1.0232128744378541
+        "change": -5.539999999999964,
+        "change_pct": -0.7768569545524607
       },
       {
         "ticker": "DE",
@@ -3459,23 +3319,23 @@
     "sector_rollups": {
       "builders": {
         "count": 5,
-        "avg_change_pct": -1.4535462248716364
+        "avg_change_pct": -1.4001372923979827
       },
       "materials": {
         "count": 6,
-        "avg_change_pct": -0.5543097915810992
+        "avg_change_pct": -0.8336184919192086
       },
       "distribution": {
         "count": 1,
-        "avg_change_pct": -2.7434
+        "avg_change_pct": -2.8263651877133165
       },
       "equipment": {
         "count": 3,
-        "avg_change_pct": -0.05663038123525632
+        "avg_change_pct": 0.02548825872654148
       },
       "retail": {
         "count": 2,
-        "avg_change_pct": -1.4967014338348235
+        "avg_change_pct": -1.6678427167434169
       }
     },
     "stock_pressure_overlay": 0,
@@ -3558,7 +3418,7 @@
   },
   "gpt_payload": {
     "product": "Construction AI",
-    "generated_at_utc": "2026-03-12T03:11:47.928Z",
+    "generated_at_utc": "2026-03-12T07:13:40.841Z",
     "regime_history": {
       "current_regime_duration_days": 9,
       "previous_regime": null,
@@ -3573,7 +3433,7 @@
     "cpi": {
       "headline": 46,
       "zone": "Slowdown",
-      "delta_3m": 0,
+      "delta_3m": -2,
       "momentum": "Stable",
       "freeze_risk": false,
       "risk_thermometer_mode": false,
