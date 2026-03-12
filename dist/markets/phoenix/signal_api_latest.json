@@ -3,14 +3,14 @@
     "system": "Construction Intelligence OS",
     "version": "signal_api_v1",
     "mode": "data_assisted",
-    "run_date": "2026-03-11",
+    "run_date": "2026-03-12",
     "region": {
       "name": "Phoenix-Mesa-Chandler, AZ MSA",
       "geo_id": "38060"
     }
   },
   "provenance": {
-    "generated_at": "2026-03-11T19:10:48.957Z",
+    "generated_at": "2026-03-12T03:11:48.090Z",
     "sources": [
       {
         "name": "FRED",
