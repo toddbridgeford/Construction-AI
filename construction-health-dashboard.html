@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Construction Health</title>
+  <style>
+    :root {
+      --bg: #f6f5f2;
+      --surface: #fdfcfb;
+      --surface-muted: #f7f6f3;
+      --text-primary: #171a1f;
+      --text-secondary: #5d636f;
+      --text-tertiary: #8a909b;
+      --shadow-soft: 0 10px 28px rgba(17, 24, 39, 0.06), 0 2px 8px rgba(17, 24, 39, 0.04);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+
+      --housing: #2f9a5f;
+      --demand: #327ecf;
+      --financing: #7b5cd6;
+      --labor: #5566d5;
+      --sentiment: #1b8f84;
+      --inputs: #c58c24;
+      --retail: #d57a1a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at 10% -20%, #ffffff 0, #f7f5f1 40%, var(--bg) 100%);
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+    }
+
+    .page {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 40px 36px 28px;
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 26px;
+    }
+
+    .executive-band {
+      background: linear-gradient(155deg, rgba(255,255,255,0.9), rgba(253,251,247,0.94));
+      border-radius: 34px;
+      padding: 30px 34px;
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 32px;
+    }
+
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-weight: 620;
+      font-size: clamp(2rem, 2.8vw, 2.8rem);
+      letter-spacing: -0.02em;
+    }
+
+    .as-of {
+      font-size: 0.78rem;
+      color: #515865;
+      border: 1px solid rgba(73, 81, 97, 0.14);
+      background: rgba(251, 251, 252, 0.92);
+      padding: 5px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.5;
+      max-width: 68ch;
+    }
+
+    .executive-summary {
+      margin-top: 20px;
+      font-size: 1.06rem;
+      color: #2c3442;
+      line-height: 1.55;
+      max-width: 65ch;
+    }
+
+    .signals {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .signal {
+      background: var(--surface-muted);
+      border-radius: 18px;
+      padding: 14px 16px;
+      border: 1px solid rgba(55, 65, 81, 0.05);
+    }
+
+    .signal h3 {
+      margin: 0 0 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #434d5e;
+    }
+
+    .signal p {
+      margin: 0;
+      font-size: 0.94rem;
+      line-height: 1.42;
+      color: #273140;
+    }
+
+    .primary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .secondary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .metric-card {
+      background: rgba(255, 255, 255, 0.88);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 20px 20px 16px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(60, 66, 80, 0.05);
+    }
+
+    .metric-card.primary {
+      min-height: 250px;
+      display: grid;
+      grid-template-rows: auto auto auto auto 1fr auto;
+      gap: 10px;
+      padding: 22px 24px 18px;
+    }
+
+    .metric-card.secondary {
+      min-height: 158px;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 7px 20px rgba(17, 24, 39, 0.04);
+      padding: 16px 16px 13px;
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 7px;
+    }
+
+    .category {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--accent);
+      font-weight: 650;
+    }
+
+    .metric-title {
+      font-size: 1rem;
+      font-weight: 560;
+      color: #263041;
+      margin: 0;
+    }
+
+    .primary .value {
+      font-size: clamp(2rem, 2.2vw, 2.45rem);
+      font-weight: 610;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .secondary .value {
+      font-size: 1.46rem;
+      font-weight: 595;
+      letter-spacing: -0.015em;
+      margin: 0;
+    }
+
+    .delta-stack {
+      display: grid;
+      gap: 2px;
+      color: var(--text-secondary);
+      font-size: 0.86rem;
+      line-height: 1.4;
+    }
+
+    .delta-main { color: #2d3644; font-weight: 520; }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 6px;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--text-tertiary);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 560;
+      background: color-mix(in srgb, var(--accent) 10%, white);
+      color: color-mix(in srgb, var(--accent) 80%, #1f2937);
+      border: 1px solid color-mix(in srgb, var(--accent) 18%, white);
+      white-space: nowrap;
+    }
+
+    .status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.78;
+    }
+
+    .interp {
+      font-size: 0.82rem;
+      color: #344155;
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    .sparkline {
+      margin-top: 6px;
+      width: 100%;
+      height: 62px;
+      opacity: 0.88;
+    }
+
+    .secondary .sparkline { height: 48px; margin-top: 3px; }
+
+    .footer-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: #707784;
+      font-size: 0.75rem;
+      padding: 2px 4px;
+    }
+
+    @media (max-width: 1200px) {
+      .executive-band { grid-template-columns: 1fr; }
+      .primary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .secondary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 760px) {
+      .page { padding: 16px; gap: 16px; }
+      .primary-grid, .secondary-grid { grid-template-columns: 1fr; }
+      .executive-band { border-radius: 24px; padding: 20px; }
+    }
+
+    @media print {
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
+      }
+      body { background: #fff; }
+      .page {
+        max-width: none;
+        padding: 0;
+        gap: 10px;
+      }
+      .executive-band, .metric-card {
+        box-shadow: none;
+        border: 1px solid rgba(0,0,0,0.06);
+        break-inside: avoid;
+      }
+      .primary-grid, .secondary-grid {
+        gap: 8px;
+      }
+      .metric-card.primary { min-height: 180px; }
+      .metric-card.secondary { min-height: 120px; }
+      .footer-line { font-size: 0.68rem; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page" id="app"></main>
+
+  <script>
+    const asOf = "March 2026";
+
+    const primaryMetrics = [
+      {
+        category: "Housing",
+        title: "Housing Starts",
+        value: "1.46M",
+        changeMain: "+2.8% MoM",
+        changeSecondary: "-1.2% YoY",
+        status: "Mixed",
+        date: "Jan 2026",
+        interpretation: "Single-family momentum is holding while multifamily remains uneven.",
+        color: "var(--housing)",
+        spark: [63,65,66,67,66,68,70,69,70,72,71,73]
+      },
+      {
+        category: "Demand / Sales",
+        title: "Existing-Home Sales",
+        value: "4.21M",
+        changeMain: "+1.1% MoM",
+        changeSecondary: "+0.6% YoY",
+        status: "Improving",
+        date: "Jan 2026",
+        interpretation: "Transaction flow is stabilizing as affordability pressure plateaus.",
+        color: "var(--demand)",
+        spark: [48,49,50,48,49,51,52,53,52,53,54,55]
+      },
+      {
+        category: "Financing",
+        title: "30-Year Mortgage Rate",
+        value: "6.57%",
+        changeMain: "-12 bps 3m",
+        changeSecondary: "+21 bps YoY",
+        status: "Stable",
+        date: "Week ending Mar 1",
+        interpretation: "Financing remains restrictive but no longer tightening materially.",
+        color: "var(--financing)",
+        spark: [78,80,82,83,81,80,79,78,77,77,76,75]
+      },
+      {
+        category: "Labor",
+        title: "Construction Employment",
+        value: "8.31M",
+        changeMain: "+0.2% MoM",
+        changeSecondary: "+2.3% YoY",
+        status: "Improving",
+        date: "Feb 2026",
+        interpretation: "Hiring remains constructive despite slower openings.",
+        color: "var(--labor)",
+        spark: [44,45,46,47,48,49,49,50,51,52,53,54]
+      },
+      {
+        category: "Sentiment",
+        title: "Builder Confidence",
+        value: "51",
+        changeMain: "+3 pts MoM",
+        changeSecondary: "Flat YoY",
+        status: "Improving",
+        date: "Feb 2026",
+        interpretation: "Expectations improved as rate volatility eased.",
+        color: "var(--sentiment)",
+        spark: [39,40,41,40,41,42,43,44,46,47,49,51]
+      },
+      {
+        category: "Housing",
+        title: "Building Permits",
+        value: "1.52M",
+        changeMain: "-0.7% MoM",
+        changeSecondary: "+1.9% YoY",
+        status: "Mixed",
+        date: "Jan 2026",
+        interpretation: "Pipeline stays resilient, but month-to-month pullbacks persist.",
+        color: "var(--housing)",
+        spark: [68,69,70,70,69,71,72,72,73,72,71,72]
+      }
+    ];
+
+    const secondaryMetrics = [
+      { category: "Labor", title: "Job Openings", value: "286K", delta: "-4.5% MoM", status: "Deteriorating", date: "Jan 2026", color: "var(--labor)", spark: [60,61,63,62,61,60,58,57,56,55,54,53] },
+      { category: "Demand / Sales", title: "New-Home Sales", value: "677K", delta: "+1.8% MoM", status: "Stable", date: "Jan 2026", color: "var(--demand)", spark: [47,48,49,48,50,51,51,52,53,52,53,54] },
+      { category: "Retail", title: "Home Improvement Sales", value: "$41.3B", delta: "+0.4% MoM", status: "Stable", date: "Jan 2026", color: "var(--retail)", spark: [52,53,54,54,55,55,56,55,56,57,56,57] },
+      { category: "Inputs / Energy", title: "Diesel Index", value: "124.6", delta: "+3.1% 3m", status: "Deteriorating", date: "Feb 2026", color: "var(--inputs)", spark: [40,39,41,42,43,45,47,48,49,50,52,53] },
+      { category: "Housing", title: "Multifamily Starts", value: "396K", delta: "-2.0% MoM", status: "Mixed", date: "Jan 2026", color: "var(--housing)", spark: [62,63,65,64,63,61,60,59,58,57,58,57] },
+      { category: "Financing", title: "Credit Spread Proxy", value: "181 bps", delta: "-6 bps MoM", status: "Improving", date: "Feb 2026", color: "var(--financing)", spark: [59,60,61,62,62,61,60,58,57,56,55,54] }
+    ];
+
+    const app = document.getElementById('app');
+
+    const executiveBand = document.createElement('section');
+    executiveBand.className = 'executive-band';
+    executiveBand.innerHTML = `
+      <div>
+        <div class="title-row">
+          <h1>Construction Health</h1>
+          <span class="as-of">As of ${asOf}</span>
+        </div>
+        <p class="subtitle">A board-level read of construction momentum across housing, financing, labor, and demand.</p>
+        <p class="executive-summary">Construction conditions are <strong>mixed with improving breadth</strong>: demand and sentiment are firming, while financing and input costs continue to cap upside in near-term project acceleration.</p>
+      </div>
+      <div class="signals">
+        <article class="signal">
+          <h3>Pressure building</h3>
+          <p>Input and transport costs are drifting higher again, with diesel-linked pressure likely to squeeze margin-sensitive projects.</p>
+        </article>
+        <article class="signal">
+          <h3>Resilience showing</h3>
+          <p>Permits and employment continue to absorb higher-rate conditions better than expected, indicating durable baseline activity.</p>
+        </article>
+        <article class="signal">
+          <h3>What matters most now</h3>
+          <p>Watch mortgage-rate direction and permit conversion; these two signals will determine whether spring demand translates into starts.</p>
+        </article>
+      </div>
+    `;
+
+    app.appendChild(executiveBand);
+
+    const primaryGrid = document.createElement('section');
+    primaryGrid.className = 'primary-grid';
+    primaryMetrics.forEach(m => primaryGrid.appendChild(buildCard(m, true)));
+    app.appendChild(primaryGrid);
+
+    const secondaryGrid = document.createElement('section');
+    secondaryGrid.className = 'secondary-grid';
+    secondaryMetrics.forEach(m => secondaryGrid.appendChild(buildCard(m, false)));
+    app.appendChild(secondaryGrid);
+
+    const footer = document.createElement('footer');
+    footer.className = 'footer-line';
+    footer.innerHTML = `
+      <span>Sources: U.S. Census Bureau, NAHB, BLS, Freddie Mac, BEA, EIA.</span>
+      <span>Designed for single-page landscape export.</span>
+    `;
+    app.appendChild(footer);
+
+    function buildCard(metric, primary) {
+      const card = document.createElement('article');
+      card.className = `metric-card ${primary ? 'primary' : 'secondary'}`;
+      card.style.setProperty('--accent', metric.color);
+
+      const deltaBlock = primary
+        ? `<div class="delta-stack"><span class="delta-main">${metric.changeMain}</span><span>${metric.changeSecondary}</span></div>`
+        : `<div class="delta-stack"><span class="delta-main">${metric.delta}</span></div>`;
+
+      card.innerHTML = `
+        <span class="category">${metric.category}</span>
+        <h2 class="metric-title">${metric.title}</h2>
+        <p class="value">${metric.value}</p>
+        ${deltaBlock}
+        ${renderSparkline(metric.spark, metric.color, primary)}
+        ${primary ? `<div class="interp">${metric.interpretation}</div>` : ''}
+        <div class="meta-row">
+          <span>${metric.date}</span>
+          <span class="status">${metric.status}</span>
+        </div>
+      `;
+      return card;
+    }
+
+    function renderSparkline(values, color, primary) {
+      const w = 220;
+      const h = primary ? 62 : 48;
+      const pad = 4;
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const range = max - min || 1;
+      const step = (w - pad * 2) / (values.length - 1);
+      const pts = values.map((v, i) => {
+        const x = pad + i * step;
+        const y = h - pad - ((v - min) / range) * (h - pad * 2);
+        return [x, y];
+      });
+
+      const d = pts.reduce((acc, [x, y], i) => {
+        if (i === 0) return `M ${x.toFixed(2)} ${y.toFixed(2)}`;
+        const [px, py] = pts[i - 1];
+        const cx = ((px + x) / 2).toFixed(2);
+        return `${acc} Q ${cx} ${py.toFixed(2)}, ${x.toFixed(2)} ${y.toFixed(2)}`;
+      }, '');
+
+      return `
+        <svg class="sparkline" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+          <path d="${d}" fill="none" stroke="${color}" stroke-width="${primary ? 2.1 : 1.8}" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"></path>
+        </svg>
+      `;
+    }
+  </script>
+</body>
+</html>
