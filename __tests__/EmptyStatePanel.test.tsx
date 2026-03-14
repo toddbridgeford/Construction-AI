@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { PerplexityDashboard } from '@/components/PerplexityDashboard';
 import { describe, expect, it } from 'vitest';
@@ -7,6 +8,6 @@ describe('PerplexityDashboard core structure', () => {
     render(<PerplexityDashboard />);
 
     expect(screen.getByText('U.S. Construction Market')).toBeInTheDocument();
-    expect(screen.getByText('Methodology')).toBeInTheDocument();
+    expect(screen.getByText('Methodology & Sources')).toBeInTheDocument();
   });
 });
