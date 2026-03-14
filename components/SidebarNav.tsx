@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import type { Route } from 'next';
 
-const nav = [
+const nav: Array<{ href: Route; label: string }> = [
   { href: '/', label: 'Executive Dashboard' },
   { href: '/segment-monitor', label: 'Segment Monitor' },
   { href: '/credit-risk', label: 'Credit / Risk View' },
