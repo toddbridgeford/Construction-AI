@@ -1,8 +1,6 @@
-# Construction AI Dashboard (Mock Frontend)
+# Construction AI Dashboard
 
-Institutional-grade **construction intelligence dashboard** built with Next.js App Router, TypeScript, Tailwind CSS, and Recharts.
-
-> This repository currently uses **mock/sample data only** for product and UX development.
+Perplexity-style **U.S. construction intelligence dashboard** built with Next.js App Router, TypeScript, Tailwind CSS, and Recharts.
 
 ## Quick Start
 
@@ -10,9 +8,27 @@ Institutional-grade **construction intelligence dashboard** built with Next.js A
 - Node.js 18+ (recommended: 20 LTS)
 - npm 9+
 
-### Install and run
+### Install
 ```bash
 npm install
+```
+
+### Environment setup (required for secure live data)
+1. Copy `.env.example` to `.env.local`.
+2. Fill in server-side secrets (never use `NEXT_PUBLIC_` for these).
+
+Required variables:
+- `CENSUS_API_KEY`
+- `BLS_API_KEY`
+- `FRED_API_KEY`
+- `EIA_API_KEY`
+
+```bash
+cp .env.example .env.local
+```
+
+### Run
+```bash
 npm run dev
 ```
 
@@ -24,105 +40,54 @@ npm run build
 npm run start
 ```
 
-### Lint check
-```bash
-npm run lint
-```
-
----
+## Security model
+- All secret-backed requests run on the server (`app/api/dashboard/live`).
+- Client components fetch only internal app routes; browser never calls secret-backed public APIs directly.
+- Secret values are validated in `lib/server/env.ts` and never logged.
+- `.gitignore` excludes `.env*` files and keeps only `.env.example` tracked.
 
 ## Routes
+- `/` — U.S. Construction Market Dashboard
+- `/segment-monitor`
+- `/credit-risk`
+- `/data-detail`
 
-- `/` — Executive Dashboard
-- `/segment-monitor` — Segment Monitor
-- `/credit-risk` — Credit / Risk View
-- `/data-detail` — Data Detail View
+## Live source coverage (Phase 1)
 
----
+| Indicator | Primary Source | Geography Coverage | Status |
+|---|---|---|---|
+| Housing starts / permits | Census (`resconst`) | US live, state map live for permits, region/metro derived fallback | Live + partial |
+| Construction spending proxy | FRED (`TTLCONS`) | US live, map fallback for non-permits | Live + partial |
+| Construction labor indicator | BLS (`CES2000000001`) then FRED fallback | US live, sub-US derived fallback | Live + partial |
+| Mortgage rate proxy | FRED (`MORTGAGE30US`) | US live, sub-US fallback | Live + partial |
+| Materials-cost indicator | EIA retail electricity price proxy then FRED fallback | US live, sub-US fallback | Live + partial |
+| Residential proxy | FRED (`TLRESCONS`) | US live, sub-US fallback | Live + partial |
 
-## Architecture Overview
+## Known limitations
+- Some geography + indicator combinations are still fallback-derived where public sub-national series are not cleanly available.
+- Forecast lines remain intentionally stubbed while historical layers are live-backed.
+- If an upstream source is unavailable/rate-limited, API returns stable fallback payloads to keep UI interactive.
+
+## Architecture overview
 
 ```text
-app/            # App Router pages and root layout
-components/     # Reusable UI components (tables, panels, shell, controls)
-data/           # Typed mock data for dashboard views
-lib/            # Framing helpers and shared utilities
-types/          # Domain TypeScript types/interfaces
+app/
+  api/dashboard/live/route.ts    # secure server endpoint for normalized dashboard data
+components/
+  PerplexityDashboard.tsx
+  USStateChoropleth.tsx          # real SVG choropleth from state geometry
+data/
+lib/
+  live-data.ts                   # source adapters (Census/BLS/FRED/EIA)
+  dashboard-data.ts              # normalization + KPI/chart/map shaping
+  use-live-dashboard.ts          # client fetch hook
+  server/env.ts                  # typed server-only env validation
+types/
+  live-data.ts
 ```
 
-### Audience mode flow (centralized)
-- Audience selection state is managed in `components/AppShell.tsx`.
-- Shared framing and guardrails are centralized in `lib/audience.ts`:
-  - `getAudienceFrame(mode)`
-  - `frameWatchlistForAudience(items, mode)`
-- Audience content variants are defined in `data/audienceModes.ts`.
-
-This keeps audience behavior easy to extend without touching each page's core layout.
-
----
-
-## Mock Data Notice
-
-All values and commentary are **sample/mock data** and should not be interpreted as live market data.
-
-See: [`docs/mock-data.md`](docs/mock-data.md)
-
----
-
-## Reviewer Verification Checklist
-
-Use this quick path after dependencies are available:
-
-1. Run `npm install`
-2. Run `npm run build`
-3. Run `npm run dev`
-4. Validate routes:
-   - `/`
-   - `/segment-monitor`
-   - `/credit-risk`
-   - `/data-detail`
-
-### Route-level checklist
-
-#### `/` Executive Dashboard
-- [ ] Executive brief band renders (dated title, one-line signal, strategist bullets, bottom-line area)
-- [ ] KPI group tables render with readable hierarchy
-- [ ] Watchlist labels adapt when audience mode changes
-
-#### `/segment-monitor`
-- [ ] Segment comparison table renders required segment rows
-- [ ] Trend chart renders without layout overflow
-- [ ] Commentary panel remains concise and readable
-
-#### `/credit-risk`
-- [ ] Exposure table renders near top
-- [ ] Surveillance/watchlist reflects audience framing
-- [ ] Single bottom-line panel appears at end
-
-#### `/data-detail`
-- [ ] Each metric panel shows latest/prior/MoM/YoY/source/reference period
-- [ ] Trend charts render where `trendKey` is present
-- [ ] Notes display for revision/lag/seasonality where available
-
----
-
-## Empty/Error-Safe Posture (Mock Data)
-
-If a section’s mock data is missing, pages render a clear empty-state panel instead of failing silently.
-
-Examples:
-- Missing KPI groups or watchlist on `/`
-- Missing segment rows or trend series on `/segment-monitor`
-- Missing exposures or surveillance items on `/credit-risk`
-- Missing detail metrics on `/data-detail`
-
----
-
 ## Scripts
-
-`package.json` scripts are intentionally standard and minimal:
-- `dev` — run local development server
-- `build` — production build
-- `start` — serve production build
-- `lint` — run Next.js lint
-
+- `npm run dev`
+- `npm run build`
+- `npm run start`
+- `npm run test`
