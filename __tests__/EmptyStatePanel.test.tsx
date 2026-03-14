@@ -1,11 +1,12 @@
 import { render, screen } from '@testing-library/react';
-import { EmptyStatePanel } from '@/components/EmptyStatePanel';
+import { PerplexityDashboard } from '@/components/PerplexityDashboard';
+import { describe, expect, it } from 'vitest';
 
-describe('EmptyStatePanel', () => {
-  it('renders title and detail text', () => {
-    render(<EmptyStatePanel title="No data" detail="Try selecting another filter." />);
+describe('PerplexityDashboard core structure', () => {
+  it('renders header and methodology section', () => {
+    render(<PerplexityDashboard />);
 
-    expect(screen.getByText('No data')).toBeInTheDocument();
-    expect(screen.getByText('Try selecting another filter.')).toBeInTheDocument();
+    expect(screen.getByText('U.S. Construction Market')).toBeInTheDocument();
+    expect(screen.getByText('Methodology')).toBeInTheDocument();
   });
 });

@@ -1,17 +1,17 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { AppShell } from '@/components/AppShell';
+import { PerplexityShell } from '@/components/PerplexityShell';
 
 export const metadata: Metadata = {
   title: 'Construction AI Dashboard',
-  description: 'Institutional-grade construction intelligence dashboard (mock data).'
+  description: 'Perplexity-style construction market dashboard.'
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <AppShell>{children}</AppShell>
+        <PerplexityShell>{children}</PerplexityShell>
       </body>
     </html>
   );
