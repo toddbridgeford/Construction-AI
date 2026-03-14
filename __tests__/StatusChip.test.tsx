@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
-import { StatusChip } from '@/components/StatusChip';
+import { PerplexityDashboard } from '@/components/PerplexityDashboard';
+import { describe, expect, it } from 'vitest';
 
-describe('StatusChip', () => {
-  it('renders the provided text and tone styling class', () => {
-    render(<StatusChip tone="caution" text="caution" />);
+describe('PerplexityDashboard map/chart layout', () => {
+  it('renders choropleth map label and time-series label', () => {
+    render(<PerplexityDashboard />);
 
-    const chip = screen.getByText('caution');
-    expect(chip).toBeInTheDocument();
-    expect(chip).toHaveClass('text-amber-200');
+    expect(screen.getByText('U.S. State Choropleth')).toBeInTheDocument();
+    expect(screen.getByText('Construction Market Time Series')).toBeInTheDocument();
   });
 });

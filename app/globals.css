@@ -7,9 +7,9 @@
 }
 
 body {
-  @apply bg-bg text-ink antialiased;
+  @apply antialiased;
   background:
-    radial-gradient(1200px 700px at 85% -10%, rgba(66, 111, 188, 0.24), transparent 55%),
-    radial-gradient(900px 580px at -10% 100%, rgba(40, 88, 148, 0.18), transparent 58%),
-    linear-gradient(180deg, #070c16 0%, #0a1221 100%);
+    radial-gradient(1000px 600px at 20% -10%, rgba(34, 211, 238, 0.12), transparent 50%),
+    radial-gradient(900px 700px at 90% 120%, rgba(59, 130, 246, 0.1), transparent 55%),
+    #020617;
 }
