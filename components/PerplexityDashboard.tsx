@@ -2,11 +2,10 @@
 
 import React, { useMemo, useState } from 'react';
 import { Area, AreaChart, CartesianGrid, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-
-type StatePoint = { code: string; lat: number; lon: number };
-type GeographyLevel = 'US' | 'Region' | 'State' | 'City/Metro';
-type DateRange = '1M' | '3M' | '6M' | '1Y' | '3Y' | '5Y' | 'YTD';
-type IndicatorKey = 'permits' | 'spending' | 'residentialProxy' | 'labor' | 'materials';
+import { datePointsForRange } from '@/lib/dashboard-data';
+import { useLiveDashboardData } from '@/lib/use-live-dashboard';
+import { DateRange, GeographyLevel, IndicatorKey } from '@/types/live-data';
+import { USStateChoropleth } from '@/components/USStateChoropleth';
 
 type IndicatorConfig = {
   label: string;
@@ -20,25 +19,7 @@ type IndicatorConfig = {
 
 const ranges: DateRange[] = ['1M', '3M', '6M', '1Y', '3Y', '5Y', 'YTD'];
 
-const states: StatePoint[] = [
-  { code: 'AL', lat: 32.8, lon: -86.8 }, { code: 'AK', lat: 64.2, lon: -152.4 }, { code: 'AZ', lat: 34.0, lon: -111.7 },
-  { code: 'AR', lat: 34.8, lon: -92.2 }, { code: 'CA', lat: 36.8, lon: -119.4 }, { code: 'CO', lat: 39.0, lon: -105.5 },
-  { code: 'CT', lat: 41.6, lon: -72.7 }, { code: 'DE', lat: 39.0, lon: -75.5 }, { code: 'FL', lat: 27.8, lon: -81.7 },
-  { code: 'GA', lat: 32.2, lon: -83.4 }, { code: 'HI', lat: 19.9, lon: -155.6 }, { code: 'ID', lat: 44.1, lon: -114.7 },
-  { code: 'IL', lat: 40.0, lon: -89.2 }, { code: 'IN', lat: 40.0, lon: -86.1 }, { code: 'IA', lat: 42.1, lon: -93.6 },
-  { code: 'KS', lat: 38.5, lon: -98.4 }, { code: 'KY', lat: 37.7, lon: -84.3 }, { code: 'LA', lat: 30.9, lon: -92.3 },
-  { code: 'ME', lat: 45.3, lon: -69.0 }, { code: 'MD', lat: 39.0, lon: -76.7 }, { code: 'MA', lat: 42.2, lon: -71.8 },
-  { code: 'MI', lat: 44.3, lon: -85.6 }, { code: 'MN', lat: 46.7, lon: -94.7 }, { code: 'MS', lat: 32.7, lon: -89.7 },
-  { code: 'MO', lat: 38.6, lon: -92.5 }, { code: 'MT', lat: 46.9, lon: -110.4 }, { code: 'NE', lat: 41.5, lon: -99.8 },
-  { code: 'NV', lat: 38.8, lon: -116.4 }, { code: 'NH', lat: 43.7, lon: -71.6 }, { code: 'NJ', lat: 40.1, lon: -74.5 },
-  { code: 'NM', lat: 34.5, lon: -106.0 }, { code: 'NY', lat: 42.9, lon: -75.5 }, { code: 'NC', lat: 35.5, lon: -79.4 },
-  { code: 'ND', lat: 47.5, lon: -100.5 }, { code: 'OH', lat: 40.4, lon: -82.8 }, { code: 'OK', lat: 35.6, lon: -97.5 },
-  { code: 'OR', lat: 43.9, lon: -120.5 }, { code: 'PA', lat: 41.0, lon: -77.2 }, { code: 'RI', lat: 41.7, lon: -71.5 },
-  { code: 'SC', lat: 33.8, lon: -80.9 }, { code: 'SD', lat: 44.4, lon: -100.2 }, { code: 'TN', lat: 35.8, lon: -86.4 },
-  { code: 'TX', lat: 31.1, lon: -99.3 }, { code: 'UT', lat: 39.3, lon: -111.7 }, { code: 'VT', lat: 44.0, lon: -72.7 },
-  { code: 'VA', lat: 37.5, lon: -78.7 }, { code: 'WA', lat: 47.4, lon: -120.7 }, { code: 'WV', lat: 38.6, lon: -80.6 },
-  { code: 'WI', lat: 44.5, lon: -89.6 }, { code: 'WY', lat: 43.0, lon: -107.6 }, { code: 'DC', lat: 38.9, lon: -77.0 }
-];
+const stateCodes = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'];
 
 const regionMap: Record<string, string[]> = {
   Northeast: ['CT', 'ME', 'MA', 'NH', 'RI', 'VT', 'NJ', 'NY', 'PA'],
@@ -60,6 +41,12 @@ const stateBaseIntensity: Record<string, number> = {
   CA: 88, TX: 84, FL: 80, NY: 72, WA: 67, CO: 70, AZ: 75, NC: 71, GA: 74, IL: 61, NJ: 64, PA: 63, OH: 58, MI: 56, TN: 66,
   VA: 68, SC: 62, MA: 57, OR: 60, NV: 69, UT: 65, ID: 59, MN: 58, MO: 55, AL: 53, LA: 52, KY: 54, IN: 56
 };
+
+
+function regionForState(code: string) {
+  const region = Object.entries(regionMap).find(([, list]) => list.includes(code));
+  return region?.[0] ?? 'South';
+}
 
 const indicators: Record<IndicatorKey, IndicatorConfig> = {
   permits: {
@@ -106,122 +93,18 @@ const indicators: Record<IndicatorKey, IndicatorConfig> = {
     trendSlope: -0.06,
     volatility: 1.2,
     higherIsBetter: false
+  },
+  mortgage: {
+    label: 'Mortgage Rate Proxy',
+    shortLabel: 'Mortgage',
+    unit: '%',
+    baseline: 6.5,
+    trendSlope: -0.02,
+    volatility: 0.2,
+    higherIsBetter: false
   }
 };
 
-const monthLabels = ['Jan 24', 'Feb 24', 'Mar 24', 'Apr 24', 'May 24', 'Jun 24', 'Jul 24', 'Aug 24', 'Sep 24', 'Oct 24', 'Nov 24', 'Dec 24', 'Jan 25', 'Feb 25', 'Mar 25', 'Apr 25', 'May 25', 'Jun 25', 'Jul 25', 'Aug 25', 'Sep 25', 'Oct 25', 'Nov 25', 'Dec 25'];
-
-function tone(v: number) {
-  if (v >= 80) return '#8af5ff';
-  if (v >= 70) return '#43deff';
-  if (v >= 60) return '#11b8ff';
-  if (v >= 50) return '#3179f6';
-  return '#2c3b5a';
-}
-
-function project(lon: number, lat: number, w: number, h: number) {
-  const x = ((lon + 125) / 59) * w;
-  const y = ((49.5 - lat) / 25.5) * h;
-  return { x, y };
-}
-
-function statePolygon(code: string, x: number, y: number, size = 7) {
-  const seed = code.charCodeAt(0) + code.charCodeAt(1);
-  const d = [
-    `${x - size},${y - size * 0.6}`,
-    `${x - size * 0.1},${y - size}`,
-    `${x + size * 0.8},${y - size * 0.35}`,
-    `${x + size},${y + size * 0.45}`,
-    `${x + size * 0.15},${y + size}`,
-    `${x - size * 0.9},${y + size * 0.35}`
-  ];
-  const nudge = ((seed % 5) - 2) * 0.35;
-  return d.map((pt, idx) => {
-    const [px, py] = pt.split(',').map(Number);
-    return `${(px + nudge * (idx % 2 ? 1 : -1)).toFixed(2)},${(py - nudge).toFixed(2)}`;
-  }).join(' ');
-}
-
-function datePointsForRange(range: DateRange) {
-  if (range === '1M') return 2;
-  if (range === '3M') return 4;
-  if (range === '6M') return 7;
-  if (range === '1Y') return 12;
-  if (range === 'YTD') return 12;
-  return monthLabels.length;
-}
-
-function geographyMultiplier(level: GeographyLevel, region: string, state: string, metro: string) {
-  if (level === 'US') return 1;
-  if (level === 'Region') {
-    return region === 'West' ? 1.06 : region === 'South' ? 1.03 : region === 'Northeast' ? 0.98 : 1.01;
-  }
-  if (level === 'State') {
-    const base = (stateBaseIntensity[state] ?? 55) / 62;
-    return Number(base.toFixed(2));
-  }
-
-  const metroBias = metro.includes('Bay') || metro.includes('Seattle') ? 1.08 : metro.includes('Dallas') ? 1.05 : 1.01;
-  return metroBias;
-}
-
-function regionForState(code: string) {
-  const region = Object.entries(regionMap).find(([, list]) => list.includes(code));
-  return region?.[0] ?? 'South';
-}
-
-function USChoropleth({
-  selectedState,
-  indicator,
-  onSelectState
-}: {
-  selectedState: string;
-  indicator: IndicatorKey;
-  onSelectState: (state: string) => void;
-}) {
-  const width = 620;
-  const height = 360;
-
-  const indicatorOffset = indicator === 'spending' ? 3 : indicator === 'materials' ? -3 : indicator === 'labor' ? -1 : 0;
-
-  return (
-    <svg viewBox={`0 0 ${width} ${height}`} className="h-full w-full" role="img" aria-label="U.S. state choropleth map">
-      <rect x="0" y="0" width={width} height={height} fill="#0a1220" rx="14" />
-
-      {states.map((s) => {
-        const value = (stateBaseIntensity[s.code] ?? 46) + indicatorOffset;
-        const lower48 = s.code !== 'AK' && s.code !== 'HI';
-        const selected = s.code === selectedState;
-        let p = project(s.lon, s.lat, width - 36, height - 30);
-        p = { x: p.x + 18, y: p.y + 14 };
-
-        if (s.code === 'AK') p = { x: 85, y: 305 };
-        if (s.code === 'HI') p = { x: 175, y: 322 };
-
-        return (
-          <g
-            key={s.code}
-            transform={!lower48 && s.code === 'AK' ? 'scale(1.22)' : undefined}
-            onClick={() => onSelectState(s.code)}
-            className="cursor-pointer"
-            aria-label={`Select ${s.code}`}
-          >
-            <polygon
-              points={statePolygon(s.code, p.x, p.y, s.code === 'DC' ? 4 : 7)}
-              fill={tone(value)}
-              stroke={selected ? '#f8fafc' : 'rgba(148,163,184,0.55)'}
-              strokeWidth={selected ? '1.9' : '0.8'}
-              opacity={selected ? 1 : 0.96}
-            />
-            <text x={p.x} y={p.y + 2} textAnchor="middle" fontSize="6.5" fill={value >= 70 ? '#041019' : '#e2e8f0'}>
-              {s.code}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
 
 export function PerplexityDashboard() {
   const [geographyLevel, setGeographyLevel] = useState<GeographyLevel>('US');
@@ -236,25 +119,25 @@ export function PerplexityDashboard() {
 
   const metrosForState = metroMap[selectedState] ?? [`${selectedState} Metro Core`];
 
-  const series = useMemo(() => {
-    const mult = geographyMultiplier(geographyLevel, selectedRegion, selectedState, selectedMetro);
-    return monthLabels.map((label, i) => {
-      const seasonality = Math.sin(i * 0.7) * currentIndicator.volatility;
-      const base = currentIndicator.baseline + i * currentIndicator.trendSlope + seasonality;
-      const actual = Number((base * mult).toFixed(1));
-      const bestModel = Number((actual + (currentIndicator.higherIsBetter ? 1.3 : -1.3)).toFixed(1));
-      const benchmarkModel = Number((actual + (i % 2 === 0 ? 0.9 : -0.9)).toFixed(1));
-      return { date: label, actual, bestModel, benchmarkModel };
-    });
-  }, [currentIndicator, geographyLevel, selectedMetro, selectedRegion, selectedState]);
+  const { data: liveData, loading, error } = useLiveDashboardData({
+    geographyLevel,
+    region: selectedRegion,
+    state: selectedState,
+    metro: selectedMetro,
+    indicator: selectedIndicator
+  });
+
+  const series = liveData?.series ?? [];
 
   const filteredSeries = useMemo(() => {
     const points = datePointsForRange(dateRange);
     return series.slice(-points);
   }, [dateRange, series]);
 
+  const chartSeries = filteredSeries.length ? filteredSeries : [{ date: 'N/A', actual: 0, bestModel: 0, benchmarkModel: 0 }];
+
   const kpis = useMemo(() => {
-    const latest = filteredSeries[filteredSeries.length - 1];
+    const latest = filteredSeries[filteredSeries.length - 1] ?? { actual: 0, bestModel: 0, benchmarkModel: 0 };
     const prior = filteredSeries[Math.max(0, filteredSeries.length - 2)] ?? latest;
     const delta = Number((latest.actual - prior.actual).toFixed(1));
     const direction = delta >= 0 ? '+' : '';
@@ -265,10 +148,10 @@ export function PerplexityDashboard() {
       { label: 'Forecast (3mo)', value: `${latest.bestModel}`, change: compareModels ? 'Showing model comparison' : 'Best model selected' },
       { label: 'Model Spread', value: `${Math.abs(latest.bestModel - latest.benchmarkModel).toFixed(1)}`, change: 'Best vs benchmark gap' },
       { label: 'Geography Context', value: geographyLevel, change: geographyLevel === 'US' ? 'National baseline' : `${selectedRegion}/${selectedState}` },
-      { label: 'Data Freshness', value: 'Dec 2025', change: dateRange === '1M' ? 'Latest monthly cut' : `${dateRange} window` },
-      { label: 'Model Confidence', value: confidence, change: 'Adaptive best-model routing' }
+      { label: 'Data Freshness', value: liveData?.metadata.referencePeriod ?? 'N/A', change: dateRange === '1M' ? 'Latest monthly cut' : `${dateRange} window` },
+      { label: 'Model Confidence', value: confidence, change: liveData?.metadata.isLive ? 'Live history + stub forecast' : 'Mock fallback in use' }
     ];
-  }, [compareModels, currentIndicator.shortLabel, dateRange, filteredSeries, geographyLevel, selectedRegion, selectedState]);
+  }, [compareModels, currentIndicator.shortLabel, dateRange, filteredSeries, geographyLevel, liveData?.metadata.isLive, liveData?.metadata.referencePeriod, selectedRegion, selectedState]);
 
   const geographicLabel = geographyLevel === 'US'
     ? 'National (USA)'
@@ -351,8 +234,8 @@ export function PerplexityDashboard() {
                   }}
                   className="w-full rounded-xl border border-white/15 bg-[#0b1324] px-3 py-2.5 text-sm text-slate-200"
                 >
-                  {states.map((state) => (
-                    <option key={state.code} value={state.code}>{state.code}</option>
+                  {stateCodes.map((stateCode) => (
+                    <option key={stateCode} value={stateCode}>{stateCode}</option>
                   ))}
                 </select>
               </label>
@@ -385,6 +268,7 @@ export function PerplexityDashboard() {
                 <option value="residentialProxy">Residential / Nonresidential Proxy</option>
                 <option value="labor">Labor Indicator</option>
                 <option value="materials">Materials-Cost Indicator</option>
+                <option value="mortgage">Mortgage Rate Proxy</option>
               </select>
             </label>
 
@@ -410,6 +294,10 @@ export function PerplexityDashboard() {
             </div>
           </div>
 
+          {loading ? <p className="text-xs text-slate-400">Loading live data...</p> : null}
+          {error ? <p className="text-xs text-amber-300">Live data fallback: {error}</p> : null}
+          {!liveData?.metadata.isLive ? <p className="text-xs text-amber-300">Some indicator/geography combinations are using mock fallback values.</p> : null}
+
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             {kpis.map((kpi) => (
               <article key={kpi.label} className="rounded-xl border border-white/10 bg-[#0b1324] px-3 py-2.5">
@@ -426,7 +314,7 @@ export function PerplexityDashboard() {
               <span className="text-[11px] text-slate-400">{currentIndicator.shortLabel} · {geographicLabel}</span>
             </div>
             <div className="h-[300px] rounded-xl border border-white/10 bg-[#0a1220] p-2 sm:h-[360px]">
-              <USChoropleth selectedState={selectedState} indicator={selectedIndicator} onSelectState={handleMapStateSelect} />
+              <USStateChoropleth selectedState={selectedState} onSelectState={handleMapStateSelect} mapValues={liveData?.mapValues ?? {}} indicatorOffset={selectedIndicator === 'spending' ? 3 : selectedIndicator === 'materials' ? -3 : selectedIndicator === 'labor' ? -1 : 0} />
             </div>
           </article>
 
@@ -437,7 +325,7 @@ export function PerplexityDashboard() {
             </div>
             <div className="h-[300px] rounded-xl border border-white/10 bg-[#0a1220] p-2 sm:h-[360px]">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={filteredSeries}>
+                <AreaChart data={chartSeries}>
                   <defs>
                     <linearGradient id="actualFill" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="4%" stopColor="#22d3ee" stopOpacity={0.35} />
@@ -477,7 +365,7 @@ export function PerplexityDashboard() {
           <section className="rounded-2xl border border-white/10 bg-[#0b1324] p-4">
             <h3 className="text-sm font-semibold text-slate-100">Methodology &amp; Sources</h3>
             <p className="mt-2 text-sm leading-relaxed text-slate-300">
-              Data layers combine permit activity, spending proxies, labor conditions, and materials-cost pressure from Census and BLS style feeds. Geography and
+              Data layers prioritize live public feeds from U.S. Census, BLS, and FRED where available, with graceful fallback stubs for unsupported combinations. Geography and
               indicator controls dynamically re-scope KPI and chart context to U.S., region, state, or metro cuts.
             </p>
             <p className="mt-2 text-sm leading-relaxed text-slate-300">
@@ -485,9 +373,9 @@ export function PerplexityDashboard() {
               Enabling compare mode overlays a benchmark model to show spread and stability.
             </p>
             <ul className="mt-3 space-y-2 text-xs text-slate-300">
-              <li className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">Sources: Building Permits Survey, Construction Spending, BLS labor indicators, producer-price benchmarks.</li>
-              <li className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">Best-model routing is currently mock-wired for UI behavior fidelity and ready for live forecasting service integration.</li>
-              <li className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">Known limitations: simplified geometry and synthetic time-series values used for product behavior prototyping.</li>
+              <li className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">Current source: {liveData?.metadata.source ?? "Stub"} · Reference period: {liveData?.metadata.referencePeriod ?? "N/A"}.</li>
+              <li className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">Forecast layer remains stubbed for best-model comparison while historical values are sourced live where practical.</li>
+              <li className="rounded-lg border border-white/10 bg-white/[0.02] px-3 py-2">Known limitations: region/state/metro disaggregation depends on source coverage; unsupported cuts gracefully fall back to mock values.</li>
             </ul>
           </section>
         </div>
