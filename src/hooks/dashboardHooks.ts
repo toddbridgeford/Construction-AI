@@ -29,6 +29,7 @@ import type {
 
 export type MetricSignal = 'BULLISH' | 'NEUTRAL' | 'BEARISH'
 export type MetricUnit = 'count' | 'annual-rate' | 'index' | 'usd-billion' | 'percent' | 'points'
+export type MetricReadinessClassification = 'live-capable' | 'fallback-capable' | 'pending' | 'excluded-from-composite'
 
 export type CoreMetricCardContract = {
   id: 'building_permits' | 'housing_starts' | 'abi' | 'construction_spending' | 'materials_ppi' | 'nahb_hmi' | 'homebuilder_equity'
@@ -44,6 +45,7 @@ export type CoreMetricCardContract = {
   growthYoy: number | null
   signal: MetricSignal
   sourceStatus: ActivityResponse['sourceStatus']
+  readinessClassification: MetricReadinessClassification
   freshness: HookResourceState<ActivityResponse>['freshness']
   safeForComposite: boolean
   modelExclusionReason?: string
@@ -84,6 +86,18 @@ const fromSeries = (series: { value: number }[]) => {
     mom: toGrowth(latest, previous),
     yoy: toGrowth(latest, priorYear)
   }
+}
+
+const classifyReadiness = ({
+  sourceStatus,
+  excludedFromComposite
+}: {
+  sourceStatus: ActivityResponse['sourceStatus']
+  excludedFromComposite: boolean
+}): MetricReadinessClassification => {
+  if (sourceStatus === 'pending') return 'pending'
+  if (excludedFromComposite) return 'excluded-from-composite'
+  return sourceStatus === 'live' ? 'live-capable' : 'fallback-capable'
 }
 
 export type MetadataHookData = MetadataResponse & {
@@ -168,12 +182,12 @@ export const useEquities = (params: ApiQuery): HookResourceState<EquitiesHookDat
 
 export const buildCoreMetricCards = (resources: {
   activity: HookResourceState<ActivityResponse>
-  pipeline: HookResourceState<PipelineResponse>
+  activityStarts: HookResourceState<ActivityResponse>
   costs: HookResourceState<CostsResponse>
   equities: HookResourceState<EquitiesHookData>
 }): CoreMetricCardContract[] => {
   const permits = fromSeries(resources.activity.data?.series ?? [])
-  const starts = fromSeries(resources.pipeline.data?.series ?? [])
+  const starts = fromSeries(resources.activityStarts.data?.series ?? [])
   const ppi = fromSeries(resources.costs.data?.series ?? [])
   const equityRows = resources.equities.data?.rows ?? []
   const equityLatest = equityRows.length ? equityRows.reduce((sum, row) => sum + row.ytd, 0) / equityRows.length : null
@@ -193,6 +207,10 @@ export const buildCoreMetricCards = (resources: {
       growthYoy: permits.yoy,
       signal: computeSignal({ mom: permits.mom }),
       sourceStatus: resources.activity.data?.sourceStatus ?? 'pending',
+      readinessClassification: classifyReadiness({
+        sourceStatus: resources.activity.data?.sourceStatus ?? 'pending',
+        excludedFromComposite: false
+      }),
       freshness: resources.activity.freshness,
       safeForComposite: (resources.activity.data?.sourceStatus ?? 'pending') !== 'pending'
     },
@@ -200,8 +218,8 @@ export const buildCoreMetricCards = (resources: {
       id: 'housing_starts',
       label: 'Housing Starts',
       upstreamSource: 'Census Housing Starts (SAAR)',
-      hookPath: 'usePipeline -> getPipelineSeries',
-      endpointPath: '/api/pipeline-series',
+      hookPath: 'useActivity(sector=starts) -> getActivitySeries',
+      endpointPath: '/api/activity-series?sector=starts',
       latestValue: starts.latest,
       formattedValue: formatMetricValue(starts.latest, 'annual-rate'),
       unit: 'annual-rate',
@@ -209,9 +227,13 @@ export const buildCoreMetricCards = (resources: {
       growthMom: starts.mom,
       growthYoy: starts.yoy,
       signal: computeSignal({ mom: starts.mom }),
-      sourceStatus: resources.pipeline.data?.sourceStatus ?? 'pending',
-      freshness: resources.pipeline.freshness,
-      safeForComposite: (resources.pipeline.data?.sourceStatus ?? 'pending') !== 'pending'
+      sourceStatus: resources.activityStarts.data?.sourceStatus ?? 'pending',
+      readinessClassification: classifyReadiness({
+        sourceStatus: resources.activityStarts.data?.sourceStatus ?? 'pending',
+        excludedFromComposite: false
+      }),
+      freshness: resources.activityStarts.freshness,
+      safeForComposite: (resources.activityStarts.data?.sourceStatus ?? 'pending') !== 'pending'
     },
     {
       id: 'abi',
@@ -227,6 +249,7 @@ export const buildCoreMetricCards = (resources: {
       growthYoy: null,
       signal: 'NEUTRAL',
       sourceStatus: 'pending',
+      readinessClassification: 'pending',
       freshness: null,
       safeForComposite: false,
       modelExclusionReason: 'Source contract not implemented yet.'
@@ -245,6 +268,7 @@ export const buildCoreMetricCards = (resources: {
       growthYoy: null,
       signal: 'NEUTRAL',
       sourceStatus: 'pending',
+      readinessClassification: 'pending',
       freshness: null,
       safeForComposite: false,
       modelExclusionReason: 'No endpoint in API contract yet.'
@@ -263,6 +287,10 @@ export const buildCoreMetricCards = (resources: {
       growthYoy: ppi.yoy,
       signal: computeSignal({ mom: ppi.mom, inverse: true }),
       sourceStatus: resources.costs.data?.sourceStatus ?? 'pending',
+      readinessClassification: classifyReadiness({
+        sourceStatus: resources.costs.data?.sourceStatus ?? 'pending',
+        excludedFromComposite: false
+      }),
       freshness: resources.costs.freshness,
       safeForComposite: false,
       modelExclusionReason: (resources.costs.data?.sourceStatus ?? 'pending') === 'pending' ? 'Cost series is pending validation.' : 'Awaiting PPI-specific contract validation.'
@@ -281,6 +309,7 @@ export const buildCoreMetricCards = (resources: {
       growthYoy: null,
       signal: 'NEUTRAL',
       sourceStatus: 'pending',
+      readinessClassification: 'pending',
       freshness: null,
       safeForComposite: false,
       modelExclusionReason: 'Source contract not implemented yet.'
@@ -299,6 +328,10 @@ export const buildCoreMetricCards = (resources: {
       growthYoy: null,
       signal: computeSignal({ mom: equityLatest }),
       sourceStatus: equityRows.every((row) => row.sourceStatus === 'pending') ? 'pending' : 'fallback',
+      readinessClassification: classifyReadiness({
+        sourceStatus: equityRows.every((row) => row.sourceStatus === 'pending') ? 'pending' : 'fallback',
+        excludedFromComposite: true
+      }),
       freshness: resources.equities.freshness,
       safeForComposite: false,
       modelExclusionReason: 'Daily market noise; excluded from macro composite input set.'
