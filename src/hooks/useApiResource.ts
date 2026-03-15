@@ -1,15 +1,18 @@
 import { useEffect, useState, type DependencyList } from 'react'
+import type { ApiEnvelope, FreshnessMeta } from '@/api/contracts'
 
 type ResourceState<T> = {
   data: T | null
   loading: boolean
   error: string | null
+  freshness: FreshnessMeta | null
 }
 
-export function useApiResource<T>(loader: () => Promise<T>, deps: DependencyList): ResourceState<T> {
+export function useApiResource<T>(loader: () => Promise<ApiEnvelope<T>>, deps: DependencyList): ResourceState<T> {
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [freshness, setFreshness] = useState<FreshnessMeta | null>(null)
 
   useEffect(() => {
     let alive = true
@@ -19,7 +22,8 @@ export function useApiResource<T>(loader: () => Promise<T>, deps: DependencyList
     loader()
       .then((payload) => {
         if (!alive) return
-        setData(payload)
+        setData(payload.data)
+        setFreshness(payload.freshness)
       })
       .catch((err: unknown) => {
         if (!alive) return
@@ -35,5 +39,5 @@ export function useApiResource<T>(loader: () => Promise<T>, deps: DependencyList
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 
-  return { data, loading, error }
+  return { data, loading, error, freshness }
 }

@@ -2,7 +2,7 @@ const DB_NAME = 'construction-ai-api-cache'
 const STORE_NAME = 'responses'
 const DB_VERSION = 1
 
-type CacheRecord<T> = {
+export type CacheRecord<T> = {
   key: string
   value: T
   updatedAt: number
@@ -21,16 +21,19 @@ const openDb = (): Promise<IDBDatabase> =>
     request.onerror = () => reject(request.error)
   })
 
-export async function readCache<T>(key: string, maxAgeMs = 1000 * 60 * 60 * 6): Promise<T | null> {
+export async function readCacheRecord<T>(key: string): Promise<CacheRecord<T> | null> {
   if (!('indexedDB' in window)) return null
   const db = await openDb()
-  const record = await new Promise<CacheRecord<T> | null>((resolve, reject) => {
+  return new Promise<CacheRecord<T> | null>((resolve, reject) => {
     const tx = db.transaction(STORE_NAME, 'readonly')
     const req = tx.objectStore(STORE_NAME).get(key)
     req.onsuccess = () => resolve((req.result as CacheRecord<T> | undefined) ?? null)
     req.onerror = () => reject(req.error)
   })
+}
 
+export async function readCache<T>(key: string, maxAgeMs = 1000 * 60 * 60 * 6): Promise<T | null> {
+  const record = await readCacheRecord<T>(key)
   if (!record) return null
   if (Date.now() - record.updatedAt > maxAgeMs) return null
   return record.value
