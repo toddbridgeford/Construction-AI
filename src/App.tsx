@@ -14,9 +14,10 @@ import type { DashboardOption, KpiMetric } from '@/components/dashboard/types'
 import type { DashboardData, GeographyLevel } from '@/data/types'
 import type { ForecastOutput } from '@/forecasting'
 import { buildInsights } from '@/insights'
-import { LocalJsonProvider } from '@/providers/LocalJsonProvider'
+import { createDataProvider } from '@/providers/providerFactory'
 
-const provider = new LocalJsonProvider()
+const providerBundle = createDataProvider()
+const provider = providerBundle.provider
 
 const geographyLevels: DashboardOption[] = [
   { label: 'United States', value: 'us' },
@@ -40,6 +41,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [providerStatus, setProviderStatus] = useState(providerBundle.runtime.getStatus())
 
   const [geographyLevel, setGeographyLevel] = useState<GeographyLevel>('us')
   const [regionId, setRegionId] = useState('northeast')
@@ -61,6 +63,7 @@ function App() {
       setLoading(true)
       const next = await provider.getDashboardData()
       setDashboardData(next)
+      setProviderStatus(providerBundle.runtime.getStatus())
       setLoading(false)
     }
 
@@ -148,6 +151,7 @@ function App() {
         periods: Number(forecastHorizon) as 3 | 6 | 12
       })
       setForecastOutput(response.output)
+      setProviderStatus(providerBundle.runtime.getStatus())
     }
 
     void loadForecast()
@@ -231,8 +235,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <HeaderBar isDarkMode={isDarkMode} onToggleTheme={() => setIsDarkMode((prev) => !prev)} />
+      <HeaderBar isDarkMode={isDarkMode} onToggleTheme={() => setIsDarkMode((prev) => !prev)} modeLabel={providerStatus.label} />
       <main className="mx-auto flex w-full max-w-[1360px] flex-col gap-2 px-3 py-2.5 md:gap-2.5 md:px-4 md:py-3">
+        {providerStatus.message && (
+          <p className="rounded-md border border-border/75 bg-card/45 px-3 py-2 text-[11px] text-muted-foreground">{providerStatus.message}</p>
+        )}
         <ControlsRow
           geographyLevels={geographyLevels}
           selectedGeographyLevel={geographyLevel}

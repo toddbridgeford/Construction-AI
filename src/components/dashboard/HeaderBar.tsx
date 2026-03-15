@@ -3,9 +3,11 @@ import { cn } from '@/lib/utils'
 type HeaderBarProps = {
   isDarkMode: boolean
   onToggleTheme: () => void
+  modeLabel: 'Demo Mode' | 'Live Data'
 }
 
-export function HeaderBar({ isDarkMode, onToggleTheme }: HeaderBarProps) {
+export function HeaderBar({ isDarkMode, onToggleTheme, modeLabel }: HeaderBarProps) {
+  const isLive = modeLabel === 'Live Data'
   return (
     <header className="sticky top-0 z-20 border-b border-border/75 bg-background/88 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-[1360px] items-center justify-between px-3 py-2 md:px-4 md:py-2.5">
@@ -23,6 +25,14 @@ export function HeaderBar({ isDarkMode, onToggleTheme }: HeaderBarProps) {
         </div>
 
         <div className="flex items-center gap-1.5">
+          <span
+            className={cn(
+              'inline-flex h-7 items-center rounded-md border px-2 text-[10px] font-medium tracking-[0.08em] uppercase',
+              isLive ? 'border-emerald-400/45 bg-emerald-500/10 text-emerald-300' : 'border-amber-400/45 bg-amber-500/10 text-amber-300'
+            )}
+          >
+            {modeLabel}
+          </span>
           <button
             className="inline-flex h-7.5 w-7.5 items-center justify-center rounded-md border border-border/80 bg-card/75 text-[10.5px] font-medium text-muted-foreground transition hover:border-primary/55 hover:text-primary"
             type="button"
