@@ -14,6 +14,7 @@ export type MacroSeriesPoint = {
 
 export type MacroSeriesApiResponse = {
   metric: SupportedMacroMetric
+  unit: 'usd-billion'
   source: {
     id: 'census_vip'
     label: 'Census Value of Construction Put in Place'
@@ -93,6 +94,7 @@ const buildEmptyResponse = (
   cache: { hit: boolean; stale: boolean }
 ): MacroSeriesApiResponse => ({
   metric,
+  unit: 'usd-billion',
   source: DEFAULT_SOURCE,
   sourceStatus: status,
   message,
@@ -144,6 +146,7 @@ export const getMacroSeriesResponse = async (
       status: 200,
       body: {
         metric,
+        unit: 'usd-billion',
         source: DEFAULT_SOURCE,
         sourceStatus: 'live',
         message: 'Construction spending series loaded successfully.',
