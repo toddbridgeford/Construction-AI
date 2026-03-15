@@ -234,7 +234,7 @@ export const METRIC_REGISTRY: Record<MetricId, MetricRegistryEntry> = {
   nahb_hmi: {
     id: 'nahb_hmi',
     label: 'NAHB HMI Confidence Index',
-    upstreamSource: 'NAHB/Wells Fargo HMI',
+    upstreamSource: 'NAHB / Wells Fargo HMI',
     endpointPath: '/api/macro-series?metric=nahb_hmi',
     hookPath: 'useMacro(metric=nahb_hmi) -> getMacroSeries',
     unit: 'index',
@@ -341,8 +341,8 @@ export const deriveMetricCards = (resources: MetricRuntimeResources): DerivedMet
       mom: nahb.mom,
       yoy: nahb.yoy,
       baselineGap: nahb.baselineGap,
-      transformValid: nahb.baselineGap != null && hasGrowthInput(nahb),
-      transformInvalidReason: 'NAHB HMI diffusion transform requires baseline gap and YoY/MoM growth.',
+      transformValid: nahb.baselineGap != null,
+      transformInvalidReason: 'NAHB HMI diffusion transform requires a valid latest index value to compute baseline gap vs 50.',
       seriesLength: (resources.nahbHmi.data?.series ?? []).length,
       declaredStatus: resources.nahbHmi.data?.sourceStatus ?? 'pending',
       freshness: resources.nahbHmi.freshness,
@@ -375,10 +375,11 @@ export const deriveMetricCards = (resources: MetricRuntimeResources): DerivedMet
     })
 
     const hasGrowth = hasGrowthInput({ yoy: metric.yoy, mom: metric.mom })
+    const compositeGrowthGate = metricId === 'nahb_hmi' ? true : hasGrowth
     const safeForComposite = canBeCompositeSafe({
       sourceStatus,
       transformValid: metric.transformValid,
-      hasGrowth,
+      hasGrowth: compositeGrowthGate,
       safePolicy: registry.policy.safeForCompositePolicy
     })
 
@@ -405,8 +406,10 @@ export const deriveMetricCards = (resources: MetricRuntimeResources): DerivedMet
       formattedValue: formatMetricValue(metric.latest, registry.unit),
       unit: registry.unit,
       transformSummary:
-        metricId === 'abi' || metricId === 'nahb_hmi'
+        metricId === 'abi'
           ? `Diffusion baseline: 50.0 · Gap ${metric.baselineGap == null ? 'N/A' : metric.baselineGap.toFixed(1)} pts · MoM ${pct(metric.mom)} · YoY ${pct(metric.yoy)}`
+          : metricId === 'nahb_hmi'
+            ? `Diffusion baseline: 50.0 · Gap ${metric.baselineGap == null ? 'N/A' : metric.baselineGap.toFixed(1)} pts (${metric.baselineGap == null ? 'signal unavailable' : metric.baselineGap > 0 ? 'above 50 = expansionary / bullish bias' : metric.baselineGap < 0 ? 'below 50 = contractionary / bearish bias' : 'at 50 = neutral'}) · MoM ${pct(metric.mom)} · YoY ${pct(metric.yoy)}`
           : metricId === 'construction_spending'
             ? `Nominal level in USD billions · MoM ${pct(metric.mom)} · YoY ${pct(metric.yoy)}`
             : metricId === 'materials_ppi'
