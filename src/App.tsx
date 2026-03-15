@@ -76,6 +76,38 @@ function App() {
     return `${value.source}${value.offlineSnapshot ? ' · offline snapshot' : ''}${value.isStale ? ' · stale' : ''}`
   }
 
+  const statusPresentation = (readiness: string) => {
+    if (readiness === 'live-capable') return { label: 'live-capable', className: 'border-emerald-400/40 bg-emerald-500/10 text-emerald-200' }
+    if (readiness === 'fallback-capable') return { label: 'fallback-capable', className: 'border-amber-400/40 bg-amber-500/10 text-amber-200' }
+    if (readiness === 'excluded-from-composite') return { label: 'excluded-by-policy', className: 'border-violet-400/40 bg-violet-500/10 text-violet-200' }
+    return { label: 'pending', className: 'border-slate-500/50 bg-slate-700/40 text-slate-200' }
+  }
+
+  const unitLabel = (unit: string) => {
+    if (unit === 'annual-rate') return 'annual rate'
+    if (unit === 'usd-billion') return 'USD billions'
+    return unit
+  }
+
+  const registryRows = coreMetrics.map((metric) => {
+    const status = statusPresentation(metric.readinessClassification)
+    const compositeRole = metric.readinessClassification === 'excluded-from-composite'
+      ? 'excluded by policy'
+      : metric.sourceStatus === 'pending' || !metric.safeForComposite
+        ? 'pending until wired'
+        : 'included when valid'
+
+    return {
+      metric: metric.label,
+      source: metric.upstreamSource,
+      endpoint: `${metric.endpointPath} · ${metric.hookPath}`,
+      unit: unitLabel(metric.unit),
+      transform: metric.transformType === 'inverse' ? 'inverse' : metric.transformType === 'diffusion' ? 'diffusion baseline' : 'direct',
+      status,
+      compositeRole
+    }
+  })
+
   return (
     <main className="min-h-screen bg-slate-950 px-4 py-5 text-slate-100">
       <div className="mx-auto max-w-6xl space-y-4">
@@ -218,19 +250,176 @@ function App() {
         )}
 
         {state.tab === 'methodology' && (
-          <Card>
-            <CardHeader><CardTitle className="text-sm">Methodology</CardTitle></CardHeader>
-            <CardContent className="space-y-2 text-xs">
-              <p>Each KPI card is mapped to a specific upstream feed, typed hook path, and API endpoint contract; pending feeds remain explicitly marked pending.</p>
-              <p>Composite methodology is explicit and equal-weighted: each valid metric is normalized from directional growth (YoY preferred, MoM fallback) into a 0-100 score by clamping to ±{compositeMethodology.methodology.clampRangePct}% then scaling linearly.</p>
-              <p>Direct metrics use growth as-is, while inverse metrics (Materials PPI) flip growth sign before normalization; pending, explicitly excluded, non-eligible, or missing-growth metrics are excluded with explicit reasons.</p>
-              {compositeMethodology.audit.filter((item) => item.status === 'excluded').map((item) => (
-                <p key={item.id}>Exclusion rule — {item.label}: {item.reason}</p>
-              ))}
-              <p>Composite score requires at least {compositeMethodology.methodology.minimumRequiredMetrics} valid metrics and composite history requires at least {compositeMethodology.methodology.minimumRequiredHistoryPoints} valid points; predictive modeling consumes only this shared composite history.</p>
-              <p>Bootstrap endpoints use stale-while-revalidate over IndexedDB cache and expose offline snapshot state.</p>
-            </CardContent>
-          </Card>
+          <section className="space-y-4">
+            <Card className="border-slate-800 bg-slate-900/70">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">1. Methodology Overview</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-3 text-xs md:grid-cols-2 xl:grid-cols-4">
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-slate-400">Composite Index</p>
+                  <p className="mt-1 text-slate-200">Single-cycle health score built from validated indicator momentum.</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">0–100 normalized</span>
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">equal-weighted</span>
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">{compositeMethodology.validMetricCount}/{compositeMethodology.minimumRequiredMetrics}+ valid</span>
+                  </div>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-slate-400">Predictive Model</p>
+                  <p className="mt-1 text-slate-200">Forward bands are produced from composite history, not a separate data path.</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">composite-driven input</span>
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">quantile envelope</span>
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">cycle phase labeling</span>
+                  </div>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-slate-400">Data Sources</p>
+                  <p className="mt-1 text-slate-200">Each metric is tied to a named source, endpoint family, and typed hook.</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">7-metric registry</span>
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">runtime status badges</span>
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">policy exclusions explicit</span>
+                  </div>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="text-[11px] uppercase tracking-wide text-slate-400">PWA / Offline Mode</p>
+                  <p className="mt-1 text-slate-200">Installable shell retains cached snapshots while network refreshes in background.</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">stale-while-revalidate</span>
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">IndexedDB snapshots</span>
+                    <span className="rounded-full border border-slate-700 px-2 py-0.5">freshness labels</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-800 bg-slate-900/70">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">2. Composite Index Construction</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-xs">
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="text-slate-200">Eligible indicators are converted to a comparable <span className="font-semibold text-slate-100">0–100 scale</span> from directional growth with <span className="font-semibold text-slate-100">YoY preferred, MoM fallback</span>.</p>
+                  <p className="mt-2 text-slate-300">Direct metrics score with growth as-is. Inverse metrics flip direction before scoring. Current methodology applies equal weighting across all included metrics.</p>
+                  <div className="mt-3 grid gap-2 md:grid-cols-2">
+                    <p className="rounded border border-slate-800 bg-slate-900/60 p-2">Formula: clamp directional growth to ±{compositeMethodology.methodology.clampRangePct}% → linearly map to 0–100.</p>
+                    <p className="rounded border border-slate-800 bg-slate-900/60 p-2">Composite requires minimum valid inputs: {compositeMethodology.methodology.minimumRequiredMetrics}+ current metrics and {compositeMethodology.methodology.minimumRequiredHistoryPoints}+ history points for model forecasting.</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-800 bg-slate-900/70">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">3. Seven-Metric Registry</CardTitle>
+              </CardHeader>
+              <CardContent className="text-xs">
+                <div className="overflow-x-auto rounded-md border border-slate-800">
+                  <table className="min-w-full divide-y divide-slate-800">
+                    <thead className="bg-slate-950/70 text-slate-300">
+                      <tr>
+                        <th className="px-3 py-2 text-left font-medium">Metric</th>
+                        <th className="px-3 py-2 text-left font-medium">Upstream source</th>
+                        <th className="px-3 py-2 text-left font-medium">Endpoint family / hook path</th>
+                        <th className="px-3 py-2 text-left font-medium">Unit</th>
+                        <th className="px-3 py-2 text-left font-medium">Transform</th>
+                        <th className="px-3 py-2 text-left font-medium">Status</th>
+                        <th className="px-3 py-2 text-left font-medium">Composite role</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800 bg-slate-950/35">
+                      {registryRows.map((row) => (
+                        <tr key={row.metric}>
+                          <td className="px-3 py-2 font-medium text-slate-100">{row.metric}</td>
+                          <td className="px-3 py-2 text-slate-300">{row.source}</td>
+                          <td className="px-3 py-2 text-slate-300">{row.endpoint}</td>
+                          <td className="px-3 py-2 text-slate-300">{row.unit}</td>
+                          <td className="px-3 py-2 text-slate-300">{row.transform}</td>
+                          <td className="px-3 py-2"><span className={`rounded-full border px-2 py-0.5 ${row.status.className}`}>{row.status.label}</span></td>
+                          <td className="px-3 py-2 text-slate-300">{row.compositeRole}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-800 bg-slate-900/70">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">4. Predictive Model</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-3 text-xs md:grid-cols-2 xl:grid-cols-3">
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="font-medium text-slate-100">Model input</p>
+                  <p className="mt-1 text-slate-300">Composite index history is the only model input stream used for forward projections.</p>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="font-medium text-slate-100">Scenario framing</p>
+                  <p className="mt-1 text-slate-300">Methodology targets a Monte Carlo-style scenario view with 800 paths represented through P10/P25/P50/P75/P90 bands.</p>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="font-medium text-slate-100">Quantile bands</p>
+                  <p className="mt-1 text-slate-300">Bands communicate downside/base/upside ranges while preserving explicit uncertainty spread by horizon.</p>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="font-medium text-slate-100">Regime behavior</p>
+                  <p className="mt-1 text-slate-300">Regime switching adjusts trend expectations across different cycle states instead of assuming one constant drift.</p>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 md:col-span-2 xl:col-span-2">
+                  <p className="font-medium text-slate-100">Cycle clock</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5 text-slate-300">
+                    {['Expansion', 'Peak', 'Contraction', 'Trough'].map((phase) => (
+                      <span key={phase} className="rounded-full border border-slate-700 px-2 py-0.5">{phase}</span>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-800 bg-slate-900/70">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">5. Data Revision and Fallback Policy</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-3 text-xs md:grid-cols-2">
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 text-slate-300">
+                  <p className="font-medium text-slate-100">Bootstrap resilience</p>
+                  <p className="mt-1">Data bootstraps in stale-while-revalidate mode: cached state renders first, then background refresh updates when network succeeds.</p>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 text-slate-300">
+                  <p className="font-medium text-slate-100">Offline snapshot behavior</p>
+                  <p className="mt-1">IndexedDB snapshots support continuity when offline. Freshness labels expose cache/network/offline provenance.</p>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 text-slate-300">
+                  <p className="font-medium text-slate-100">Status semantics</p>
+                  <p className="mt-1">Live and fallback feeds are distinguished from pending feeds; unsupported integrations are labeled explicitly and never synthesized as live.</p>
+                </div>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 text-slate-300">
+                  <p className="font-medium text-slate-100">Revision sensitivity</p>
+                  <p className="mt-1">Macro and economic releases can revise after publication; composite history and model bands should be interpreted as revision-sensitive.</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-slate-800 bg-slate-900/70">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">6. PWA Behavior</CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-2 text-xs md:grid-cols-2 xl:grid-cols-5">
+                {[
+                  'Installable dashboard experience',
+                  'Cached shell for fast startup',
+                  'Cached bootstrap data for continuity',
+                  'Offline snapshot mode when disconnected',
+                  'Freshness/state labeling on every feed'
+                ].map((item) => (
+                  <p key={item} className="rounded-md border border-slate-800 bg-slate-950/60 p-2 text-slate-300">{item}</p>
+                ))}
+              </CardContent>
+            </Card>
+          </section>
         )}
       </div>
     </main>
