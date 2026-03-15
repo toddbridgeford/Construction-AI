@@ -1,5 +1,6 @@
 import rawDashboardData from '@/data/dashboardData.json'
-import type { DashboardData, ForecastRequest, ForecastResponse, GeographyLevel, Observation, Metadata, MapDatum } from '@/data/types'
+import { generateForecast } from '@/forecasting'
+import type { DashboardData, ForecastRequest, ForecastResponse, GeographyLevel, MapDatum, Metadata, Observation } from '@/data/types'
 import type { DataProvider } from './types'
 
 type SeedRow = {
@@ -72,26 +73,19 @@ export class LocalJsonProvider implements DataProvider {
   }
 
   async getForecast(request: ForecastRequest): Promise<ForecastResponse> {
-    const matching = this.data.observations.filter(
-      (observation) =>
-        observation.geographyLevel === request.geographyLevel &&
-        observation.geographyId === request.geographyId &&
-        observation.indicatorId === request.indicatorId
-    )
-    const sourcePoints = matching.slice(-12)
+    const matching = this.data.observations
+      .filter(
+        (observation) =>
+          observation.geographyLevel === request.geographyLevel &&
+          observation.geographyId === request.geographyId &&
+          observation.indicatorId === request.indicatorId
+      )
+      .sort((left, right) => left.date.localeCompare(right.date))
+      .map((point) => ({ date: point.date, value: point.value }))
 
-    const projectedPoints = Array.from({ length: request.periods }, (_, index) => {
-      const source = sourcePoints[index % Math.max(sourcePoints.length, 1)]
-      const baseValue = source?.value ?? 100
-      const projectionDate = new Date((source?.date ?? this.data.observations.at(-1)?.date) || '2025-01-01')
-      projectionDate.setMonth(projectionDate.getMonth() + index + 1)
-
-      return {
-        date: formatDate(projectionDate),
-        value: Number((baseValue * (1 + 0.004 * (index + 1))).toFixed(2))
-      }
+    return Promise.resolve({
+      request,
+      output: generateForecast(matching, request.periods)
     })
-
-    return Promise.resolve({ request, projectedPoints })
   }
 }
