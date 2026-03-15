@@ -2,6 +2,7 @@ import rawDashboardData from '@/data/dashboardData.json'
 import { generateForecast } from '@/forecasting'
 import type { DashboardData, ForecastRequest, ForecastResponse, GeographyLevel, MapDatum, Metadata, Observation } from '@/data/types'
 import type { DataProvider } from './types'
+import type { ProviderRuntime } from './runtime'
 
 type SeedRow = {
   geographyLevel: GeographyLevel
@@ -66,9 +67,18 @@ function normalizeDashboardData(): DashboardData {
 }
 
 export class LocalJsonProvider implements DataProvider {
+  constructor(private readonly runtime?: ProviderRuntime) {}
+
   private readonly data = normalizeDashboardData()
 
   async getDashboardData(): Promise<DashboardData> {
+    this.runtime?.setStatus({
+      mode: 'demo',
+      label: 'Demo Mode',
+      degradedSources: [],
+      usedFallback: false,
+      message: 'Using local synthetic dataset.'
+    })
     return Promise.resolve(this.data)
   }
 
