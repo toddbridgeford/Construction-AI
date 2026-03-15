@@ -102,10 +102,27 @@ const formatMetricValue = (value: number | null, unit: MetricUnit): string => {
   return `${value.toFixed(1)}`
 }
 
-const computeSignal = ({ mom, baselineGap, inverse = false }: { mom: number | null; baselineGap?: number | null; inverse?: boolean }): MetricSignal => {
+const computeSignal = ({
+  mom,
+  baselineGap,
+  transformType,
+  inverse = false
+}: {
+  mom: number | null
+  baselineGap?: number | null
+  transformType: MetricTransformType
+  inverse?: boolean
+}): MetricSignal => {
   const directional = baselineGap ?? mom
   if (directional == null) return 'NEUTRAL'
   const adjusted = inverse ? directional * -1 : directional
+
+  if (transformType === 'diffusion') {
+    if (adjusted > 0) return 'BULLISH'
+    if (adjusted < 0) return 'BEARISH'
+    return 'NEUTRAL'
+  }
+
   if (adjusted > 1) return 'BULLISH'
   if (adjusted < -1) return 'BEARISH'
   return 'NEUTRAL'
@@ -288,8 +305,8 @@ export const deriveMetricCards = (resources: MetricRuntimeResources): DerivedMet
       mom: abi.mom,
       yoy: abi.yoy,
       baselineGap: abi.baselineGap,
-      transformValid: abi.baselineGap != null && hasGrowthInput(abi),
-      transformInvalidReason: 'ABI diffusion transform requires baseline gap and YoY/MoM growth.',
+      transformValid: abi.baselineGap != null,
+      transformInvalidReason: 'ABI diffusion transform requires a valid latest index value to compute baseline gap vs 50.',
       seriesLength: (resources.abi.data?.series ?? []).length,
       declaredStatus: resources.abi.data?.sourceStatus ?? 'pending',
       freshness: resources.abi.freshness,
@@ -403,7 +420,12 @@ export const deriveMetricCards = (resources: MetricRuntimeResources): DerivedMet
       transformType: registry.transformType,
       transformValid: metric.transformValid,
       transformInvalidReason: metric.transformValid ? undefined : metric.transformInvalidReason,
-      signal: computeSignal({ mom: metric.mom, baselineGap: metric.baselineGap, inverse: registry.transformType === 'inverse' }),
+      signal: computeSignal({
+        mom: metric.mom,
+        baselineGap: metric.baselineGap,
+        transformType: registry.transformType,
+        inverse: registry.transformType === 'inverse'
+      }),
       sourceStatus,
       readinessClassification: classifyReadiness({
         sourceStatus,
