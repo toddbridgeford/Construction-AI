@@ -72,14 +72,113 @@ const DASHBOARD_COPY = {
 
 const mapFeatures = (usStateGeometry.features ?? []) as MapFeature[]
 
-const projectPoint = (lon: number, lat: number) => {
-  const x = ((lon + 125) / 59) * 360 + 20
-  const y = ((49 - lat) / 24) * 220 + 20
+const MAP_VIEWPORT = {
+  x: 8,
+  y: 8,
+  width: 414,
+  height: 244,
+  padding: 8
+} as const
+
+const CONTIGUOUS_STATE_IDS = new Set(mapFeatures.map((feature) => feature.properties.stateId).filter((stateId) => stateId !== 'AK' && stateId !== 'HI'))
+
+type Bounds = { minLon: number; maxLon: number; minLat: number; maxLat: number }
+const emptyBounds = (): Bounds => ({
+  minLon: Number.POSITIVE_INFINITY,
+  maxLon: Number.NEGATIVE_INFINITY,
+  minLat: Number.POSITIVE_INFINITY,
+  maxLat: Number.NEGATIVE_INFINITY
+})
+
+const collectBounds = (stateIds: Set<string>): Bounds =>
+  mapFeatures.reduce((acc, feature) => {
+    if (!stateIds.has(feature.properties.stateId)) return acc
+    const ring = feature.geometry.coordinates[0] ?? []
+    ring.forEach(([lon, lat]) => {
+      acc.minLon = Math.min(acc.minLon, lon)
+      acc.maxLon = Math.max(acc.maxLon, lon)
+      acc.minLat = Math.min(acc.minLat, lat)
+      acc.maxLat = Math.max(acc.maxLat, lat)
+    })
+    return acc
+  }, emptyBounds())
+
+const contiguousBounds = collectBounds(CONTIGUOUS_STATE_IDS)
+const alaskaBounds = collectBounds(new Set(['AK']))
+const hawaiiBounds = collectBounds(new Set(['HI']))
+
+
+const CONTIGUOUS_BOX = { x: MAP_VIEWPORT.x + 54, y: MAP_VIEWPORT.y + 22, width: 352, height: 168 }
+const ALASKA_BOX = { x: MAP_VIEWPORT.x + 4, y: MAP_VIEWPORT.y + MAP_VIEWPORT.height - 56, width: 92, height: 46 }
+const HAWAII_BOX = { x: MAP_VIEWPORT.x + 106, y: MAP_VIEWPORT.y + MAP_VIEWPORT.height - 34, width: 54, height: 24 }
+
+const normalizePoint = (lon: number, lat: number, bounds: Bounds) => {
+  const lonRange = Math.max(bounds.maxLon - bounds.minLon, 1)
+  const latRange = Math.max(bounds.maxLat - bounds.minLat, 1)
+  const x = (lon - bounds.minLon) / lonRange
+  const y = (bounds.maxLat - lat) / latRange
   return [x, y] as const
 }
 
-const polygonToPath = (ring: GeoPoint[]) =>
-  ring.map(([lon, lat], index) => `${index === 0 ? 'M' : 'L'} ${projectPoint(lon, lat)[0].toFixed(2)} ${projectPoint(lon, lat)[1].toFixed(2)}`).join(' ') + ' Z'
+const projectToBox = (xNorm: number, yNorm: number, box: { x: number; y: number; width: number; height: number }) => {
+  const x = box.x + xNorm * box.width
+  const y = box.y + yNorm * box.height
+  return [x, y] as const
+}
+
+const projectPoint = (stateId: string, lon: number, lat: number) => {
+  if (stateId === 'AK') {
+    const [xNorm, yNorm] = normalizePoint(lon, lat, alaskaBounds)
+    return projectToBox(xNorm, yNorm, ALASKA_BOX)
+  }
+
+  if (stateId === 'HI') {
+    const [xNorm, yNorm] = normalizePoint(lon, lat, hawaiiBounds)
+    return projectToBox(xNorm, yNorm, HAWAII_BOX)
+  }
+
+  const [xNorm, yNorm] = normalizePoint(lon, lat, contiguousBounds)
+  const lonRange = Math.max(contiguousBounds.maxLon - contiguousBounds.minLon, 1)
+  const latRange = Math.max(contiguousBounds.maxLat - contiguousBounds.minLat, 1)
+  const scale = Math.min(CONTIGUOUS_BOX.width / lonRange, CONTIGUOUS_BOX.height / latRange)
+  const width = lonRange * scale
+  const height = latRange * scale
+  const box = {
+    x: CONTIGUOUS_BOX.x + (CONTIGUOUS_BOX.width - width) / 2,
+    y: CONTIGUOUS_BOX.y + (CONTIGUOUS_BOX.height - height) / 2,
+    width,
+    height
+  }
+  return projectToBox(xNorm, yNorm, box)
+}
+
+const polygonToPath = (stateId: string, ring: GeoPoint[]) =>
+  ring
+    .map(([lon, lat], index) => {
+      const [x, y] = projectPoint(stateId, lon, lat)
+      return `${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`
+    })
+    .join(' ') + ' Z'
+
+const interpolate = (start: number, end: number, ratio: number) => Math.round(start + (end - start) * ratio)
+const choroplethColor = (ratio: number) => {
+  const clamped = Math.max(0, Math.min(1, ratio))
+  const eased = clamped ** 0.92
+
+  if (eased < 0.55) {
+    const t = eased / 0.55
+    const red = interpolate(250, 248, t)
+    const green = interpolate(243, 173, t)
+    const blue = interpolate(188, 84, t)
+    return `rgba(${red}, ${green}, ${blue}, ${(0.86).toFixed(3)})`
+  }
+
+  const t = (eased - 0.55) / 0.45
+  const red = interpolate(248, 220, t)
+  const green = interpolate(173, 38, t)
+  const blue = interpolate(84, 38, t)
+  return `rgba(${red}, ${green}, ${blue}, ${(0.9).toFixed(3)})`
+}
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true)
@@ -413,20 +512,29 @@ function App() {
             <CardContent className="h-[304px] p-3">
               <div className="relative h-full rounded border border-border/70 bg-[#0e1628] p-2.5">
                 <svg viewBox="0 0 430 260" className="h-full w-full">
-                  <rect x="8" y="10" width="356" height="216" rx="8" fill="rgba(15,23,42,0.45)" stroke="rgba(148,163,184,0.2)" strokeWidth="1" />
+                  <rect
+                    x={MAP_VIEWPORT.x}
+                    y={MAP_VIEWPORT.y}
+                    width={MAP_VIEWPORT.width}
+                    height={MAP_VIEWPORT.height}
+                    rx="8"
+                    fill="rgba(15,23,42,0.45)"
+                    stroke="rgba(148,163,184,0.24)"
+                    strokeWidth="1"
+                  />
                   {mapFeatures.map((feature) => {
                     const item = mapEntriesByState.get(feature.properties.stateId)
                     const ratio = item ? Math.max(0, Math.min(1, (item.value - mapExtent.min) / Math.max(mapExtent.max - mapExtent.min, 1))) : 0
-                    const fill = item ? `rgba(245, 158, ${Math.max(26, Math.round(80 - ratio * 54))}, ${0.24 + ratio * 0.62})` : 'rgba(71,85,105,0.2)'
+                    const fill = item ? choroplethColor(ratio) : 'rgba(231,229,196,0.42)'
                     const outerRing = feature.geometry.coordinates[0] ?? []
 
                     return (
                       <path
                         key={feature.properties.stateId}
-                        d={polygonToPath(outerRing)}
+                        d={polygonToPath(feature.properties.stateId, outerRing)}
                         fill={fill}
-                        stroke={item ? 'rgba(245,158,11,0.6)' : 'rgba(148,163,184,0.24)'}
-                        strokeWidth="1"
+                        stroke={item ? 'rgba(248,250,252,0.92)' : 'rgba(226,232,240,0.28)'}
+                        strokeWidth={0.75}
                         className={item ? 'cursor-pointer' : 'cursor-default'}
                         onMouseEnter={() => setHoverMap({ state: item?.stateName ?? feature.properties.stateName, value: item?.value ?? Number.NaN })}
                         onMouseLeave={() => setHoverMap(null)}
@@ -443,16 +551,23 @@ function App() {
                 </svg>
 
                 {hoverMap && (
-                  <div className="absolute left-2.5 top-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[10px]">
-                    <p className="font-medium text-slate-100">{hoverMap.state}</p>
-                    <p className="font-mono text-slate-400">{Number.isFinite(hoverMap.value) ? `${hoverMap.value.toFixed(1)} ${mapMetricLabel}` : DASHBOARD_COPY.mapNoData}</p>
+                  <div className="absolute right-3 top-3 rounded border border-slate-500/70 bg-[#070c18]/97 px-2.5 py-1.5 text-[10.5px] shadow-[0_4px_14px_rgba(2,6,23,0.55)] backdrop-blur-sm">
+                    <p className="font-semibold tracking-wide text-slate-100">{hoverMap.state}</p>
+                    <p className="font-mono text-[10px] text-slate-300">{Number.isFinite(hoverMap.value) ? `${hoverMap.value.toFixed(1)} ${mapMetricLabel}` : DASHBOARD_COPY.mapNoData}</p>
                   </div>
                 )}
 
                 {hasMapValues ? (
-                  <div className="pointer-events-none absolute bottom-2.5 right-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[9px] text-slate-400">
-                    <p className="mb-0.5">Low → High</p>
-                    <div className="h-1.5 w-20 rounded bg-gradient-to-r from-slate-600/60 to-amber-400/80" />
+                  <div className="pointer-events-none absolute bottom-3 right-3 rounded border border-slate-500/70 bg-[#070c18]/97 px-2.5 py-1.5 text-[9.5px] text-slate-300 backdrop-blur-sm">
+                    <div className="mb-1 flex items-center justify-between gap-3">
+                      <span className="font-medium tracking-wide text-slate-200">{mapMetricLabel}</span>
+                      <span className="font-mono text-slate-400">Low → High</span>
+                    </div>
+                    <div className="h-2 w-24 rounded bg-gradient-to-r from-[#faf3bc] via-[#f8ad54] to-[#dc2626]" />
+                    <div className="mt-1 flex justify-between font-mono text-[9px] text-slate-400">
+                      <span>{mapExtent.min.toFixed(1)}</span>
+                      <span>{mapExtent.max.toFixed(1)}</span>
+                    </div>
                   </div>
                 ) : (
                   <div className="pointer-events-none absolute bottom-2.5 right-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[9px] text-slate-500">{DASHBOARD_COPY.mapNoData}.</div>
