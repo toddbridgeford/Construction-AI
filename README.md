@@ -18,6 +18,13 @@ Set these in your `.env` file for live mode:
 
 The client only calls your server-side layer (`VITE_API_BASE_URL`) and does not call upstream vendor APIs directly.
 
+## PWA behavior
+
+- Manifest: `public/manifest.webmanifest`
+- Service worker: `public/sw.js` (registered from `src/main.tsx`)
+- Installability: app declares standalone display, theme color, and icon metadata.
+- Offline/degraded mode: app shell is precached, data calls use network-first with cache fallback, and dashboard data also falls back to a cached snapshot in `localStorage`.
+
 ## Live data adapters and normalization
 
 `ApiProvider` fetches source payloads and normalizes into the dashboard's internal typed shape (`DashboardData`):
