@@ -1,43 +1,53 @@
-import type { GeographyLevel, Metadata, Observation, MapDatum } from '@/data/types'
+import type { GeographyLevel, MapDatum, Metadata } from '@/data/types'
+
+export type DashboardTab = 'overview' | 'leading' | 'predictive' | 'equities' | 'methodology'
+export type SectorId = 'permits' | 'starts' | 'cost_index' | 'employment'
 
 export type ApiQuery = {
   geographyLevel?: GeographyLevel
   geographyId?: string
-  indicatorId?: string
-  horizon?: 12
+  region?: string
+  sector?: SectorId
+  horizon?: 3 | 6 | 12
+  tab?: DashboardTab
 }
 
 export type DataReadiness = 'live' | 'fallback' | 'pending'
+export type ResponseSource = 'network' | 'cache' | 'fallback'
 
 export type ContractMeta = {
   generatedAt: string
   mode: 'live' | 'degraded' | 'offline'
 }
 
-export type OverviewResponse = {
+export type FreshnessMeta = {
+  source: ResponseSource
+  fetchedAt: string
+  isStale: boolean
+  offlineSnapshot: boolean
+}
+
+export type ApiEnvelope<T> = {
+  data: T
+  freshness: FreshnessMeta
+}
+
+export type SeriesPoint = { date: string; value: number }
+
+export type MetadataResponse = {
   meta: ContractMeta
   geography: Metadata['geography']
-  indicators: Metadata['indicators']
-  observations: Observation[]
-  mapData: MapDatum[]
-  readiness: Record<'permits' | 'starts' | 'employment' | 'cost_index', DataReadiness>
+  sectors: Array<{ id: SectorId; label: string; readiness: DataReadiness }>
+  tabs: DashboardTab[]
 }
 
-export type IndicatorItem = {
-  id: string
-  label: string
-  role: string
-  neutral: number
-  higherIsBetter: boolean
-  leadTime?: string
-  source: string
-  sourceStatus: DataReadiness
-  series: Array<{ date: string; value: number }>
-}
-
-export type IndicatorsResponse = {
+export type SeriesResponse = {
   meta: ContractMeta
-  metrics: IndicatorItem[]
+  region: string
+  sector: SectorId
+  horizon: 3 | 6 | 12
+  series: SeriesPoint[]
+  sourceStatus: DataReadiness
 }
 
 export type ForecastBand = {
@@ -49,17 +59,20 @@ export type ForecastBand = {
   p90: number
 }
 
-export type ForecastResponse = {
+export type ForecastsResponse = {
   meta: ContractMeta
-  horizon: 12
+  region: string
+  sector: SectorId
+  horizon: 3 | 6 | 12
   cyclePhase: 'expansion' | 'contraction' | 'transition'
   bands: ForecastBand[]
-  terminal: {
-    bear: number
-    base: number
-    bull: number
-  }
+  terminal: { bear: number; base: number; bull: number }
   sourceStatus: DataReadiness
+}
+
+export type ConsistencySummaryResponse = {
+  meta: ContractMeta
+  checks: Array<{ id: string; ok: boolean; message: string }>
 }
 
 export type EquityPoint = {
@@ -72,17 +85,12 @@ export type EquityPoint = {
   sourceStatus: DataReadiness
 }
 
-export type EquitiesResponse = {
+export type EquitiesSnapshotResponse = {
   meta: ContractMeta
   rows: EquityPoint[]
 }
 
-export type MethodologyResponse = {
-  meta: ContractMeta
-  sections: Array<{ title: string; body: string }>
-}
-
-export type ConsistencyResponse = {
-  meta: ContractMeta
-  checks: Array<{ id: string; ok: boolean; message: string }>
-}
+export type ActivityResponse = SeriesResponse & { mapData: MapDatum[] }
+export type PipelineResponse = SeriesResponse
+export type CostsResponse = SeriesResponse
+export type LaborResponse = SeriesResponse

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { MapDatum } from '@/data/types'
+import geometry from '@/data/us-state-geometry.json'
 
 type MapCardProps = {
   mapData: MapDatum[]
@@ -10,31 +11,50 @@ type MapCardProps = {
   onDrillState: (stateId: string) => void
 }
 
-type TilePosition = { x: number; y: number }
+type GeoFeature = {
+  properties: { stateId: string; stateName: string }
+  geometry: { type: 'Polygon' | 'MultiPolygon'; coordinates: number[][][] | number[][][][] }
+}
 
-const tilePositions: Record<string, TilePosition> = {
-  WA: { x: 1, y: 0 },
-  CA: { x: 1, y: 2 },
-  TX: { x: 4, y: 4 },
-  IL: { x: 5, y: 2 },
-  NY: { x: 7, y: 1 },
-  FL: { x: 7, y: 5 }
+const viewBox = { width: 960, height: 600 }
+
+const project = ([lon, lat]: number[]) => {
+  const x = ((lon + 130) / 65) * viewBox.width
+  const y = ((52 - lat) / 28) * viewBox.height
+  return [x, y]
+}
+
+const pathForPolygon = (polygon: number[][]) =>
+  polygon
+    .map((point, index) => {
+      const [x, y] = project(point)
+      return `${index === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`
+    })
+    .join(' ') + ' Z'
+
+const buildPath = (feature: GeoFeature): string => {
+  if (feature.geometry.type === 'Polygon') {
+    return (feature.geometry.coordinates as number[][][]).map((ring) => pathForPolygon(ring)).join(' ')
+  }
+  return (feature.geometry.coordinates as number[][][][])
+    .map((polygon) => polygon.map((ring) => pathForPolygon(ring)).join(' '))
+    .join(' ')
 }
 
 export function MapCard({ mapData, selectedIndicator, onIndicatorToggle, onDrillState }: MapCardProps) {
   const [hovered, setHovered] = useState<MapDatum | null>(null)
+  const byState = useMemo(() => new Map(mapData.map((item) => [item.stateId, item])), [mapData])
 
   const valueExtent = useMemo(() => {
     const values = mapData.map((item) => item.value)
-    return {
-      min: Math.min(...values),
-      max: Math.max(...values)
-    }
+    return { min: Math.min(...values), max: Math.max(...values) }
   }, [mapData])
 
-  const colorFor = (value: number) => {
+  const colorFor = (stateId: string) => {
+    const state = byState.get(stateId)
+    if (!state) return 'rgba(71,85,105,0.45)'
     if (valueExtent.max === valueExtent.min) return 'rgba(245,158,11,0.35)'
-    const t = (value - valueExtent.min) / (valueExtent.max - valueExtent.min)
+    const t = (state.value - valueExtent.min) / (valueExtent.max - valueExtent.min)
     return `rgba(245,158,11,${0.2 + t * 0.65})`
   }
 
@@ -43,8 +63,8 @@ export function MapCard({ mapData, selectedIndicator, onIndicatorToggle, onDrill
       <CardHeader className="border-b border-border/75 pb-2">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <div>
-            <CardTitle className="text-[12px]">Regional Opportunity Heatmap</CardTitle>
-            <p className="mt-0.5 text-[10.5px] text-muted-foreground">Hover states for values • click to drill into state view</p>
+            <CardTitle className="text-[12px]">Regional Opportunity Choropleth</CardTitle>
+            <p className="mt-0.5 text-[10.5px] text-muted-foreground">Real state geometry fill; click to drill into state</p>
           </div>
           <div className="inline-flex items-center gap-1 rounded-md border border-border/75 bg-background/45 p-0.5 text-[9.5px]">
             {[
@@ -67,34 +87,22 @@ export function MapCard({ mapData, selectedIndicator, onIndicatorToggle, onDrill
         </div>
       </CardHeader>
       <CardContent className="h-[306px]">
-        <div className="relative h-full overflow-hidden rounded-md border border-border/75 bg-gradient-to-b from-slate-800/35 via-slate-900/85 to-slate-950 p-3">
-          <svg viewBox="0 0 420 250" className="h-full w-full">
-            {mapData.map((item) => {
-              const tile = tilePositions[item.stateId]
-              if (!tile) return null
-              const x = tile.x * 50 + 30
-              const y = tile.y * 34 + 18
-
+        <div className="relative h-full overflow-hidden rounded-md border border-border/75 bg-gradient-to-b from-slate-800/35 via-slate-900/85 to-slate-950 p-2">
+          <svg viewBox={`0 0 ${viewBox.width} ${viewBox.height}`} className="h-full w-full">
+            {(geometry.features as GeoFeature[]).map((feature) => {
+              const datum = byState.get(feature.properties.stateId)
               return (
-                <g key={item.stateId}>
-                  <rect
-                    x={x}
-                    y={y}
-                    width={42}
-                    height={28}
-                    rx={6}
-                    fill={colorFor(item.value)}
-                    stroke="rgba(245,158,11,0.75)"
-                    strokeWidth={hovered?.stateId === item.stateId ? 2 : 1}
-                    className="cursor-pointer transition"
-                    onMouseEnter={() => setHovered(item)}
-                    onMouseLeave={() => setHovered(null)}
-                    onClick={() => onDrillState(item.stateId)}
-                  />
-                  <text x={x + 21} y={y + 18} textAnchor="middle" fontSize="10" fill="rgba(241,245,249,0.9)">
-                    {item.stateId}
-                  </text>
-                </g>
+                <path
+                  key={feature.properties.stateId}
+                  d={buildPath(feature)}
+                  fill={colorFor(feature.properties.stateId)}
+                  stroke="rgba(148,163,184,0.55)"
+                  strokeWidth={hovered?.stateId === feature.properties.stateId ? 2 : 0.8}
+                  className="cursor-pointer transition"
+                  onMouseEnter={() => datum && setHovered(datum)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => onDrillState(feature.properties.stateId)}
+                />
               )
             })}
           </svg>
