@@ -47,6 +47,52 @@ const run = async () => {
   assert(success.body.series[12].yoy === 6.3, 'Expected derived YoY when 12-month history exists')
   assert(success.body.cache.hit === false && success.body.cache.stale === false, 'Expected cache envelope defaults')
 
+  const abiSuccess = await getMacroSeriesResponse(
+    { metric: 'abi' },
+    {
+      now: fixedNow,
+      fetchCensusVipSeries: async () => [],
+      fetchAbiSeries: async () => [
+        { date: '2024-11-01', value: 49.5 },
+        { date: '2024-12-01', value: 50.2 },
+        { month: '2025-01', observation: '51.3' }
+      ]
+    }
+  )
+
+  assert(abiSuccess.status === 200, 'Expected ABI success status 200')
+  if ('error' in abiSuccess.body) throw new Error('Expected ABI payload, got error payload')
+  assert(abiSuccess.body.metric === 'abi', 'Expected abi metric')
+  assert(abiSuccess.body.unit === 'index', 'Expected ABI unit index')
+  assert(abiSuccess.body.source.id === 'aia_abi', 'Expected ABI source id')
+  assert(abiSuccess.body.source.transformType === 'diffusion', 'Expected ABI diffusion transform type')
+  assert(abiSuccess.body.sourceStatus === 'live', 'Expected ABI live source status')
+  assert(abiSuccess.body.series.length === 3, 'Expected ABI points')
+  assert(abiSuccess.body.series[2].value === 51.3, 'Expected ABI latest value')
+  assert(abiSuccess.body.series[1].mom === null && abiSuccess.body.series[1].yoy === null, 'Expected ABI rates null for truthful diffusion semantics')
+
+  const nahbSuccess = await getMacroSeriesResponse(
+    { metric: 'nahb_hmi' },
+    {
+      now: fixedNow,
+      fetchCensusVipSeries: async () => [],
+      fetchNahbHmiSeries: async () => [
+        { period: '2024-12-01', amount: '46' },
+        { time: '2025-01-01', observation_value: '47' }
+      ]
+    }
+  )
+
+  assert(nahbSuccess.status === 200, 'Expected NAHB HMI success status 200')
+  if ('error' in nahbSuccess.body) throw new Error('Expected NAHB HMI payload, got error payload')
+  assert(nahbSuccess.body.metric === 'nahb_hmi', 'Expected nahb_hmi metric')
+  assert(nahbSuccess.body.unit === 'index', 'Expected NAHB HMI unit index')
+  assert(nahbSuccess.body.source.id === 'nahb_hmi', 'Expected NAHB HMI source id')
+  assert(nahbSuccess.body.source.transformType === 'diffusion', 'Expected NAHB HMI diffusion transform type')
+  assert(nahbSuccess.body.sourceStatus === 'live', 'Expected NAHB HMI live source status')
+  assert(nahbSuccess.body.series.length === 2, 'Expected NAHB HMI points')
+  assert(nahbSuccess.body.series[1].mom === null && nahbSuccess.body.series[1].yoy === null, 'Expected NAHB HMI rates null for truthful diffusion semantics')
+
   const pending = await getMacroSeriesResponse(
     { metric: 'construction_spending' },
     {
@@ -77,7 +123,7 @@ const run = async () => {
   assert(typeof unavailable.body.message === 'string' && unavailable.body.message.length > 0, 'Expected failure message')
 
   const unsupported = await getMacroSeriesResponse(
-    { metric: 'abi' },
+    { metric: 'unknown_metric' },
     {
       now: fixedNow,
       fetchCensusVipSeries: async () => []

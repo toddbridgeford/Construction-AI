@@ -17,23 +17,33 @@ const parseVipPayload = (payload: unknown): unknown => {
   return Array.isArray(nestedArray) ? nestedArray : []
 }
 
-const fetchCensusVipSeries = async (): Promise<unknown> => {
-  const endpoint = process.env.CENSUS_VIP_API_URL
+const fetchSeriesFromEndpoint = async (endpoint: string | undefined, apiKey: string | undefined): Promise<unknown> => {
   if (!endpoint) return []
 
   const response = await fetch(endpoint, {
     headers: {
       Accept: 'application/json',
-      ...(process.env.CENSUS_VIP_API_KEY ? { Authorization: `Bearer ${process.env.CENSUS_VIP_API_KEY}` } : {})
+      ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {})
     }
   })
 
   if (!response.ok) {
-    throw new Error(`Census VIP request failed with ${response.status}`)
+    throw new Error(`Series request failed with ${response.status}`)
   }
 
   return parseVipPayload(await response.json())
 }
+
+const fetchCensusVipSeries = async (): Promise<unknown> => {
+  const endpoint = process.env.CENSUS_VIP_API_URL
+  return fetchSeriesFromEndpoint(endpoint, process.env.CENSUS_VIP_API_KEY)
+}
+
+const fetchAbiSeries = async (): Promise<unknown> =>
+  fetchSeriesFromEndpoint(process.env.AIA_ABI_API_URL, process.env.AIA_ABI_API_KEY)
+
+const fetchNahbHmiSeries = async (): Promise<unknown> =>
+  fetchSeriesFromEndpoint(process.env.NAHB_HMI_API_URL, process.env.NAHB_HMI_API_KEY)
 
 const macroSeriesRoutePlugin = (): Plugin => {
   const middleware = async (req: any, res: any, next: () => void) => {
@@ -52,6 +62,8 @@ const macroSeriesRoutePlugin = (): Plugin => {
       { metric: requestUrl.searchParams.get('metric') ?? undefined },
       {
         fetchCensusVipSeries,
+        fetchAbiSeries,
+        fetchNahbHmiSeries,
         cache: { hit: false, stale: false }
       }
     )

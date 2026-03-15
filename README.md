@@ -84,7 +84,7 @@ If no usable points are returned, the metric remains **Onboarding** (pending) an
   1. Parse `metric` query from `GET /api/macro-series`.
   2. Use `getMacroSeriesResponse({ metric }, deps)` with `fetchCensusVipSeries` dependency.
   3. Return the helper's `{ status, body }` response directly as JSON.
-- By default, missing `CENSUS_VIP_API_URL` returns an empty upstream payload and truthful `sourceStatus: "pending"`.
+- By default, missing `CENSUS_VIP_API_URL`, `AIA_ABI_API_URL`, or `NAHB_HMI_API_URL` returns an empty upstream payload and truthful `sourceStatus: "pending"` for the corresponding metric.
 - A concrete backend implementation contract for Construction Spending is documented in `docs/backend-macro-series-contract.md`.
 
 ## Known limitations
