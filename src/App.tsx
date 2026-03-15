@@ -7,9 +7,11 @@ import { HeaderBar } from '@/components/dashboard/HeaderBar'
 import { KpiGrid } from '@/components/dashboard/KpiGrid'
 import { MapCard } from '@/components/dashboard/MapCard'
 import { MethodologyCard } from '@/components/dashboard/MethodologyCard'
+import { ModelComparisonPanel } from '@/components/dashboard/ModelComparisonPanel'
 import { buildKpis, mapDataByIndicator, toSeries } from '@/components/dashboard/dataTransforms'
 import type { DashboardOption, KpiMetric } from '@/components/dashboard/types'
 import type { DashboardData, GeographyLevel } from '@/data/types'
+import type { ForecastOutput } from '@/forecasting'
 import { LocalJsonProvider } from '@/providers/LocalJsonProvider'
 
 const provider = new LocalJsonProvider()
@@ -23,6 +25,15 @@ const geographyLevels: DashboardOption[] = [
 
 const formatPct = (value: number | null) => (value == null ? 'N/A' : `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`)
 
+const emptyForecastOutput: ForecastOutput = {
+  horizon: 12,
+  bestModel: 'naive',
+  forecast: [],
+  comparison: [],
+  validationWindow: 0,
+  warnings: []
+}
+
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
@@ -35,6 +46,8 @@ function App() {
   const [indicatorGroup, setIndicatorGroup] = useState('Market Activity')
   const [indicatorId, setIndicatorId] = useState('permits')
   const [forecastEnabled, setForecastEnabled] = useState(true)
+  const [forecastHorizon, setForecastHorizon] = useState<'3' | '6' | '12'>('12')
+  const [compareModels, setCompareModels] = useState(false)
   const [range, setRange] = useState<'all' | '10y' | '5y' | '3y' | '1y'>('5y')
 
   useEffect(() => {
@@ -117,21 +130,26 @@ function App() {
     [geographyLevel, observations, secondaryIndicator, selectedGeographyId]
   )
 
-  const [forecastPoints, setForecastPoints] = useState<{ date: string; value: number }[]>([])
+  const [forecastOutput, setForecastOutput] = useState<ForecastOutput>(emptyForecastOutput)
 
   useEffect(() => {
     const loadForecast = async () => {
       if (!forecastEnabled) {
-        setForecastPoints([])
+        setForecastOutput({ ...emptyForecastOutput, horizon: Number(forecastHorizon) as 3 | 6 | 12 })
         return
       }
 
-      const response = await provider.getForecast({ geographyLevel, geographyId: selectedGeographyId, indicatorId, periods: 12 })
-      setForecastPoints(response.projectedPoints)
+      const response = await provider.getForecast({
+        geographyLevel,
+        geographyId: selectedGeographyId,
+        indicatorId,
+        periods: Number(forecastHorizon) as 3 | 6 | 12
+      })
+      setForecastOutput(response.output)
     }
 
     void loadForecast()
-  }, [forecastEnabled, geographyLevel, indicatorId, selectedGeographyId])
+  }, [forecastEnabled, forecastHorizon, geographyLevel, indicatorId, selectedGeographyId])
 
   const kpis = useMemo<KpiMetric[]>(() => {
     const values = buildKpis({
@@ -181,6 +199,10 @@ function App() {
           onIndicatorChange={setIndicatorId}
           forecastEnabled={forecastEnabled}
           onForecastToggle={setForecastEnabled}
+          forecastHorizon={forecastHorizon}
+          onForecastHorizonChange={setForecastHorizon}
+          compareModels={compareModels}
+          onCompareModelsToggle={setCompareModels}
         />
 
         <KpiGrid metrics={kpis} />
@@ -197,8 +219,22 @@ function App() {
               setStateId(nextStateId)
             }}
           />
-          <ChartCard historical={primarySeries.points} forecast={forecastPoints} range={range} onRangeChange={setRange} loading={loading} empty={isEmpty} />
+          <ChartCard
+            historical={primarySeries.points}
+            forecast={forecastEnabled ? forecastOutput.forecast : []}
+            modelComparison={forecastEnabled ? forecastOutput.comparison : []}
+            bestModel={forecastEnabled ? forecastOutput.bestModel : null}
+            compareMode={forecastEnabled && compareModels}
+            validationWindow={forecastOutput.validationWindow}
+            warnings={forecastOutput.warnings}
+            range={range}
+            onRangeChange={setRange}
+            loading={loading}
+            empty={isEmpty}
+          />
         </section>
+
+        {forecastEnabled && compareModels && <ModelComparisonPanel models={forecastOutput.comparison} bestModel={forecastOutput.bestModel} />}
 
         <MethodologyCard />
       </main>

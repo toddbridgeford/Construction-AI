@@ -23,6 +23,10 @@ type ControlsRowProps = {
   onIndicatorChange: (value: string) => void
   forecastEnabled: boolean
   onForecastToggle: (value: boolean) => void
+  forecastHorizon: '3' | '6' | '12'
+  onForecastHorizonChange: (value: '3' | '6' | '12') => void
+  compareModels: boolean
+  onCompareModelsToggle: (value: boolean) => void
 }
 
 const divider = <span className="hidden h-4 w-px bg-border/85 lg:block" />
@@ -48,7 +52,11 @@ export function ControlsRow(props: ControlsRowProps) {
     selectedIndicator,
     onIndicatorChange,
     forecastEnabled,
-    onForecastToggle
+    onForecastToggle,
+    forecastHorizon,
+    onForecastHorizonChange,
+    compareModels,
+    onCompareModelsToggle
   } = props
 
   return (
@@ -75,7 +83,23 @@ export function ControlsRow(props: ControlsRowProps) {
       )}
       <Select options={indicators} value={selectedIndicator} onChange={onIndicatorChange} className="md:min-w-[10rem]" />
 
-      <div className="flex items-center justify-between rounded-md border border-border/85 bg-background/50 px-2 py-[5px] md:ml-auto md:min-w-[8.6rem]">
+      <Select
+        options={[
+          { label: 'Forecast: 3 mo', value: '3' },
+          { label: 'Forecast: 6 mo', value: '6' },
+          { label: 'Forecast: 12 mo', value: '12' }
+        ]}
+        value={forecastHorizon}
+        onChange={(value) => onForecastHorizonChange(value as '3' | '6' | '12')}
+        className="md:min-w-[8.3rem]"
+      />
+
+      <div className="flex items-center justify-between rounded-md border border-border/85 bg-background/50 px-2 py-[5px] md:min-w-[10rem]">
+        <span className="text-[10.5px] tracking-[0.03em] text-muted-foreground">Compare Models</span>
+        <Switch checked={compareModels} onCheckedChange={onCompareModelsToggle} />
+      </div>
+
+      <div className="flex items-center justify-between rounded-md border border-border/85 bg-background/50 px-2 py-[5px] md:min-w-[8.6rem]">
         <span className="text-[10.5px] tracking-[0.03em] text-muted-foreground">Forecast</span>
         <Switch checked={forecastEnabled} onCheckedChange={onForecastToggle} />
       </div>

@@ -1,3 +1,5 @@
+import type { ForecastOutput } from '@/forecasting/types'
+
 export type GeographyLevel = 'us' | 'region' | 'state' | 'metro'
 
 export type Metadata = {
@@ -58,12 +60,12 @@ export type ForecastRequest = {
   geographyLevel: GeographyLevel
   geographyId: string
   indicatorId: string
-  periods: number
+  periods: 3 | 6 | 12
 }
 
 export type ForecastResponse = {
   request: ForecastRequest
-  projectedPoints: SeriesPoint[]
+  output: ForecastOutput
 }
 
 export type DashboardData = {

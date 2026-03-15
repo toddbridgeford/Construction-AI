@@ -2,12 +2,18 @@ import { useMemo, useState } from 'react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import type { SeriesPoint } from '@/data/types'
+import type { ModelResult } from '@/forecasting'
 
 type RangeOption = 'all' | '10y' | '5y' | '3y' | '1y'
 
 type ChartCardProps = {
   historical: SeriesPoint[]
-  forecast: SeriesPoint[]
+  forecast: { date: string; value: number; lowerBound: number; upperBound: number }[]
+  modelComparison: ModelResult[]
+  bestModel: string | null
+  compareMode: boolean
+  validationWindow: number
+  warnings: string[]
   range: RangeOption
   onRangeChange: (value: RangeOption) => void
   loading?: boolean
@@ -22,20 +28,21 @@ const rangePeriods: Record<RangeOption, number> = {
   '1y': 12
 }
 
-const legend = [
-  { label: 'Historical', color: '#f59e0b' },
-  { label: 'Forecast', color: '#38bdf8' }
-]
+const modelColors: Record<string, string> = {
+  naive: '#94a3b8',
+  ses: '#60a5fa',
+  holt: '#22d3ee',
+  lagRegression: '#f59e0b'
+}
 
-export function ChartCard({ historical, forecast, range, onRangeChange, loading, empty }: ChartCardProps) {
+export function ChartCard({ historical, forecast, modelComparison, bestModel, compareMode, validationWindow, warnings, range, onRangeChange, loading, empty }: ChartCardProps) {
   const [brushStart, setBrushStart] = useState(0)
   const [brushEnd, setBrushEnd] = useState(100)
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
   const rangeFiltered = useMemo(() => {
-    const points = [...historical]
     const cap = rangePeriods[range]
-    return Number.isFinite(cap) ? points.slice(-cap) : points
+    return Number.isFinite(cap) ? historical.slice(-cap) : [...historical]
   }, [historical, range])
 
   const brushed = useMemo(() => {
@@ -45,22 +52,56 @@ export function ChartCard({ historical, forecast, range, onRangeChange, loading,
     return rangeFiltered.slice(startIndex, endIndex)
   }, [brushEnd, brushStart, rangeFiltered])
 
-  const joined = useMemo(() => [...brushed, ...forecast], [brushed, forecast])
-  const maxY = Math.max(...joined.map((point) => point.value), 1)
-  const minY = Math.min(...joined.map((point) => point.value), 0)
+  const histCount = brushed.length
+  const totalCount = histCount + forecast.length
 
-  const buildPath = (points: SeriesPoint[], isForecast = false) => {
-    if (!points.length) return ''
-    return points
-      .map((point, index) => {
-        const x = (index / Math.max(points.length - 1, 1)) * 100
-        const y = 100 - ((point.value - minY) / Math.max(maxY - minY, 1)) * 100
-        return `${index === 0 ? 'M' : 'L'} ${x} ${y}${isForecast ? '' : ''}`
-      })
-      .join(' ')
+  const toX = (index: number) => (index / Math.max(totalCount - 1, 1)) * 100
+
+  const compareSeries = useMemo(
+    () =>
+      compareMode
+        ? modelComparison.map((result) => ({
+            model: result.model,
+            values: result.forecast.map((point) => point.value)
+          }))
+        : [],
+    [compareMode, modelComparison]
+  )
+
+  const valuePool = useMemo(() => {
+    const main = [...brushed.map((point) => point.value), ...forecast.map((point) => point.value), ...forecast.map((point) => point.lowerBound), ...forecast.map((point) => point.upperBound)]
+    const compare = compareSeries.flatMap((series) => series.values)
+    return [...main, ...compare]
+  }, [brushed, compareSeries, forecast])
+
+  const maxY = Math.max(...valuePool, 1)
+  const minY = Math.min(...valuePool, 0)
+  const toY = (value: number) => 100 - ((value - minY) / Math.max(maxY - minY, 1)) * 100
+
+  const buildHistoricalPath = () =>
+    brushed.map((point, index) => `${index === 0 ? 'M' : 'L'} ${toX(index)} ${toY(point.value)}`).join(' ')
+
+  const buildForecastPath = (values: number[]) => {
+    if (!histCount || !values.length) return ''
+    const start = `M ${toX(histCount - 1)} ${toY(brushed[histCount - 1].value)}`
+    const segments = values.map((value, index) => `L ${toX(histCount + index)} ${toY(value)}`)
+    return [start, ...segments].join(' ')
   }
 
+  const confidenceBandPath = useMemo(() => {
+    if (!histCount || !forecast.length) return ''
+    const upper = forecast.map((point, index) => `${index === 0 ? 'M' : 'L'} ${toX(histCount + index)} ${toY(point.upperBound)}`)
+    const lower = [...forecast]
+      .reverse()
+      .map((point, reverseIndex) => {
+        const index = forecast.length - reverseIndex - 1
+        return `L ${toX(histCount + index)} ${toY(point.lowerBound)}`
+      })
+    return [...upper, ...lower, 'Z'].join(' ')
+  }, [forecast, histCount])
+
   const hoveredPoint = hoverIndex != null ? brushed[hoverIndex] : null
+  const markerX = histCount > 0 ? toX(histCount - 1) : 0
 
   return (
     <Card className="min-h-[382px] border-border/90 bg-gradient-to-b from-card via-slate-900/95 to-slate-950/95">
@@ -68,15 +109,11 @@ export function ChartCard({ historical, forecast, range, onRangeChange, loading,
         <div className="flex items-start justify-between gap-2">
           <div>
             <CardTitle className="text-[12px]">Construction Trend + Forecast</CardTitle>
-            <p className="mt-0.5 text-[10.5px] text-muted-foreground">Historical series with interactive range + brush</p>
+            <p className="mt-0.5 text-[10.5px] text-muted-foreground">Historical series, forecast bridge, confidence bands, model overlays</p>
           </div>
           <div className="inline-flex rounded-sm border border-border/70 bg-background/45 p-0.5 text-[9px]">
             {(['all', '10y', '5y', '3y', '1y'] as RangeOption[]).map((option) => (
-              <button
-                key={option}
-                className={`rounded-sm px-1.5 py-0.5 uppercase ${range === option ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`}
-                onClick={() => onRangeChange(option)}
-              >
+              <button key={option} className={`rounded-sm px-1.5 py-0.5 uppercase ${range === option ? 'bg-primary/20 text-primary' : 'text-muted-foreground'}`} onClick={() => onRangeChange(option)}>
                 {option}
               </button>
             ))}
@@ -91,22 +128,31 @@ export function ChartCard({ historical, forecast, range, onRangeChange, loading,
             <div className="grid h-full place-items-center text-[10px] text-muted-foreground">No series data for current selection.</div>
           ) : (
             <svg viewBox="0 0 100 100" className="h-full w-full" onMouseLeave={() => setHoverIndex(null)}>
-              <path d={buildPath(brushed)} fill="none" stroke="#f59e0b" strokeWidth="1.5" />
-              <path d={buildPath(forecast, true)} fill="none" stroke="#38bdf8" strokeWidth="1.2" strokeDasharray="3 2" />
-              {brushed.map((point, index) => {
-                const x = (index / Math.max(brushed.length - 1, 1)) * 100
-                const y = 100 - ((point.value - minY) / Math.max(maxY - minY, 1)) * 100
-                return (
-                  <circle
-                    key={point.date}
-                    cx={x}
-                    cy={y}
-                    r={hoverIndex === index ? 1.8 : 0.8}
-                    fill="#f59e0b"
-                    onMouseEnter={() => setHoverIndex(index)}
-                  />
-                )
-              })}
+              {forecast.length > 0 && <path d={confidenceBandPath} fill="rgba(56,189,248,0.14)" stroke="none" />}
+              <path d={buildHistoricalPath()} fill="none" stroke="#f59e0b" strokeWidth="1.5" />
+              <path d={buildForecastPath(forecast.map((point) => point.value))} fill="none" stroke="#38bdf8" strokeWidth="1.2" strokeDasharray="3 2" />
+              {compareSeries.map((series) => (
+                <path
+                  key={series.model}
+                  d={buildForecastPath(series.values)}
+                  fill="none"
+                  stroke={modelColors[series.model] ?? '#a1a1aa'}
+                  strokeWidth={series.model === bestModel ? 1.2 : 0.8}
+                  strokeDasharray={series.model === bestModel ? '2 1' : '1.5 2.5'}
+                  opacity={series.model === bestModel ? 0.95 : 0.6}
+                />
+              ))}
+              {forecast.length > 0 && <line x1={markerX} y1={0} x2={markerX} y2={100} stroke="rgba(148,163,184,0.4)" strokeDasharray="1.5 1.5" strokeWidth="0.5" />}
+              {brushed.map((point, index) => (
+                <circle
+                  key={point.date}
+                  cx={toX(index)}
+                  cy={toY(point.value)}
+                  r={hoverIndex === index ? 1.8 : 0.8}
+                  fill="#f59e0b"
+                  onMouseEnter={() => setHoverIndex(index)}
+                />
+              ))}
             </svg>
           )}
 
@@ -117,14 +163,14 @@ export function ChartCard({ historical, forecast, range, onRangeChange, loading,
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-1 rounded-md border border-border/72 bg-background/40 p-1.5 text-[9.5px]">
-          {legend.map((item) => (
-            <div key={item.label} className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="inline-block size-1.5 rounded-full" style={{ background: item.color }} />
-              {item.label}
-            </div>
-          ))}
+        <div className="grid grid-cols-2 gap-1 rounded-md border border-border/72 bg-background/40 p-1.5 text-[9.5px] md:grid-cols-4">
+          <div className="flex items-center gap-1.5 text-muted-foreground"><span className="inline-block size-1.5 rounded-full bg-[#f59e0b]" />Historical</div>
+          <div className="flex items-center gap-1.5 text-muted-foreground"><span className="inline-block size-1.5 rounded-full bg-[#38bdf8]" />Forecast</div>
+          <div className="flex items-center gap-1.5 text-muted-foreground"><span className="inline-block size-1.5 rounded-full bg-[#94a3b8]" />Confidence band</div>
+          <div className="text-muted-foreground">Validation: <span className="font-mono">{validationWindow || '—'} mo</span></div>
         </div>
+
+        {warnings.length > 0 && <div className="rounded-md border border-amber-400/40 bg-amber-500/10 px-2 py-1 text-[9.5px] text-amber-200">{warnings.join(' ')}</div>}
 
         <div className="rounded-md border border-dashed border-border/70 bg-background/35 px-2 py-1.5">
           <div className="flex items-center justify-between text-[9.5px] text-muted-foreground">
