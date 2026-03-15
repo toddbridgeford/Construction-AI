@@ -8,6 +8,7 @@ import usStateGeometry from '@/data/us-state-geometry.json'
 
 const providerBundle = createDataProvider()
 const provider = providerBundle.provider
+const DASHBOARD_CACHE_KEY = 'construction-ai-dashboard-cache-v1'
 
 type TabId = 'overview' | 'leading' | 'predictive' | 'equities' | 'methodology'
 type MetricSignal = 'BULLISH' | 'NEUTRAL' | 'BEARISH'
@@ -219,9 +220,20 @@ function App() {
         const data = await provider.getDashboardData()
         if (!alive) return
         setDashboardData(data)
+        localStorage.setItem(DASHBOARD_CACHE_KEY, JSON.stringify(data))
       } catch {
         if (!alive) return
-        setLoadError('Unable to load dashboard data from provider.')
+        const cached = localStorage.getItem(DASHBOARD_CACHE_KEY)
+        if (cached) {
+          try {
+            setDashboardData(JSON.parse(cached) as DashboardData)
+            setLoadError('Live refresh failed. Loaded cached snapshot for degraded/offline mode.')
+          } catch {
+            setLoadError('Unable to load dashboard data from provider.')
+          }
+        } else {
+          setLoadError('Unable to load dashboard data from provider.')
+        }
       } finally {
         if (!alive) return
         setProviderStatus(providerBundle.runtime.getStatus())

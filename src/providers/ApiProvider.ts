@@ -35,6 +35,7 @@ const dedupeMapData = (items: MapDatum[]): MapDatum[] => {
 
 export class ApiProvider implements DataProvider {
   private cache: DashboardData | null = null
+  private readonly requestTimeoutMs = 10_000
 
   constructor(private readonly options: ApiProviderOptions) {}
 
@@ -52,7 +53,15 @@ export class ApiProvider implements DataProvider {
     const headers: HeadersInit = {}
     if (this.options.apiKey) headers.Authorization = `Bearer ${this.options.apiKey}`
 
-    const response = await fetch(url.toString(), { headers })
+    const controller = new AbortController()
+    const timeoutId = window.setTimeout(() => controller.abort(), this.requestTimeoutMs)
+    const response = await fetch(url.toString(), {
+      headers,
+      signal: controller.signal,
+      cache: 'no-store'
+    }).finally(() => {
+      window.clearTimeout(timeoutId)
+    })
 
     if (!response.ok) throw new Error(`${source.name} request failed (${response.status})`)
     const payload = (await response.json()) as unknown
