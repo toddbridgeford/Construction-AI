@@ -266,8 +266,8 @@ export const getEquitiesSnapshot = (params: ApiQuery) =>
 
 
 
-export const getMacroSeries = (params: ApiQuery & { metric: MacroMetricId }) =>
-  fetchWithCache<MacroSeriesResponse>('/api/macro-series', params, {
+export const getMacroSeries = async (params: ApiQuery & { metric: MacroMetricId }) => {
+  const envelope = await fetchWithCache<MacroSeriesResponse>('/api/macro-series', params, {
     bootstrap: true,
     adapter: adaptMacroSeries,
     fallback: async () => ({
@@ -280,5 +280,21 @@ export const getMacroSeries = (params: ApiQuery & { metric: MacroMetricId }) =>
       sourceStatus: 'pending'
     })
   })
+
+  const usablePayload = envelope.data.series.some((point) => Number.isFinite(point.value))
+  const derivedStatus = !usablePayload
+    ? 'pending'
+    : envelope.freshness.source === 'fallback'
+      ? envelope.data.sourceStatus
+      : 'live'
+
+  return {
+    ...envelope,
+    data: {
+      ...envelope.data,
+      sourceStatus: derivedStatus
+    }
+  }
+}
 
 export const getCachedResource = <T>(path: string, params: ApiQuery = {}) => readCache<T>(getCacheKey(path, params))

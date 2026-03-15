@@ -50,6 +50,31 @@ Adapters currently included:
 - If live payloads produce no usable rows, the app remains effectively in demo-backed mode.
 - Forecasting continues running because normalized live series map into the same internal shape.
 
+
+## Macro series backend contract (Construction Spending first live target)
+
+When `VITE_API_BASE_URL` is set, the dashboard requests macro metrics from:
+
+- `GET {VITE_API_BASE_URL}/api/macro-series?metric=construction_spending`
+
+The client now treats Construction Spending as **runtime-live capable** only when the response contains usable series points. Supported response payload shapes are intentionally minimal and typed:
+
+```json
+{
+  "metric": "construction_spending",
+  "series": [{ "date": "2025-01", "value": 2145.3 }],
+  "sourceStatus": "live"
+}
+```
+
+Also accepted for compatibility:
+
+- `points` or `data` arrays instead of `series`
+- `period`/`month` instead of `date`
+- numeric strings (e.g. `"2,145.3"`) for values
+
+If no usable points are returned, the metric remains **Onboarding** (pending) and is excluded from composite inclusion. If a previously fetched real payload is available in cache while offline, it is surfaced as an offline snapshot via freshness metadata without synthesizing values.
+
 ## Known limitations
 
 - Endpoint paths are assumed as `/fred`, `/bls`, `/census`, `/hud`, `/bea` under `VITE_API_BASE_URL`.
