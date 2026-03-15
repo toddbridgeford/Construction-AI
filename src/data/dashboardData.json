@@ -1,0 +1,90 @@
+{
+  "metadata": {
+    "updatedAt": "2026-03-01",
+    "units": {
+      "permits": "index",
+      "employment": "index",
+      "starts": "index",
+      "cost_index": "index"
+    },
+    "geography": {
+      "regions": [
+        { "id": "northeast", "name": "Northeast" },
+        { "id": "south", "name": "South" },
+        { "id": "west", "name": "West" }
+      ],
+      "states": [
+        { "id": "CA", "name": "California", "regionId": "west" },
+        { "id": "TX", "name": "Texas", "regionId": "south" },
+        { "id": "FL", "name": "Florida", "regionId": "south" },
+        { "id": "NY", "name": "New York", "regionId": "northeast" },
+        { "id": "WA", "name": "Washington", "regionId": "west" },
+        { "id": "IL", "name": "Illinois", "regionId": "northeast" }
+      ],
+      "metros": [
+        { "id": "los-angeles-ca", "name": "Los Angeles", "stateId": "CA" },
+        { "id": "dallas-tx", "name": "Dallas", "stateId": "TX" },
+        { "id": "miami-fl", "name": "Miami", "stateId": "FL" },
+        { "id": "new-york-ny", "name": "New York City", "stateId": "NY" }
+      ]
+    },
+    "indicators": [
+      { "id": "permits", "name": "Permit Momentum", "group": "Market Activity", "geographyLevels": ["us", "region", "state", "metro"], "chartColor": "#f59e0b" },
+      { "id": "employment", "name": "Construction Employment", "group": "Labor", "geographyLevels": ["us", "region", "state", "metro"], "chartColor": "#38bdf8" },
+      { "id": "starts", "name": "Construction Starts", "group": "Market Activity", "geographyLevels": ["us"], "chartColor": "#22c55e" },
+      { "id": "cost_index", "name": "Input Cost Pressure", "group": "Costs", "geographyLevels": ["us"], "chartColor": "#ef4444" }
+    ]
+  },
+  "seriesSeeds": [
+    { "geographyLevel": "us", "geographyId": "us", "indicatorId": "permits", "base": "102", "trend": "0.52", "seasonality": "2.2" },
+    { "geographyLevel": "us", "geographyId": "us", "indicatorId": "employment", "base": "97", "trend": "0.35", "seasonality": "1.6" },
+    { "geographyLevel": "us", "geographyId": "us", "indicatorId": "starts", "base": "108", "trend": "0.40", "seasonality": "2.8" },
+    { "geographyLevel": "us", "geographyId": "us", "indicatorId": "cost_index", "base": "114", "trend": "-0.12", "seasonality": "1.1" },
+
+    { "geographyLevel": "region", "geographyId": "northeast", "indicatorId": "permits", "base": "95", "trend": "0.42", "seasonality": "1.9" },
+    { "geographyLevel": "region", "geographyId": "south", "indicatorId": "permits", "base": "109", "trend": "0.56", "seasonality": "2.4" },
+    { "geographyLevel": "region", "geographyId": "west", "indicatorId": "permits", "base": "101", "trend": "0.48", "seasonality": "2.0" },
+    { "geographyLevel": "region", "geographyId": "northeast", "indicatorId": "employment", "base": "92", "trend": "0.31", "seasonality": "1.2" },
+    { "geographyLevel": "region", "geographyId": "south", "indicatorId": "employment", "base": "99", "trend": "0.37", "seasonality": "1.8" },
+    { "geographyLevel": "region", "geographyId": "west", "indicatorId": "employment", "base": "96", "trend": "0.34", "seasonality": "1.4" },
+
+    { "geographyLevel": "state", "geographyId": "CA", "indicatorId": "permits", "base": "104", "trend": "0.45", "seasonality": "2.0" },
+    { "geographyLevel": "state", "geographyId": "TX", "indicatorId": "permits", "base": "111", "trend": "0.60", "seasonality": "2.5" },
+    { "geographyLevel": "state", "geographyId": "FL", "indicatorId": "permits", "base": "107", "trend": "0.58", "seasonality": "2.2" },
+    { "geographyLevel": "state", "geographyId": "NY", "indicatorId": "permits", "base": "93", "trend": "0.39", "seasonality": "1.7" },
+    { "geographyLevel": "state", "geographyId": "WA", "indicatorId": "permits", "base": "98", "trend": "0.44", "seasonality": "1.8" },
+    { "geographyLevel": "state", "geographyId": "IL", "indicatorId": "permits", "base": "91", "trend": "0.33", "seasonality": "1.5" },
+
+    { "geographyLevel": "state", "geographyId": "CA", "indicatorId": "employment", "base": "100", "trend": "0.30", "seasonality": "1.4" },
+    { "geographyLevel": "state", "geographyId": "TX", "indicatorId": "employment", "base": "102", "trend": "0.42", "seasonality": "1.9" },
+    { "geographyLevel": "state", "geographyId": "FL", "indicatorId": "employment", "base": "99", "trend": "0.39", "seasonality": "1.8" },
+    { "geographyLevel": "state", "geographyId": "NY", "indicatorId": "employment", "base": "90", "trend": "0.24", "seasonality": "1.0" },
+    { "geographyLevel": "state", "geographyId": "WA", "indicatorId": "employment", "base": "95", "trend": "0.29", "seasonality": "1.2" },
+    { "geographyLevel": "state", "geographyId": "IL", "indicatorId": "employment", "base": "89", "trend": "0.22", "seasonality": "1.0" },
+
+    { "geographyLevel": "metro", "geographyId": "los-angeles-ca", "indicatorId": "permits", "base": "105", "trend": "0.44", "seasonality": "2.1" },
+    { "geographyLevel": "metro", "geographyId": "dallas-tx", "indicatorId": "permits", "base": "113", "trend": "0.62", "seasonality": "2.6" },
+    { "geographyLevel": "metro", "geographyId": "miami-fl", "indicatorId": "permits", "base": "108", "trend": "0.60", "seasonality": "2.3" },
+    { "geographyLevel": "metro", "geographyId": "new-york-ny", "indicatorId": "permits", "base": "94", "trend": "0.36", "seasonality": "1.5" },
+
+    { "geographyLevel": "metro", "geographyId": "los-angeles-ca", "indicatorId": "employment", "base": "100", "trend": "0.29", "seasonality": "1.5" },
+    { "geographyLevel": "metro", "geographyId": "dallas-tx", "indicatorId": "employment", "base": "104", "trend": "0.44", "seasonality": "2.0" },
+    { "geographyLevel": "metro", "geographyId": "miami-fl", "indicatorId": "employment", "base": "101", "trend": "0.41", "seasonality": "1.9" },
+    { "geographyLevel": "metro", "geographyId": "new-york-ny", "indicatorId": "employment", "base": "91", "trend": "0.21", "seasonality": "1.0" }
+  ],
+  "mapData": [
+    { "stateId": "CA", "stateName": "California", "indicatorId": "permits", "value": "126.4" },
+    { "stateId": "TX", "stateName": "Texas", "indicatorId": "permits", "value": "133.6" },
+    { "stateId": "FL", "stateName": "Florida", "indicatorId": "permits", "value": "129.2" },
+    { "stateId": "NY", "stateName": "New York", "indicatorId": "permits", "value": "112.4" },
+    { "stateId": "WA", "stateName": "Washington", "indicatorId": "permits", "value": "118.3" },
+    { "stateId": "IL", "stateName": "Illinois", "indicatorId": "permits", "value": "109.1" },
+
+    { "stateId": "CA", "stateName": "California", "indicatorId": "employment", "value": "110.2" },
+    { "stateId": "TX", "stateName": "Texas", "indicatorId": "employment", "value": "115.7" },
+    { "stateId": "FL", "stateName": "Florida", "indicatorId": "employment", "value": "113.9" },
+    { "stateId": "NY", "stateName": "New York", "indicatorId": "employment", "value": "103.3" },
+    { "stateId": "WA", "stateName": "Washington", "indicatorId": "employment", "value": "107.4" },
+    { "stateId": "IL", "stateName": "Illinois", "indicatorId": "employment", "value": "101.6" }
+  ]
+}

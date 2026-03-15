@@ -24,7 +24,9 @@ export function KpiGrid({ metrics }: KpiGridProps) {
             <CardTitle className="text-[9.5px] uppercase tracking-[0.16em] text-muted-foreground/95">{metric.label}</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <div className="font-mono text-[22px] font-semibold leading-none tabular-nums text-foreground">{metric.value}</div>
+            <div className="font-mono text-[22px] font-semibold leading-none tabular-nums text-foreground">
+              {metric.value == null ? '—' : metric.value.toFixed(1)}
+            </div>
             <div
               className={cn(
                 'mt-1.5 inline-flex items-center gap-1 rounded-sm border px-1.5 py-0.5 text-[9.5px] font-medium',
@@ -34,8 +36,9 @@ export function KpiGrid({ metrics }: KpiGridProps) {
               )}
             >
               <span className="leading-none">{trendIndicator[metric.trend]}</span>
-              <span className="font-mono tabular-nums tracking-tight">{metric.delta}</span>
+              <span className="font-mono tabular-nums tracking-tight">{metric.deltaText}</span>
             </div>
+            <p className="mt-1 text-[9px] text-muted-foreground">{metric.yoyText}</p>
           </CardContent>
         </Card>
       ))}
