@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch'
 import type { DashboardData, GeographyLevel } from '@/data/types'
 import type { ForecastOutput } from '@/forecasting'
 import { createDataProvider } from '@/providers/providerFactory'
+import usStateGeometry from '@/data/us-state-geometry.json'
 
 const providerBundle = createDataProvider()
 const provider = providerBundle.provider
@@ -53,7 +54,12 @@ const pct = (current: number | undefined, previous: number | undefined) => {
 }
 const toneClass = (value: number | null) => (value == null ? 'text-slate-400' : value >= 0 ? 'text-emerald-300' : 'text-rose-300')
 
-type StateTile = { id: string; col: number; row: number }
+type GeoPoint = [number, number]
+type MapFeature = {
+  type: 'Feature'
+  properties: { stateId: string; stateName: string }
+  geometry: { type: 'Polygon'; coordinates: GeoPoint[][] }
+}
 
 const DASHBOARD_COPY = {
   subtitle: 'Interactive market dashboard with forecast monitoring',
@@ -64,22 +70,16 @@ const DASHBOARD_COPY = {
   mapNoData: 'No index value available'
 } as const
 
-const usStateTiles: StateTile[] = [
-  { id: 'AK', col: 0, row: 7 }, { id: 'HI', col: 1, row: 7 }, { id: 'WA', col: 0, row: 0 }, { id: 'OR', col: 0, row: 1 }, { id: 'CA', col: 0, row: 2 },
-  { id: 'ID', col: 1, row: 1 }, { id: 'NV', col: 1, row: 2 }, { id: 'AZ', col: 1, row: 3 }, { id: 'MT', col: 2, row: 0 }, { id: 'WY', col: 2, row: 1 },
-  { id: 'UT', col: 2, row: 2 }, { id: 'CO', col: 2, row: 3 }, { id: 'NM', col: 2, row: 4 }, { id: 'ND', col: 3, row: 0 }, { id: 'SD', col: 3, row: 1 },
-  { id: 'NE', col: 3, row: 2 }, { id: 'KS', col: 3, row: 3 }, { id: 'OK', col: 3, row: 4 }, { id: 'TX', col: 3, row: 5 }, { id: 'MN', col: 4, row: 1 },
-  { id: 'IA', col: 4, row: 2 }, { id: 'MO', col: 4, row: 3 }, { id: 'AR', col: 4, row: 4 }, { id: 'LA', col: 4, row: 5 }, { id: 'WI', col: 5, row: 1 },
-  { id: 'IL', col: 5, row: 2 }, { id: 'MS', col: 5, row: 5 }, { id: 'MI', col: 6, row: 1 }, { id: 'IN', col: 6, row: 2 }, { id: 'KY', col: 6, row: 3 },
-  { id: 'TN', col: 6, row: 4 }, { id: 'AL', col: 6, row: 5 }, { id: 'OH', col: 7, row: 2 }, { id: 'WV', col: 7, row: 3 }, { id: 'GA', col: 7, row: 5 },
-  { id: 'FL', col: 8, row: 6 }, { id: 'PA', col: 8, row: 2 }, { id: 'VA', col: 8, row: 3 }, { id: 'NC', col: 8, row: 4 }, { id: 'SC', col: 8, row: 5 },
-  { id: 'NY', col: 9, row: 1 }, { id: 'NJ', col: 9, row: 2 }, { id: 'DE', col: 9, row: 3 }, { id: 'MD', col: 9, row: 4 }, { id: 'DC', col: 9, row: 5 },
-  { id: 'VT', col: 10, row: 0 }, { id: 'MA', col: 10, row: 1 }, { id: 'CT', col: 10, row: 2 }, { id: 'RI', col: 11, row: 2 }, { id: 'NH', col: 11, row: 0 },
-  { id: 'ME', col: 12, row: 0 }
-]
+const mapFeatures = (usStateGeometry.features ?? []) as MapFeature[]
 
-const tilePath = (x: number, y: number, width = 24, height = 18) =>
-  `M ${x + 3} ${y} L ${x + width - 3} ${y} L ${x + width} ${y + 3} L ${x + width} ${y + height - 3} L ${x + width - 3} ${y + height} L ${x + 3} ${y + height} L ${x} ${y + height - 3} L ${x} ${y + 3} Z`
+const projectPoint = (lon: number, lat: number) => {
+  const x = ((lon + 125) / 59) * 360 + 20
+  const y = ((49 - lat) / 24) * 220 + 20
+  return [x, y] as const
+}
+
+const polygonToPath = (ring: GeoPoint[]) =>
+  ring.map(([lon, lat], index) => `${index === 0 ? 'M' : 'L'} ${projectPoint(lon, lat)[0].toFixed(2)} ${projectPoint(lon, lat)[1].toFixed(2)}`).join(' ') + ' Z'
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true)
@@ -414,35 +414,30 @@ function App() {
               <div className="relative h-full rounded border border-border/70 bg-[#0e1628] p-2.5">
                 <svg viewBox="0 0 430 260" className="h-full w-full">
                   <rect x="8" y="10" width="356" height="216" rx="8" fill="rgba(15,23,42,0.45)" stroke="rgba(148,163,184,0.2)" strokeWidth="1" />
-                  {usStateTiles.map((tile) => {
-                    const item = mapEntriesByState.get(tile.id)
+                  {mapFeatures.map((feature) => {
+                    const item = mapEntriesByState.get(feature.properties.stateId)
                     const ratio = item ? Math.max(0, Math.min(1, (item.value - mapExtent.min) / Math.max(mapExtent.max - mapExtent.min, 1))) : 0
                     const fill = item ? `rgba(245, 158, ${Math.max(26, Math.round(80 - ratio * 54))}, ${0.24 + ratio * 0.62})` : 'rgba(71,85,105,0.2)'
-                    const x = 16 + tile.col * 26
-                    const y = 18 + tile.row * 22
+                    const outerRing = feature.geometry.coordinates[0] ?? []
 
                     return (
-                      <g key={tile.id}>
-                        <path
-                          d={tilePath(x, y)}
-                          fill={fill}
-                          stroke={item ? 'rgba(245,158,11,0.6)' : 'rgba(148,163,184,0.24)'}
-                          strokeWidth="1"
-                          className={item ? 'cursor-pointer' : 'cursor-default'}
-                          onMouseEnter={() => setHoverMap({ state: item?.stateName ?? tile.id, value: item?.value ?? Number.NaN })}
-                          onMouseLeave={() => setHoverMap(null)}
-                          onClick={() => {
-                            if (!item) return
-                            setGeographyLevel('state')
-                            const region = metadata?.geography.states.find((entry) => entry.id === item.stateId)?.regionId
-                            if (region) setRegionId(region)
-                            setStateId(item.stateId)
-                          }}
-                        />
-                        <text x={x + 12} y={y + 12} textAnchor="middle" fontSize="7" fill={item ? 'rgba(241,245,249,0.92)' : 'rgba(148,163,184,0.7)'}>
-                          {tile.id}
-                        </text>
-                      </g>
+                      <path
+                        key={feature.properties.stateId}
+                        d={polygonToPath(outerRing)}
+                        fill={fill}
+                        stroke={item ? 'rgba(245,158,11,0.6)' : 'rgba(148,163,184,0.24)'}
+                        strokeWidth="1"
+                        className={item ? 'cursor-pointer' : 'cursor-default'}
+                        onMouseEnter={() => setHoverMap({ state: item?.stateName ?? feature.properties.stateName, value: item?.value ?? Number.NaN })}
+                        onMouseLeave={() => setHoverMap(null)}
+                        onClick={() => {
+                          if (!item) return
+                          setGeographyLevel('state')
+                          const region = metadata?.geography.states.find((entry) => entry.id === item.stateId)?.regionId
+                          if (region) setRegionId(region)
+                          setStateId(item.stateId)
+                        }}
+                      />
                     )
                   })}
                 </svg>
