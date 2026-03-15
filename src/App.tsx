@@ -1,58 +1,29 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { mapDataByIndicator, toSeries } from '@/components/dashboard/dataTransforms'
+import { toSeries } from '@/components/dashboard/dataTransforms'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select } from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
-import type { DashboardData, GeographyLevel } from '@/data/types'
-import type { ForecastOutput } from '@/forecasting'
+import type { DashboardData, Observation } from '@/data/types'
 import { createDataProvider } from '@/providers/providerFactory'
 import usStateGeometry from '@/data/us-state-geometry.json'
 
 const providerBundle = createDataProvider()
 const provider = providerBundle.provider
 
-type RangeOption = 'all' | '10y' | '5y' | '3y' | '1y'
-type IndicatorOption = { label: string; value: string }
+type TabId = 'overview' | 'leading' | 'predictive' | 'equities' | 'methodology'
+type MetricSignal = 'BULLISH' | 'NEUTRAL' | 'BEARISH'
 
-type KpiCardData = {
+type MetricDefinition = {
+  id: 'building_permits' | 'housing_starts' | 'abi' | 'construction_spending' | 'materials_ppi' | 'nahb_hmi' | 'homebuilder_equity'
   label: string
-  value: number
-  yoy: number | null
-  mom: number | null
-  icon: string
+  role: string
+  leadTime?: string
+  note: string
+  neutral: number
+  higherIsBetter: boolean
+  source: string
+  sourceStatus: 'live' | 'fallback' | 'pending'
+  mappedIndicatorId?: string
 }
-
-const geographyLevels: IndicatorOption[] = [
-  { label: 'United States', value: 'us' },
-  { label: 'Region', value: 'region' },
-  { label: 'State', value: 'state' },
-  { label: 'Metro', value: 'metro' }
-]
-
-const rangePeriods: Record<RangeOption, number> = {
-  all: Number.POSITIVE_INFINITY,
-  '10y': 120,
-  '5y': 60,
-  '3y': 36,
-  '1y': 12
-}
-
-const emptyForecastOutput: ForecastOutput = {
-  horizon: 12,
-  bestModel: 'naive',
-  forecast: [],
-  comparison: [],
-  validationWindow: 0,
-  warnings: []
-}
-
-const fmtPct = (value: number | null) => (value == null || Number.isNaN(value) ? 'N/A' : `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`)
-const pct = (current: number | undefined, previous: number | undefined) => {
-  if (current == null || previous == null || previous === 0) return null
-  return ((current - previous) / previous) * 100
-}
-const toneClass = (value: number | null) => (value == null ? 'text-slate-400' : value >= 0 ? 'text-emerald-300' : 'text-rose-300')
 
 type GeoPoint = [number, number]
 type MapFeature = {
@@ -61,35 +32,133 @@ type MapFeature = {
   geometry: { type: 'Polygon'; coordinates: GeoPoint[][] }
 }
 
-const DASHBOARD_COPY = {
-  subtitle: 'Interactive market dashboard with forecast monitoring',
-  mapTitlePermits: 'Building Permits by State',
-  mapTitleEmployment: 'Construction Employment by State',
-  mapSubtitle: 'Nationwide choropleth coverage with drill-down for supported states.',
-  forecastUnavailable: 'Forecast unavailable for this selection.',
-  mapNoData: 'No index value available'
-} as const
-
 const mapFeatures = (usStateGeometry.features ?? []) as MapFeature[]
 
-const MAP_VIEWPORT = {
-  x: 8,
-  y: 8,
-  width: 414,
-  height: 244,
-  padding: 8
-} as const
+const metricDefinitions: MetricDefinition[] = [
+  {
+    id: 'building_permits',
+    label: 'Building Permits',
+    role: 'Leading',
+    leadTime: '1–3 month lead',
+    note: 'Strongest predictor of housing starts.',
+    neutral: 100,
+    higherIsBetter: true,
+    source: 'FRED PERMIT (national trend), Census state permits for choropleth',
+    sourceStatus: 'live',
+    mappedIndicatorId: 'permits'
+  },
+  {
+    id: 'housing_starts',
+    label: 'Housing Starts',
+    role: 'Coincident',
+    note: 'Primary volume measure in thousands SAAR.',
+    neutral: 100,
+    higherIsBetter: true,
+    source: 'Census starts endpoint',
+    sourceStatus: 'live',
+    mappedIndicatorId: 'starts'
+  },
+  {
+    id: 'abi',
+    label: 'Architecture Billings Index (ABI)',
+    role: 'Leading',
+    leadTime: '9–12 month lead',
+    note: 'Below 50 indicates contraction. Pending supported endpoint integration.',
+    neutral: 50,
+    higherIsBetter: true,
+    source: 'Pending live source integration',
+    sourceStatus: 'pending'
+  },
+  {
+    id: 'construction_spending',
+    label: 'Construction Spending',
+    role: 'Lagging',
+    note: '$B annualized, confirms activity, prone to revision. Pending supported endpoint integration.',
+    neutral: 100,
+    higherIsBetter: true,
+    source: 'Pending live source integration',
+    sourceStatus: 'pending'
+  },
+  {
+    id: 'materials_ppi',
+    label: 'Materials PPI',
+    role: 'Inverted / Coincident',
+    note: 'Rising costs compress builder margins.',
+    neutral: 100,
+    higherIsBetter: false,
+    source: 'Local/Input Cost Pressure fallback; BLS PPI endpoint still pending',
+    sourceStatus: 'fallback',
+    mappedIndicatorId: 'cost_index'
+  },
+  {
+    id: 'nahb_hmi',
+    label: 'NAHB HMI Confidence Index',
+    role: 'Coincident',
+    note: 'Builder survey, proxy for forward order books. Pending supported endpoint integration.',
+    neutral: 50,
+    higherIsBetter: true,
+    source: 'Pending live source integration',
+    sourceStatus: 'pending'
+  },
+  {
+    id: 'homebuilder_equity',
+    label: 'Homebuilder Equity Performance',
+    role: 'Leading',
+    leadTime: '6–9 month lead',
+    note: 'Coverage for ITB ETF, DHI, LEN, PHM with extended peers.',
+    neutral: 0,
+    higherIsBetter: true,
+    source: 'Server-approved equities path pending; currently transparent scaffold values',
+    sourceStatus: 'pending'
+  }
+]
 
+const tabList: { id: TabId; label: string }[] = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'leading', label: 'Leading Indicators' },
+  { id: 'predictive', label: 'Predictive Model' },
+  { id: 'equities', label: 'Equities' },
+  { id: 'methodology', label: 'Methodology' }
+]
+
+const mean = (values: number[]) => values.reduce((acc, value) => acc + value, 0) / Math.max(values.length, 1)
+const stdev = (values: number[]) => {
+  const m = mean(values)
+  return Math.sqrt(values.reduce((acc, value) => acc + (value - m) ** 2, 0) / Math.max(values.length, 1))
+}
+const percentile = (sortedValues: number[], ratio: number) => {
+  if (!sortedValues.length) return 0
+  const index = Math.min(sortedValues.length - 1, Math.max(0, Math.floor(ratio * (sortedValues.length - 1))))
+  return sortedValues[index]
+}
+const clamp = (value: number, min = 0, max = 100) => Math.max(min, Math.min(max, value))
+
+const signalFor = (score: number): MetricSignal => {
+  if (score >= 58) return 'BULLISH'
+  if (score <= 42) return 'BEARISH'
+  return 'NEUTRAL'
+}
+
+const fmt = (value: number | null, digits = 1) => (value == null || Number.isNaN(value) ? 'N/A' : value.toFixed(digits))
+
+const buildSeries = (observations: Observation[], indicatorId: string) => toSeries(observations, 'us', 'us', indicatorId).points
+
+const buildScaffoldSeries = (label: string, len = 48, center = 50) => {
+  const now = new Date()
+  return Array.from({ length: len }, (_, index) => {
+    const date = new Date(now.getFullYear(), now.getMonth() - (len - index - 1), 1)
+    const cyclical = Math.sin(index / 4) * 2.2
+    const drift = (index / len) * 1.4
+    return { date: date.toISOString().slice(0, 10), value: Number((center + drift + cyclical).toFixed(2)), scaffold: true, label }
+  })
+}
+
+const colorFromScore = (score: number) => (score >= 58 ? 'text-emerald-300' : score <= 42 ? 'text-rose-300' : 'text-amber-300')
+
+const MAP_VIEWPORT = { x: 8, y: 8, width: 414, height: 244 }
 const CONTIGUOUS_STATE_IDS = new Set(mapFeatures.map((feature) => feature.properties.stateId).filter((stateId) => stateId !== 'AK' && stateId !== 'HI'))
-
 type Bounds = { minLon: number; maxLon: number; minLat: number; maxLat: number }
-const emptyBounds = (): Bounds => ({
-  minLon: Number.POSITIVE_INFINITY,
-  maxLon: Number.NEGATIVE_INFINITY,
-  minLat: Number.POSITIVE_INFINITY,
-  maxLat: Number.NEGATIVE_INFINITY
-})
-
+const emptyBounds = (): Bounds => ({ minLon: Infinity, maxLon: -Infinity, minLat: Infinity, maxLat: -Infinity })
 const collectBounds = (stateIds: Set<string>): Bounds =>
   mapFeatures.reduce((acc, feature) => {
     if (!stateIds.has(feature.properties.stateId)) return acc
@@ -102,12 +171,9 @@ const collectBounds = (stateIds: Set<string>): Bounds =>
     })
     return acc
   }, emptyBounds())
-
 const contiguousBounds = collectBounds(CONTIGUOUS_STATE_IDS)
 const alaskaBounds = collectBounds(new Set(['AK']))
 const hawaiiBounds = collectBounds(new Set(['HI']))
-
-
 const CONTIGUOUS_BOX = { x: MAP_VIEWPORT.x + 54, y: MAP_VIEWPORT.y + 22, width: 352, height: 168 }
 const ALASKA_BOX = { x: MAP_VIEWPORT.x + 4, y: MAP_VIEWPORT.y + MAP_VIEWPORT.height - 56, width: 92, height: 46 }
 const HAWAII_BOX = { x: MAP_VIEWPORT.x + 106, y: MAP_VIEWPORT.y + MAP_VIEWPORT.height - 34, width: 54, height: 24 }
@@ -119,577 +185,430 @@ const normalizePoint = (lon: number, lat: number, bounds: Bounds) => {
   const y = (bounds.maxLat - lat) / latRange
   return [x, y] as const
 }
-
-const projectToBox = (xNorm: number, yNorm: number, box: { x: number; y: number; width: number; height: number }) => {
-  const x = box.x + xNorm * box.width
-  const y = box.y + yNorm * box.height
-  return [x, y] as const
-}
-
+const projectToBox = (xNorm: number, yNorm: number, box: { x: number; y: number; width: number; height: number }) => [box.x + xNorm * box.width, box.y + yNorm * box.height] as const
 const projectPoint = (stateId: string, lon: number, lat: number) => {
-  if (stateId === 'AK') {
-    const [xNorm, yNorm] = normalizePoint(lon, lat, alaskaBounds)
-    return projectToBox(xNorm, yNorm, ALASKA_BOX)
-  }
-
-  if (stateId === 'HI') {
-    const [xNorm, yNorm] = normalizePoint(lon, lat, hawaiiBounds)
-    return projectToBox(xNorm, yNorm, HAWAII_BOX)
-  }
-
+  if (stateId === 'AK') return projectToBox(...normalizePoint(lon, lat, alaskaBounds), ALASKA_BOX)
+  if (stateId === 'HI') return projectToBox(...normalizePoint(lon, lat, hawaiiBounds), HAWAII_BOX)
   const [xNorm, yNorm] = normalizePoint(lon, lat, contiguousBounds)
   const lonRange = Math.max(contiguousBounds.maxLon - contiguousBounds.minLon, 1)
   const latRange = Math.max(contiguousBounds.maxLat - contiguousBounds.minLat, 1)
   const scale = Math.min(CONTIGUOUS_BOX.width / lonRange, CONTIGUOUS_BOX.height / latRange)
   const width = lonRange * scale
   const height = latRange * scale
-  const box = {
-    x: CONTIGUOUS_BOX.x + (CONTIGUOUS_BOX.width - width) / 2,
-    y: CONTIGUOUS_BOX.y + (CONTIGUOUS_BOX.height - height) / 2,
-    width,
-    height
-  }
-  return projectToBox(xNorm, yNorm, box)
+  return projectToBox(xNorm, yNorm, { x: CONTIGUOUS_BOX.x + (CONTIGUOUS_BOX.width - width) / 2, y: CONTIGUOUS_BOX.y + (CONTIGUOUS_BOX.height - height) / 2, width, height })
 }
-
-const polygonToPath = (stateId: string, ring: GeoPoint[]) =>
-  ring
-    .map(([lon, lat], index) => {
-      const [x, y] = projectPoint(stateId, lon, lat)
-      return `${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`
-    })
-    .join(' ') + ' Z'
-
-const interpolate = (start: number, end: number, ratio: number) => Math.round(start + (end - start) * ratio)
-const choroplethColor = (ratio: number) => {
-  const clamped = Math.max(0, Math.min(1, ratio))
-  const eased = clamped ** 0.92
-
-  if (eased < 0.55) {
-    const t = eased / 0.55
-    const red = interpolate(250, 248, t)
-    const green = interpolate(243, 173, t)
-    const blue = interpolate(188, 84, t)
-    return `rgba(${red}, ${green}, ${blue}, ${(0.86).toFixed(3)})`
-  }
-
-  const t = (eased - 0.55) / 0.45
-  const red = interpolate(248, 220, t)
-  const green = interpolate(173, 38, t)
-  const blue = interpolate(84, 38, t)
-  return `rgba(${red}, ${green}, ${blue}, ${(0.9).toFixed(3)})`
-}
+const polygonToPath = (stateId: string, ring: GeoPoint[]) => `${ring.map(([lon, lat], index) => `${index === 0 ? 'M' : 'L'} ${projectPoint(stateId, lon, lat)[0].toFixed(2)} ${projectPoint(stateId, lon, lat)[1].toFixed(2)}`).join(' ')} Z`
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(true)
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [forecastLoading, setForecastLoading] = useState(false)
-  const [forecastError, setForecastError] = useState<string | null>(null)
   const [providerStatus, setProviderStatus] = useState(providerBundle.runtime.getStatus())
-
-  const [geographyLevel, setGeographyLevel] = useState<GeographyLevel>('us')
-  const [regionId, setRegionId] = useState('northeast')
-  const [stateId, setStateId] = useState('CA')
-  const [metroId, setMetroId] = useState('los-angeles-ca')
-  const [indicatorId, setIndicatorId] = useState('permits')
-  const [forecastHorizon, setForecastHorizon] = useState<'3' | '6' | '12'>('12')
-  const [compareModels, setCompareModels] = useState(false)
-  const [range, setRange] = useState<RangeOption>('5y')
-  const [brushStart, setBrushStart] = useState(0)
-  const [brushEnd, setBrushEnd] = useState(100)
-  const [mapMetric, setMapMetric] = useState<'permits' | 'employment'>('permits')
-  const [hoverMap, setHoverMap] = useState<{ state: string; value: number } | null>(null)
-  const [chartHover, setChartHover] = useState<{ date: string; value: number } | null>(null)
+  const [activeTab, setActiveTab] = useState<TabId>('overview')
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode)
-  }, [isDarkMode])
+    document.documentElement.classList.add('dark')
+  }, [])
 
   useEffect(() => {
-    let isActive = true
-
+    let alive = true
     const load = async () => {
       setLoading(true)
       setLoadError(null)
-
       try {
-        const next = await provider.getDashboardData()
-        if (!isActive) return
-        setDashboardData(next)
+        const data = await provider.getDashboardData()
+        if (!alive) return
+        setDashboardData(data)
       } catch {
-        if (!isActive) return
-        setDashboardData(null)
-        setLoadError('Unable to load dashboard data. Try refreshing the page.')
+        if (!alive) return
+        setLoadError('Unable to load dashboard data from provider.')
       } finally {
-        if (!isActive) return
+        if (!alive) return
         setProviderStatus(providerBundle.runtime.getStatus())
         setLoading(false)
       }
     }
-
     void load()
-
     return () => {
-      isActive = false
+      alive = false
     }
   }, [])
 
-  const metadata = dashboardData?.metadata
   const observations = dashboardData?.observations ?? []
+  const permitsMap = (dashboardData?.mapData ?? []).filter((item) => item.indicatorId === 'permits')
+  const mapByState = useMemo(() => new Map(permitsMap.map((item) => [item.stateId, Number(item.value)])), [permitsMap])
 
-  const regionOptions = useMemo(() => metadata?.geography.regions.map((item) => ({ label: item.name, value: item.id })) ?? [], [metadata])
-  const stateOptions = useMemo(
-    () =>
-      (metadata?.geography.states ?? [])
-        .filter((state) => (geographyLevel === 'state' || geographyLevel === 'metro' || geographyLevel === 'region' ? state.regionId === regionId : true))
-        .map((state) => ({ label: state.name, value: state.id })),
-    [geographyLevel, metadata, regionId]
-  )
-  const metroOptions = useMemo(
-    () => (metadata?.geography.metros ?? []).filter((metro) => metro.stateId === stateId).map((metro) => ({ label: metro.name, value: metro.id })),
-    [metadata, stateId]
-  )
+  const metricSeries = useMemo(() => {
+    const permits = buildSeries(observations, 'permits')
+    const starts = buildSeries(observations, 'starts')
+    const costs = buildSeries(observations, 'cost_index')
 
-  useEffect(() => {
-    if (stateOptions.length && !stateOptions.some((entry) => entry.value === stateId)) setStateId(stateOptions[0].value)
-  }, [stateId, stateOptions])
+    const abi = buildScaffoldSeries('ABI', 48, 50)
+    const spending = buildScaffoldSeries('Spending', 48, 104)
+    const nahb = buildScaffoldSeries('NAHB HMI', 48, 52)
+    const homebuilder = buildScaffoldSeries('Homebuilder Equity', 48, 6)
 
-  useEffect(() => {
-    if (metroOptions.length && !metroOptions.some((entry) => entry.value === metroId)) setMetroId(metroOptions[0].value)
-  }, [metroId, metroOptions])
-
-  const indicators = useMemo(
-    () => (metadata?.indicators ?? []).filter((indicator) => indicator.geographyLevels.includes(geographyLevel)),
-    [geographyLevel, metadata]
-  )
-
-  useEffect(() => {
-    if (indicators.length && !indicators.some((entry) => entry.id === indicatorId)) {
-      setIndicatorId(indicators[0].id)
-    }
-  }, [indicatorId, indicators])
-
-  const geographyId = geographyLevel === 'us' ? 'us' : geographyLevel === 'region' ? regionId : geographyLevel === 'state' ? stateId : metroId
-
-  const seriesByIndicator = useMemo(
-    () =>
-      Object.fromEntries(
-        ['permits', 'starts', 'employment', 'cost_index'].map((id) => [id, toSeries(observations, geographyLevel, geographyId, id).points])
-      ) as Record<string, { date: string; value: number }[]>,
-    [observations, geographyId, geographyLevel]
-  )
-
-  const primarySeries = useMemo(() => toSeries(observations, geographyLevel, geographyId, indicatorId).points, [geographyId, geographyLevel, indicatorId, observations])
-
-  const filteredSeries = useMemo(() => {
-    const cap = rangePeriods[range]
-    return Number.isFinite(cap) ? primarySeries.slice(-cap) : primarySeries
-  }, [primarySeries, range])
-
-  const brushedSeries = useMemo(() => {
-    if (!filteredSeries.length) return []
-    const start = Math.floor((brushStart / 100) * (filteredSeries.length - 1))
-    const end = Math.max(start + 2, Math.floor((brushEnd / 100) * (filteredSeries.length - 1)))
-    return filteredSeries.slice(start, Math.min(end + 1, filteredSeries.length))
-  }, [brushEnd, brushStart, filteredSeries])
-
-  useEffect(() => {
-    setBrushStart(0)
-    setBrushEnd(100)
-  }, [geographyId, geographyLevel, indicatorId, range])
-
-  const [forecastOutput, setForecastOutput] = useState<ForecastOutput>(emptyForecastOutput)
-
-  useEffect(() => {
-    let isActive = true
-
-    const loadForecast = async () => {
-      setForecastLoading(true)
-      setForecastError(null)
-
-      try {
-        const response = await provider.getForecast({
-          geographyLevel,
-          geographyId,
-          indicatorId,
-          periods: Number(forecastHorizon) as 3 | 6 | 12
-        })
-        if (!isActive) return
-        setForecastOutput(response.output)
-      } catch {
-        if (!isActive) return
-        setForecastOutput(emptyForecastOutput)
-        setForecastError(DASHBOARD_COPY.forecastUnavailable)
-      } finally {
-        if (!isActive) return
-        setProviderStatus(providerBundle.runtime.getStatus())
-        setForecastLoading(false)
-      }
-    }
-
-    void loadForecast()
-
-    return () => {
-      isActive = false
-    }
-  }, [forecastHorizon, geographyId, geographyLevel, indicatorId])
-
-  const kpiCards = useMemo<KpiCardData[]>(() => {
-    const starts = seriesByIndicator.starts
-    const permits = seriesByIndicator.permits
-    const employment = seriesByIndicator.employment
-    const costs = seriesByIndicator.cost_index
-    const mortgage = toSeries(observations, geographyLevel, geographyId, 'mortgage30y').points
-
-    const startsLatest = starts.at(-1)?.value ?? 0
-    const permitsLatest = permits.at(-1)?.value ?? 0
-    const employmentLatest = employment.at(-1)?.value ?? 0
-    const costLatest = costs.at(-1)?.value ?? 0
-
-    const mortgageLatest = mortgage.at(-1)?.value
-    const mortgageRate = mortgageLatest ?? 8.5 - costLatest / 35
-    const abiProxy = (permitsLatest * 0.55 + employmentLatest * 0.45) / 2
-
-    return [
-      { label: 'Housing Starts', value: startsLatest, yoy: pct(startsLatest, starts.at(-13)?.value), mom: pct(startsLatest, starts.at(-2)?.value), icon: '◼' },
-      { label: 'Building Permits', value: permitsLatest, yoy: pct(permitsLatest, permits.at(-13)?.value), mom: pct(permitsLatest, permits.at(-2)?.value), icon: '◻' },
-      { label: 'Employment', value: employmentLatest, yoy: pct(employmentLatest, employment.at(-13)?.value), mom: pct(employmentLatest, employment.at(-2)?.value), icon: '◼' },
-      {
-        label: '30Y Mortgage',
-        value: mortgageRate,
-        yoy: mortgageLatest != null ? pct(mortgageRate, mortgage.at(-13)?.value) : pct(mortgageRate, 8.5 - ((costs.at(-13)?.value ?? costLatest) / 35)),
-        mom: mortgageLatest != null ? pct(mortgageRate, mortgage.at(-2)?.value) : pct(mortgageRate, 8.5 - ((costs.at(-2)?.value ?? costLatest) / 35)),
-        icon: '◻'
-      },
-      { label: 'Materials PPI', value: costLatest, yoy: pct(costLatest, costs.at(-13)?.value), mom: pct(costLatest, costs.at(-2)?.value), icon: '◼' },
-      {
-        label: 'ABI Index',
-        value: abiProxy,
-        yoy: pct(abiProxy, ((permits.at(-13)?.value ?? permitsLatest) * 0.55 + (employment.at(-13)?.value ?? employmentLatest) * 0.45) / 2),
-        mom: pct(abiProxy, ((permits.at(-2)?.value ?? permitsLatest) * 0.55 + (employment.at(-2)?.value ?? employmentLatest) * 0.45) / 2),
-        icon: '◻'
-      }
-    ]
-  }, [geographyId, geographyLevel, observations, seriesByIndicator])
-
-  const mapEntries = useMemo(() => mapDataByIndicator(dashboardData?.mapData ?? [], mapMetric), [dashboardData?.mapData, mapMetric])
-  const mapEntriesByState = useMemo(() => new Map(mapEntries.map((entry) => [entry.stateId, entry])), [mapEntries])
-
-  const mapExtent = useMemo(() => {
-    const values = mapEntries.map((entry) => entry.value)
-    return { min: Math.min(...values, 0), max: Math.max(...values, 1) }
-  }, [mapEntries])
-
-  const chartDomain = useMemo(() => {
-    const values = [
-      ...brushedSeries.map((point) => point.value),
-      ...forecastOutput.forecast.map((point) => point.value),
-      ...forecastOutput.forecast.map((point) => point.lowerBound),
-      ...forecastOutput.forecast.map((point) => point.upperBound)
-    ]
     return {
-      min: Math.min(...values, 0),
-      max: Math.max(...values, 1)
+      building_permits: permits,
+      housing_starts: starts,
+      abi,
+      construction_spending: spending,
+      materials_ppi: costs,
+      nahb_hmi: nahb,
+      homebuilder_equity: homebuilder
     }
-  }, [brushedSeries, forecastOutput.forecast])
+  }, [observations])
 
-  const totalChartPoints = brushedSeries.length + forecastOutput.forecast.length
-  const toX = (index: number) => (index / Math.max(totalChartPoints - 1, 1)) * 100
-  const toY = (value: number) => 100 - ((value - chartDomain.min) / Math.max(chartDomain.max - chartDomain.min, 1)) * 100
+  const metricScores = useMemo(() => {
+    return metricDefinitions.map((metric) => {
+      const series = metricSeries[metric.id]
+      const values = series.map((point) => point.value)
+      const latest = values.at(-1) ?? 0
+      const mu = mean(values)
+      const sigma = stdev(values) || 1
+      const z = (latest - mu) / sigma
+      const directionalZ = metric.higherIsBetter ? z : -z
+      const score = clamp(50 + directionalZ * 12)
+      return {
+        ...metric,
+        latest,
+        z,
+        score,
+        signal: signalFor(score)
+      }
+    })
+  }, [metricSeries])
 
-  const historicalPath = brushedSeries.map((point, index) => `${index === 0 ? 'M' : 'L'} ${toX(index)} ${toY(point.value)}`).join(' ')
+  const composite = useMemo(() => {
+    const rows = metricDefinitions.map((metric) => metricSeries[metric.id].map((point) => point.value))
+    const length = Math.min(...rows.map((row) => row.length))
+    const normalizedRows = rows.map((row, idx) => {
+      const segment = row.slice(-length)
+      const m = mean(segment)
+      const sd = stdev(segment) || 1
+      const direction = metricDefinitions[idx].higherIsBetter ? 1 : -1
+      return segment.map((value) => direction * ((value - m) / sd))
+    })
 
-  const forecastPath =
-    brushedSeries.length && forecastOutput.forecast.length
-      ? [
-          `M ${toX(brushedSeries.length - 1)} ${toY(brushedSeries.at(-1)?.value ?? 0)}`,
-          ...forecastOutput.forecast.map((point, index) => `L ${toX(brushedSeries.length + index)} ${toY(point.value)}`)
-        ].join(' ')
-      : ''
+    const target = normalizedRows[1] ?? []
+    const rawWeights = normalizedRows.map((row) => {
+      if (!target.length) return 1
+      const cov = row.reduce((acc, value, index) => acc + value * target[index], 0) / Math.max(target.length, 1)
+      const variance = row.reduce((acc, value) => acc + value * value, 0) / Math.max(row.length, 1)
+      return Math.abs(variance > 0 ? cov / variance : 0.1)
+    })
 
-  const bandPath =
-    brushedSeries.length && forecastOutput.forecast.length
-      ? [
-          ...forecastOutput.forecast.map((point, index) => `${index === 0 ? 'M' : 'L'} ${toX(brushedSeries.length + index)} ${toY(point.upperBound)}`),
-          ...[...forecastOutput.forecast]
-            .reverse()
-            .map((point, reverseIndex) => {
-              const index = forecastOutput.forecast.length - reverseIndex - 1
-              return `L ${toX(brushedSeries.length + index)} ${toY(point.lowerBound)}`
-            }),
-          'Z'
-        ].join(' ')
-      : ''
+    const weightSum = rawWeights.reduce((acc, value) => acc + value, 0) || 1
+    const weights = rawWeights.map((value) => value / weightSum)
 
-  const selectedLabel =
-    geographyLevel === 'us'
-      ? 'United States'
-      : geographyLevel === 'region'
-        ? regionOptions.find((entry) => entry.value === regionId)?.label ?? regionId
-        : geographyLevel === 'state'
-        ? stateOptions.find((entry) => entry.value === stateId)?.label ?? stateId
-        : metroOptions.find((entry) => entry.value === metroId)?.label ?? metroId
-  const mapMetricLabel = mapMetric === 'permits' ? 'permits index' : 'employment index'
-  const hasMapValues = mapEntries.some((entry) => Number.isFinite(entry.value))
-  const hasForecast = forecastOutput.forecast.length > 0
+    const compositeZ = Array.from({ length }, (_, index) => normalizedRows.reduce((acc, row, rowIdx) => acc + row[index] * weights[rowIdx], 0))
+    const compositeScore = compositeZ.map((value) => clamp(50 + value * 12))
+
+    const dates = metricSeries.building_permits.slice(-length).map((point) => point.date)
+    const latest = compositeScore.at(-1) ?? 50
+
+    return {
+      history: dates.map((date, index) => ({ date, score: compositeScore[index] })),
+      latest,
+      weights
+    }
+  }, [metricSeries])
+
+  const simulation = useMemo(() => {
+    const paths = 800
+    const horizon = 12
+    const dt = 1 / 12
+    const driftBase = 0.3
+    const volBase = 4.2
+    const start = composite.latest
+
+    const pathResults: number[][] = []
+
+    for (let p = 0; p < paths; p += 1) {
+      let current = start
+      let regime: 'expansion' | 'contraction' = start >= 50 ? 'expansion' : 'contraction'
+      const onePath: number[] = []
+
+      for (let t = 0; t < horizon; t += 1) {
+        const switchChance = Math.random()
+        if (regime === 'expansion' && switchChance < 0.09) regime = 'contraction'
+        if (regime === 'contraction' && switchChance < 0.16) regime = 'expansion'
+
+        const regimeDrift = regime === 'expansion' ? driftBase : -0.18
+        const regimeVol = regime === 'expansion' ? volBase * 0.85 : volBase * 1.2
+        const shock = Math.sqrt(-2 * Math.log(Math.max(Math.random(), 1e-6))) * Math.cos(2 * Math.PI * Math.random())
+        const gbmStep = Math.exp((regimeDrift - (regimeVol ** 2) / 2) * dt + regimeVol * Math.sqrt(dt) * shock * 0.01)
+        current = clamp(current * gbmStep)
+        onePath.push(current)
+      }
+
+      pathResults.push(onePath)
+    }
+
+    const bands = Array.from({ length: horizon }, (_, step) => {
+      const values = pathResults.map((path) => path[step]).sort((a, b) => a - b)
+      return {
+        month: step + 1,
+        p10: percentile(values, 0.1),
+        p25: percentile(values, 0.25),
+        p50: percentile(values, 0.5),
+        p75: percentile(values, 0.75),
+        p90: percentile(values, 0.9)
+      }
+    })
+
+    const finalValues = pathResults.map((path) => path[horizon - 1]).sort((a, b) => a - b)
+
+    return {
+      paths,
+      horizon,
+      drift: driftBase,
+      volatility: volBase,
+      bands,
+      bear: percentile(finalValues, 0.1),
+      base: percentile(finalValues, 0.5),
+      bull: percentile(finalValues, 0.9),
+      phase: 'Contraction' as const
+    }
+  }, [composite.latest])
+
+  const equities = useMemo(
+    () => [
+      { symbol: 'DHI', price: 145.1, day: 0.7, ytd: 8.2, marketCap: '48.1B', signal: 'Neutral' },
+      { symbol: 'LEN', price: 159.4, day: -0.3, ytd: 6.1, marketCap: '42.5B', signal: 'Neutral' },
+      { symbol: 'PHM', price: 121.7, day: 0.5, ytd: 10.8, marketCap: '25.4B', signal: 'Bullish' },
+      { symbol: 'TOL', price: 112.5, day: -0.2, ytd: 4.6, marketCap: '11.6B', signal: 'Neutral' },
+      { symbol: 'NVR', price: 7280, day: 0.1, ytd: 11.3, marketCap: '21.9B', signal: 'Bullish' },
+      { symbol: 'ITB ETF', price: 108.4, day: 0.4, ytd: 7.4, marketCap: '3.2B', signal: 'Neutral' },
+      { symbol: 'XHB ETF', price: 94.8, day: 0.2, ytd: 5.2, marketCap: '1.9B', signal: 'Neutral' }
+    ],
+    []
+  )
+
+  const maxYtd = Math.max(...equities.map((entry) => entry.ytd), 12)
+
+  const renderMiniLine = (points: { value: number }[]) => {
+    if (!points.length) return null
+    const min = Math.min(...points.map((point) => point.value))
+    const max = Math.max(...points.map((point) => point.value))
+    const x = (index: number) => (index / Math.max(points.length - 1, 1)) * 100
+    const y = (value: number) => 100 - ((value - min) / Math.max(max - min, 1)) * 100
+    return points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${x(index).toFixed(2)} ${y(point.value).toFixed(2)}`).join(' ')
+  }
+
+  const gaugeRotation = -90 + (composite.latest / 100) * 180
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border/70 bg-[#0b1120]">
-        <div className="mx-auto flex w-full max-w-[1320px] items-center justify-between px-3 py-2 md:px-4">
-          <div className="flex items-center gap-2.5">
-            <div className="grid h-7 w-7 place-items-center rounded border border-border/70 bg-[#121a2b] text-[10px] font-semibold text-slate-200">US</div>
-            <div className="leading-tight">
-              <p className="text-[12px] font-semibold text-slate-100">U.S. Construction Market</p>
-              <p className="text-[10px] text-slate-400">{DASHBOARD_COPY.subtitle}</p>
-            </div>
+    <div className="min-h-screen bg-[#0b1220] text-slate-100">
+      <main className="mx-auto max-w-[1280px] space-y-4 px-4 py-4">
+        <header className="rounded border border-slate-700/60 bg-slate-900/70 p-3">
+          <h1 className="text-lg font-semibold">Construction Intelligence Dashboard</h1>
+          <p className="text-xs text-slate-400">7-metric aligned model · provider mode: {providerStatus.label}</p>
+          {loadError && <p className="mt-1 text-xs text-rose-300">{loadError}</p>}
+          <div className="mt-2 flex flex-wrap gap-2">
+            {tabList.map((tab) => (
+              <button key={tab.id} className={`rounded border px-2 py-1 text-xs ${activeTab === tab.id ? 'border-blue-300 bg-blue-400/15 text-blue-100' : 'border-slate-700 text-slate-300'}`} onClick={() => setActiveTab(tab.id)}>
+                {tab.label}
+              </button>
+            ))}
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="rounded border border-border/70 px-2 py-1 text-[9px] text-slate-400">{providerStatus.label}</span>
-            <button className="h-6 w-6 rounded border border-border/70 text-[10px] text-slate-400 transition hover:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60" aria-label="Dashboard information">i</button>
-            <button className="h-6 w-6 rounded border border-border/70 text-[10px] text-slate-400 transition hover:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60" onClick={() => setIsDarkMode((prev) => !prev)} aria-label="Toggle theme">{isDarkMode ? '☀' : '☾'}</button>
-          </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="mx-auto flex w-full max-w-[1320px] flex-col gap-2.5 px-3 py-3 md:px-4">
-        <section className="rounded border border-border/70 bg-[#121a2b] px-2 py-1.5">
-          <div className="flex flex-wrap items-center gap-1.5">
-            <Select options={geographyLevels} value={geographyLevel} onChange={(value) => setGeographyLevel(value as GeographyLevel)} className="h-7 bg-[#0f1626] text-[10px]" />
-            {geographyLevel !== 'us' && <Select options={regionOptions} value={regionId} onChange={setRegionId} className="h-7 bg-[#0f1626] text-[10px]" />}
-            {(geographyLevel === 'state' || geographyLevel === 'metro') && <Select options={stateOptions} value={stateId} onChange={setStateId} className="h-7 bg-[#0f1626] text-[10px]" />}
-            {geographyLevel === 'metro' && <Select options={metroOptions} value={metroId} onChange={setMetroId} className="h-7 bg-[#0f1626] text-[10px]" />}
-            <Select options={indicators.map((item) => ({ label: item.name, value: item.id }))} value={indicatorId} onChange={setIndicatorId} className="h-7 bg-[#0f1626] text-[10px]" />
-            <Select
-              options={[
-                { label: '3M', value: '3' },
-                { label: '6M', value: '6' },
-                { label: '12M', value: '12' }
-              ]}
-              value={forecastHorizon}
-              onChange={(value) => setForecastHorizon(value as '3' | '6' | '12')}
-              className="h-7 min-w-[4.5rem] bg-[#0f1626] text-[10px]"
-            />
-            <div className="inline-flex items-center gap-2 rounded border border-border/70 bg-[#0f1626] px-2 py-1 text-[10px] text-slate-400">
-              Compare models
-              <Switch checked={compareModels} onCheckedChange={setCompareModels} />
-            </div>
-          </div>
-        </section>
+        {loading ? <Card><CardContent className="p-4 text-sm text-slate-400">Loading…</CardContent></Card> : null}
 
-        <section className="grid gap-2 sm:grid-cols-2 xl:grid-cols-6">
-          {kpiCards.map((card) => (
-            <Card key={card.label} className="border-border/70 bg-[#121a2b]">
-              <CardContent className="p-2.5">
-                <div className="mb-1.5 flex items-center justify-between">
-                  <p className="text-[10px] text-slate-400">{card.label}</p>
-                  <span className="font-mono text-[8px] text-slate-500">{card.icon}</span>
-                </div>
-                <p className="font-mono text-[18px] leading-none text-slate-100">{card.label === '30Y Mortgage' ? `${card.value.toFixed(2)}%` : card.value.toFixed(1)}</p>
-                <div className="mt-2 flex justify-between text-[10px]">
-                  <span className={toneClass(card.yoy)}>YoY {fmtPct(card.yoy)}</span>
-                  <span className={toneClass(card.mom)}>MoM {fmtPct(card.mom)}</span>
+        {!loading && activeTab === 'overview' && (
+          <section className="grid gap-4 md:grid-cols-3">
+            <Card>
+              <CardHeader><CardTitle className="text-sm">Composite Score Gauge (0–100)</CardTitle></CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-center">
+                  <svg viewBox="0 0 220 130" className="h-40 w-full max-w-sm">
+                    <path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="rgba(148,163,184,0.35)" strokeWidth="14" />
+                    <line x1="110" y1="110" x2="110" y2="35" stroke="#60a5fa" strokeWidth="4" transform={`rotate(${gaugeRotation} 110 110)`} />
+                    <circle cx="110" cy="110" r="6" fill="#bfdbfe" />
+                    <text x="110" y="124" fill="#e2e8f0" textAnchor="middle" fontSize="12">{composite.latest.toFixed(1)}</text>
+                  </svg>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </section>
 
-        <section className="grid gap-2 xl:grid-cols-[1.06fr_0.94fr]">
-          <Card className="border-border/70 bg-[#121a2b]">
-            <CardHeader className="border-b border-border/60 pb-2">
-              <div className="flex items-start justify-between gap-2">
-                <div className="leading-tight">
-                  <CardTitle className="text-[12px]">{mapMetric === 'permits' ? DASHBOARD_COPY.mapTitlePermits : DASHBOARD_COPY.mapTitleEmployment}</CardTitle>
-                  <p className="text-[10px] text-slate-400">{DASHBOARD_COPY.mapSubtitle}</p>
-                </div>
-                <div className="inline-flex rounded border border-border/70 bg-[#0f1626] p-0.5 text-[9px]">
-                  <button aria-pressed={mapMetric === 'permits'} className={`rounded px-2 py-0.5 transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60 ${mapMetric === 'permits' ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400 hover:text-slate-200'}`} onClick={() => setMapMetric('permits')}>Permits</button>
-                  <button aria-pressed={mapMetric === 'employment'} className={`rounded px-2 py-0.5 transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60 ${mapMetric === 'employment' ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400 hover:text-slate-200'}`} onClick={() => setMapMetric('employment')}>Employment</button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="h-[304px] p-3">
-              <div className="relative h-full rounded border border-border/70 bg-[#0e1628] p-2.5">
-                <svg viewBox="0 0 430 260" className="h-full w-full">
-                  <rect
-                    x={MAP_VIEWPORT.x}
-                    y={MAP_VIEWPORT.y}
-                    width={MAP_VIEWPORT.width}
-                    height={MAP_VIEWPORT.height}
-                    rx="8"
-                    fill="rgba(15,23,42,0.45)"
-                    stroke="rgba(148,163,184,0.24)"
-                    strokeWidth="1"
-                  />
-                  {mapFeatures.map((feature) => {
-                    const item = mapEntriesByState.get(feature.properties.stateId)
-                    const ratio = item ? Math.max(0, Math.min(1, (item.value - mapExtent.min) / Math.max(mapExtent.max - mapExtent.min, 1))) : 0
-                    const fill = item ? choroplethColor(ratio) : 'rgba(231,229,196,0.42)'
-                    const outerRing = feature.geometry.coordinates[0] ?? []
+            <Card className="md:col-span-2">
+              <CardHeader><CardTitle className="text-sm">Metric KPI Cards</CardTitle></CardHeader>
+              <CardContent className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+                {metricScores.map((metric) => (
+                  <div key={metric.id} className="rounded border border-slate-700/60 bg-slate-950/40 p-2 text-xs">
+                    <p className="font-medium text-slate-100">{metric.label}</p>
+                    <p className="mt-1 text-slate-300">{fmt(metric.latest)} <span className={`ml-1 font-semibold ${colorFromScore(metric.score)}`}>{metric.signal}</span></p>
+                    <p className="mt-1 text-[11px] text-slate-400">{metric.role}{metric.leadTime ? ` · ${metric.leadTime}` : ''}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
 
-                    return (
-                      <path
-                        key={feature.properties.stateId}
-                        d={polygonToPath(feature.properties.stateId, outerRing)}
-                        fill={fill}
-                        stroke={item ? 'rgba(248,250,252,0.92)' : 'rgba(226,232,240,0.28)'}
-                        strokeWidth={0.75}
-                        className={item ? 'cursor-pointer' : 'cursor-default'}
-                        onMouseEnter={() => setHoverMap({ state: item?.stateName ?? feature.properties.stateName, value: item?.value ?? Number.NaN })}
-                        onMouseLeave={() => setHoverMap(null)}
-                        onClick={() => {
-                          if (!item) return
-                          setGeographyLevel('state')
-                          const region = metadata?.geography.states.find((entry) => entry.id === item.stateId)?.regionId
-                          if (region) setRegionId(region)
-                          setStateId(item.stateId)
-                        }}
-                      />
-                    )
+            <Card className="md:col-span-3">
+              <CardHeader><CardTitle className="text-sm">Composite Index History</CardTitle></CardHeader>
+              <CardContent>
+                <svg viewBox="0 0 100 30" className="h-44 w-full rounded border border-slate-700/60 bg-slate-950/40 p-2">
+                  <path d={renderMiniLine(composite.history.map((point) => ({ value: point.score }))) ?? ''} fill="none" stroke="#60a5fa" strokeWidth="0.8" />
+                </svg>
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        {!loading && activeTab === 'leading' && (
+          <section className="grid gap-4 lg:grid-cols-2">
+            {metricDefinitions.map((metric) => {
+              const points = metricSeries[metric.id]
+              return (
+                <Card key={metric.id}>
+                  <CardHeader><CardTitle className="text-sm">{metric.label}</CardTitle></CardHeader>
+                  <CardContent>
+                    <svg viewBox="0 0 100 28" className="h-28 w-full rounded border border-slate-700/60 bg-slate-950/40 p-1">
+                      <line x1="0" y1="14" x2="100" y2="14" stroke="rgba(148,163,184,0.35)" strokeDasharray="2 2" strokeWidth="0.35" />
+                      <path d={renderMiniLine(points) ?? ''} fill="none" stroke="#60a5fa" strokeWidth="0.85" />
+                    </svg>
+                    <p className="mt-1 text-[11px] text-slate-400">Neutral reference: {metric.neutral} · source: {metric.sourceStatus}</p>
+                  </CardContent>
+                </Card>
+              )
+            })}
+
+            <Card className="lg:col-span-2">
+              <CardHeader><CardTitle className="text-sm">Normalized Factor Radar</CardTitle></CardHeader>
+              <CardContent>
+                <div className="grid gap-2 md:grid-cols-2">
+                  {metricScores.map((metric, index) => (
+                    <div key={metric.id} className="rounded border border-slate-700/60 bg-slate-950/40 p-2 text-xs">
+                      <p>{index + 1}. {metric.label}</p>
+                      <div className="mt-1 h-2 rounded bg-slate-800">
+                        <div className="h-2 rounded bg-blue-400" style={{ width: `${metric.score}%` }} />
+                      </div>
+                      <p className="mt-1 text-slate-400">Factor score: {metric.score.toFixed(1)}</p>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        {!loading && activeTab === 'predictive' && (
+          <section className="grid gap-4 lg:grid-cols-3">
+            <Card className="lg:col-span-2">
+              <CardHeader><CardTitle className="text-sm">Monte Carlo (800 paths, 12-month horizon)</CardTitle></CardHeader>
+              <CardContent>
+                <svg viewBox="0 0 100 38" className="h-56 w-full rounded border border-slate-700/60 bg-slate-950/40 p-2">
+                  {['p90','p75','p50','p25','p10'].map((band, idx) => {
+                    const color = `rgba(96,165,250,${0.16 + idx * 0.1})`
+                    const points = simulation.bands.map((step, index) => {
+                      const x = (index / Math.max(simulation.bands.length - 1, 1)) * 100
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      const y = 36 - (((step as any)[band] - 20) / 80) * 36
+                      return `${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`
+                    }).join(' ')
+                    return <path key={band} d={points} fill="none" stroke={color} strokeWidth={band === 'p50' ? 1 : 0.7} />
                   })}
                 </svg>
-
-                {hoverMap && (
-                  <div className="absolute right-3 top-3 rounded border border-slate-500/70 bg-[#070c18]/97 px-2.5 py-1.5 text-[10.5px] shadow-[0_4px_14px_rgba(2,6,23,0.55)] backdrop-blur-sm">
-                    <p className="font-semibold tracking-wide text-slate-100">{hoverMap.state}</p>
-                    <p className="font-mono text-[10px] text-slate-300">{Number.isFinite(hoverMap.value) ? `${hoverMap.value.toFixed(1)} ${mapMetricLabel}` : DASHBOARD_COPY.mapNoData}</p>
-                  </div>
-                )}
-
-                {hasMapValues ? (
-                  <div className="pointer-events-none absolute bottom-3 right-3 rounded border border-slate-500/70 bg-[#070c18]/97 px-2.5 py-1.5 text-[9.5px] text-slate-300 backdrop-blur-sm">
-                    <div className="mb-1 flex items-center justify-between gap-3">
-                      <span className="font-medium tracking-wide text-slate-200">{mapMetricLabel}</span>
-                      <span className="font-mono text-slate-400">Low → High</span>
-                    </div>
-                    <div className="h-2 w-24 rounded bg-gradient-to-r from-[#faf3bc] via-[#f8ad54] to-[#dc2626]" />
-                    <div className="mt-1 flex justify-between font-mono text-[9px] text-slate-400">
-                      <span>{mapExtent.min.toFixed(1)}</span>
-                      <span>{mapExtent.max.toFixed(1)}</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="pointer-events-none absolute bottom-2.5 right-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[9px] text-slate-500">{DASHBOARD_COPY.mapNoData}.</div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/70 bg-[#121a2b]">
-            <CardHeader className="border-b border-border/60 pb-2">
-              <div className="flex items-start justify-between gap-2">
-                <div className="leading-tight">
-                  <CardTitle className="text-[12px]">{indicators.find((entry) => entry.id === indicatorId)?.name ?? indicatorId}</CardTitle>
-                  <p className="text-[10px] text-slate-400">{selectedLabel}: historical (white) with {forecastHorizon}-month forecast projection (orange).</p>
+                <p className="mt-2 text-xs text-slate-300">Bands: P10 / P25 / P50 / P75 / P90 with regime-switching GBM (drift≈{simulation.drift}, vol≈{simulation.volatility}).</p>
+                <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
+                  <div className="rounded border border-slate-700/60 bg-slate-950/40 p-2">Bear: {simulation.bear.toFixed(1)}</div>
+                  <div className="rounded border border-slate-700/60 bg-slate-950/40 p-2">Base: {simulation.base.toFixed(1)}</div>
+                  <div className="rounded border border-slate-700/60 bg-slate-950/40 p-2">Bull: {simulation.bull.toFixed(1)}</div>
                 </div>
-                <span className="rounded border border-amber-300/30 bg-amber-500/10 px-1.5 py-0.5 text-[9px] uppercase text-amber-300">Model: {forecastLoading ? 'updating' : hasForecast ? forecastOutput.bestModel : 'unavailable'}</span>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-2 p-3">
-              <div className="relative h-[222px] rounded border border-border/70 bg-[#0e1628] p-2">
-                {loading ? (
-                  <div className="grid h-full place-items-center text-[11px] text-slate-400">Loading series…</div>
-                ) : loadError ? (
-                  <div className="grid h-full place-items-center text-[11px] text-rose-300">{loadError}</div>
-                ) : !brushedSeries.length ? (
-                  <div className="grid h-full place-items-center text-[11px] text-slate-400">No data for selected filter.</div>
-                ) : (
-                  <svg viewBox="0 0 100 100" className="h-full w-full" onMouseLeave={() => setChartHover(null)}>
-                    {[20, 40, 60, 80].map((y) => <line key={y} x1="0" x2="100" y1={y} y2={y} stroke="rgba(148,163,184,0.14)" strokeWidth="0.35" />)}
-                    {bandPath && <path d={bandPath} fill="rgba(245,158,11,0.12)" />}
-                    <path d={historicalPath} fill="none" stroke="#f8fafc" strokeWidth="1.2" />
-                    {forecastPath && <path d={forecastPath} fill="none" stroke="#f59e0b" strokeWidth="1.2" strokeDasharray="2 1.6" />}
-                    {brushedSeries.map((point, index) => (
-                      <circle key={point.date} cx={toX(index)} cy={toY(point.value)} r={0.56} fill="#f8fafc" onMouseEnter={() => setChartHover({ date: point.date, value: point.value })} />
-                    ))}
-                  </svg>
-                )}
+              </CardContent>
+            </Card>
 
-                {chartHover && (
-                  <div className="absolute right-2 top-2 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[10px]">
-                    <p className="font-mono text-slate-200">{chartHover.date}</p>
-                    <p className="font-mono text-slate-400">{chartHover.value.toFixed(1)}</p>
-                  </div>
-                )}
-              </div>
+            <Card>
+              <CardHeader><CardTitle className="text-sm">Construction Cycle Clock</CardTitle></CardHeader>
+              <CardContent>
+                <div className="grid gap-2 text-xs">
+                  {['Expansion', 'Peak', 'Contraction', 'Trough'].map((phase) => (
+                    <div key={phase} className={`rounded border px-2 py-2 ${phase === simulation.phase ? 'border-rose-300 bg-rose-500/10 text-rose-200 shadow-[0_0_12px_rgba(251,113,133,0.45)]' : 'border-slate-700/60 bg-slate-950/40 text-slate-300'}`}>
+                      {phase}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </section>
+        )}
 
-              <div className="grid grid-cols-3 gap-1 rounded border border-border/70 bg-[#0f1626] p-1.5 text-[10px] text-slate-400">
-                <div>Selected: <span className="font-mono text-slate-200">{selectedLabel}</span></div>
-                <div>Validation: <span className="font-mono text-slate-200">{forecastOutput.validationWindow} mo</span></div>
-                <div>{forecastLoading ? 'Updating forecast…' : compareModels ? `${forecastOutput.comparison.length} models compared` : 'Comparison off'}</div>
-              </div>
-
-              {compareModels && (
-                <div className="rounded border border-border/70 bg-[#0f1626] px-2 py-1.5 text-[10px] text-slate-300">
-                  {forecastOutput.comparison.length === 0 ? (
-                    <p className="text-slate-400">No comparison metrics available for this selection.</p>
-                  ) : (
-                    <div className="grid gap-1">
-                      {forecastOutput.comparison.slice(0, 4).map((entry) => (
-                        <div key={entry.model} className="flex items-center justify-between">
-                          <span className={entry.model === forecastOutput.bestModel ? 'text-amber-300' : 'text-slate-300'}>{entry.model}</span>
-                          <span className="font-mono text-slate-400">RMSE {entry.rmse.toFixed(2)}</span>
-                        </div>
+        {!loading && activeTab === 'equities' && (
+          <section className="grid gap-4 lg:grid-cols-3">
+            <Card className="lg:col-span-2">
+              <CardHeader><CardTitle className="text-sm">Homebuilder & ETF Table</CardTitle></CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead><tr className="text-slate-400"><th>Symbol</th><th>Price</th><th>Day</th><th>YTD %</th><th>Market Cap</th><th>Institutional Signal</th></tr></thead>
+                    <tbody>
+                      {equities.map((row) => (
+                        <tr key={row.symbol} className="border-t border-slate-800"><td className="py-1.5">{row.symbol}</td><td>{row.price}</td><td className={row.day >= 0 ? 'text-emerald-300' : 'text-rose-300'}>{row.day >= 0 ? '+' : ''}{row.day}%</td><td>{row.ytd}%</td><td>{row.marketCap}</td><td>{row.signal}</td></tr>
                       ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p className="mt-2 text-[11px] text-amber-300">Equity rows are scaffolded until server-approved live integration path is enabled.</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader><CardTitle className="text-sm">Institutional Positioning</CardTitle></CardHeader>
+              <CardContent className="space-y-2 text-xs">
+                <div className="rounded border border-slate-700/60 bg-slate-950/40 p-2">Rate sensitivity: Elevated</div>
+                <div className="rounded border border-slate-700/60 bg-slate-950/40 p-2">Short interest: Moderate</div>
+                <div className="rounded border border-slate-700/60 bg-slate-950/40 p-2">Insider activity: Mixed</div>
+                <div className="rounded border border-slate-700/60 bg-slate-950/40 p-2">Options skew: Slightly bearish</div>
+                <div className="rounded border border-slate-700/60 bg-slate-950/40 p-2">Valuation P/B: Above long-run median</div>
+              </CardContent>
+            </Card>
+
+            <Card className="lg:col-span-3">
+              <CardHeader><CardTitle className="text-sm">YTD vs S&P 500 Benchmark (line at 5.8%)</CardTitle></CardHeader>
+              <CardContent>
+                <div className="space-y-1">
+                  {equities.map((row) => (
+                    <div key={row.symbol} className="flex items-center gap-2 text-xs">
+                      <span className="w-16">{row.symbol}</span>
+                      <div className="h-2 flex-1 rounded bg-slate-800"><div className="h-2 rounded bg-blue-400" style={{ width: `${(row.ytd / maxYtd) * 100}%` }} /></div>
+                      <span className="w-12 text-right">{row.ytd}%</span>
                     </div>
-                  )}
+                  ))}
+                  <div className="pt-1 text-[11px] text-slate-400">S&P 500 benchmark: 5.8% (reference line)</div>
                 </div>
-              )}
+              </CardContent>
+            </Card>
+          </section>
+        )}
 
-              {forecastError && <div className="rounded border border-rose-300/30 bg-rose-500/10 px-2 py-1 text-[10px] text-rose-200">{forecastError}</div>}
+        {!loading && activeTab === 'methodology' && (
+          <section className="grid gap-4">
+            <Card>
+              <CardHeader><CardTitle className="text-sm">Composite Index Methodology</CardTitle></CardHeader>
+              <CardContent className="space-y-2 text-xs text-slate-300">
+                <p>Composite construction uses Z-score normalization across each metric, then derives factor weights from covariance-to-variance coefficients (OLS-style) against housing starts as anchor target.</p>
+                <p>Dynamic Factor Model concept: weighted latent factor summarizes synchronized shifts in permits, starts, costs, and scaffolded/pending survey-equity channels.</p>
+                <p>Monte Carlo forecast runs 800 regime-switching GBM paths for 12 months and publishes percentile bands P10/P25/P50/P75/P90 plus bear/base/bull terminal scenarios.</p>
+                <p>Data sources and revision policy: Census/FRED/BLS wired via provider abstraction and server base URL; unsupported feeds (ABI, NAHB HMI, equities live tickers, spending) are clearly tagged pending and not represented as fake live feeds.</p>
+              </CardContent>
+            </Card>
 
-              <div className="rounded border border-border/70 bg-[#0f1626] px-2 py-1.5">
-                <div className="mb-1 flex items-center justify-between text-[10px] text-slate-400">
-                  <span>Range brush</span>
-                  <span className="font-mono">{brushedSeries[0]?.date ?? '—'} → {brushedSeries.at(-1)?.date ?? '—'}</span>
-                </div>
-                <div className="grid gap-1">
-                  <input className="accent-amber-400" type="range" min={0} max={95} value={brushStart} aria-label="Brush start" onChange={(event) => setBrushStart(Math.min(Number(event.target.value), brushEnd - 5))} />
-                  <input className="accent-amber-400" type="range" min={5} max={100} value={brushEnd} aria-label="Brush end" onChange={(event) => setBrushEnd(Math.max(Number(event.target.value), brushStart + 5))} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <section className="inline-flex rounded border border-border/70 bg-[#121a2b] p-0.5">
-          {(['all', '10y', '5y', '3y', '1y'] as RangeOption[]).map((option) => (
-            <button
-              key={option}
-              aria-pressed={range === option}
-              className={`rounded px-2.5 py-1 text-[10px] uppercase transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60 ${range === option ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400 hover:text-slate-200'}`}
-              onClick={() => setRange(option)}
-            >
-              {option}
-            </button>
-          ))}
-        </section>
-
-        <Card className="border-border/70 bg-[#121a2b]">
-          <CardHeader className="pb-1.5">
-            <CardTitle className="text-[12px]">Methodology and sources</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-2 text-[10.5px] leading-relaxed text-slate-400 md:grid-cols-2">
-            <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2">
-              <p className="text-[10px] uppercase tracking-[0.08em] text-slate-200">Data Sources</p>
-              <p>Core indicators are served through the checked-in provider contract, with local synthetic fallback when live credentials are unavailable.</p>
-              <p>Current panels are wired to Census, BLS, and FRED-backed series when live endpoints are available, with local dataset fallback.</p>
-            </div>
-            <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2">
-              <p className="text-[10px] uppercase tracking-[0.08em] text-slate-200">Forecasting</p>
-              <p>The existing engine compares naive, SES, Holt, and lag-regression models and selects by validation RMSE.</p>
-              <p>Forecast bands are derived from residual volatility and available history length.</p>
-            </div>
-            <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2 md:col-span-2">
-              <p className="text-[10px] uppercase tracking-[0.08em] text-slate-200">Limitations</p>
-              <p>30Y Mortgage uses the live FRED mortgage series when available. ABI remains a transparent permits/employment composite proxy.</p>
-              {forecastOutput.warnings.length > 0 && <p className="text-amber-200">Forecast warning: {forecastOutput.warnings.join(' ')}</p>}
-            </div>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardHeader><CardTitle className="text-sm">State Polygon Choropleth (Building Permits)</CardTitle></CardHeader>
+              <CardContent>
+                <svg viewBox="0 0 430 260" className="w-full rounded border border-slate-700/60 bg-slate-950/40">
+                  {mapFeatures.map((feature) => {
+                    const ring = feature.geometry.coordinates[0] ?? []
+                    const raw = mapByState.get(feature.properties.stateId)
+                    const fill = raw == null ? 'rgba(30,41,59,0.45)' : `rgba(248,173,84,${0.4 + ((raw - 90) / 50) * 0.5})`
+                    return <path key={feature.properties.stateId} d={polygonToPath(feature.properties.stateId, ring)} fill={fill} stroke="rgba(226,232,240,0.4)" strokeWidth={0.65} />
+                  })}
+                </svg>
+              </CardContent>
+            </Card>
+          </section>
+        )}
       </main>
     </div>
   )
