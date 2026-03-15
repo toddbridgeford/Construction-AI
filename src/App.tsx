@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useEffect } from 'react'
 import { useDashboardUrlState } from '@/hooks/useDashboardUrlState'
 import {
+  buildLeadingKpis,
   useActivity,
   useConsistency,
   useCosts,
@@ -40,6 +41,7 @@ function App() {
   const forecasts = useForecasts(params)
   const consistency = useConsistency(params)
   const equities = useEquities(params)
+  const leadingKpis = buildLeadingKpis({ activity, pipeline, labor, costs })
 
   useEffect(() => {
     document.documentElement.classList.add('dark')
@@ -71,7 +73,7 @@ function App() {
               <CardHeader><CardTitle className="text-sm">Metadata + contract readiness</CardTitle></CardHeader>
               <CardContent className="space-y-1 text-xs">
                 <p>Freshness: {freshnessLabel(metadata.freshness)}</p>
-                {metadata.data?.sectors.map((sector) => <p key={sector.id}>{sector.label}: <span className="font-semibold">{sector.readiness}</span></p>)}
+                {metadata.data?.filterOptions.sectors.map((sector) => <p key={sector.sectorId}>{sector.label}: <span className="font-semibold">{sector.readiness}</span></p>)}
               </CardContent>
             </Card>
             <Card>
@@ -112,13 +114,13 @@ function App() {
 
         {state.tab === 'leading' && (
           <section className="grid gap-4 md:grid-cols-3">
-            {[{ label: 'Activity', hook: activity }, { label: 'Pipeline', hook: pipeline }, { label: 'Labor', hook: labor }, { label: 'Costs', hook: costs }].map((item) => (
-              <Card key={item.label}>
-                <CardHeader><CardTitle className="text-sm">{item.label}</CardTitle></CardHeader>
+            {leadingKpis.map((card) => (
+              <Card key={card.id}>
+                <CardHeader><CardTitle className="text-sm">{card.label}</CardTitle></CardHeader>
                 <CardContent className="text-xs">
-                  <p>Status: {item.hook.data?.sourceStatus ?? 'pending'}</p>
-                  <p>Freshness: {freshnessLabel(item.hook.freshness)}</p>
-                  <p>Latest: {item.hook.data?.series.at(-1)?.value?.toFixed(2) ?? 'N/A'}</p>
+                  <p>Status: {card.sourceStatus}</p>
+                  <p>Freshness: {freshnessLabel(card.freshness)}</p>
+                  <p>Latest: {card.latestValue?.toFixed(2) ?? 'N/A'}</p>
                 </CardContent>
               </Card>
             ))}

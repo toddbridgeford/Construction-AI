@@ -1,18 +1,12 @@
 import { useEffect, useState, type DependencyList } from 'react'
-import type { ApiEnvelope, FreshnessMeta } from '@/api/contracts'
+import type { ApiEnvelope } from '@/api/contracts'
+import type { HookResourceState } from './types'
 
-type ResourceState<T> = {
-  data: T | null
-  loading: boolean
-  error: string | null
-  freshness: FreshnessMeta | null
-}
-
-export function useApiResource<T>(loader: () => Promise<ApiEnvelope<T>>, deps: DependencyList): ResourceState<T> {
+export function useApiResource<T>(loader: () => Promise<ApiEnvelope<T>>, deps: DependencyList): HookResourceState<T> {
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [freshness, setFreshness] = useState<FreshnessMeta | null>(null)
+  const [freshness, setFreshness] = useState<HookResourceState<T>['freshness']>(null)
 
   useEffect(() => {
     let alive = true
