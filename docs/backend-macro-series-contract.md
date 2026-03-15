@@ -113,11 +113,11 @@ Example:
 
 ## Implementation notes
 
-This repository does not currently run a server runtime. The implementation added for this contract is a backend-oriented route handler helper:
+This repository exposes a runtime `/api/macro-series` route through the Vite server layer (`vite dev` + `vite preview`) and delegates request handling to:
 
 - `src/backend/macroSeries.ts`
 
-Integrate this helper into your API runtime route (`GET /api/macro-series`) where your server framework parses query params and wires the upstream Census client.
+The route middleware in `vite.config.ts` parses `metric` query params and invokes the helper with a Census VIP fetch dependency.
 
 Exact invocation shape:
 
