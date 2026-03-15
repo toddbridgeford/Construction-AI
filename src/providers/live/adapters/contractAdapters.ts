@@ -13,14 +13,39 @@ import type {
 
 const MACRO_METRICS = new Set(['abi', 'construction_spending', 'nahb_hmi'])
 
+const toFiniteNumber = (value: unknown): number | null => {
+  if (typeof value === 'number' && Number.isFinite(value)) return value
+  if (typeof value === 'string') {
+    const parsed = Number(value.replace(/,/g, ''))
+    return Number.isFinite(parsed) ? parsed : null
+  }
+  return null
+}
+
 const asSeries = (input: unknown): TimeSeriesPoint[] => {
   if (!Array.isArray(input)) return []
   return input
     .map((item) => {
       if (!item || typeof item !== 'object') return null
-      const row = item as { date?: unknown; value?: unknown }
-      if (typeof row.date !== 'string' || typeof row.value !== 'number') return null
-      return { date: row.date, value: row.value }
+      const row = item as {
+        date?: unknown
+        period?: unknown
+        month?: unknown
+        value?: unknown
+        observation?: unknown
+        observation_value?: unknown
+      }
+      const date =
+        typeof row.date === 'string'
+          ? row.date
+          : typeof row.period === 'string'
+            ? row.period
+            : typeof row.month === 'string'
+              ? row.month
+              : null
+      const value = toFiniteNumber(row.value ?? row.observation ?? row.observation_value)
+      if (!date || value == null) return null
+      return { date, value }
     })
     .filter((row): row is TimeSeriesPoint => row != null)
 }
@@ -80,8 +105,35 @@ export const adaptEquities = (input: unknown): EquitiesSnapshotResponse | null =
 
 
 export const adaptMacroSeries = (input: unknown): MacroSeriesResponse | null => {
-  const base = adaptSeriesResponse<MacroSeriesResponse>(input)
-  const metric = (base as { metric?: unknown } | null)?.metric
-  if (!base || typeof metric !== 'string' || !MACRO_METRICS.has(metric)) return null
-  return base
+  if (!input || typeof input !== 'object') return null
+
+  const payload = input as Partial<MacroSeriesResponse> & {
+    points?: unknown
+    data?: unknown
+    status?: unknown
+  }
+
+  const metric = typeof payload.metric === 'string' ? payload.metric : null
+  if (!metric || !MACRO_METRICS.has(metric)) return null
+
+  const series = asSeries(payload.series ?? payload.points ?? payload.data)
+  const sourceStatus =
+    payload.sourceStatus === 'live' || payload.sourceStatus === 'fallback' || payload.sourceStatus === 'pending'
+      ? payload.sourceStatus
+      : payload.status === 'live' || payload.status === 'fallback' || payload.status === 'pending'
+        ? payload.status
+        : 'pending'
+
+  return {
+    meta:
+      payload.meta && typeof payload.meta.generatedAt === 'string' && (payload.meta.mode === 'live' || payload.meta.mode === 'degraded' || payload.meta.mode === 'offline')
+        ? payload.meta
+        : { generatedAt: new Date().toISOString(), mode: 'degraded' },
+    region: typeof payload.region === 'string' ? payload.region : 'us',
+    sector: payload.sector === 'permits' || payload.sector === 'starts' || payload.sector === 'cost_index' || payload.sector === 'employment' ? payload.sector : 'permits',
+    horizon: payload.horizon === 3 || payload.horizon === 6 || payload.horizon === 12 ? payload.horizon : 12,
+    metric,
+    series,
+    sourceStatus
+  }
 }
