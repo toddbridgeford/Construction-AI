@@ -30,6 +30,18 @@ Example:
 
 ## Upstream mapping
 
+### Runtime environment variables (macro-series route)
+
+- `CENSUS_VIP_API_URL` / `CENSUS_VIP_API_KEY` (construction spending)
+- `AIA_ABI_API_URL` / `AIA_ABI_API_KEY` (ABI)
+- `NAHB_HMI_API_URL` / `NAHB_HMI_API_KEY` (NAHB HMI)
+
+Optional API key transport configuration (all three metrics support the same pattern):
+
+- `<PREFIX>_API_KEY_HEADER` to send the API key via a custom header (example: `x-api-key`)
+- `<PREFIX>_API_KEY_QUERY_PARAM` to send the API key as a query parameter name (example: `api_key`)
+- If neither optional override is set and `<PREFIX>_API_KEY` is present, the request uses `Authorization: Bearer <API_KEY>`
+
 ### `metric=construction_spending`
 
 - **Source**: Census Value of Construction Put in Place (VIP)
@@ -44,6 +56,9 @@ Example:
 - **Unit returned to frontend**: `index`
 - **Transform**: `diffusion` with `transformLabel: "diffusion vs 50 baseline"`
 - **Truthfulness rule**: raw index values are returned; `mom`/`yoy` are left `null` to avoid implying growth semantics for diffusion indices.
+- **Normalization aliases accepted**:
+  - date keys: `date`, `period`, `month`, `time`, `release_date`
+  - value keys: `value`, `index`, `abi`, `abi_index`, `billings_index`, `observation`, `observation_value`
 
 ### `metric=nahb_hmi`
 
@@ -52,6 +67,9 @@ Example:
 - **Unit returned to frontend**: `index`
 - **Transform**: `diffusion` with `transformLabel: "diffusion vs 50 baseline"`
 - **Truthfulness rule**: raw index values are returned; `mom`/`yoy` are left `null` to avoid implying growth semantics for diffusion indices.
+- **Normalization aliases accepted**:
+  - date keys: `date`, `period`, `month`, `time`, `release_date`
+  - value keys: `value`, `index`, `hmi`, `hmi_index`, `observation`, `observation_value`
 
 ## Response schema (stable frontend contract)
 

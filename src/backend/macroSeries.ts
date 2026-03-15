@@ -1,4 +1,4 @@
-import { adaptCensusVipPayload } from '../providers/live/adapters/censusAdapter'
+import { adaptAbiPayload, adaptCensusVipPayload, adaptNahbHmiPayload } from '../providers/live/adapters/censusAdapter'
 
 export const SUPPORTED_MACRO_METRICS = ['construction_spending', 'abi', 'nahb_hmi'] as const
 export type SupportedMacroMetric = (typeof SUPPORTED_MACRO_METRICS)[number]
@@ -189,9 +189,15 @@ export const getMacroSeriesResponse = async (
     nahb_hmi: deps.fetchNahbHmiSeries ?? (async () => [])
   }
 
+  const normalizeByMetric: Record<SupportedMacroMetric, (payload: unknown) => Array<{ date: string; value: number }>> = {
+    construction_spending: adaptCensusVipPayload,
+    abi: adaptAbiPayload,
+    nahb_hmi: adaptNahbHmiPayload
+  }
+
   try {
     const upstreamPayload = await fetchByMetric[metric]()
-    const normalized = adaptCensusVipPayload(upstreamPayload)
+    const normalized = normalizeByMetric[metric](upstreamPayload)
 
     if (normalized.length === 0) {
       return {

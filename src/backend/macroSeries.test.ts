@@ -69,7 +69,41 @@ const run = async () => {
   assert(abiSuccess.body.sourceStatus === 'live', 'Expected ABI live source status')
   assert(abiSuccess.body.series.length === 3, 'Expected ABI points')
   assert(abiSuccess.body.series[2].value === 51.3, 'Expected ABI latest value')
+  assert(abiSuccess.body.series[2].date === '2025-01', 'Expected ABI YYYY-MM normalized date')
   assert(abiSuccess.body.series[1].mom === null && abiSuccess.body.series[1].yoy === null, 'Expected ABI rates null for truthful diffusion semantics')
+
+  const abiPending = await getMacroSeriesResponse(
+    { metric: 'abi' },
+    {
+      now: fixedNow,
+      fetchCensusVipSeries: async () => [],
+      fetchAbiSeries: async () => []
+    }
+  )
+
+  assert(abiPending.status === 200, 'Expected ABI pending status 200')
+  if ('error' in abiPending.body) throw new Error('Expected ABI pending payload, got error payload')
+  assert(abiPending.body.sourceStatus === 'pending', 'Expected ABI pending sourceStatus for empty payload')
+  assert(abiPending.body.series.length === 0, 'Expected ABI empty series for pending payload')
+
+  const abiFixtureNormalized = await getMacroSeriesResponse(
+    { metric: 'abi' },
+    {
+      now: fixedNow,
+      fetchCensusVipSeries: async () => [],
+      fetchAbiSeries: async () => [
+        { release_date: '2024-11-30', abi_index: '48.6' },
+        { date: '202412', billings_index: 49.8 },
+        { period: '2025-01-01', abi: '50.4' }
+      ]
+    }
+  )
+
+  assert(abiFixtureNormalized.status === 200, 'Expected ABI fixture normalization status 200')
+  if ('error' in abiFixtureNormalized.body) throw new Error('Expected ABI fixture payload, got error payload')
+  assert(abiFixtureNormalized.body.sourceStatus === 'live', 'Expected ABI fixture to normalize into live status')
+  assert(abiFixtureNormalized.body.series[0].date === '2024-11', 'Expected ABI release_date normalization')
+  assert(abiFixtureNormalized.body.series[2].value === 50.4, 'Expected ABI alternate value key normalization')
 
   const nahbSuccess = await getMacroSeriesResponse(
     { metric: 'nahb_hmi' },
@@ -91,7 +125,41 @@ const run = async () => {
   assert(nahbSuccess.body.source.transformType === 'diffusion', 'Expected NAHB HMI diffusion transform type')
   assert(nahbSuccess.body.sourceStatus === 'live', 'Expected NAHB HMI live source status')
   assert(nahbSuccess.body.series.length === 2, 'Expected NAHB HMI points')
+  assert(nahbSuccess.body.series[0].date === '2024-12', 'Expected NAHB HMI YYYY-MM normalized date')
   assert(nahbSuccess.body.series[1].mom === null && nahbSuccess.body.series[1].yoy === null, 'Expected NAHB HMI rates null for truthful diffusion semantics')
+
+  const nahbPending = await getMacroSeriesResponse(
+    { metric: 'nahb_hmi' },
+    {
+      now: fixedNow,
+      fetchCensusVipSeries: async () => [],
+      fetchNahbHmiSeries: async () => []
+    }
+  )
+
+  assert(nahbPending.status === 200, 'Expected NAHB HMI pending status 200')
+  if ('error' in nahbPending.body) throw new Error('Expected NAHB HMI pending payload, got error payload')
+  assert(nahbPending.body.sourceStatus === 'pending', 'Expected NAHB HMI pending sourceStatus for empty payload')
+  assert(nahbPending.body.series.length === 0, 'Expected NAHB HMI empty series for pending payload')
+
+  const nahbFixtureNormalized = await getMacroSeriesResponse(
+    { metric: 'nahb_hmi' },
+    {
+      now: fixedNow,
+      fetchCensusVipSeries: async () => [],
+      fetchNahbHmiSeries: async () => [
+        { release_date: '2024-11-20', hmi_index: '41' },
+        { month: '2024-12', index: 45 },
+        { time: '2025-01-01', hmi: '47' }
+      ]
+    }
+  )
+
+  assert(nahbFixtureNormalized.status === 200, 'Expected NAHB HMI fixture normalization status 200')
+  if ('error' in nahbFixtureNormalized.body) throw new Error('Expected NAHB HMI fixture payload, got error payload')
+  assert(nahbFixtureNormalized.body.sourceStatus === 'live', 'Expected NAHB fixture to normalize into live status')
+  assert(nahbFixtureNormalized.body.series[0].date === '2024-11', 'Expected NAHB release_date normalization')
+  assert(nahbFixtureNormalized.body.series[2].value === 47, 'Expected NAHB alternate value key normalization')
 
   const pending = await getMacroSeriesResponse(
     { metric: 'construction_spending' },
