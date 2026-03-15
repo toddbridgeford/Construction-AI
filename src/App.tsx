@@ -7,12 +7,12 @@ import {
   useConsistency,
   useCosts,
   useEquities,
-  useForecasts,
   useLabor,
   useMetadata,
   usePipeline
 } from '@/hooks/dashboardHooks'
 import { MapCard } from '@/components/dashboard/MapCard'
+import { computeCompositeMethodology } from '@/lib/compositeMethodology'
 
 const tabs: Array<{ id: 'overview' | 'leading' | 'predictive' | 'equities' | 'methodology'; label: string }> = [
   { id: 'overview', label: 'Overview' },
@@ -39,12 +39,34 @@ function App() {
   usePipeline(params)
   const costs = useCosts(params)
   useLabor(params)
-  const forecasts = useForecasts(params)
   const consistency = useConsistency(params)
   const equities = useEquities(params)
   const coreMetrics = buildCoreMetricCards({ activity, activityStarts, costs, equities })
-  const compositeInputs = coreMetrics.filter((metric) => metric.safeForComposite)
-  const excludedFromComposite = coreMetrics.filter((metric) => !metric.safeForComposite)
+  const compositeMethodology = computeCompositeMethodology({
+    metrics: coreMetrics.map((metric) => {
+      const history =
+        metric.id === 'building_permits'
+          ? activity.data?.series
+          : metric.id === 'housing_starts'
+            ? activityStarts.data?.series
+            : metric.id === 'materials_ppi'
+              ? costs.data?.series
+              : undefined
+
+      return {
+        id: metric.id,
+        label: metric.label,
+        sourceStatus: metric.sourceStatus,
+        safeForComposite: metric.safeForComposite,
+        growthMom: metric.growthMom,
+        growthYoy: metric.growthYoy,
+        latestValue: metric.latestValue,
+        modelExclusionReason: metric.modelExclusionReason,
+        history
+      }
+    }),
+    horizon: state.horizon
+  })
 
   useEffect(() => {
     document.documentElement.classList.add('dark')
@@ -102,6 +124,16 @@ function App() {
                 </label>
               </CardContent>
             </Card>
+            <Card>
+              <CardHeader><CardTitle className="text-sm">Composite Index (0-100)</CardTitle></CardHeader>
+              <CardContent className="space-y-1 text-xs">
+                <p>Score: <span className="font-semibold">{compositeMethodology.scoreLabel}</span></p>
+                <p>Status: {compositeMethodology.status}</p>
+                <p>{compositeMethodology.message}</p>
+                <p>Valid metrics: {compositeMethodology.validMetricCount}/{compositeMethodology.minimumRequiredMetrics} minimum</p>
+                <p>Recent history: {compositeMethodology.history.slice(-3).map((point) => `${point.date}: ${point.score.toFixed(1)}`).join(' · ') || 'N/A'}</p>
+              </CardContent>
+            </Card>
             <div className="grid gap-4 md:col-span-2 md:grid-cols-2 lg:grid-cols-3">
               {coreMetrics.map((metric) => (
                 <Card key={metric.id}>
@@ -148,20 +180,27 @@ function App() {
         )}
 
         {state.tab === 'predictive' && (
-          <section className="grid gap-4 md:grid-cols-2">
+          <section className="grid gap-4 md:grid-cols-2"> 
             <Card>
-              <CardHeader><CardTitle className="text-sm">Forecast quantiles ({state.horizon} months)</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-sm">Composite forecast quantiles ({state.horizon} months)</CardTitle></CardHeader>
               <CardContent className="text-xs space-y-1">
-                {forecasts.data?.bands.slice(0, 4).map((band) => <p key={band.month}>M{band.month}: p10 {band.p10.toFixed(1)} · p50 {band.p50.toFixed(1)} · p90 {band.p90.toFixed(1)}</p>)}
+                {compositeMethodology.predictiveModel?.forecast.slice(0, 4).map((point, index) => {
+                  const spread = Math.max((point.upperBound - point.lowerBound) / 2, 0.5)
+                  const p10 = point.value - spread
+                  const p50 = point.value
+                  const p90 = point.value + spread
+                  return <p key={point.date}>M{index + 1}: p10 {p10.toFixed(1)} · p50 {p50.toFixed(1)} · p90 {p90.toFixed(1)}</p>
+                })}
+                {!compositeMethodology.predictiveModel && <p>{compositeMethodology.historyMessage}</p>}
               </CardContent>
             </Card>
             <Card>
               <CardHeader><CardTitle className="text-sm">Composite model inputs (validated only)</CardTitle></CardHeader>
               <CardContent className="text-xs space-y-1">
-                <p>Forecast source: {forecasts.data?.sourceStatus ?? 'pending'} ({freshnessLabel(forecasts.freshness)})</p>
-                <p>Included inputs: {compositeInputs.map((metric) => metric.label).join(', ') || 'None'}</p>
-                {excludedFromComposite.map((metric) => (
-                  <p key={metric.id}>Excluded {metric.label}: {metric.modelExclusionReason ?? 'Pending validation.'}</p>
+                <p>Predictive source: shared composite methodology (equal-weighted)</p>
+                <p>Included inputs: {compositeMethodology.audit.filter((item) => item.status === 'included').map((item) => item.label).join(', ') || 'None'}</p>
+                {compositeMethodology.audit.filter((item) => item.status === 'excluded').map((item) => (
+                  <p key={item.id}>Excluded {item.label}: {item.reason}</p>
                 ))}
                 {consistency.data?.checks.map((check) => <p key={check.id}>{check.ok ? '✓' : '•'} {check.message}</p>)}
               </CardContent>
@@ -184,8 +223,9 @@ function App() {
             <CardHeader><CardTitle className="text-sm">Methodology</CardTitle></CardHeader>
             <CardContent className="space-y-2 text-xs">
               <p>Each KPI card is mapped to a specific upstream feed, typed hook path, and API endpoint contract; pending feeds remain explicitly marked pending.</p>
-              <p>MoM/YoY transforms are derived from the same hook payloads used by the leading indicators view, with inverse signal scoring applied only to inflation-sensitive Materials PPI.</p>
-              <p>Predictive composite input list includes only non-pending validated metrics; excluded metrics are listed with explicit reasons.</p>
+              <p>Composite methodology is explicit and equal-weighted: each valid metric is normalized from directional growth (YoY preferred, MoM fallback) into a 0-100 score by clamping to ±{compositeMethodology.methodology.clampRangePct}% then scaling linearly.</p>
+              <p>Direct metrics use growth as-is, while inverse metrics (Materials PPI) flip growth sign before normalization; pending, explicitly excluded, non-eligible, or missing-growth metrics are excluded with explicit reasons.</p>
+              <p>Composite score requires at least {compositeMethodology.methodology.minimumRequiredMetrics} valid metrics and composite history requires at least {compositeMethodology.methodology.minimumRequiredHistoryPoints} valid points; predictive modeling consumes only this shared composite history.</p>
               <p>Bootstrap endpoints use stale-while-revalidate over IndexedDB cache and expose offline snapshot state.</p>
             </CardContent>
           </Card>
