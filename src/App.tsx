@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { ChartCard } from '@/components/dashboard/ChartCard'
 import { ControlsRow } from '@/components/dashboard/ControlsRow'
@@ -7,50 +7,197 @@ import { HeaderBar } from '@/components/dashboard/HeaderBar'
 import { KpiGrid } from '@/components/dashboard/KpiGrid'
 import { MapCard } from '@/components/dashboard/MapCard'
 import { MethodologyCard } from '@/components/dashboard/MethodologyCard'
+import { buildKpis, mapDataByIndicator, toSeries } from '@/components/dashboard/dataTransforms'
 import type { DashboardOption, KpiMetric } from '@/components/dashboard/types'
+import type { DashboardData, GeographyLevel } from '@/data/types'
+import { LocalJsonProvider } from '@/providers/LocalJsonProvider'
 
-const geographies: DashboardOption[] = [
+const provider = new LocalJsonProvider()
+
+const geographyLevels: DashboardOption[] = [
   { label: 'United States', value: 'us' },
-  { label: 'Northeast', value: 'northeast' },
-  { label: 'Southeast', value: 'southeast' }
+  { label: 'Region', value: 'region' },
+  { label: 'State', value: 'state' },
+  { label: 'Metro', value: 'metro' }
 ]
 
-const sectors: DashboardOption[] = [
-  { label: 'All Segments', value: 'all' },
-  { label: 'Residential', value: 'residential' },
-  { label: 'Infrastructure', value: 'infrastructure' }
-]
-
-const horizons: DashboardOption[] = [
-  { label: '12 Months', value: '12m' },
-  { label: '24 Months', value: '24m' },
-  { label: '36 Months', value: '36m' }
-]
-
-const metrics: KpiMetric[] = [
-  { label: 'Total Pipeline Value', value: '$482.6B', delta: '+5.3% QoQ', trend: 'up' },
-  { label: 'Permits Momentum', value: '112.8', delta: '+1.4 pts', trend: 'up' },
-  { label: 'Labor Availability', value: '88.2', delta: '-0.6 pts', trend: 'down' },
-  { label: 'Input Cost Pressure', value: '74.1', delta: 'Flat MoM', trend: 'flat' }
-]
+const formatPct = (value: number | null) => (value == null ? 'N/A' : `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`)
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true)
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  const [geographyLevel, setGeographyLevel] = useState<GeographyLevel>('us')
+  const [regionId, setRegionId] = useState('northeast')
+  const [stateId, setStateId] = useState('CA')
+  const [metroId, setMetroId] = useState('los-angeles-ca')
+  const [indicatorGroup, setIndicatorGroup] = useState('Market Activity')
+  const [indicatorId, setIndicatorId] = useState('permits')
+  const [forecastEnabled, setForecastEnabled] = useState(true)
+  const [range, setRange] = useState<'all' | '10y' | '5y' | '3y' | '1y'>('5y')
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode)
   }, [isDarkMode])
 
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true)
+      const next = await provider.getDashboardData()
+      setDashboardData(next)
+      setLoading(false)
+    }
+
+    void load()
+  }, [])
+
+  const metadata = dashboardData?.metadata
+  const observations = dashboardData?.observations ?? []
+
+  const regionOptions = useMemo(
+    () => metadata?.geography.regions.map((region) => ({ label: region.name, value: region.id })) ?? [],
+    [metadata]
+  )
+
+  const stateOptions = useMemo(() => {
+    const source = metadata?.geography.states ?? []
+    return source
+      .filter((state) => (geographyLevel === 'state' || geographyLevel === 'metro' || geographyLevel === 'region' ? state.regionId === regionId : true))
+      .map((state) => ({ label: state.name, value: state.id }))
+  }, [geographyLevel, metadata, regionId])
+
+  const metroOptions = useMemo(() => {
+    const source = metadata?.geography.metros ?? []
+    return source.filter((metro) => metro.stateId === stateId).map((metro) => ({ label: metro.name, value: metro.id }))
+  }, [metadata, stateId])
+
+  useEffect(() => {
+    if (stateOptions.length && !stateOptions.some((option) => option.value === stateId)) {
+      setStateId(stateOptions[0].value)
+    }
+  }, [stateId, stateOptions])
+
+  useEffect(() => {
+    if (metroOptions.length && !metroOptions.some((option) => option.value === metroId)) {
+      setMetroId(metroOptions[0].value)
+    }
+  }, [metroId, metroOptions])
+
+  const indicatorGroupOptions = useMemo(() => {
+    const groups = new Set((metadata?.indicators ?? []).filter((indicator) => indicator.geographyLevels.includes('us')).map((indicator) => indicator.group))
+    return [...groups].map((group) => ({ label: group, value: group }))
+  }, [metadata])
+
+  const availableIndicators = useMemo(() => {
+    const indicators = metadata?.indicators ?? []
+    return indicators.filter((indicator) => {
+      const levelMatch = indicator.geographyLevels.includes(geographyLevel)
+      if (!levelMatch) return false
+      return geographyLevel === 'us' ? indicator.group === indicatorGroup : true
+    })
+  }, [geographyLevel, indicatorGroup, metadata])
+
+  useEffect(() => {
+    if (availableIndicators.length && !availableIndicators.some((indicator) => indicator.id === indicatorId)) {
+      setIndicatorId(availableIndicators[0].id)
+    }
+  }, [availableIndicators, indicatorId])
+
+  const selectedGeographyId = geographyLevel === 'us' ? 'us' : geographyLevel === 'region' ? regionId : geographyLevel === 'state' ? stateId : metroId
+
+  const primarySeries = useMemo(
+    () => toSeries(observations, geographyLevel, selectedGeographyId, indicatorId),
+    [geographyLevel, indicatorId, observations, selectedGeographyId]
+  )
+
+  const secondaryIndicator = availableIndicators.find((indicator) => indicator.id !== indicatorId)?.id ?? indicatorId
+  const secondarySeries = useMemo(
+    () => toSeries(observations, geographyLevel, selectedGeographyId, secondaryIndicator),
+    [geographyLevel, observations, secondaryIndicator, selectedGeographyId]
+  )
+
+  const [forecastPoints, setForecastPoints] = useState<{ date: string; value: number }[]>([])
+
+  useEffect(() => {
+    const loadForecast = async () => {
+      if (!forecastEnabled) {
+        setForecastPoints([])
+        return
+      }
+
+      const response = await provider.getForecast({ geographyLevel, geographyId: selectedGeographyId, indicatorId, periods: 12 })
+      setForecastPoints(response.projectedPoints)
+    }
+
+    void loadForecast()
+  }, [forecastEnabled, geographyLevel, indicatorId, selectedGeographyId])
+
+  const kpis = useMemo<KpiMetric[]>(() => {
+    const values = buildKpis({
+      selectedIndicator: indicatorId,
+      indicators: metadata?.indicators ?? [],
+      series: primarySeries,
+      comparisonSeries: secondarySeries
+    })
+
+    return values.map((value) => {
+      const delta = value.momChange
+      return {
+        ...value,
+        trend: delta == null ? 'flat' : delta > 0 ? 'up' : delta < 0 ? 'down' : 'flat',
+        deltaText: `MoM ${formatPct(value.momChange)}`,
+        yoyText: `YoY ${formatPct(value.yoyChange)}`
+      }
+    })
+  }, [indicatorId, metadata?.indicators, primarySeries, secondarySeries])
+
+  const mapEntries = useMemo(() => mapDataByIndicator(dashboardData?.mapData ?? [], indicatorId === 'employment' ? 'employment' : 'permits'), [dashboardData?.mapData, indicatorId])
+
+  const isEmpty = !primarySeries.points.length
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <HeaderBar isDarkMode={isDarkMode} onToggleTheme={() => setIsDarkMode((prev) => !prev)} />
       <main className="mx-auto flex w-full max-w-[1360px] flex-col gap-2 px-3 py-2.5 md:gap-2.5 md:px-4 md:py-3">
-        <ControlsRow geographies={geographies} sectors={sectors} horizons={horizons} />
-        <KpiGrid metrics={metrics} />
+        <ControlsRow
+          geographyLevels={geographyLevels}
+          selectedGeographyLevel={geographyLevel}
+          onGeographyLevelChange={(value) => setGeographyLevel(value as GeographyLevel)}
+          regions={regionOptions}
+          selectedRegion={regionId}
+          onRegionChange={setRegionId}
+          states={stateOptions}
+          selectedState={stateId}
+          onStateChange={setStateId}
+          metros={metroOptions}
+          selectedMetro={metroId}
+          onMetroChange={setMetroId}
+          indicatorGroups={indicatorGroupOptions}
+          selectedIndicatorGroup={indicatorGroup}
+          onIndicatorGroupChange={setIndicatorGroup}
+          indicators={availableIndicators.map((item) => ({ label: item.name, value: item.id }))}
+          selectedIndicator={indicatorId}
+          onIndicatorChange={setIndicatorId}
+          forecastEnabled={forecastEnabled}
+          onForecastToggle={setForecastEnabled}
+        />
+
+        <KpiGrid metrics={kpis} />
 
         <section className="grid gap-2 xl:grid-cols-[1.24fr_0.76fr]">
-          <MapCard />
-          <ChartCard />
+          <MapCard
+            mapData={mapEntries}
+            selectedIndicator={indicatorId === 'employment' ? 'employment' : 'permits'}
+            onIndicatorToggle={setIndicatorId}
+            onDrillState={(nextStateId) => {
+              setGeographyLevel('state')
+              const regionForState = metadata?.geography.states.find((entry) => entry.id === nextStateId)?.regionId
+              if (regionForState) setRegionId(regionForState)
+              setStateId(nextStateId)
+            }}
+          />
+          <ChartCard historical={primarySeries.points} forecast={forecastPoints} range={range} onRangeChange={setRange} loading={loading} empty={isEmpty} />
         </section>
 
         <MethodologyCard />
