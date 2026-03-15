@@ -260,7 +260,7 @@ function App() {
         )}
 
         {state.tab === 'methodology' && (
-          <section className="space-y-5">
+          <section className="space-y-6">
             <Card className="border-slate-800 bg-slate-900/70">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">1. Methodology Overview</CardTitle>
@@ -336,42 +336,52 @@ function App() {
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">3. Seven-Metric Registry</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-xs">
-                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-2.5 text-[11px] text-slate-300">
-                  <p className="font-medium text-slate-200">Registry legend</p>
-                  <div className="mt-1 flex flex-wrap gap-1.5">
-                    {['Included when valid', 'Source onboarding in progress', 'Excluded from composite', 'Fallback-enabled'].map((item) => (
-                      <span key={item} className="rounded-full border border-slate-700 px-2 py-0.5">{item}</span>
+              <CardContent className="space-y-3 text-xs">
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 text-[11px] text-slate-300">
+                  <p className="font-medium text-slate-200">Status legend</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {[
+                      { label: 'Available via fallback', className: 'border-amber-400/40 bg-amber-500/10 text-amber-200' },
+                      { label: 'Onboarding', className: 'border-sky-400/40 bg-sky-500/10 text-sky-200' },
+                      { label: 'Excluded from composite', className: 'border-violet-400/40 bg-violet-500/10 text-violet-200' },
+                      { label: 'Included when valid', className: 'border-emerald-400/40 bg-emerald-500/10 text-emerald-200' }
+                    ].map((item) => (
+                      <span key={item.label} className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] leading-none ${item.className}`}>{item.label}</span>
                     ))}
                   </div>
                 </div>
                 <div className="overflow-x-auto rounded-md border border-slate-800">
-                  <table className="min-w-full divide-y divide-slate-800 text-[11.5px]">
+                  <table className="min-w-[860px] divide-y divide-slate-800 text-[12px] md:min-w-full md:text-[12.5px]">
                     <thead className="bg-slate-950/70 text-slate-300">
                       <tr>
-                        <th className="px-3 py-2.5 text-left font-medium">Metric</th>
-                        <th className="px-3 py-2.5 text-left font-medium">Source</th>
-                        <th className="px-3 py-2.5 text-left font-medium">Unit</th>
-                        <th className="px-3 py-2.5 text-left font-medium">Transform</th>
-                        <th className="px-3 py-2.5 text-left font-medium">Status</th>
-                        <th className="px-3 py-2.5 text-left font-medium">Composite role</th>
+                        <th className="px-4 py-3 text-left font-medium">Metric</th>
+                        <th className="px-4 py-3 text-left font-medium">Source</th>
+                        <th className="px-4 py-3 text-left font-medium">Unit</th>
+                        <th className="px-4 py-3 text-left font-medium">Transform</th>
+                        <th className="px-4 py-3 text-left font-medium">Status</th>
+                        <th className="px-4 py-3 text-left font-medium">Composite role</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-800 bg-slate-950/35">
                       {registryRows.map((row) => (
                         <tr key={row.metric} className="align-top">
-                          <td className="px-3 py-2.5 font-medium text-slate-100">
+                          <td className="px-4 py-3.5 font-medium text-slate-100">
                             <p>{row.metric}</p>
-                            <p className="mt-0.5 text-[10.5px] text-slate-400">{row.integrationPath}</p>
+                            <details className="mt-1 text-[10.5px] font-normal text-slate-500">
+                              <summary className="cursor-pointer list-none text-slate-400 hover:text-slate-300">Data flow</summary>
+                              <p className="mt-1">{row.integrationPath}</p>
+                              <p className="text-slate-500">{row.integrationDetail}</p>
+                            </details>
                           </td>
-                          <td className="px-3 py-2.5 text-slate-300">{row.source}</td>
-                          <td className="px-3 py-2.5 text-slate-300">{row.unit}</td>
-                          <td className="px-3 py-2.5 text-slate-300 capitalize">{row.transform}</td>
-                          <td className="px-3 py-2.5">
-                            <span className={`inline-flex rounded-full border px-2 py-0.5 ${row.status.className}`}>{row.status.label}</span>
-                            <p className="mt-1 text-[10px] text-slate-400">{row.integrationDetail}</p>
+                          <td className="px-4 py-3.5 text-slate-300">{row.source}</td>
+                          <td className="px-4 py-3.5 text-slate-300">{row.unit}</td>
+                          <td className="px-4 py-3.5 text-slate-300 capitalize">{row.transform}</td>
+                          <td className="px-4 py-3.5">
+                            <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] leading-none ${row.status.className}`}>{row.status.label}</span>
                           </td>
-                          <td className="px-3 py-2.5 text-slate-300">{row.compositeRole}</td>
+                          <td className="px-4 py-3.5 text-slate-300">
+                            <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] leading-none ${row.compositeRole === 'Included when valid' ? 'border-emerald-400/40 bg-emerald-500/10 text-emerald-200' : row.compositeRole === 'Excluded from composite' ? 'border-violet-400/40 bg-violet-500/10 text-violet-200' : 'border-slate-600 bg-slate-900/70 text-slate-300'}`}>{row.compositeRole}</span>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -380,63 +390,60 @@ function App() {
               </CardContent>
             </Card>
 
-            <Card className="border-slate-800 bg-slate-900/70">
+            <Card className="mt-1 border-slate-800 bg-slate-900/70">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">4. Predictive Model</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3 text-xs leading-relaxed">
-                <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              <CardContent className="space-y-4 text-xs leading-relaxed">
+                <div className="grid gap-2.5 md:grid-cols-5">
                   {[
-                    { title: 'Model input', body: 'Composite history is the single input stream for all forward scenarios.' },
-                    { title: 'Simulation engine', body: '800 simulation paths are generated to stress upside/downside dispersion.' },
-                    { title: 'Percentile bands', body: 'Scenario output is summarized as P10 / P25 / P50 / P75 / P90.' },
-                    { title: 'Regime switching', body: 'State-aware behavior shifts expected trend dynamics across cycle regimes.' }
-                  ].map((item) => (
-                    <div key={item.title} className="rounded-md border border-slate-800 bg-slate-950/60 p-3.5">
-                      <p className="font-medium text-slate-100">{item.title}</p>
+                    { title: 'Composite History', body: 'Historical composite trend' },
+                    { title: '800 Simulation Paths', body: 'Scenario range generation' },
+                    { title: 'Percentile Bands', body: 'P10 / P25 / P50 / P75 / P90' },
+                    { title: 'Regime Switching', body: 'State-aware trend shifts' },
+                    { title: 'Cycle Clock', body: 'Expansion · Peak · Contraction · Trough' }
+                  ].map((item, index) => (
+                    <div key={item.title} className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                      <p className="text-[10px] uppercase tracking-wide text-slate-500">Step {index + 1}</p>
+                      <p className="mt-1 font-medium text-slate-100">{item.title}</p>
                       <p className="mt-1 text-slate-300">{item.body}</p>
                     </div>
                   ))}
                 </div>
-                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3.5">
-                  <p className="font-medium text-slate-100">Forecast flow</p>
-                  <div className="mt-2 grid gap-2 text-[11px] md:grid-cols-5">
-                    {['Composite history', '800 paths', 'Percentile compression', 'Regime selection', 'Cycle clock phase'].map((step, index) => (
-                      <div key={step} className="rounded border border-slate-800 bg-slate-900/70 p-2 text-slate-300">
-                        <p className="text-slate-500">Step {index + 1}</p>
-                        <p className="mt-0.5">{step}</p>
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3">
+                  <p className="font-medium text-slate-100">Executive flow</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-slate-300">
+                    {['Composite History', '800 Simulation Paths', 'Percentile Bands', 'Regime Switching', 'Cycle Clock'].map((step, index) => (
+                      <div key={step} className="flex items-center gap-2">
+                        <span className="rounded-md border border-slate-700 bg-slate-900/70 px-2 py-1">{step}</span>
+                        {index < 4 && <span className="text-slate-500">→</span>}
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-1.5 text-slate-300">
-                    {['Expansion', 'Peak', 'Contraction', 'Trough'].map((phase) => (
-                      <span key={phase} className="rounded-full border border-slate-700 px-2 py-0.5">{phase}</span>
                     ))}
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-slate-800 bg-slate-900/70">
+            <Card className="mt-1 border-slate-800 bg-slate-900/70">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm">5. Data Revision and Fallback Policy</CardTitle>
               </CardHeader>
-              <CardContent className="grid gap-3 text-xs leading-relaxed md:grid-cols-2">
-                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 text-slate-300">
+              <CardContent className="grid gap-3.5 text-xs leading-relaxed md:grid-cols-2">
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3.5 text-slate-300">
                   <p className="font-medium text-slate-100">Bootstrap resilience</p>
-                  <p className="mt-1">Data bootstraps in stale-while-revalidate mode: cached state renders first, then background refresh updates when network succeeds.</p>
+                  <p className="mt-1">Cached state renders immediately, then background refresh updates when network calls succeed.</p>
                 </div>
-                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 text-slate-300">
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3.5 text-slate-300">
                   <p className="font-medium text-slate-100">Offline snapshot behavior</p>
-                  <p className="mt-1">IndexedDB snapshots support continuity when offline. Freshness labels expose cache/network/offline provenance, and an offline snapshot is available when connectivity drops.</p>
+                  <p className="mt-1">IndexedDB snapshots preserve continuity offline, with freshness labels showing cache, network, or offline provenance.</p>
                 </div>
-                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 text-slate-300">
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3.5 text-slate-300">
                   <p className="font-medium text-slate-100">Status semantics</p>
-                  <p className="mt-1">Live and fallback-enabled feeds are separated from onboarding sources; excluded series are explicitly labeled and never represented as live.</p>
+                  <p className="mt-1">Fallback and onboarding feeds stay clearly separated, and excluded series are always labeled as excluded.</p>
                 </div>
-                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3 text-slate-300">
+                <div className="rounded-md border border-slate-800 bg-slate-950/60 p-3.5 text-slate-300">
                   <p className="font-medium text-slate-100">Revision sensitivity</p>
-                  <p className="mt-1">Macro and economic releases can revise after publication; composite history and model bands should be interpreted as revision-sensitive.</p>
+                  <p className="mt-1">Macro releases can revise after publication, so composite history and model bands are revision-sensitive.</p>
                 </div>
               </CardContent>
             </Card>
