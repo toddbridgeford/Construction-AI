@@ -1,6 +1,6 @@
 import { adaptCensusVipPayload } from '../providers/live/adapters/censusAdapter'
 
-export const SUPPORTED_MACRO_METRICS = ['construction_spending'] as const
+export const SUPPORTED_MACRO_METRICS = ['construction_spending', 'abi', 'nahb_hmi'] as const
 export type SupportedMacroMetric = (typeof SUPPORTED_MACRO_METRICS)[number]
 
 type SourceStatus = 'live' | 'fallback' | 'pending' | 'offline_snapshot' | 'error'
@@ -14,14 +14,14 @@ export type MacroSeriesPoint = {
 
 export type MacroSeriesApiResponse = {
   metric: SupportedMacroMetric
-  unit: 'usd-billion'
+  unit: 'usd-billion' | 'index'
   source: {
-    id: 'census_vip'
-    label: 'Census Value of Construction Put in Place'
+    id: 'census_vip' | 'aia_abi' | 'nahb_hmi'
+    label: 'Census Value of Construction Put in Place' | 'AIA Architecture Billings Index' | 'NAHB / Wells Fargo Housing Market Index'
     frequency: 'monthly'
-    unit: 'usd-billion'
-    transformType: 'direct'
-    transformLabel: 'direct'
+    unit: 'usd-billion' | 'index'
+    transformType: 'direct' | 'diffusion'
+    transformLabel: 'direct' | 'diffusion vs 50 baseline'
   }
   sourceStatus: SourceStatus
   message?: string
@@ -49,6 +49,8 @@ export type MacroSeriesRouteResponse = {
 
 export type MacroSeriesDependencies = {
   fetchCensusVipSeries: () => Promise<unknown>
+  fetchAbiSeries?: () => Promise<unknown>
+  fetchNahbHmiSeries?: () => Promise<unknown>
   now?: () => Date
   cache?: {
     hit: boolean
@@ -56,22 +58,77 @@ export type MacroSeriesDependencies = {
   }
 }
 
-const DEFAULT_SOURCE = {
-  id: 'census_vip',
-  label: 'Census Value of Construction Put in Place',
-  frequency: 'monthly',
-  unit: 'usd-billion',
-  transformType: 'direct',
-  transformLabel: 'direct'
-} as const
+const METRIC_CONFIG: Record<SupportedMacroMetric, {
+  unit: 'usd-billion' | 'index'
+  source: MacroSeriesApiResponse['source']
+  emptyMessage: string
+  successMessage: string
+  errorMessage: string
+  deriveRates: 'direct' | 'diffusion'
+}> = {
+  construction_spending: {
+    unit: 'usd-billion',
+    source: {
+      id: 'census_vip',
+      label: 'Census Value of Construction Put in Place',
+      frequency: 'monthly',
+      unit: 'usd-billion',
+      transformType: 'direct',
+      transformLabel: 'direct'
+    },
+    emptyMessage: 'Construction spending upstream is not configured or returned no usable points.',
+    successMessage: 'Construction spending series loaded successfully.',
+    errorMessage: 'Construction spending upstream request failed. No usable points were returned.',
+    deriveRates: 'direct'
+  },
+  abi: {
+    unit: 'index',
+    source: {
+      id: 'aia_abi',
+      label: 'AIA Architecture Billings Index',
+      frequency: 'monthly',
+      unit: 'index',
+      transformType: 'diffusion',
+      transformLabel: 'diffusion vs 50 baseline'
+    },
+    emptyMessage: 'ABI upstream is not configured or returned no usable points.',
+    successMessage: 'ABI diffusion index loaded successfully (interpret using gap vs 50 baseline).',
+    errorMessage: 'ABI upstream request failed. No usable points were returned.',
+    deriveRates: 'diffusion'
+  },
+  nahb_hmi: {
+    unit: 'index',
+    source: {
+      id: 'nahb_hmi',
+      label: 'NAHB / Wells Fargo Housing Market Index',
+      frequency: 'monthly',
+      unit: 'index',
+      transformType: 'diffusion',
+      transformLabel: 'diffusion vs 50 baseline'
+    },
+    emptyMessage: 'NAHB HMI upstream is not configured or returned no usable points.',
+    successMessage: 'NAHB HMI diffusion index loaded successfully (interpret using gap vs 50 baseline).',
+    errorMessage: 'NAHB HMI upstream request failed. No usable points were returned.',
+    deriveRates: 'diffusion'
+  }
+}
 
 const isSupportedMetric = (metric: string): metric is SupportedMacroMetric =>
   (SUPPORTED_MACRO_METRICS as readonly string[]).includes(metric)
 
 const roundRate = (value: number) => Number(value.toFixed(1))
 
-const withDerivedRates = (series: Array<{ date: string; value: number }>): MacroSeriesPoint[] =>
+const withDerivedRates = (series: Array<{ date: string; value: number }>, mode: 'direct' | 'diffusion'): MacroSeriesPoint[] =>
   series.map((point, index, all) => {
+    if (mode === 'diffusion') {
+      return {
+        date: point.date,
+        value: point.value,
+        yoy: null,
+        mom: null
+      }
+    }
+
     const prevMonth = index > 0 ? all[index - 1] : null
     const prevYear = index > 11 ? all[index - 12] : null
 
@@ -94,8 +151,8 @@ const buildEmptyResponse = (
   cache: { hit: boolean; stale: boolean }
 ): MacroSeriesApiResponse => ({
   metric,
-  unit: 'usd-billion',
-  source: DEFAULT_SOURCE,
+  unit: METRIC_CONFIG[metric].unit,
+  source: METRIC_CONFIG[metric].source,
   sourceStatus: status,
   message,
   series: [],
@@ -124,9 +181,16 @@ export const getMacroSeriesResponse = async (
 
   const nowIso = (deps.now ?? (() => new Date()))().toISOString()
   const cache = deps.cache ?? { hit: false, stale: false }
+  const metricConfig = METRIC_CONFIG[metric]
+
+  const fetchByMetric: Record<SupportedMacroMetric, () => Promise<unknown>> = {
+    construction_spending: deps.fetchCensusVipSeries,
+    abi: deps.fetchAbiSeries ?? (async () => []),
+    nahb_hmi: deps.fetchNahbHmiSeries ?? (async () => [])
+  }
 
   try {
-    const upstreamPayload = await deps.fetchCensusVipSeries()
+    const upstreamPayload = await fetchByMetric[metric]()
     const normalized = adaptCensusVipPayload(upstreamPayload)
 
     if (normalized.length === 0) {
@@ -135,7 +199,7 @@ export const getMacroSeriesResponse = async (
         body: buildEmptyResponse(
           metric,
           'pending',
-          'Construction spending upstream is not configured or returned no usable points.',
+          metricConfig.emptyMessage,
           nowIso,
           cache
         )
@@ -146,11 +210,11 @@ export const getMacroSeriesResponse = async (
       status: 200,
       body: {
         metric,
-        unit: 'usd-billion',
-        source: DEFAULT_SOURCE,
+        unit: metricConfig.unit,
+        source: metricConfig.source,
         sourceStatus: 'live',
-        message: 'Construction spending series loaded successfully.',
-        series: withDerivedRates(normalized),
+        message: metricConfig.successMessage,
+        series: withDerivedRates(normalized, metricConfig.deriveRates),
         asOf: nowIso,
         cache
       }
@@ -161,7 +225,7 @@ export const getMacroSeriesResponse = async (
       body: buildEmptyResponse(
         metric,
         'error',
-        'Construction spending upstream request failed. No usable points were returned.',
+        metricConfig.errorMessage,
         nowIso,
         cache
       )
