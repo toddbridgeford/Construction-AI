@@ -11,6 +11,20 @@ const toNumber = (value: unknown): number | null => {
   return null
 }
 
+const normalizeMonthlyDate = (rawDate: unknown): string | null => {
+  if (typeof rawDate !== 'string') return null
+  const trimmed = rawDate.trim()
+  if (/^\d{4}-\d{2}$/.test(trimmed)) return trimmed
+
+  const ymd = trimmed.match(/^(\d{4})-(\d{2})-\d{2}$/)
+  if (ymd) return `${ymd[1]}-${ymd[2]}`
+
+  const compact = trimmed.match(/^(\d{4})(\d{2})$/)
+  if (compact) return `${compact[1]}-${compact[2]}`
+
+  return null
+}
+
 export function adaptCensusPayload(payload: unknown, indicatorId = 'starts'): NormalizedSourcePayload {
   const rows = asArray(payload)
 
@@ -35,4 +49,27 @@ export function adaptCensusPayload(payload: unknown, indicatorId = 'starts'): No
     mapData,
     notes: observations.length || mapData.length ? [] : ['Census payload parsed with zero points.']
   }
+}
+
+export function adaptCensusVipPayload(payload: unknown): Array<{ date: string; value: number }> {
+  const rows = asArray(payload)
+
+  return rows
+    .map((row) => {
+      if (!isRecord(row)) return null
+
+      const date = normalizeMonthlyDate(row.date ?? row.period ?? row.month ?? row.time)
+      const rawValue = toNumber(row.value ?? row.amount ?? row.observation ?? row.observation_value)
+      if (!date || rawValue == null) return null
+
+      const normalizedUnit = typeof row.unit === 'string' ? row.unit.toLowerCase() : ''
+      const normalizedValue = normalizedUnit.includes('million') ? rawValue / 1000 : rawValue
+
+      return {
+        date,
+        value: Number(normalizedValue.toFixed(3))
+      }
+    })
+    .filter((row): row is { date: string; value: number } => row != null)
+    .sort((a, b) => a.date.localeCompare(b.date))
 }
