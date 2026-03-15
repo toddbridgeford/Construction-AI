@@ -7,11 +7,6 @@ import type { LiveSourceConfig } from './live/types'
 export type LiveProviderEnv = {
   baseUrl?: string
   apiKey?: string
-  fredApiKey?: string
-  blsApiKey?: string
-  censusApiKey?: string
-  hudApiKey?: string
-  beaApiKey?: string
 }
 
 export type ProviderBundle = {
@@ -21,23 +16,19 @@ export type ProviderBundle = {
 
 const readEnv = (): LiveProviderEnv => ({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
-  apiKey: import.meta.env.VITE_API_KEY,
-  fredApiKey: import.meta.env.VITE_FRED_API_KEY,
-  blsApiKey: import.meta.env.VITE_BLS_API_KEY,
-  censusApiKey: import.meta.env.VITE_CENSUS_API_KEY,
-  hudApiKey: import.meta.env.VITE_HUD_API_KEY,
-  beaApiKey: import.meta.env.VITE_BEA_API_KEY
+  apiKey: import.meta.env.VITE_API_KEY
 })
 
-const hasLiveConfig = (env: LiveProviderEnv): boolean => Boolean(env.baseUrl && (env.apiKey || env.fredApiKey || env.blsApiKey || env.censusApiKey))
+const hasLiveConfig = (env: LiveProviderEnv): boolean => Boolean(env.baseUrl)
 
 export const buildLiveSources = (env: LiveProviderEnv): LiveSourceConfig[] => [
-  { id: 'fred', name: 'FRED', path: '/fred', apiKey: env.fredApiKey ?? env.apiKey, indicatorId: 'permits', required: true },
-  { id: 'bls', name: 'BLS', path: '/bls', apiKey: env.blsApiKey ?? env.apiKey, indicatorId: 'employment', required: true },
-  { id: 'census', name: 'Census', path: '/census', apiKey: env.censusApiKey ?? env.apiKey, indicatorId: 'starts', required: false },
-  { id: 'mortgage', name: 'Freddie Mac', path: '/mortgage', apiKey: env.apiKey, indicatorId: 'cost_index', required: false },
-  { id: 'hud', name: 'HUD', path: '/hud', apiKey: env.hudApiKey ?? env.apiKey, indicatorId: 'permits', required: false },
-  { id: 'bea', name: 'BEA', path: '/bea', apiKey: env.beaApiKey ?? env.apiKey, indicatorId: 'employment', required: false }
+  { id: 'fred', name: 'FRED Building Permits', path: '/fred', query: { series_id: 'PERMIT' }, apiKey: env.apiKey, indicatorId: 'permits', required: true },
+  { id: 'fred', name: 'FRED 30Y Mortgage', path: '/fred', query: { series_id: 'MORTGAGE30US' }, apiKey: env.apiKey, indicatorId: 'mortgage30y', required: true },
+  { id: 'bls', name: 'BLS Construction Employment', path: '/bls', query: { series_id: 'CES2000000001' }, apiKey: env.apiKey, indicatorId: 'employment', required: true },
+  { id: 'census', name: 'Census Housing Starts', path: '/census', query: { dataset: 'starts', geography: 'us' }, apiKey: env.apiKey, indicatorId: 'starts', required: true },
+  { id: 'census', name: 'Census State Permits Map', path: '/census', query: { dataset: 'state_permits', geography: 'state' }, apiKey: env.apiKey, indicatorId: 'permits', required: false },
+  { id: 'hud', name: 'HUD', path: '/hud', apiKey: env.apiKey, indicatorId: 'permits', required: false },
+  { id: 'bea', name: 'BEA', path: '/bea', apiKey: env.apiKey, indicatorId: 'employment', required: false }
 ]
 
 export function createDataProvider(env = readEnv()): ProviderBundle {

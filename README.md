@@ -2,10 +2,10 @@
 
 ## Provider selection (demo vs live)
 
-The dashboard now uses a provider factory (`createDataProvider`) to select the data source at runtime:
+The dashboard uses a provider factory (`createDataProvider`) to select the data source at runtime:
 
 - **Demo/local mode** (default): uses `LocalJsonProvider` and synthetic/local JSON data.
-- **Live mode**: enabled when `VITE_API_BASE_URL` and at least one API key are configured.
+- **Live mode**: enabled when `VITE_API_BASE_URL` is configured.
 
 Selection logic lives in `src/providers/providerFactory.ts`.
 
@@ -14,14 +14,9 @@ Selection logic lives in `src/providers/providerFactory.ts`.
 Set these in your `.env` file for live mode:
 
 - `VITE_API_BASE_URL` (required for live mode)
-- `VITE_API_KEY` (optional global fallback key)
-- `VITE_FRED_API_KEY`
-- `VITE_BLS_API_KEY`
-- `VITE_CENSUS_API_KEY`
-- `VITE_HUD_API_KEY`
-- `VITE_BEA_API_KEY`
+- `VITE_API_KEY` (optional bearer token for your server-side proxy)
 
-If missing or incomplete, the app remains in **Demo Mode** and keeps full dashboard functionality.
+The client only calls your server-side layer (`VITE_API_BASE_URL`) and does not call upstream vendor APIs directly.
 
 ## Live data adapters and normalization
 
@@ -29,18 +24,14 @@ If missing or incomplete, the app remains in **Demo Mode** and keeps full dashbo
 
 - metadata
 - observations
-- series-compatible observation points
-- KPI-compatible values
 - map values
 - forecast inputs
-- insight inputs
 
 Adapters currently included:
 
-- `fredAdapter` (wired)
-- `blsAdapter` (wired)
-- `censusAdapter` (wired, including map patches when available)
-- `mortgageAdapter` (wired for Freddie Mac / mortgage-compatible shape)
+- `fredAdapter` (wired; supports permits + 30Y mortgage series via configured source indicator)
+- `blsAdapter` (wired for construction employment)
+- `censusAdapter` (wired for starts and state map permit rows)
 - `HUD` scaffold adapter (structure only)
 - `BEA` scaffold adapter (structure only)
 
@@ -50,19 +41,10 @@ Adapters currently included:
 - Any failed source degrades gracefully without crashing the app.
 - The provider merges successful live payloads with local baseline data.
 - If live payloads produce no usable rows, the app remains effectively in demo-backed mode.
-- Forecasting and insights continue running because normalized live series are mapped into the same internal series shape.
-
-## Live mode UX
-
-The header includes a subtle premium status chip:
-
-- **Live Data** when normalized live rows are available.
-- **Demo Mode** when local fallback is active.
-
-A lightweight status line under the header communicates degraded-mode details when needed.
+- Forecasting continues running because normalized live series map into the same internal shape.
 
 ## Known limitations
 
-- Endpoint paths are currently assumed as `/fred`, `/bls`, `/census`, `/mortgage`, `/hud`, `/bea` under `VITE_API_BASE_URL`.
+- Endpoint paths are assumed as `/fred`, `/bls`, `/census`, `/hud`, `/bea` under `VITE_API_BASE_URL`.
+- Server-side route behavior is expected to support query parameters for series routing (e.g. FRED `series_id`).
 - HUD/BEA adapters are scaffolded but not endpoint-specific yet.
-- Indicator mapping for live sources is currently fixed to existing dashboard IDs (`permits`, `employment`, `starts`, `cost_index`) and may need expansion as additional series are onboarded.
