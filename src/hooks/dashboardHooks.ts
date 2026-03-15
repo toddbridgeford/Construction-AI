@@ -24,30 +24,70 @@ import type {
   EquityRowContract,
   ForecastBandPointContract,
   HookResourceState,
-  KpiCardContract,
-  MetadataFilterOptionsContract,
-  TimeSeriesPointContract
+  MetadataFilterOptionsContract
 } from './types'
 
-const toKpiCard = <T extends { series: TimeSeriesPointContract[]; sourceStatus: ActivityResponse['sourceStatus'] }>(
-  id: string,
-  label: string,
-  resource: HookResourceState<T>
-): KpiCardContract => ({
-  id,
-  label,
-  latestValue: resource.data?.series.at(-1)?.value ?? null,
-  sourceStatus: resource.data?.sourceStatus ?? 'pending',
-  freshness: resource.freshness
-})
+export type MetricSignal = 'BULLISH' | 'NEUTRAL' | 'BEARISH'
+export type MetricUnit = 'count' | 'annual-rate' | 'index' | 'usd-billion' | 'percent' | 'points'
+
+export type CoreMetricCardContract = {
+  id: 'building_permits' | 'housing_starts' | 'abi' | 'construction_spending' | 'materials_ppi' | 'nahb_hmi' | 'homebuilder_equity'
+  label: string
+  upstreamSource: string
+  hookPath: string
+  endpointPath: string
+  latestValue: number | null
+  formattedValue: string
+  unit: MetricUnit
+  transformSummary: string
+  growthMom: number | null
+  growthYoy: number | null
+  signal: MetricSignal
+  sourceStatus: ActivityResponse['sourceStatus']
+  freshness: HookResourceState<ActivityResponse>['freshness']
+  safeForComposite: boolean
+  modelExclusionReason?: string
+}
+
+const pct = (value: number | null): string => (value == null ? 'N/A' : `${value >= 0 ? '+' : ''}${value.toFixed(1)}%`)
+
+const toGrowth = (latest: number | null, previous: number | null): number | null => {
+  if (latest == null || previous == null || previous === 0) return null
+  return ((latest - previous) / Math.abs(previous)) * 100
+}
+
+const computeSignal = ({ mom, baselineGap, inverse = false }: { mom: number | null; baselineGap?: number | null; inverse?: boolean }): MetricSignal => {
+  const directional = baselineGap ?? mom
+  if (directional == null) return 'NEUTRAL'
+  const adjusted = inverse ? directional * -1 : directional
+  if (adjusted > 1) return 'BULLISH'
+  if (adjusted < -1) return 'BEARISH'
+  return 'NEUTRAL'
+}
+
+const formatMetricValue = (value: number | null, unit: MetricUnit): string => {
+  if (value == null) return 'N/A'
+  if (unit === 'count') return `${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}`
+  if (unit === 'annual-rate') return `${value.toLocaleString(undefined, { maximumFractionDigits: 0 })}k SAAR`
+  if (unit === 'usd-billion') return `$${value.toFixed(1)}B`
+  if (unit === 'percent') return `${value.toFixed(2)}%`
+  if (unit === 'points') return `${value.toFixed(1)} pts`
+  return `${value.toFixed(1)}`
+}
+
+const fromSeries = (series: { value: number }[]) => {
+  const latest = series.at(-1)?.value ?? null
+  const previous = series.at(-2)?.value ?? null
+  const priorYear = series.length >= 13 ? series.at(-13)?.value ?? null : null
+  return {
+    latest,
+    mom: toGrowth(latest, previous),
+    yoy: toGrowth(latest, priorYear)
+  }
+}
 
 export type MetadataHookData = MetadataResponse & {
   filterOptions: MetadataFilterOptionsContract
-}
-
-export type SeriesHookData = {
-  raw: ActivityResponse | PipelineResponse | CostsResponse | LaborResponse
-  points: TimeSeriesPointContract[]
 }
 
 export type ForecastsHookData = ForecastsResponse & {
@@ -126,14 +166,142 @@ export const useEquities = (params: ApiQuery): HookResourceState<EquitiesHookDat
     [params.region, params.sector, params.horizon, params.tab]
   )
 
-export const buildLeadingKpis = (resources: {
+export const buildCoreMetricCards = (resources: {
   activity: HookResourceState<ActivityResponse>
   pipeline: HookResourceState<PipelineResponse>
-  labor: HookResourceState<LaborResponse>
   costs: HookResourceState<CostsResponse>
-}): KpiCardContract[] => [
-  toKpiCard('activity', 'Activity', resources.activity),
-  toKpiCard('pipeline', 'Pipeline', resources.pipeline),
-  toKpiCard('labor', 'Labor', resources.labor),
-  toKpiCard('costs', 'Costs', resources.costs)
-]
+  equities: HookResourceState<EquitiesHookData>
+}): CoreMetricCardContract[] => {
+  const permits = fromSeries(resources.activity.data?.series ?? [])
+  const starts = fromSeries(resources.pipeline.data?.series ?? [])
+  const ppi = fromSeries(resources.costs.data?.series ?? [])
+  const equityRows = resources.equities.data?.rows ?? []
+  const equityLatest = equityRows.length ? equityRows.reduce((sum, row) => sum + row.ytd, 0) / equityRows.length : null
+
+  return [
+    {
+      id: 'building_permits',
+      label: 'Building Permits',
+      upstreamSource: 'FRED PERMIT (Census New Residential Construction)',
+      hookPath: 'useActivity -> getActivitySeries',
+      endpointPath: '/api/activity-series',
+      latestValue: permits.latest,
+      formattedValue: formatMetricValue(permits.latest, 'annual-rate'),
+      unit: 'annual-rate',
+      transformSummary: `MoM ${pct(permits.mom)} · YoY ${pct(permits.yoy)}`,
+      growthMom: permits.mom,
+      growthYoy: permits.yoy,
+      signal: computeSignal({ mom: permits.mom }),
+      sourceStatus: resources.activity.data?.sourceStatus ?? 'pending',
+      freshness: resources.activity.freshness,
+      safeForComposite: (resources.activity.data?.sourceStatus ?? 'pending') !== 'pending'
+    },
+    {
+      id: 'housing_starts',
+      label: 'Housing Starts',
+      upstreamSource: 'Census Housing Starts (SAAR)',
+      hookPath: 'usePipeline -> getPipelineSeries',
+      endpointPath: '/api/pipeline-series',
+      latestValue: starts.latest,
+      formattedValue: formatMetricValue(starts.latest, 'annual-rate'),
+      unit: 'annual-rate',
+      transformSummary: `MoM ${pct(starts.mom)} · YoY ${pct(starts.yoy)}`,
+      growthMom: starts.mom,
+      growthYoy: starts.yoy,
+      signal: computeSignal({ mom: starts.mom }),
+      sourceStatus: resources.pipeline.data?.sourceStatus ?? 'pending',
+      freshness: resources.pipeline.freshness,
+      safeForComposite: (resources.pipeline.data?.sourceStatus ?? 'pending') !== 'pending'
+    },
+    {
+      id: 'abi',
+      label: 'Architecture Billings Index (ABI)',
+      upstreamSource: 'AIA ABI diffusion index',
+      hookPath: 'pending (no typed hook bound yet)',
+      endpointPath: 'pending',
+      latestValue: null,
+      formattedValue: 'Pending source onboarding',
+      unit: 'index',
+      transformSummary: 'Diffusion logic requires 50 baseline once source is integrated.',
+      growthMom: null,
+      growthYoy: null,
+      signal: 'NEUTRAL',
+      sourceStatus: 'pending',
+      freshness: null,
+      safeForComposite: false,
+      modelExclusionReason: 'Source contract not implemented yet.'
+    },
+    {
+      id: 'construction_spending',
+      label: 'Construction Spending',
+      upstreamSource: 'Census Value of Construction Put in Place',
+      hookPath: 'pending (no typed hook bound yet)',
+      endpointPath: 'pending',
+      latestValue: null,
+      formattedValue: 'Pending source onboarding',
+      unit: 'usd-billion',
+      transformSummary: 'Needs nominal $ billions series with MoM/YoY normalization.',
+      growthMom: null,
+      growthYoy: null,
+      signal: 'NEUTRAL',
+      sourceStatus: 'pending',
+      freshness: null,
+      safeForComposite: false,
+      modelExclusionReason: 'No endpoint in API contract yet.'
+    },
+    {
+      id: 'materials_ppi',
+      label: 'Materials PPI',
+      upstreamSource: 'BLS PPI (construction inputs)',
+      hookPath: 'useCosts -> getCostSeries',
+      endpointPath: '/api/cost-series',
+      latestValue: ppi.latest,
+      formattedValue: formatMetricValue(ppi.latest, 'index'),
+      unit: 'index',
+      transformSummary: `MoM ${pct(ppi.mom)} · YoY ${pct(ppi.yoy)} (inverse scoring: lower inflation is bullish)`,
+      growthMom: ppi.mom,
+      growthYoy: ppi.yoy,
+      signal: computeSignal({ mom: ppi.mom, inverse: true }),
+      sourceStatus: resources.costs.data?.sourceStatus ?? 'pending',
+      freshness: resources.costs.freshness,
+      safeForComposite: false,
+      modelExclusionReason: (resources.costs.data?.sourceStatus ?? 'pending') === 'pending' ? 'Cost series is pending validation.' : 'Awaiting PPI-specific contract validation.'
+    },
+    {
+      id: 'nahb_hmi',
+      label: 'NAHB HMI Confidence Index',
+      upstreamSource: 'NAHB/Wells Fargo Housing Market Index',
+      hookPath: 'pending (no typed hook bound yet)',
+      endpointPath: 'pending',
+      latestValue: null,
+      formattedValue: 'Pending source onboarding',
+      unit: 'index',
+      transformSummary: 'Diffusion logic requires 50 baseline once source is integrated.',
+      growthMom: null,
+      growthYoy: null,
+      signal: 'NEUTRAL',
+      sourceStatus: 'pending',
+      freshness: null,
+      safeForComposite: false,
+      modelExclusionReason: 'Source contract not implemented yet.'
+    },
+    {
+      id: 'homebuilder_equity',
+      label: 'Homebuilder Equity Performance',
+      upstreamSource: 'Homebuilder equity basket snapshot',
+      hookPath: 'useEquities -> getEquitiesSnapshot',
+      endpointPath: '/api/equities-snapshot',
+      latestValue: equityLatest,
+      formattedValue: formatMetricValue(equityLatest, 'percent'),
+      unit: 'percent',
+      transformSummary: 'Average YTD return across tracked homebuilder symbols.',
+      growthMom: null,
+      growthYoy: null,
+      signal: computeSignal({ mom: equityLatest }),
+      sourceStatus: equityRows.every((row) => row.sourceStatus === 'pending') ? 'pending' : 'fallback',
+      freshness: resources.equities.freshness,
+      safeForComposite: false,
+      modelExclusionReason: 'Daily market noise; excluded from macro composite input set.'
+    }
+  ]
+}

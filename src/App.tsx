@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useEffect } from 'react'
 import { useDashboardUrlState } from '@/hooks/useDashboardUrlState'
 import {
-  buildLeadingKpis,
+  buildCoreMetricCards,
   useActivity,
   useConsistency,
   useCosts,
@@ -37,11 +37,13 @@ function App() {
   const activity = useActivity(params)
   const pipeline = usePipeline(params)
   const costs = useCosts(params)
-  const labor = useLabor(params)
+  useLabor(params)
   const forecasts = useForecasts(params)
   const consistency = useConsistency(params)
   const equities = useEquities(params)
-  const leadingKpis = buildLeadingKpis({ activity, pipeline, labor, costs })
+  const coreMetrics = buildCoreMetricCards({ activity, pipeline, costs, equities })
+  const compositeInputs = coreMetrics.filter((metric) => metric.safeForComposite)
+  const excludedFromComposite = coreMetrics.filter((metric) => !metric.safeForComposite)
 
   useEffect(() => {
     document.documentElement.classList.add('dark')
@@ -99,6 +101,19 @@ function App() {
                 </label>
               </CardContent>
             </Card>
+            <div className="grid gap-4 md:col-span-2 md:grid-cols-2 lg:grid-cols-3">
+              {coreMetrics.map((metric) => (
+                <Card key={metric.id}>
+                  <CardHeader><CardTitle className="text-sm">{metric.label}</CardTitle></CardHeader>
+                  <CardContent className="text-xs space-y-1">
+                    <p>Latest: {metric.formattedValue}</p>
+                    <p>Signal: {metric.signal}</p>
+                    <p>Status: {metric.sourceStatus}</p>
+                    <p>Source: {metric.upstreamSource}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
             <div className="md:col-span-2">
               {activity.data && (
                 <MapCard
@@ -114,13 +129,15 @@ function App() {
 
         {state.tab === 'leading' && (
           <section className="grid gap-4 md:grid-cols-3">
-            {leadingKpis.map((card) => (
-              <Card key={card.id}>
-                <CardHeader><CardTitle className="text-sm">{card.label}</CardTitle></CardHeader>
-                <CardContent className="text-xs">
-                  <p>Status: {card.sourceStatus}</p>
-                  <p>Freshness: {freshnessLabel(card.freshness)}</p>
-                  <p>Latest: {card.latestValue?.toFixed(2) ?? 'N/A'}</p>
+            {coreMetrics.map((metric) => (
+              <Card key={metric.id}>
+                <CardHeader><CardTitle className="text-sm">{metric.label}</CardTitle></CardHeader>
+                <CardContent className="text-xs space-y-1">
+                  <p>Status: {metric.sourceStatus}</p>
+                  <p>Freshness: {freshnessLabel(metric.freshness)}</p>
+                  <p>Latest: {metric.formattedValue}</p>
+                  <p>{metric.transformSummary}</p>
+                  <p>Hook: {metric.hookPath}</p>
                 </CardContent>
               </Card>
             ))}
@@ -136,9 +153,13 @@ function App() {
               </CardContent>
             </Card>
             <Card>
-              <CardHeader><CardTitle className="text-sm">Consistency summary</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-sm">Composite model inputs (validated only)</CardTitle></CardHeader>
               <CardContent className="text-xs space-y-1">
                 <p>Forecast source: {forecasts.data?.sourceStatus ?? 'pending'} ({freshnessLabel(forecasts.freshness)})</p>
+                <p>Included inputs: {compositeInputs.map((metric) => metric.label).join(', ') || 'None'}</p>
+                {excludedFromComposite.map((metric) => (
+                  <p key={metric.id}>Excluded {metric.label}: {metric.modelExclusionReason ?? 'Pending validation.'}</p>
+                ))}
                 {consistency.data?.checks.map((check) => <p key={check.id}>{check.ok ? '✓' : '•'} {check.message}</p>)}
               </CardContent>
             </Card>
@@ -159,8 +180,9 @@ function App() {
           <Card>
             <CardHeader><CardTitle className="text-sm">Methodology</CardTitle></CardHeader>
             <CardContent className="space-y-2 text-xs">
-              <p>Visual components consume typed hooks only; HTTP and adapters are isolated in API client/provider layers.</p>
-              <p>Pending sources are explicitly labeled `pending`; fallback values are labeled `fallback`; live responses remain `live`.</p>
+              <p>Each KPI card is mapped to a specific upstream feed, typed hook path, and API endpoint contract; pending feeds remain explicitly marked pending.</p>
+              <p>MoM/YoY transforms are derived from the same hook payloads used by the leading indicators view, with inverse signal scoring applied only to inflation-sensitive Materials PPI.</p>
+              <p>Predictive composite input list includes only non-pending validated metrics; excluded metrics are listed with explicit reasons.</p>
               <p>Bootstrap endpoints use stale-while-revalidate over IndexedDB cache and expose offline snapshot state.</p>
             </CardContent>
           </Card>
