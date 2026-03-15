@@ -4,6 +4,7 @@ import { ChartCard } from '@/components/dashboard/ChartCard'
 import { ControlsRow } from '@/components/dashboard/ControlsRow'
 import { Footer } from '@/components/dashboard/Footer'
 import { HeaderBar } from '@/components/dashboard/HeaderBar'
+import { InsightsPanel } from '@/components/dashboard/InsightsPanel'
 import { KpiGrid } from '@/components/dashboard/KpiGrid'
 import { MapCard } from '@/components/dashboard/MapCard'
 import { MethodologyCard } from '@/components/dashboard/MethodologyCard'
@@ -12,6 +13,7 @@ import { buildKpis, mapDataByIndicator, toSeries } from '@/components/dashboard/
 import type { DashboardOption, KpiMetric } from '@/components/dashboard/types'
 import type { DashboardData, GeographyLevel } from '@/data/types'
 import type { ForecastOutput } from '@/forecasting'
+import { buildInsights } from '@/insights'
 import { LocalJsonProvider } from '@/providers/LocalJsonProvider'
 
 const provider = new LocalJsonProvider()
@@ -174,6 +176,59 @@ function App() {
 
   const isEmpty = !primarySeries.points.length
 
+  const selectedIndicatorMeta = availableIndicators.find((indicator) => indicator.id === indicatorId)
+  const selectedLabel =
+    geographyLevel === 'us'
+      ? 'United States'
+      : geographyLevel === 'region'
+        ? regionOptions.find((option) => option.value === regionId)?.label ?? regionId
+        : geographyLevel === 'state'
+          ? stateOptions.find((option) => option.value === stateId)?.label ?? stateId
+          : metroOptions.find((option) => option.value === metroId)?.label ?? metroId
+
+  const nationalSeries = useMemo(
+    () => toSeries(observations, 'us', 'us', indicatorId),
+    [indicatorId, observations]
+  )
+
+  const insights = useMemo(
+    () =>
+      buildInsights({
+        indicatorId,
+        indicatorName: selectedIndicatorMeta?.name ?? indicatorId,
+        geographyLevel,
+        geographyLabel: selectedLabel,
+        series: primarySeries.points,
+        comparison: {
+          label: availableIndicators.find((indicator) => indicator.id === secondaryIndicator)?.name ?? 'Companion KPI',
+          indicatorId: secondaryIndicator,
+          series: secondarySeries.points
+        },
+        nationalBenchmark:
+          geographyLevel === 'us'
+            ? undefined
+            : {
+                label: 'United States',
+                series: nationalSeries.points
+              },
+        forecastEnabled,
+        forecast: forecastOutput
+      }),
+    [
+      availableIndicators,
+      forecastEnabled,
+      forecastOutput,
+      geographyLevel,
+      indicatorId,
+      nationalSeries.points,
+      primarySeries.points,
+      secondaryIndicator,
+      secondarySeries.points,
+      selectedIndicatorMeta?.name,
+      selectedLabel
+    ]
+  )
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <HeaderBar isDarkMode={isDarkMode} onToggleTheme={() => setIsDarkMode((prev) => !prev)} />
@@ -235,6 +290,8 @@ function App() {
         </section>
 
         {forecastEnabled && compareModels && <ModelComparisonPanel models={forecastOutput.comparison} bestModel={forecastOutput.bestModel} />}
+
+        <InsightsPanel insights={insights} />
 
         <MethodologyCard />
       </main>
