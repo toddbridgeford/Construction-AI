@@ -145,14 +145,15 @@ export const getActivitySeries = (params: ApiQuery) =>
     bootstrap: true,
     adapter: adaptActivity,
     fallback: async () => {
+      const activitySector: SectorId = params.sector === 'starts' ? 'starts' : 'permits'
       const data = await localProvider.getDashboardData()
       return {
         meta: buildMeta(API_BASE_URL ? 'degraded' : 'offline'),
         region: params.region ?? params.geographyId ?? 'us',
-        sector: sectorToIndicator(params.sector),
+        sector: activitySector,
         horizon: params.horizon ?? 12,
-        series: await pickSeries('permits', params),
-        mapData: data.mapData.filter((item) => item.indicatorId === 'permits'),
+        series: await pickSeries(activitySector, params),
+        mapData: data.mapData.filter((item) => item.indicatorId === activitySector),
         sourceStatus: sourceStatus(Boolean(API_BASE_URL))
       }
     }

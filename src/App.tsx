@@ -35,13 +35,14 @@ function App() {
 
   const metadata = useMetadata()
   const activity = useActivity(params)
-  const pipeline = usePipeline(params)
+  const activityStarts = useActivity({ ...params, sector: 'starts' })
+  usePipeline(params)
   const costs = useCosts(params)
   useLabor(params)
   const forecasts = useForecasts(params)
   const consistency = useConsistency(params)
   const equities = useEquities(params)
-  const coreMetrics = buildCoreMetricCards({ activity, pipeline, costs, equities })
+  const coreMetrics = buildCoreMetricCards({ activity, activityStarts, costs, equities })
   const compositeInputs = coreMetrics.filter((metric) => metric.safeForComposite)
   const excludedFromComposite = coreMetrics.filter((metric) => !metric.safeForComposite)
 
@@ -107,11 +108,12 @@ function App() {
                   <CardHeader><CardTitle className="text-sm">{metric.label}</CardTitle></CardHeader>
                   <CardContent className="text-xs space-y-1">
                     <p>Latest: {metric.formattedValue}</p>
-                    <p>Signal: {metric.signal}</p>
-                    <p>Status: {metric.sourceStatus}</p>
-                    <p>Source: {metric.upstreamSource}</p>
-                  </CardContent>
-                </Card>
+                  <p>Signal: {metric.signal}</p>
+                  <p>Status: {metric.sourceStatus}</p>
+                  <p>Readiness: {metric.readinessClassification}</p>
+                  <p>Source: {metric.upstreamSource}</p>
+                </CardContent>
+              </Card>
               ))}
             </div>
             <div className="md:col-span-2">
@@ -134,6 +136,7 @@ function App() {
                 <CardHeader><CardTitle className="text-sm">{metric.label}</CardTitle></CardHeader>
                 <CardContent className="text-xs space-y-1">
                   <p>Status: {metric.sourceStatus}</p>
+                  <p>Readiness: {metric.readinessClassification}</p>
                   <p>Freshness: {freshnessLabel(metric.freshness)}</p>
                   <p>Latest: {metric.formattedValue}</p>
                   <p>{metric.transformSummary}</p>
