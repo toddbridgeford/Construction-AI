@@ -18,6 +18,10 @@ export type CompositeMetricInput = {
   growthMom: number | null
   growthYoy: number | null
   latestValue: number | null
+  baselineGap: number | null
+  transformType: 'direct' | 'inverse' | 'diffusion'
+  transformValid: boolean
+  transformInvalidReason?: string
   modelExclusionReason?: string
   history?: TimeSeriesPoint[]
 }
@@ -88,6 +92,9 @@ const scoreFromGrowth = ({ growthPct, inverse }: { growthPct: number; inverse: b
   return normalizeDirectionalPctToScore(directionalPct)
 }
 
+const isDiffusionSemanticsValid = (metric: CompositeMetricInput) =>
+  metric.transformType !== 'diffusion' || metric.baselineGap != null
+
 const monthGrowthPct = (current: number | undefined, previous: number | undefined): number | null => {
   if (current == null || previous == null || previous === 0) return null
   return ((current - previous) / Math.abs(previous)) * 100
@@ -127,6 +134,50 @@ export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: Com
         label: metric.label,
         status: 'excluded',
         reason: metric.modelExclusionReason ?? 'Pending metrics are excluded by rule.',
+        inverse: rule.inverse,
+        sourceStatus: metric.sourceStatus
+      }
+    }
+
+    if (!metric.transformValid) {
+      return {
+        id: metric.id,
+        label: metric.label,
+        status: 'excluded',
+        reason: metric.transformInvalidReason ?? 'Metric transform is invalid for composite normalization.',
+        inverse: rule.inverse,
+        sourceStatus: metric.sourceStatus
+      }
+    }
+
+    if (rule.inverse && metric.transformType !== 'inverse') {
+      return {
+        id: metric.id,
+        label: metric.label,
+        status: 'excluded',
+        reason: 'Inverse methodology mismatch: expected inverse transform metadata.',
+        inverse: rule.inverse,
+        sourceStatus: metric.sourceStatus
+      }
+    }
+
+    if (!rule.inverse && metric.transformType === 'inverse') {
+      return {
+        id: metric.id,
+        label: metric.label,
+        status: 'excluded',
+        reason: 'Direct methodology mismatch: inverse transform metadata provided for non-inverse metric.',
+        inverse: rule.inverse,
+        sourceStatus: metric.sourceStatus
+      }
+    }
+
+    if (!isDiffusionSemanticsValid(metric)) {
+      return {
+        id: metric.id,
+        label: metric.label,
+        status: 'excluded',
+        reason: 'Diffusion threshold semantics invalid: baseline gap is required.',
         inverse: rule.inverse,
         sourceStatus: metric.sourceStatus
       }

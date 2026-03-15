@@ -71,6 +71,10 @@ function App() {
         growthMom: metric.growthMom,
         growthYoy: metric.growthYoy,
         latestValue: metric.latestValue,
+        baselineGap: metric.baselineGap,
+        transformType: metric.transformType,
+        transformValid: metric.transformValid,
+        transformInvalidReason: metric.transformInvalidReason,
         modelExclusionReason: metric.modelExclusionReason,
         history
       }

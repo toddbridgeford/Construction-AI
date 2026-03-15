@@ -32,6 +32,7 @@ import type {
 export type MetricSignal = 'BULLISH' | 'NEUTRAL' | 'BEARISH'
 export type MetricUnit = 'count' | 'annual-rate' | 'index' | 'usd-billion' | 'percent' | 'points'
 export type MetricReadinessClassification = 'live-capable' | 'fallback-capable' | 'pending' | 'excluded-from-composite'
+export type MetricTransformType = 'direct' | 'inverse' | 'diffusion'
 
 export type CoreMetricCardContract = {
   id: 'building_permits' | 'housing_starts' | 'abi' | 'construction_spending' | 'materials_ppi' | 'nahb_hmi' | 'homebuilder_equity'
@@ -45,6 +46,10 @@ export type CoreMetricCardContract = {
   transformSummary: string
   growthMom: number | null
   growthYoy: number | null
+  baselineGap: number | null
+  transformType: MetricTransformType
+  transformValid: boolean
+  transformInvalidReason?: string
   signal: MetricSignal
   sourceStatus: ActivityResponse['sourceStatus']
   readinessClassification: MetricReadinessClassification
@@ -109,6 +114,8 @@ const classifyReadiness = ({
   if (excludedFromComposite) return 'excluded-from-composite'
   return sourceStatus === 'live' ? 'live-capable' : 'fallback-capable'
 }
+
+const hasGrowthInput = ({ yoy, mom }: { yoy: number | null; mom: number | null }) => yoy != null || mom != null
 
 export type MetadataHookData = MetadataResponse & {
   filterOptions: MetadataFilterOptionsContract
@@ -212,6 +219,13 @@ export const buildCoreMetricCards = (resources: {
   const equityRows = resources.equities.data?.rows ?? []
   const equityLatest = equityRows.length ? equityRows.reduce((sum, row) => sum + row.ytd, 0) / equityRows.length : null
 
+  const permitsGrowthValid = hasGrowthInput(permits)
+  const startsGrowthValid = hasGrowthInput(starts)
+  const spendingGrowthValid = hasGrowthInput(constructionSpending)
+  const ppiGrowthValid = hasGrowthInput(ppi)
+  const abiDiffusionValid = abi.baselineGap != null && hasGrowthInput(abi)
+  const nahbDiffusionValid = nahbHmi.baselineGap != null && hasGrowthInput(nahbHmi)
+
   return [
     {
       id: 'building_permits',
@@ -225,6 +239,10 @@ export const buildCoreMetricCards = (resources: {
       transformSummary: `MoM ${pct(permits.mom)} · YoY ${pct(permits.yoy)}`,
       growthMom: permits.mom,
       growthYoy: permits.yoy,
+      baselineGap: null,
+      transformType: 'direct',
+      transformValid: permitsGrowthValid,
+      transformInvalidReason: permitsGrowthValid ? undefined : 'Building permits requires YoY or MoM growth to be computed.',
       signal: computeSignal({ mom: permits.mom }),
       sourceStatus: resources.activity.data?.sourceStatus ?? 'pending',
       readinessClassification: classifyReadiness({
@@ -232,7 +250,13 @@ export const buildCoreMetricCards = (resources: {
         excludedFromComposite: false
       }),
       freshness: resources.activity.freshness,
-      safeForComposite: (resources.activity.data?.sourceStatus ?? 'pending') !== 'pending'
+      safeForComposite: (resources.activity.data?.sourceStatus ?? 'pending') !== 'pending' && permitsGrowthValid,
+      modelExclusionReason:
+        (resources.activity.data?.sourceStatus ?? 'pending') === 'pending'
+          ? 'Building permits source is pending.'
+          : permitsGrowthValid
+            ? undefined
+            : 'Building permits missing growth input (YoY/MoM).'
     },
     {
       id: 'housing_starts',
@@ -246,6 +270,10 @@ export const buildCoreMetricCards = (resources: {
       transformSummary: `MoM ${pct(starts.mom)} · YoY ${pct(starts.yoy)}`,
       growthMom: starts.mom,
       growthYoy: starts.yoy,
+      baselineGap: null,
+      transformType: 'direct',
+      transformValid: startsGrowthValid,
+      transformInvalidReason: startsGrowthValid ? undefined : 'Housing starts requires YoY or MoM growth to be computed.',
       signal: computeSignal({ mom: starts.mom }),
       sourceStatus: resources.activityStarts.data?.sourceStatus ?? 'pending',
       readinessClassification: classifyReadiness({
@@ -253,7 +281,13 @@ export const buildCoreMetricCards = (resources: {
         excludedFromComposite: false
       }),
       freshness: resources.activityStarts.freshness,
-      safeForComposite: (resources.activityStarts.data?.sourceStatus ?? 'pending') !== 'pending'
+      safeForComposite: (resources.activityStarts.data?.sourceStatus ?? 'pending') !== 'pending' && startsGrowthValid,
+      modelExclusionReason:
+        (resources.activityStarts.data?.sourceStatus ?? 'pending') === 'pending'
+          ? 'Housing starts source is pending.'
+          : startsGrowthValid
+            ? undefined
+            : 'Housing starts missing growth input (YoY/MoM).'
     },
     {
       id: 'abi',
@@ -267,6 +301,10 @@ export const buildCoreMetricCards = (resources: {
       transformSummary: `Diffusion baseline: 50.0 · Gap ${abi.baselineGap == null ? 'N/A' : abi.baselineGap.toFixed(1)} pts · MoM ${pct(abi.mom)} · YoY ${pct(abi.yoy)}`,
       growthMom: abi.mom,
       growthYoy: abi.yoy,
+      baselineGap: abi.baselineGap,
+      transformType: 'diffusion',
+      transformValid: abiDiffusionValid,
+      transformInvalidReason: abiDiffusionValid ? undefined : 'ABI diffusion transform requires baseline gap and YoY/MoM growth.',
       signal: computeSignal({ mom: abi.mom, baselineGap: abi.baselineGap }),
       sourceStatus: resources.abi.data?.sourceStatus ?? 'pending',
       readinessClassification: classifyReadiness({
@@ -274,8 +312,13 @@ export const buildCoreMetricCards = (resources: {
         excludedFromComposite: false
       }),
       freshness: resources.abi.freshness,
-      safeForComposite: (resources.abi.data?.sourceStatus ?? 'pending') !== 'pending',
-      modelExclusionReason: (resources.abi.data?.sourceStatus ?? 'pending') === 'pending' ? 'ABI source is still pending.' : undefined
+      safeForComposite: (resources.abi.data?.sourceStatus ?? 'pending') !== 'pending' && abiDiffusionValid,
+      modelExclusionReason:
+        (resources.abi.data?.sourceStatus ?? 'pending') === 'pending'
+          ? 'ABI source is still pending.'
+          : abiDiffusionValid
+            ? undefined
+            : 'ABI excluded until diffusion baseline gap and growth are both valid.'
     },
     {
       id: 'construction_spending',
@@ -289,6 +332,10 @@ export const buildCoreMetricCards = (resources: {
       transformSummary: `Nominal level in USD billions · MoM ${pct(constructionSpending.mom)} · YoY ${pct(constructionSpending.yoy)}`,
       growthMom: constructionSpending.mom,
       growthYoy: constructionSpending.yoy,
+      baselineGap: null,
+      transformType: 'direct',
+      transformValid: spendingGrowthValid,
+      transformInvalidReason: spendingGrowthValid ? undefined : 'Construction spending requires YoY or MoM growth to be computed.',
       signal: computeSignal({ mom: constructionSpending.mom }),
       sourceStatus: resources.constructionSpending.data?.sourceStatus ?? 'pending',
       readinessClassification: classifyReadiness({
@@ -296,8 +343,13 @@ export const buildCoreMetricCards = (resources: {
         excludedFromComposite: false
       }),
       freshness: resources.constructionSpending.freshness,
-      safeForComposite: (resources.constructionSpending.data?.sourceStatus ?? 'pending') !== 'pending',
-      modelExclusionReason: (resources.constructionSpending.data?.sourceStatus ?? 'pending') === 'pending' ? 'Construction spending source is still pending.' : undefined
+      safeForComposite: (resources.constructionSpending.data?.sourceStatus ?? 'pending') !== 'pending' && spendingGrowthValid,
+      modelExclusionReason:
+        (resources.constructionSpending.data?.sourceStatus ?? 'pending') === 'pending'
+          ? 'Construction spending source is still pending.'
+          : spendingGrowthValid
+            ? undefined
+            : 'Construction spending missing growth input (YoY/MoM).'
     },
     {
       id: 'materials_ppi',
@@ -311,6 +363,10 @@ export const buildCoreMetricCards = (resources: {
       transformSummary: `MoM ${pct(ppi.mom)} · YoY ${pct(ppi.yoy)} (inverse scoring: lower inflation is bullish)`,
       growthMom: ppi.mom,
       growthYoy: ppi.yoy,
+      baselineGap: null,
+      transformType: 'inverse',
+      transformValid: ppiGrowthValid,
+      transformInvalidReason: ppiGrowthValid ? undefined : 'Materials PPI inverse transform requires YoY or MoM growth.',
       signal: computeSignal({ mom: ppi.mom, inverse: true }),
       sourceStatus: resources.costs.data?.sourceStatus ?? 'pending',
       readinessClassification: classifyReadiness({
@@ -318,8 +374,13 @@ export const buildCoreMetricCards = (resources: {
         excludedFromComposite: false
       }),
       freshness: resources.costs.freshness,
-      safeForComposite: false,
-      modelExclusionReason: (resources.costs.data?.sourceStatus ?? 'pending') === 'pending' ? 'Cost series is pending validation.' : 'Awaiting PPI-specific contract validation.'
+      safeForComposite: (resources.costs.data?.sourceStatus ?? 'pending') !== 'pending' && ppiGrowthValid,
+      modelExclusionReason:
+        (resources.costs.data?.sourceStatus ?? 'pending') === 'pending'
+          ? 'Materials PPI source is pending.'
+          : ppiGrowthValid
+            ? undefined
+            : 'Materials PPI excluded until inverse growth transform is valid.'
     },
     {
       id: 'nahb_hmi',
@@ -333,6 +394,10 @@ export const buildCoreMetricCards = (resources: {
       transformSummary: `Diffusion baseline: 50.0 · Gap ${nahbHmi.baselineGap == null ? 'N/A' : nahbHmi.baselineGap.toFixed(1)} pts · MoM ${pct(nahbHmi.mom)} · YoY ${pct(nahbHmi.yoy)}`,
       growthMom: nahbHmi.mom,
       growthYoy: nahbHmi.yoy,
+      baselineGap: nahbHmi.baselineGap,
+      transformType: 'diffusion',
+      transformValid: nahbDiffusionValid,
+      transformInvalidReason: nahbDiffusionValid ? undefined : 'NAHB HMI diffusion transform requires baseline gap and YoY/MoM growth.',
       signal: computeSignal({ mom: nahbHmi.mom, baselineGap: nahbHmi.baselineGap }),
       sourceStatus: resources.nahbHmi.data?.sourceStatus ?? 'pending',
       readinessClassification: classifyReadiness({
@@ -340,8 +405,13 @@ export const buildCoreMetricCards = (resources: {
         excludedFromComposite: false
       }),
       freshness: resources.nahbHmi.freshness,
-      safeForComposite: (resources.nahbHmi.data?.sourceStatus ?? 'pending') !== 'pending',
-      modelExclusionReason: (resources.nahbHmi.data?.sourceStatus ?? 'pending') === 'pending' ? 'NAHB HMI source is still pending.' : undefined
+      safeForComposite: (resources.nahbHmi.data?.sourceStatus ?? 'pending') !== 'pending' && nahbDiffusionValid,
+      modelExclusionReason:
+        (resources.nahbHmi.data?.sourceStatus ?? 'pending') === 'pending'
+          ? 'NAHB HMI source is still pending.'
+          : nahbDiffusionValid
+            ? undefined
+            : 'NAHB HMI excluded until diffusion baseline gap and growth are both valid.'
     },
     {
       id: 'homebuilder_equity',
@@ -355,6 +425,10 @@ export const buildCoreMetricCards = (resources: {
       transformSummary: 'Average YTD return across tracked homebuilder symbols.',
       growthMom: null,
       growthYoy: null,
+      baselineGap: null,
+      transformType: 'direct',
+      transformValid: false,
+      transformInvalidReason: 'Homebuilder equity is policy-excluded from macro composite methodology.',
       signal: computeSignal({ mom: equityLatest }),
       sourceStatus: equityRows.every((row) => row.sourceStatus === 'pending') ? 'pending' : 'fallback',
       readinessClassification: classifyReadiness({
