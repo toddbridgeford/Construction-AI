@@ -163,16 +163,16 @@ const classifyRuntimeStatus = ({
 const canBeCompositeSafe = ({
   sourceStatus,
   transformValid,
-  hasGrowth,
+  hasCompositeEvidence,
   safePolicy
 }: {
   sourceStatus: MetricSourceStatus
   transformValid: boolean
-  hasGrowth: boolean
+  hasCompositeEvidence: boolean
   safePolicy: MetricRegistryEntry['policy']['safeForCompositePolicy']
 }) => {
   if (safePolicy === 'always-false') return false
-  return sourceStatus !== 'pending' && transformValid && hasGrowth
+  return sourceStatus !== 'pending' && transformValid && hasCompositeEvidence
 }
 
 export const METRIC_REGISTRY: Record<MetricId, MetricRegistryEntry> = {
@@ -375,11 +375,14 @@ export const deriveMetricCards = (resources: MetricRuntimeResources): DerivedMet
     })
 
     const hasGrowth = hasGrowthInput({ yoy: metric.yoy, mom: metric.mom })
-    const compositeGrowthGate = metricId === 'nahb_hmi' ? true : hasGrowth
+    const hasCompositeEvidence =
+      metricId === 'nahb_hmi'
+        ? metric.latest != null && metric.baselineGap != null
+        : hasGrowth
     const safeForComposite = canBeCompositeSafe({
       sourceStatus,
       transformValid: metric.transformValid,
-      hasGrowth: compositeGrowthGate,
+      hasCompositeEvidence,
       safePolicy: registry.policy.safeForCompositePolicy
     })
 
