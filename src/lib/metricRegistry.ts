@@ -212,7 +212,7 @@ export const METRIC_REGISTRY: Record<MetricId, MetricRegistryEntry> = {
   construction_spending: {
     id: 'construction_spending',
     label: 'Construction Spending',
-    upstreamSource: 'Census VIP',
+    upstreamSource: 'Census Value of Construction Put in Place (VIP)',
     endpointPath: '/api/macro-series?metric=construction_spending',
     hookPath: 'useMacro(metric=construction_spending) -> getMacroSeries',
     unit: 'usd-billion',

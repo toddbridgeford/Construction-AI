@@ -11,6 +11,8 @@ import type {
   TimeSeriesPoint
 } from '@/api/contracts'
 
+const MACRO_METRICS = new Set(['abi', 'construction_spending', 'nahb_hmi'])
+
 const asSeries = (input: unknown): TimeSeriesPoint[] => {
   if (!Array.isArray(input)) return []
   return input
@@ -79,6 +81,7 @@ export const adaptEquities = (input: unknown): EquitiesSnapshotResponse | null =
 
 export const adaptMacroSeries = (input: unknown): MacroSeriesResponse | null => {
   const base = adaptSeriesResponse<MacroSeriesResponse>(input)
-  if (!base || typeof (base as { metric?: unknown }).metric !== 'string') return null
+  const metric = (base as { metric?: unknown } | null)?.metric
+  if (!base || typeof metric !== 'string' || !MACRO_METRICS.has(metric)) return null
   return base
 }
