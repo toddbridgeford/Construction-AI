@@ -78,12 +78,13 @@ If no usable points are returned, the metric remains **Onboarding** (pending) an
 
 ## Server-side implementation status (current repo audit)
 
-- `/api/macro-series` is represented by a backend-oriented handler helper at `src/backend/macroSeries.ts`.
-- It is currently a **pure handler module** and is not attached to an in-repo HTTP runtime route.
-- Runtime call path required for a real server route:
+- `/api/macro-series` handler logic lives at `src/backend/macroSeries.ts`.
+- The route is mounted in the in-repo runtime via `vite.config.ts` for both `vite dev` and `vite preview`.
+- Runtime path wiring now:
   1. Parse `metric` query from `GET /api/macro-series`.
-  2. Provide dependencies (`fetchCensusVipSeries`, optional `now`, optional `cache`).
-  3. Invoke `getMacroSeriesResponse({ metric }, deps)` and serialize `{ status, body }`.
+  2. Use `getMacroSeriesResponse({ metric }, deps)` with `fetchCensusVipSeries` dependency.
+  3. Return the helper's `{ status, body }` response directly as JSON.
+- By default, missing `CENSUS_VIP_API_URL` returns an empty upstream payload and truthful `sourceStatus: "pending"`.
 - A concrete backend implementation contract for Construction Spending is documented in `docs/backend-macro-series-contract.md`.
 
 ## Known limitations

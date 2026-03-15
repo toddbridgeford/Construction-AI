@@ -4,9 +4,26 @@
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
   },
   "include": [
-    "vite.config.ts"
+    "vite.config.ts",
+    "src/backend/macroSeries.ts",
+    "src/providers/live/adapters/censusAdapter.ts",
+    "src/providers/live/adapters/shared.ts",
+    "src/providers/live/types.ts",
+    "src/data/types.ts",
+    "src/forecasting/types.ts"
   ]
 }
