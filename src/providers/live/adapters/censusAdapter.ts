@@ -73,3 +73,45 @@ export function adaptCensusVipPayload(payload: unknown): Array<{ date: string; v
     .filter((row): row is { date: string; value: number } => row != null)
     .sort((a, b) => a.date.localeCompare(b.date))
 }
+
+export function adaptAbiPayload(payload: unknown): Array<{ date: string; value: number }> {
+  const rows = asArray(payload)
+
+  return rows
+    .map((row) => {
+      if (!isRecord(row)) return null
+
+      const date = normalizeMonthlyDate(row.date ?? row.period ?? row.month ?? row.time ?? row.release_date)
+      const rawValue = toNumber(
+        row.value ?? row.index ?? row.abi ?? row.abi_index ?? row.billings_index ?? row.observation ?? row.observation_value
+      )
+      if (!date || rawValue == null) return null
+
+      return {
+        date,
+        value: Number(rawValue.toFixed(3))
+      }
+    })
+    .filter((row): row is { date: string; value: number } => row != null)
+    .sort((a, b) => a.date.localeCompare(b.date))
+}
+
+export function adaptNahbHmiPayload(payload: unknown): Array<{ date: string; value: number }> {
+  const rows = asArray(payload)
+
+  return rows
+    .map((row) => {
+      if (!isRecord(row)) return null
+
+      const date = normalizeMonthlyDate(row.date ?? row.period ?? row.month ?? row.time ?? row.release_date)
+      const rawValue = toNumber(row.value ?? row.amount ?? row.index ?? row.hmi ?? row.hmi_index ?? row.observation ?? row.observation_value)
+      if (!date || rawValue == null) return null
+
+      return {
+        date,
+        value: Number(rawValue.toFixed(3))
+      }
+    })
+    .filter((row): row is { date: string; value: number } => row != null)
+    .sort((a, b) => a.date.localeCompare(b.date))
+}

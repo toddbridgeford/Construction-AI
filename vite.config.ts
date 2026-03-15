@@ -8,22 +8,45 @@ const jsonHeaders = {
   'Cache-Control': 'no-store'
 } as const
 
-const parseVipPayload = (payload: unknown): unknown => {
+const parseUpstreamPayload = (payload: unknown): unknown => {
   if (Array.isArray(payload)) return payload
   if (!payload || typeof payload !== 'object') return []
 
   const candidate = payload as Record<string, unknown>
-  const nestedArray = candidate.data ?? candidate.results ?? candidate.series ?? candidate.observations
+  const nestedArray =
+    candidate.data ??
+    candidate.results ??
+    candidate.result ??
+    candidate.series ??
+    candidate.observations ??
+    candidate.values ??
+    candidate.items
   return Array.isArray(nestedArray) ? nestedArray : []
 }
 
-const fetchSeriesFromEndpoint = async (endpoint: string | undefined, apiKey: string | undefined): Promise<unknown> => {
+type UpstreamRequestOptions = {
+  endpoint?: string
+  apiKey?: string
+  apiKeyHeader?: string
+  apiKeyQueryParam?: string
+}
+
+const fetchSeriesFromEndpoint = async ({ endpoint, apiKey, apiKeyHeader, apiKeyQueryParam }: UpstreamRequestOptions): Promise<unknown> => {
   if (!endpoint) return []
 
-  const response = await fetch(endpoint, {
+  const url = new URL(endpoint)
+  if (apiKey && apiKeyQueryParam) {
+    url.searchParams.set(apiKeyQueryParam, apiKey)
+  }
+
+  const authHeader = apiKey && !apiKeyQueryParam ? { Authorization: `Bearer ${apiKey}` } : {}
+  const customHeader = apiKey && apiKeyHeader ? { [apiKeyHeader]: apiKey } : {}
+
+  const response = await fetch(url, {
     headers: {
       Accept: 'application/json',
-      ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {})
+      ...authHeader,
+      ...customHeader
     }
   })
 
@@ -31,19 +54,33 @@ const fetchSeriesFromEndpoint = async (endpoint: string | undefined, apiKey: str
     throw new Error(`Series request failed with ${response.status}`)
   }
 
-  return parseVipPayload(await response.json())
+  return parseUpstreamPayload(await response.json())
 }
 
 const fetchCensusVipSeries = async (): Promise<unknown> => {
-  const endpoint = process.env.CENSUS_VIP_API_URL
-  return fetchSeriesFromEndpoint(endpoint, process.env.CENSUS_VIP_API_KEY)
+  return fetchSeriesFromEndpoint({
+    endpoint: process.env.CENSUS_VIP_API_URL,
+    apiKey: process.env.CENSUS_VIP_API_KEY,
+    apiKeyHeader: process.env.CENSUS_VIP_API_KEY_HEADER,
+    apiKeyQueryParam: process.env.CENSUS_VIP_API_KEY_QUERY_PARAM
+  })
 }
 
 const fetchAbiSeries = async (): Promise<unknown> =>
-  fetchSeriesFromEndpoint(process.env.AIA_ABI_API_URL, process.env.AIA_ABI_API_KEY)
+  fetchSeriesFromEndpoint({
+    endpoint: process.env.AIA_ABI_API_URL,
+    apiKey: process.env.AIA_ABI_API_KEY,
+    apiKeyHeader: process.env.AIA_ABI_API_KEY_HEADER,
+    apiKeyQueryParam: process.env.AIA_ABI_API_KEY_QUERY_PARAM
+  })
 
 const fetchNahbHmiSeries = async (): Promise<unknown> =>
-  fetchSeriesFromEndpoint(process.env.NAHB_HMI_API_URL, process.env.NAHB_HMI_API_KEY)
+  fetchSeriesFromEndpoint({
+    endpoint: process.env.NAHB_HMI_API_URL,
+    apiKey: process.env.NAHB_HMI_API_KEY,
+    apiKeyHeader: process.env.NAHB_HMI_API_KEY_HEADER,
+    apiKeyQueryParam: process.env.NAHB_HMI_API_KEY_QUERY_PARAM
+  })
 
 const macroSeriesRoutePlugin = (): Plugin => {
   const middleware = async (req: any, res: any, next: () => void) => {

@@ -85,6 +85,19 @@ If no usable points are returned, the metric remains **Onboarding** (pending) an
   2. Use `getMacroSeriesResponse({ metric }, deps)` with `fetchCensusVipSeries` dependency.
   3. Return the helper's `{ status, body }` response directly as JSON.
 - By default, missing `CENSUS_VIP_API_URL`, `AIA_ABI_API_URL`, or `NAHB_HMI_API_URL` returns an empty upstream payload and truthful `sourceStatus: "pending"` for the corresponding metric.
+- Macro-series runtime env wiring for live upstreams:
+  - **ABI**
+    - Required: `AIA_ABI_API_URL`
+    - Optional auth: `AIA_ABI_API_KEY`
+    - Optional custom auth header name: `AIA_ABI_API_KEY_HEADER` (e.g., `x-api-key`)
+    - Optional auth query key name: `AIA_ABI_API_KEY_QUERY_PARAM` (e.g., `api_key`)
+    - Default auth behavior without `*_API_KEY_HEADER` / `*_API_KEY_QUERY_PARAM`: `Authorization: Bearer <AIA_ABI_API_KEY>`
+  - **NAHB HMI**
+    - Required: `NAHB_HMI_API_URL`
+    - Optional auth: `NAHB_HMI_API_KEY`
+    - Optional custom auth header name: `NAHB_HMI_API_KEY_HEADER` (e.g., `x-api-key`)
+    - Optional auth query key name: `NAHB_HMI_API_KEY_QUERY_PARAM` (e.g., `api_key`)
+    - Default auth behavior without `*_API_KEY_HEADER` / `*_API_KEY_QUERY_PARAM`: `Authorization: Bearer <NAHB_HMI_API_KEY>`
 - A concrete backend implementation contract for Construction Spending is documented in `docs/backend-macro-series-contract.md`.
 
 ## Known limitations
