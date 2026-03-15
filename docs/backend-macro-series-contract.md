@@ -1,101 +1,118 @@
-# Backend contract: `GET /api/macro-series` (Construction Spending activation)
+# Backend contract: `GET /api/macro-series` (Construction Spending)
 
-## Audit result (this repository)
-
-There is currently **no server runtime** in this repository implementing `/api/macro-series`.
-
-Verified entrypoints in-repo are frontend-only:
-
-- Vite app entry: `src/main.tsx`
-- Frontend API client callsite: `src/api/client.ts` (`getMacroSeries`)
-- Frontend normalization adapter: `src/providers/live/adapters/contractAdapters.ts` (`adaptMacroSeries`)
-- Metric registry wiring: `src/lib/metricRegistry.ts`
-
-No Node/Express server, serverless function directory, Cloudflare Worker, edge handler, or API route source for `/api/macro-series` exists in the current tree.
-
-## Required endpoint
+## Endpoint
 
 - **Path**: `/api/macro-series`
 - **Method**: `GET`
-- **Required query param**: `metric`
-- **Supported value for this task**: `construction_spending`
+- **Query parameter**: `metric`
+- **Supported metric values**: `construction_spending`
 
-### Optional query params
+## Request validation
 
-- `geographyId` (default `us`)
-- `region` (default `us`)
-- `horizon` (`3 | 6 | 12`, default `12`)
+- Missing `metric` returns `400` with a structured error payload.
+- Unsupported `metric` returns `400` with:
+  - `error.code = "UNSUPPORTED_METRIC"`
+  - `error.metric`
+  - `error.supportedMetrics`
 
-## Response shape (minimum compatible contract)
-
-The frontend currently expects `MacroSeriesResponse` semantics and can also adapt legacy aliases (`points`, `data`). Preferred canonical response:
-
-```json
-{
-  "meta": { "generatedAt": "2026-03-15T00:00:00.000Z", "mode": "live" },
-  "region": "us",
-  "sector": "permits",
-  "horizon": 12,
-  "metric": "construction_spending",
-  "series": [
-    { "date": "2024-01", "value": 2098.4, "yoy": 6.2, "mom": 0.4 },
-    { "date": "2024-02", "value": 2105.1, "yoy": 6.0, "mom": 0.3 }
-  ],
-  "sourceStatus": "live"
-}
-```
-
-### Required guarantees
-
-- `series` contains monthly points with:
-  - `date` in `YYYY-MM`
-  - numeric `value`
-- points are sorted ascending by `date`
-- enough history to compute growth rates in UI logic (recommended: at least 24 monthly points; minimum 13 for YoY)
-
-### Optional fields
-
-- `yoy`, `mom` per row are optional and may be included by server.
-- If omitted, the frontend can still operate from raw points.
-
-## Upstream source mapping (server-side)
-
-For `metric=construction_spending`, upstream should map to **U.S. Census Bureau Value of Construction Put in Place** monthly total construction spending (seasonally adjusted annual rate, nominal dollars).
-
-Server responsibilities:
-
-1. Fetch monthly source observations from Census endpoint configured by the backend environment.
-2. Normalize each row to:
-   - `date: YYYY-MM`
-   - `value: number`
-3. Drop invalid/non-numeric rows.
-4. Sort ascending by month.
-5. Return canonical envelope above.
-
-## Error behavior (truthful runtime)
-
-- `400` for missing/unsupported `metric`.
-- `502` when upstream fails or returns unusable payload.
-- `200` with `sourceStatus: "pending"` and empty series is acceptable only when backend intentionally signals onboarding state.
-
-Example error payload:
+Example:
 
 ```json
 {
   "error": {
-    "code": "UPSTREAM_UNAVAILABLE",
-    "message": "Census construction spending source did not return usable monthly observations.",
-    "metric": "construction_spending"
+    "code": "UNSUPPORTED_METRIC",
+    "message": "Unsupported metric 'abi'. Supported metrics: construction_spending.",
+    "metric": "abi",
+    "supportedMetrics": ["construction_spending"]
   }
 }
 ```
 
-## Adapter compatibility requirements
+## Upstream mapping
 
-The current frontend adapter accepts these aliases for backwards compatibility:
+For `metric=construction_spending`, upstream maps to:
 
-- series arrays at `series`, `points`, or `data`
-- date keys at `date`, `period`, or `month`
-- values at `value`, `observation`, or `observation_value`
+- **Source**: Census Value of Construction Put in Place (VIP)
+- **Frequency**: monthly
+- **Unit returned to frontend**: `usd-billion`
+- **Normalization rule**: if upstream points are in millions, divide by `1000` before returning.
 
-Backend should still emit canonical `series/date/value` to reduce ambiguity.
+## Response schema (stable frontend contract)
+
+```json
+{
+  "metric": "construction_spending",
+  "source": {
+    "id": "census_vip",
+    "label": "Census Value of Construction Put in Place",
+    "frequency": "monthly",
+    "unit": "usd-billion",
+    "transformType": "direct",
+    "transformLabel": "direct"
+  },
+  "sourceStatus": "live",
+  "message": "Construction spending series loaded successfully.",
+  "series": [
+    {
+      "date": "2025-03",
+      "value": 2.124,
+      "yoy": 5.2,
+      "mom": 0.3
+    }
+  ],
+  "asOf": "2026-03-15T16:30:00Z",
+  "cache": {
+    "hit": false,
+    "stale": false
+  }
+}
+```
+
+### Guarantees
+
+- `series` is always present (may be empty).
+- `series` is sorted in ascending monthly order.
+- `date` is normalized to `YYYY-MM`.
+- `value` is numeric and normalized to USD billions.
+- `yoy` and `mom` are derived server-side when history exists, otherwise `null`.
+
+## Unavailable upstream behavior
+
+If the Census VIP upstream is unavailable or returns no usable points:
+
+- keep response truthful,
+- return `sourceStatus` as `pending` or `error`,
+- return `series: []`,
+- include `message`.
+
+Example:
+
+```json
+{
+  "metric": "construction_spending",
+  "source": {
+    "id": "census_vip",
+    "label": "Census Value of Construction Put in Place",
+    "frequency": "monthly",
+    "unit": "usd-billion",
+    "transformType": "direct",
+    "transformLabel": "direct"
+  },
+  "sourceStatus": "error",
+  "message": "Construction spending upstream request failed. No usable points were returned.",
+  "series": [],
+  "asOf": "2026-03-15T16:30:00Z",
+  "cache": {
+    "hit": false,
+    "stale": false
+  }
+}
+```
+
+## Implementation notes
+
+This repository does not currently run a server runtime. The implementation added for this contract is a backend-oriented route handler helper:
+
+- `src/backend/macroSeries.ts`
+
+Integrate this helper into your API runtime route (`GET /api/macro-series`) where your server framework parses query params and wires the upstream Census client.
