@@ -53,21 +53,33 @@ const pct = (current: number | undefined, previous: number | undefined) => {
 }
 const toneClass = (value: number | null) => (value == null ? 'text-slate-400' : value >= 0 ? 'text-emerald-300' : 'text-rose-300')
 
-type StatePolygon = {
-  id: string
-  d: string
-  labelX: number
-  labelY: number
-}
+type StateTile = { id: string; col: number; row: number }
 
-const usStatePolygons: StatePolygon[] = [
-  { id: 'WA', d: 'M 80 62 L 118 58 L 132 72 L 124 96 L 86 98 L 70 82 Z', labelX: 102, labelY: 80 },
-  { id: 'CA', d: 'M 84 108 L 116 106 L 126 124 L 121 150 L 133 178 L 118 196 L 88 182 L 74 136 Z', labelX: 104, labelY: 150 },
-  { id: 'TX', d: 'M 198 150 L 246 147 L 262 162 L 274 188 L 256 214 L 220 210 L 206 196 L 186 202 L 176 180 Z', labelX: 227, labelY: 181 },
-  { id: 'IL', d: 'M 244 98 L 264 96 L 270 110 L 266 142 L 252 147 L 240 132 L 242 108 Z', labelX: 255, labelY: 124 },
-  { id: 'NY', d: 'M 302 82 L 334 80 L 346 94 L 338 112 L 308 114 L 294 98 Z', labelX: 321, labelY: 98 },
-  { id: 'FL', d: 'M 304 162 L 334 160 L 352 172 L 360 192 L 348 214 L 336 220 L 326 205 L 316 196 L 306 178 Z', labelX: 332, labelY: 188 }
+const DASHBOARD_COPY = {
+  subtitle: 'Interactive market dashboard with forecast monitoring',
+  mapTitlePermits: 'Building Permits by State',
+  mapTitleEmployment: 'Construction Employment by State',
+  mapSubtitle: 'Nationwide choropleth coverage with drill-down for supported states.',
+  forecastUnavailable: 'Forecast unavailable for this selection.',
+  mapNoData: 'No index value available'
+} as const
+
+const usStateTiles: StateTile[] = [
+  { id: 'AK', col: 0, row: 7 }, { id: 'HI', col: 1, row: 7 }, { id: 'WA', col: 0, row: 0 }, { id: 'OR', col: 0, row: 1 }, { id: 'CA', col: 0, row: 2 },
+  { id: 'ID', col: 1, row: 1 }, { id: 'NV', col: 1, row: 2 }, { id: 'AZ', col: 1, row: 3 }, { id: 'MT', col: 2, row: 0 }, { id: 'WY', col: 2, row: 1 },
+  { id: 'UT', col: 2, row: 2 }, { id: 'CO', col: 2, row: 3 }, { id: 'NM', col: 2, row: 4 }, { id: 'ND', col: 3, row: 0 }, { id: 'SD', col: 3, row: 1 },
+  { id: 'NE', col: 3, row: 2 }, { id: 'KS', col: 3, row: 3 }, { id: 'OK', col: 3, row: 4 }, { id: 'TX', col: 3, row: 5 }, { id: 'MN', col: 4, row: 1 },
+  { id: 'IA', col: 4, row: 2 }, { id: 'MO', col: 4, row: 3 }, { id: 'AR', col: 4, row: 4 }, { id: 'LA', col: 4, row: 5 }, { id: 'WI', col: 5, row: 1 },
+  { id: 'IL', col: 5, row: 2 }, { id: 'MS', col: 5, row: 5 }, { id: 'MI', col: 6, row: 1 }, { id: 'IN', col: 6, row: 2 }, { id: 'KY', col: 6, row: 3 },
+  { id: 'TN', col: 6, row: 4 }, { id: 'AL', col: 6, row: 5 }, { id: 'OH', col: 7, row: 2 }, { id: 'WV', col: 7, row: 3 }, { id: 'GA', col: 7, row: 5 },
+  { id: 'FL', col: 8, row: 6 }, { id: 'PA', col: 8, row: 2 }, { id: 'VA', col: 8, row: 3 }, { id: 'NC', col: 8, row: 4 }, { id: 'SC', col: 8, row: 5 },
+  { id: 'NY', col: 9, row: 1 }, { id: 'NJ', col: 9, row: 2 }, { id: 'DE', col: 9, row: 3 }, { id: 'MD', col: 9, row: 4 }, { id: 'DC', col: 9, row: 5 },
+  { id: 'VT', col: 10, row: 0 }, { id: 'MA', col: 10, row: 1 }, { id: 'CT', col: 10, row: 2 }, { id: 'RI', col: 11, row: 2 }, { id: 'NH', col: 11, row: 0 },
+  { id: 'ME', col: 12, row: 0 }
 ]
+
+const tilePath = (x: number, y: number, width = 24, height = 18) =>
+  `M ${x + 3} ${y} L ${x + width - 3} ${y} L ${x + width} ${y + 3} L ${x + width} ${y + height - 3} L ${x + width - 3} ${y + height} L ${x + 3} ${y + height} L ${x} ${y + height - 3} L ${x} ${y + 3} Z`
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(true)
@@ -210,7 +222,7 @@ function App() {
       } catch {
         if (!isActive) return
         setForecastOutput(emptyForecastOutput)
-        setForecastError('Forecast unavailable for current selection.')
+        setForecastError(DASHBOARD_COPY.forecastUnavailable)
       } finally {
         if (!isActive) return
         setProviderStatus(providerBundle.runtime.getStatus())
@@ -330,7 +342,7 @@ function App() {
             <div className="grid h-7 w-7 place-items-center rounded border border-border/70 bg-[#121a2b] text-[10px] font-semibold text-slate-200">US</div>
             <div className="leading-tight">
               <p className="text-[12px] font-semibold text-slate-100">U.S. Construction Market</p>
-              <p className="text-[10px] text-slate-400">Interactive dashboard and forecast monitor</p>
+              <p className="text-[10px] text-slate-400">{DASHBOARD_COPY.subtitle}</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
@@ -389,8 +401,8 @@ function App() {
             <CardHeader className="border-b border-border/60 pb-2">
               <div className="flex items-start justify-between gap-2">
                 <div className="leading-tight">
-                  <CardTitle className="text-[12px]">{mapMetric === 'permits' ? 'Building Permits by State' : 'Construction Employment by State'}</CardTitle>
-                  <p className="text-[10px] text-slate-400">Click a state polygon to drill into the chart context.</p>
+                  <CardTitle className="text-[12px]">{mapMetric === 'permits' ? DASHBOARD_COPY.mapTitlePermits : DASHBOARD_COPY.mapTitleEmployment}</CardTitle>
+                  <p className="text-[10px] text-slate-400">{DASHBOARD_COPY.mapSubtitle}</p>
                 </div>
                 <div className="inline-flex rounded border border-border/70 bg-[#0f1626] p-0.5 text-[9px]">
                   <button aria-pressed={mapMetric === 'permits'} className={`rounded px-2 py-0.5 transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60 ${mapMetric === 'permits' ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400 hover:text-slate-200'}`} onClick={() => setMapMetric('permits')}>Permits</button>
@@ -401,26 +413,23 @@ function App() {
             <CardContent className="h-[304px] p-3">
               <div className="relative h-full rounded border border-border/70 bg-[#0e1628] p-2.5">
                 <svg viewBox="0 0 430 260" className="h-full w-full">
-                  <path
-                    d="M 52 52 L 138 48 L 198 72 L 254 74 L 326 70 L 364 86 L 376 120 L 370 176 L 336 220 L 252 226 L 192 210 L 126 202 L 84 168 L 68 122 Z"
-                    fill="rgba(148,163,184,0.08)"
-                    stroke="rgba(148,163,184,0.22)"
-                    strokeWidth="1"
-                  />
-                  {usStatePolygons.map((polygon) => {
-                    const item = mapEntriesByState.get(polygon.id)
+                  <rect x="8" y="10" width="356" height="216" rx="8" fill="rgba(15,23,42,0.45)" stroke="rgba(148,163,184,0.2)" strokeWidth="1" />
+                  {usStateTiles.map((tile) => {
+                    const item = mapEntriesByState.get(tile.id)
                     const ratio = item ? Math.max(0, Math.min(1, (item.value - mapExtent.min) / Math.max(mapExtent.max - mapExtent.min, 1))) : 0
-                    const fill = item ? `rgba(245, 158, ${Math.max(26, Math.round(80 - ratio * 54))}, ${0.24 + ratio * 0.62})` : 'rgba(71,85,105,0.22)'
+                    const fill = item ? `rgba(245, 158, ${Math.max(26, Math.round(80 - ratio * 54))}, ${0.24 + ratio * 0.62})` : 'rgba(71,85,105,0.2)'
+                    const x = 16 + tile.col * 26
+                    const y = 18 + tile.row * 22
 
                     return (
-                      <g key={polygon.id}>
+                      <g key={tile.id}>
                         <path
-                          d={polygon.d}
+                          d={tilePath(x, y)}
                           fill={fill}
-                          stroke={item ? 'rgba(245,158,11,0.62)' : 'rgba(148,163,184,0.26)'}
+                          stroke={item ? 'rgba(245,158,11,0.6)' : 'rgba(148,163,184,0.24)'}
                           strokeWidth="1"
                           className={item ? 'cursor-pointer' : 'cursor-default'}
-                          onMouseEnter={() => setHoverMap({ state: item?.stateName ?? polygon.id, value: item?.value ?? Number.NaN })}
+                          onMouseEnter={() => setHoverMap({ state: item?.stateName ?? tile.id, value: item?.value ?? Number.NaN })}
                           onMouseLeave={() => setHoverMap(null)}
                           onClick={() => {
                             if (!item) return
@@ -430,8 +439,8 @@ function App() {
                             setStateId(item.stateId)
                           }}
                         />
-                        <text x={polygon.labelX} y={polygon.labelY} textAnchor="middle" fontSize="10" fill="rgba(241,245,249,0.9)">
-                          {item?.stateId ?? polygon.id}
+                        <text x={x + 12} y={y + 12} textAnchor="middle" fontSize="7" fill={item ? 'rgba(241,245,249,0.92)' : 'rgba(148,163,184,0.7)'}>
+                          {tile.id}
                         </text>
                       </g>
                     )
@@ -441,7 +450,7 @@ function App() {
                 {hoverMap && (
                   <div className="absolute left-2.5 top-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[10px]">
                     <p className="font-medium text-slate-100">{hoverMap.state}</p>
-                    <p className="font-mono text-slate-400">{Number.isFinite(hoverMap.value) ? `${hoverMap.value.toFixed(1)} ${mapMetricLabel}` : `No ${mapMetricLabel} available`}</p>
+                    <p className="font-mono text-slate-400">{Number.isFinite(hoverMap.value) ? `${hoverMap.value.toFixed(1)} ${mapMetricLabel}` : DASHBOARD_COPY.mapNoData}</p>
                   </div>
                 )}
 
@@ -451,7 +460,7 @@ function App() {
                     <div className="h-1.5 w-20 rounded bg-gradient-to-r from-slate-600/60 to-amber-400/80" />
                   </div>
                 ) : (
-                  <div className="pointer-events-none absolute bottom-2.5 right-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[9px] text-slate-500">No {mapMetricLabel} available.</div>
+                  <div className="pointer-events-none absolute bottom-2.5 right-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[9px] text-slate-500">{DASHBOARD_COPY.mapNoData}.</div>
                 )}
               </div>
             </CardContent>
@@ -504,7 +513,7 @@ function App() {
               {compareModels && (
                 <div className="rounded border border-border/70 bg-[#0f1626] px-2 py-1.5 text-[10px] text-slate-300">
                   {forecastOutput.comparison.length === 0 ? (
-                    <p className="text-slate-400">No model comparison available for this selection.</p>
+                    <p className="text-slate-400">No comparison metrics available for this selection.</p>
                   ) : (
                     <div className="grid gap-1">
                       {forecastOutput.comparison.slice(0, 4).map((entry) => (
@@ -522,7 +531,7 @@ function App() {
 
               <div className="rounded border border-border/70 bg-[#0f1626] px-2 py-1.5">
                 <div className="mb-1 flex items-center justify-between text-[10px] text-slate-400">
-                  <span>Range Brush</span>
+                  <span>Range brush</span>
                   <span className="font-mono">{brushedSeries[0]?.date ?? '—'} → {brushedSeries.at(-1)?.date ?? '—'}</span>
                 </div>
                 <div className="grid gap-1">
@@ -549,7 +558,7 @@ function App() {
 
         <Card className="border-border/70 bg-[#121a2b]">
           <CardHeader className="pb-1.5">
-            <CardTitle className="text-[12px]">Methodology & Sources</CardTitle>
+            <CardTitle className="text-[12px]">Methodology and sources</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-2 text-[10.5px] leading-relaxed text-slate-400 md:grid-cols-2">
             <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2">
