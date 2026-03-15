@@ -5,7 +5,6 @@ import type { LiveSourceConfig, NormalizedSourcePayload } from './live/types'
 import { adaptFredPayload } from './live/adapters/fredAdapter'
 import { adaptBlsPayload } from './live/adapters/blsAdapter'
 import { adaptCensusPayload } from './live/adapters/censusAdapter'
-import { adaptMortgagePayload } from './live/adapters/mortgageAdapter'
 import { scaffoldAdapter } from './live/adapters/scaffoldAdapter'
 import type { ProviderRuntime } from './runtime'
 
@@ -40,30 +39,31 @@ export class ApiProvider implements DataProvider {
   constructor(private readonly options: ApiProviderOptions) {}
 
   private async fetchSource(source: LiveSourceConfig): Promise<NormalizedSourcePayload> {
-    if (!source.apiKey && source.required) throw new Error(`${source.name} key missing`)
-
     if (source.id === 'hud') return scaffoldAdapter('HUD')
     if (source.id === 'bea') return scaffoldAdapter('BEA')
 
     const url = new URL(source.path, this.options.baseUrl)
-    if (source.apiKey) url.searchParams.set('api_key', source.apiKey)
+    if (source.query) {
+      Object.entries(source.query).forEach(([key, value]) => {
+        url.searchParams.set(key, value)
+      })
+    }
 
-    const response = await fetch(url.toString(), {
-      headers: this.options.apiKey ? { Authorization: `Bearer ${this.options.apiKey}` } : undefined
-    })
+    const headers: HeadersInit = {}
+    if (this.options.apiKey) headers.Authorization = `Bearer ${this.options.apiKey}`
+
+    const response = await fetch(url.toString(), { headers })
 
     if (!response.ok) throw new Error(`${source.name} request failed (${response.status})`)
     const payload = (await response.json()) as unknown
 
     switch (source.id) {
       case 'fred':
-        return adaptFredPayload(payload)
+        return adaptFredPayload(payload, source.indicatorId)
       case 'bls':
-        return adaptBlsPayload(payload)
+        return adaptBlsPayload(payload, source.indicatorId)
       case 'census':
-        return adaptCensusPayload(payload)
-      case 'mortgage':
-        return adaptMortgagePayload(payload)
+        return adaptCensusPayload(payload, source.indicatorId)
       default:
         return { source: source.name, observations: [], mapData: [] }
     }
@@ -79,16 +79,19 @@ export class ApiProvider implements DataProvider {
       .filter((item) => item.result.status === 'rejected')
       .map((item) => item.source)
 
+    const liveObs = successful.flatMap((item) => item.observations)
+    const liveMap = successful.flatMap((item) => item.mapData)
+
     const merged: DashboardData = {
       metadata: {
         ...fallback.metadata,
         updatedAt: new Date().toISOString().slice(0, 10)
       },
-      observations: dedupeObservations([...fallback.observations, ...successful.flatMap((item) => item.observations)]),
-      mapData: dedupeMapData([...fallback.mapData, ...successful.flatMap((item) => item.mapData)])
+      observations: dedupeObservations([...fallback.observations, ...liveObs]),
+      mapData: dedupeMapData([...fallback.mapData, ...liveMap])
     }
 
-    const noLiveRows = successful.every((item) => item.observations.length === 0 && item.mapData.length === 0)
+    const noLiveRows = liveObs.length === 0 && liveMap.length === 0
 
     this.options.runtime.setStatus({
       mode: noLiveRows ? 'demo' : 'live',

@@ -20,6 +20,7 @@ export type LiveSourceConfig = {
   name: string
   path: string
   apiKey?: string
+  query?: Record<string, string>
   indicatorId: string
   required: boolean
 }

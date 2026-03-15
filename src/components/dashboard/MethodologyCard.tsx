@@ -8,10 +8,10 @@ export function MethodologyCard() {
       </CardHeader>
       <CardContent className="space-y-1.5 text-[10.5px] leading-relaxed text-muted-foreground">
         <p>
-          Signal blend combines Census starts, BLS labor, project announcements, bond issuance, and sentiment indicators, normalized for
-          comparable regional momentum scoring.
+          Signal blend combines Census housing activity, BLS construction employment, and FRED rate signals, normalized for
+          comparable momentum scoring with graceful source fallback.
         </p>
-        <p>Forecast rendering is intentionally static in this phase to finalize visual shell fidelity ahead of live endpoint wiring.</p>
+        <p>Forecasts run from the same normalized live-or-fallback series used in charts and KPIs.</p>
       </CardContent>
     </Card>
   )

@@ -341,13 +341,15 @@ function App() {
     const permits = seriesByIndicator.permits
     const employment = seriesByIndicator.employment
     const costs = seriesByIndicator.cost_index
+    const mortgage = toSeries(observations, geographyLevel, geographyId, 'mortgage30y').points
 
     const startsLatest = starts.at(-1)?.value ?? 0
     const permitsLatest = permits.at(-1)?.value ?? 0
     const employmentLatest = employment.at(-1)?.value ?? 0
     const costLatest = costs.at(-1)?.value ?? 0
 
-    const mortgageProxy = 8.5 - costLatest / 35
+    const mortgageLatest = mortgage.at(-1)?.value
+    const mortgageRate = mortgageLatest ?? 8.5 - costLatest / 35
     const abiProxy = (permitsLatest * 0.55 + employmentLatest * 0.45) / 2
 
     return [
@@ -356,9 +358,9 @@ function App() {
       { label: 'Employment', value: employmentLatest, yoy: pct(employmentLatest, employment.at(-13)?.value), mom: pct(employmentLatest, employment.at(-2)?.value), icon: '◼' },
       {
         label: '30Y Mortgage',
-        value: mortgageProxy,
-        yoy: pct(mortgageProxy, 8.5 - ((costs.at(-13)?.value ?? costLatest) / 35)),
-        mom: pct(mortgageProxy, 8.5 - ((costs.at(-2)?.value ?? costLatest) / 35)),
+        value: mortgageRate,
+        yoy: mortgageLatest != null ? pct(mortgageRate, mortgage.at(-13)?.value) : pct(mortgageRate, 8.5 - ((costs.at(-13)?.value ?? costLatest) / 35)),
+        mom: mortgageLatest != null ? pct(mortgageRate, mortgage.at(-2)?.value) : pct(mortgageRate, 8.5 - ((costs.at(-2)?.value ?? costLatest) / 35)),
         icon: '◻'
       },
       { label: 'Materials PPI', value: costLatest, yoy: pct(costLatest, costs.at(-13)?.value), mom: pct(costLatest, costs.at(-2)?.value), icon: '◼' },
@@ -370,7 +372,7 @@ function App() {
         icon: '◻'
       }
     ]
-  }, [seriesByIndicator])
+  }, [geographyId, geographyLevel, observations, seriesByIndicator])
 
   const mapEntries = useMemo(() => mapDataByIndicator(dashboardData?.mapData ?? [], mapMetric), [dashboardData?.mapData, mapMetric])
   const mapEntriesByState = useMemo(() => new Map(mapEntries.map((entry) => [entry.stateId, entry])), [mapEntries])
@@ -674,7 +676,7 @@ function App() {
             <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2">
               <p className="text-[10px] uppercase tracking-[0.08em] text-slate-200">Data Sources</p>
               <p>Core indicators are served through the checked-in provider contract, with local synthetic fallback when live credentials are unavailable.</p>
-              <p>Current panels are wired to permits, starts, employment, and materials cost index series from the repository dataset.</p>
+              <p>Current panels are wired to Census, BLS, and FRED-backed series when live endpoints are available, with local dataset fallback.</p>
             </div>
             <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2">
               <p className="text-[10px] uppercase tracking-[0.08em] text-slate-200">Forecasting</p>
@@ -683,7 +685,7 @@ function App() {
             </div>
             <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2 md:col-span-2">
               <p className="text-[10px] uppercase tracking-[0.08em] text-slate-200">Limitations</p>
-              <p>30Y Mortgage and ABI are proxy calculations from available indicators so the dashboard stays grounded in the current contract without unsupported feeds.</p>
+              <p>30Y Mortgage uses the live FRED mortgage series when available. ABI remains a transparent permits/employment composite proxy.</p>
               {forecastOutput.warnings.length > 0 && <p className="text-amber-200">Forecast warning: {forecastOutput.warnings.join(' ')}</p>}
             </div>
           </CardContent>
