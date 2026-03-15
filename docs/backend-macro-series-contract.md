@@ -42,6 +42,7 @@ For `metric=construction_spending`, upstream maps to:
 ```json
 {
   "metric": "construction_spending",
+  "unit": "usd-billion",
   "source": {
     "id": "census_vip",
     "label": "Census Value of Construction Put in Place",
@@ -90,6 +91,7 @@ Example:
 ```json
 {
   "metric": "construction_spending",
+  "unit": "usd-billion",
   "source": {
     "id": "census_vip",
     "label": "Census Value of Construction Put in Place",
@@ -116,3 +118,16 @@ This repository does not currently run a server runtime. The implementation adde
 - `src/backend/macroSeries.ts`
 
 Integrate this helper into your API runtime route (`GET /api/macro-series`) where your server framework parses query params and wires the upstream Census client.
+
+Exact invocation shape:
+
+```ts
+const { status, body } = await getMacroSeriesResponse(
+  { metric: request.query.metric },
+  {
+    fetchCensusVipSeries: () => censusClient.fetchVipSeries(),
+    now: () => new Date(),
+    cache: { hit: false, stale: false }
+  }
+)
+```
