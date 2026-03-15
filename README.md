@@ -75,6 +75,13 @@ Also accepted for compatibility:
 
 If no usable points are returned, the metric remains **Onboarding** (pending) and is excluded from composite inclusion. If a previously fetched real payload is available in cache while offline, it is surfaced as an offline snapshot via freshness metadata without synthesizing values.
 
+
+## Server-side implementation status (current repo audit)
+
+- `/api/macro-series` is **not implemented in this repository** as executable backend code.
+- This codebase currently contains frontend callers/adapters only.
+- A concrete backend implementation contract for Construction Spending is documented in `docs/backend-macro-series-contract.md`.
+
 ## Known limitations
 
 - Endpoint paths are assumed as `/fred`, `/bls`, `/census`, `/hud`, `/bea` under `VITE_API_BASE_URL`.

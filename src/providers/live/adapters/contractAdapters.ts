@@ -13,6 +13,19 @@ import type {
 
 const MACRO_METRICS = new Set(['abi', 'construction_spending', 'nahb_hmi'])
 
+const normalizeMonthlyDate = (input: string): string | null => {
+  const trimmed = input.trim()
+  if (/^\d{4}-\d{2}$/.test(trimmed)) return trimmed
+
+  const ymd = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+  if (ymd) return `${ymd[1]}-${ymd[2]}`
+
+  const compact = trimmed.match(/^(\d{4})(\d{2})$/)
+  if (compact) return `${compact[1]}-${compact[2]}`
+
+  return null
+}
+
 const toFiniteNumber = (value: unknown): number | null => {
   if (typeof value === 'number' && Number.isFinite(value)) return value
   if (typeof value === 'string') {
@@ -117,6 +130,12 @@ export const adaptMacroSeries = (input: unknown): MacroSeriesResponse | null => 
   if (!metric || !MACRO_METRICS.has(metric)) return null
 
   const series = asSeries(payload.series ?? payload.points ?? payload.data)
+    .map((row) => {
+      const date = normalizeMonthlyDate(row.date)
+      return date ? { ...row, date } : null
+    })
+    .filter((row): row is TimeSeriesPoint => row != null)
+    .sort((a, b) => a.date.localeCompare(b.date))
   const sourceStatus =
     payload.sourceStatus === 'live' || payload.sourceStatus === 'fallback' || payload.sourceStatus === 'pending'
       ? payload.sourceStatus
