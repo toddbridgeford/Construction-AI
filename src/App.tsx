@@ -51,6 +51,7 @@ const pct = (current: number | undefined, previous: number | undefined) => {
   if (current == null || previous == null || previous === 0) return null
   return ((current - previous) / previous) * 100
 }
+const toneClass = (value: number | null) => (value == null ? 'text-slate-400' : value >= 0 ? 'text-emerald-300' : 'text-rose-300')
 
 type StatePolygon = {
   id: string
@@ -72,6 +73,9 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [forecastLoading, setForecastLoading] = useState(false)
+  const [forecastError, setForecastError] = useState<string | null>(null)
   const [providerStatus, setProviderStatus] = useState(providerBundle.runtime.getStatus())
 
   const [geographyLevel, setGeographyLevel] = useState<GeographyLevel>('us')
@@ -93,15 +97,32 @@ function App() {
   }, [isDarkMode])
 
   useEffect(() => {
+    let isActive = true
+
     const load = async () => {
       setLoading(true)
-      const next = await provider.getDashboardData()
-      setDashboardData(next)
-      setProviderStatus(providerBundle.runtime.getStatus())
-      setLoading(false)
+      setLoadError(null)
+
+      try {
+        const next = await provider.getDashboardData()
+        if (!isActive) return
+        setDashboardData(next)
+      } catch {
+        if (!isActive) return
+        setDashboardData(null)
+        setLoadError('Unable to load dashboard data. Try refreshing the page.')
+      } finally {
+        if (!isActive) return
+        setProviderStatus(providerBundle.runtime.getStatus())
+        setLoading(false)
+      }
     }
 
     void load()
+
+    return () => {
+      isActive = false
+    }
   }, [])
 
   const metadata = dashboardData?.metadata
@@ -160,24 +181,48 @@ function App() {
     if (!filteredSeries.length) return []
     const start = Math.floor((brushStart / 100) * (filteredSeries.length - 1))
     const end = Math.max(start + 2, Math.floor((brushEnd / 100) * (filteredSeries.length - 1)))
-    return filteredSeries.slice(start, end)
+    return filteredSeries.slice(start, Math.min(end + 1, filteredSeries.length))
   }, [brushEnd, brushStart, filteredSeries])
+
+  useEffect(() => {
+    setBrushStart(0)
+    setBrushEnd(100)
+  }, [geographyId, geographyLevel, indicatorId, range])
 
   const [forecastOutput, setForecastOutput] = useState<ForecastOutput>(emptyForecastOutput)
 
   useEffect(() => {
+    let isActive = true
+
     const loadForecast = async () => {
-      const response = await provider.getForecast({
-        geographyLevel,
-        geographyId,
-        indicatorId,
-        periods: Number(forecastHorizon) as 3 | 6 | 12
-      })
-      setForecastOutput(response.output)
-      setProviderStatus(providerBundle.runtime.getStatus())
+      setForecastLoading(true)
+      setForecastError(null)
+
+      try {
+        const response = await provider.getForecast({
+          geographyLevel,
+          geographyId,
+          indicatorId,
+          periods: Number(forecastHorizon) as 3 | 6 | 12
+        })
+        if (!isActive) return
+        setForecastOutput(response.output)
+      } catch {
+        if (!isActive) return
+        setForecastOutput(emptyForecastOutput)
+        setForecastError('Forecast unavailable for current selection.')
+      } finally {
+        if (!isActive) return
+        setProviderStatus(providerBundle.runtime.getStatus())
+        setForecastLoading(false)
+      }
     }
 
     void loadForecast()
+
+    return () => {
+      isActive = false
+    }
   }, [forecastHorizon, geographyId, geographyLevel, indicatorId])
 
   const kpiCards = useMemo<KpiCardData[]>(() => {
@@ -196,7 +241,7 @@ function App() {
 
     return [
       { label: 'Housing Starts', value: startsLatest, yoy: pct(startsLatest, starts.at(-13)?.value), mom: pct(startsLatest, starts.at(-2)?.value), icon: '◼' },
-      { label: 'Construction Spend', value: permitsLatest, yoy: pct(permitsLatest, permits.at(-13)?.value), mom: pct(permitsLatest, permits.at(-2)?.value), icon: '◻' },
+      { label: 'Building Permits', value: permitsLatest, yoy: pct(permitsLatest, permits.at(-13)?.value), mom: pct(permitsLatest, permits.at(-2)?.value), icon: '◻' },
       { label: 'Employment', value: employmentLatest, yoy: pct(employmentLatest, employment.at(-13)?.value), mom: pct(employmentLatest, employment.at(-2)?.value), icon: '◼' },
       {
         label: '30Y Mortgage',
@@ -217,6 +262,7 @@ function App() {
   }, [seriesByIndicator])
 
   const mapEntries = useMemo(() => mapDataByIndicator(dashboardData?.mapData ?? [], mapMetric), [dashboardData?.mapData, mapMetric])
+  const mapEntriesByState = useMemo(() => new Map(mapEntries.map((entry) => [entry.stateId, entry])), [mapEntries])
 
   const mapExtent = useMemo(() => {
     const values = mapEntries.map((entry) => entry.value)
@@ -270,8 +316,11 @@ function App() {
       : geographyLevel === 'region'
         ? regionOptions.find((entry) => entry.value === regionId)?.label ?? regionId
         : geographyLevel === 'state'
-          ? stateOptions.find((entry) => entry.value === stateId)?.label ?? stateId
-          : metroOptions.find((entry) => entry.value === metroId)?.label ?? metroId
+        ? stateOptions.find((entry) => entry.value === stateId)?.label ?? stateId
+        : metroOptions.find((entry) => entry.value === metroId)?.label ?? metroId
+  const mapMetricLabel = mapMetric === 'permits' ? 'permits index' : 'employment index'
+  const hasMapValues = mapEntries.some((entry) => Number.isFinite(entry.value))
+  const hasForecast = forecastOutput.forecast.length > 0
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -281,13 +330,13 @@ function App() {
             <div className="grid h-7 w-7 place-items-center rounded border border-border/70 bg-[#121a2b] text-[10px] font-semibold text-slate-200">US</div>
             <div className="leading-tight">
               <p className="text-[12px] font-semibold text-slate-100">U.S. Construction Market</p>
-              <p className="text-[10px] text-slate-400">Interactive Dashboard & Forecasting</p>
+              <p className="text-[10px] text-slate-400">Interactive dashboard and forecast monitor</p>
             </div>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="rounded border border-border/70 px-2 py-1 text-[9px] text-slate-400">{providerStatus.label}</span>
-            <button className="h-6 w-6 rounded border border-border/70 text-[10px] text-slate-400">i</button>
-            <button className="h-6 w-6 rounded border border-border/70 text-[10px] text-slate-400" onClick={() => setIsDarkMode((prev) => !prev)}>{isDarkMode ? '☀' : '☾'}</button>
+            <button className="h-6 w-6 rounded border border-border/70 text-[10px] text-slate-400 transition hover:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60" aria-label="Dashboard information">i</button>
+            <button className="h-6 w-6 rounded border border-border/70 text-[10px] text-slate-400 transition hover:text-slate-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60" onClick={() => setIsDarkMode((prev) => !prev)} aria-label="Toggle theme">{isDarkMode ? '☀' : '☾'}</button>
           </div>
         </div>
       </header>
@@ -310,25 +359,25 @@ function App() {
               onChange={(value) => setForecastHorizon(value as '3' | '6' | '12')}
               className="h-7 min-w-[4.5rem] bg-[#0f1626] text-[10px]"
             />
-            <div className="flex items-center gap-2 rounded border border-border/70 bg-[#0f1626] px-2 py-1 text-[10px] text-slate-400">
-              Compare Models
+            <div className="inline-flex items-center gap-2 rounded border border-border/70 bg-[#0f1626] px-2 py-1 text-[10px] text-slate-400">
+              Compare models
               <Switch checked={compareModels} onCheckedChange={setCompareModels} />
             </div>
           </div>
         </section>
 
         <section className="grid gap-2 sm:grid-cols-2 xl:grid-cols-6">
-          {kpiCards.map((card, index) => (
+          {kpiCards.map((card) => (
             <Card key={card.label} className="border-border/70 bg-[#121a2b]">
               <CardContent className="p-2.5">
                 <div className="mb-1.5 flex items-center justify-between">
                   <p className="text-[10px] text-slate-400">{card.label}</p>
-                  <span className="text-[8px] text-slate-500">{card.icon}</span>
+                  <span className="font-mono text-[8px] text-slate-500">{card.icon}</span>
                 </div>
                 <p className="font-mono text-[18px] leading-none text-slate-100">{card.label === '30Y Mortgage' ? `${card.value.toFixed(2)}%` : card.value.toFixed(1)}</p>
                 <div className="mt-2 flex justify-between text-[10px]">
-                  <span className="text-emerald-300">YoY {fmtPct(card.yoy)}</span>
-                  <span className={index % 2 === 0 ? 'text-slate-400' : 'text-amber-300'}>MoM {fmtPct(card.mom)}</span>
+                  <span className={toneClass(card.yoy)}>YoY {fmtPct(card.yoy)}</span>
+                  <span className={toneClass(card.mom)}>MoM {fmtPct(card.mom)}</span>
                 </div>
               </CardContent>
             </Card>
@@ -340,12 +389,12 @@ function App() {
             <CardHeader className="border-b border-border/60 pb-2">
               <div className="flex items-start justify-between gap-2">
                 <div className="leading-tight">
-                  <CardTitle className="text-[12px]">Building Permits by State</CardTitle>
-                  <p className="text-[10px] text-slate-400">Permits and employment view with state drill-in.</p>
+                  <CardTitle className="text-[12px]">{mapMetric === 'permits' ? 'Building Permits by State' : 'Construction Employment by State'}</CardTitle>
+                  <p className="text-[10px] text-slate-400">Click a state polygon to drill into the chart context.</p>
                 </div>
                 <div className="inline-flex rounded border border-border/70 bg-[#0f1626] p-0.5 text-[9px]">
-                  <button className={`rounded px-2 py-0.5 ${mapMetric === 'permits' ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400'}`} onClick={() => setMapMetric('permits')}>Permits</button>
-                  <button className={`rounded px-2 py-0.5 ${mapMetric === 'employment' ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400'}`} onClick={() => setMapMetric('employment')}>Employment</button>
+                  <button aria-pressed={mapMetric === 'permits'} className={`rounded px-2 py-0.5 transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60 ${mapMetric === 'permits' ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400 hover:text-slate-200'}`} onClick={() => setMapMetric('permits')}>Permits</button>
+                  <button aria-pressed={mapMetric === 'employment'} className={`rounded px-2 py-0.5 transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60 ${mapMetric === 'employment' ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400 hover:text-slate-200'}`} onClick={() => setMapMetric('employment')}>Employment</button>
                 </div>
               </div>
             </CardHeader>
@@ -358,23 +407,23 @@ function App() {
                     stroke="rgba(148,163,184,0.22)"
                     strokeWidth="1"
                   />
-                  {mapEntries.map((item) => {
-                    const polygon = usStatePolygons.find((entry) => entry.id === item.stateId)
-                    if (!polygon) return null
-                    const ratio = (item.value - mapExtent.min) / Math.max(mapExtent.max - mapExtent.min, 1)
-                    const fill = `rgba(245, 158, ${Math.max(26, Math.round(80 - ratio * 54))}, ${0.24 + ratio * 0.62})`
+                  {usStatePolygons.map((polygon) => {
+                    const item = mapEntriesByState.get(polygon.id)
+                    const ratio = item ? Math.max(0, Math.min(1, (item.value - mapExtent.min) / Math.max(mapExtent.max - mapExtent.min, 1))) : 0
+                    const fill = item ? `rgba(245, 158, ${Math.max(26, Math.round(80 - ratio * 54))}, ${0.24 + ratio * 0.62})` : 'rgba(71,85,105,0.22)'
 
                     return (
-                      <g key={item.stateId}>
+                      <g key={polygon.id}>
                         <path
                           d={polygon.d}
                           fill={fill}
-                          stroke="rgba(245,158,11,0.62)"
+                          stroke={item ? 'rgba(245,158,11,0.62)' : 'rgba(148,163,184,0.26)'}
                           strokeWidth="1"
-                          className="cursor-pointer"
-                          onMouseEnter={() => setHoverMap({ state: item.stateName, value: item.value })}
+                          className={item ? 'cursor-pointer' : 'cursor-default'}
+                          onMouseEnter={() => setHoverMap({ state: item?.stateName ?? polygon.id, value: item?.value ?? Number.NaN })}
                           onMouseLeave={() => setHoverMap(null)}
                           onClick={() => {
+                            if (!item) return
                             setGeographyLevel('state')
                             const region = metadata?.geography.states.find((entry) => entry.id === item.stateId)?.regionId
                             if (region) setRegionId(region)
@@ -382,7 +431,7 @@ function App() {
                           }}
                         />
                         <text x={polygon.labelX} y={polygon.labelY} textAnchor="middle" fontSize="10" fill="rgba(241,245,249,0.9)">
-                          {item.stateId}
+                          {item?.stateId ?? polygon.id}
                         </text>
                       </g>
                     )
@@ -392,8 +441,17 @@ function App() {
                 {hoverMap && (
                   <div className="absolute left-2.5 top-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[10px]">
                     <p className="font-medium text-slate-100">{hoverMap.state}</p>
-                    <p className="font-mono text-slate-400">{hoverMap.value.toFixed(1)} index</p>
+                    <p className="font-mono text-slate-400">{Number.isFinite(hoverMap.value) ? `${hoverMap.value.toFixed(1)} ${mapMetricLabel}` : `No ${mapMetricLabel} available`}</p>
                   </div>
+                )}
+
+                {hasMapValues ? (
+                  <div className="pointer-events-none absolute bottom-2.5 right-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[9px] text-slate-400">
+                    <p className="mb-0.5">Low → High</p>
+                    <div className="h-1.5 w-20 rounded bg-gradient-to-r from-slate-600/60 to-amber-400/80" />
+                  </div>
+                ) : (
+                  <div className="pointer-events-none absolute bottom-2.5 right-2.5 rounded border border-border/70 bg-[#070c18]/95 px-2 py-1 text-[9px] text-slate-500">No {mapMetricLabel} available.</div>
                 )}
               </div>
             </CardContent>
@@ -404,15 +462,17 @@ function App() {
               <div className="flex items-start justify-between gap-2">
                 <div className="leading-tight">
                   <CardTitle className="text-[12px]">{indicators.find((entry) => entry.id === indicatorId)?.name ?? indicatorId}</CardTitle>
-                  <p className="text-[10px] text-slate-400">Historical (white) with forecast projection (orange).</p>
+                  <p className="text-[10px] text-slate-400">{selectedLabel}: historical (white) with {forecastHorizon}-month forecast projection (orange).</p>
                 </div>
-                <span className="rounded border border-amber-300/30 bg-amber-500/10 px-1.5 py-0.5 text-[9px] uppercase text-amber-300">Model: {forecastOutput.bestModel}</span>
+                <span className="rounded border border-amber-300/30 bg-amber-500/10 px-1.5 py-0.5 text-[9px] uppercase text-amber-300">Model: {forecastLoading ? 'updating' : hasForecast ? forecastOutput.bestModel : 'unavailable'}</span>
               </div>
             </CardHeader>
             <CardContent className="space-y-2 p-3">
               <div className="relative h-[222px] rounded border border-border/70 bg-[#0e1628] p-2">
                 {loading ? (
                   <div className="grid h-full place-items-center text-[11px] text-slate-400">Loading series…</div>
+                ) : loadError ? (
+                  <div className="grid h-full place-items-center text-[11px] text-rose-300">{loadError}</div>
                 ) : !brushedSeries.length ? (
                   <div className="grid h-full place-items-center text-[11px] text-slate-400">No data for selected filter.</div>
                 ) : (
@@ -438,8 +498,27 @@ function App() {
               <div className="grid grid-cols-3 gap-1 rounded border border-border/70 bg-[#0f1626] p-1.5 text-[10px] text-slate-400">
                 <div>Selected: <span className="font-mono text-slate-200">{selectedLabel}</span></div>
                 <div>Validation: <span className="font-mono text-slate-200">{forecastOutput.validationWindow} mo</span></div>
-                <div>{compareModels ? `${forecastOutput.comparison.length} models` : 'Best model only'}</div>
+                <div>{forecastLoading ? 'Updating forecast…' : compareModels ? `${forecastOutput.comparison.length} models compared` : 'Comparison off'}</div>
               </div>
+
+              {compareModels && (
+                <div className="rounded border border-border/70 bg-[#0f1626] px-2 py-1.5 text-[10px] text-slate-300">
+                  {forecastOutput.comparison.length === 0 ? (
+                    <p className="text-slate-400">No model comparison available for this selection.</p>
+                  ) : (
+                    <div className="grid gap-1">
+                      {forecastOutput.comparison.slice(0, 4).map((entry) => (
+                        <div key={entry.model} className="flex items-center justify-between">
+                          <span className={entry.model === forecastOutput.bestModel ? 'text-amber-300' : 'text-slate-300'}>{entry.model}</span>
+                          <span className="font-mono text-slate-400">RMSE {entry.rmse.toFixed(2)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {forecastError && <div className="rounded border border-rose-300/30 bg-rose-500/10 px-2 py-1 text-[10px] text-rose-200">{forecastError}</div>}
 
               <div className="rounded border border-border/70 bg-[#0f1626] px-2 py-1.5">
                 <div className="mb-1 flex items-center justify-between text-[10px] text-slate-400">
@@ -447,8 +526,8 @@ function App() {
                   <span className="font-mono">{brushedSeries[0]?.date ?? '—'} → {brushedSeries.at(-1)?.date ?? '—'}</span>
                 </div>
                 <div className="grid gap-1">
-                  <input type="range" min={0} max={95} value={brushStart} onChange={(event) => setBrushStart(Math.min(Number(event.target.value), brushEnd - 5))} />
-                  <input type="range" min={5} max={100} value={brushEnd} onChange={(event) => setBrushEnd(Math.max(Number(event.target.value), brushStart + 5))} />
+                  <input className="accent-amber-400" type="range" min={0} max={95} value={brushStart} aria-label="Brush start" onChange={(event) => setBrushStart(Math.min(Number(event.target.value), brushEnd - 5))} />
+                  <input className="accent-amber-400" type="range" min={5} max={100} value={brushEnd} aria-label="Brush end" onChange={(event) => setBrushEnd(Math.max(Number(event.target.value), brushStart + 5))} />
                 </div>
               </div>
             </CardContent>
@@ -459,7 +538,8 @@ function App() {
           {(['all', '10y', '5y', '3y', '1y'] as RangeOption[]).map((option) => (
             <button
               key={option}
-              className={`rounded px-2.5 py-1 text-[10px] uppercase ${range === option ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400 hover:text-slate-200'}`}
+              aria-pressed={range === option}
+              className={`rounded px-2.5 py-1 text-[10px] uppercase transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-300/60 ${range === option ? 'bg-amber-500/20 text-amber-300' : 'text-slate-400 hover:text-slate-200'}`}
               onClick={() => setRange(option)}
             >
               {option}
@@ -474,17 +554,17 @@ function App() {
           <CardContent className="grid gap-2 text-[10.5px] leading-relaxed text-slate-400 md:grid-cols-2">
             <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2">
               <p className="text-[10px] uppercase tracking-[0.08em] text-slate-200">Data Sources</p>
-              <p>Core indicators are served through the repository provider contract, using local synthetic data when live env credentials are unavailable.</p>
-              <p>Current panels are wired to permits, starts, employment, and input cost index series from the checked-in dataset.</p>
+              <p>Core indicators are served through the checked-in provider contract, with local synthetic fallback when live credentials are unavailable.</p>
+              <p>Current panels are wired to permits, starts, employment, and materials cost index series from the repository dataset.</p>
             </div>
             <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2">
               <p className="text-[10px] uppercase tracking-[0.08em] text-slate-200">Forecasting</p>
-              <p>The existing forecast engine compares naive, SES, Holt, and lag-regression models, selecting by validation RMSE.</p>
-              <p>Confidence bands are derived from model residual volatility and data history length.</p>
+              <p>The existing engine compares naive, SES, Holt, and lag-regression models and selects by validation RMSE.</p>
+              <p>Forecast bands are derived from residual volatility and available history length.</p>
             </div>
             <div className="space-y-1 rounded border border-border/65 bg-[#0f1626] p-2 md:col-span-2">
               <p className="text-[10px] uppercase tracking-[0.08em] text-slate-200">Limitations</p>
-              <p>30Y Mortgage and ABI are proxy calculations from available indicators to keep the dashboard wired to the current contract without introducing unsupported data feeds.</p>
+              <p>30Y Mortgage and ABI are proxy calculations from available indicators so the dashboard stays grounded in the current contract without unsupported feeds.</p>
               {forecastOutput.warnings.length > 0 && <p className="text-amber-200">Forecast warning: {forecastOutput.warnings.join(' ')}</p>}
             </div>
           </CardContent>
