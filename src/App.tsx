@@ -48,21 +48,6 @@ function App() {
   const coreMetrics = buildCoreMetricCards({ activity, activityStarts, costs, equities, abi, constructionSpending, nahbHmi })
   const compositeMethodology = computeCompositeMethodology({
     metrics: coreMetrics.map((metric) => {
-      const history =
-        metric.id === 'building_permits'
-          ? activity.data?.series
-          : metric.id === 'housing_starts'
-            ? activityStarts.data?.series
-            : metric.id === 'materials_ppi'
-              ? costs.data?.series
-              : metric.id === 'construction_spending'
-                ? constructionSpending.data?.series
-                : metric.id === 'abi'
-                  ? abi.data?.series
-                  : metric.id === 'nahb_hmi'
-                    ? nahbHmi.data?.series
-                    : undefined
-
       return {
         id: metric.id,
         label: metric.label,
@@ -76,7 +61,7 @@ function App() {
         transformValid: metric.transformValid,
         transformInvalidReason: metric.transformInvalidReason,
         modelExclusionReason: metric.modelExclusionReason,
-        history
+        history: metric.history
       }
     }),
     horizon: state.horizon
@@ -239,6 +224,9 @@ function App() {
               <p>Each KPI card is mapped to a specific upstream feed, typed hook path, and API endpoint contract; pending feeds remain explicitly marked pending.</p>
               <p>Composite methodology is explicit and equal-weighted: each valid metric is normalized from directional growth (YoY preferred, MoM fallback) into a 0-100 score by clamping to ±{compositeMethodology.methodology.clampRangePct}% then scaling linearly.</p>
               <p>Direct metrics use growth as-is, while inverse metrics (Materials PPI) flip growth sign before normalization; pending, explicitly excluded, non-eligible, or missing-growth metrics are excluded with explicit reasons.</p>
+              {compositeMethodology.audit.filter((item) => item.status === 'excluded').map((item) => (
+                <p key={item.id}>Exclusion rule — {item.label}: {item.reason}</p>
+              ))}
               <p>Composite score requires at least {compositeMethodology.methodology.minimumRequiredMetrics} valid metrics and composite history requires at least {compositeMethodology.methodology.minimumRequiredHistoryPoints} valid points; predictive modeling consumes only this shared composite history.</p>
               <p>Bootstrap endpoints use stale-while-revalidate over IndexedDB cache and expose offline snapshot state.</p>
             </CardContent>
