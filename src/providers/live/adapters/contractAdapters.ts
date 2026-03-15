@@ -5,6 +5,7 @@ import type {
   EquitiesSnapshotResponse,
   ForecastsResponse,
   LaborResponse,
+  MacroSeriesResponse,
   MetadataResponse,
   PipelineResponse,
   TimeSeriesPoint
@@ -73,4 +74,11 @@ export const adaptEquities = (input: unknown): EquitiesSnapshotResponse | null =
   const payload = input as Partial<EquitiesSnapshotResponse>
   if (!payload.meta || !Array.isArray(payload.rows)) return null
   return payload as EquitiesSnapshotResponse
+}
+
+
+export const adaptMacroSeries = (input: unknown): MacroSeriesResponse | null => {
+  const base = adaptSeriesResponse<MacroSeriesResponse>(input)
+  if (!base || typeof (base as { metric?: unknown }).metric !== 'string') return null
+  return base
 }

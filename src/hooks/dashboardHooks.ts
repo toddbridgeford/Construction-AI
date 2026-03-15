@@ -5,6 +5,7 @@ import {
   getEquitiesSnapshot,
   getForecasts,
   getLaborSeries,
+  getMacroSeries,
   getMetadata,
   getPipelineSeries
 } from '@/api/client'
@@ -16,6 +17,7 @@ import type {
   EquitiesSnapshotResponse,
   ForecastsResponse,
   LaborResponse,
+  MacroSeriesResponse,
   MetadataResponse,
   PipelineResponse
 } from '@/api/contracts'
@@ -75,6 +77,14 @@ const formatMetricValue = (value: number | null, unit: MetricUnit): string => {
   if (unit === 'percent') return `${value.toFixed(2)}%`
   if (unit === 'points') return `${value.toFixed(1)} pts`
   return `${value.toFixed(1)}`
+}
+
+const fromDiffusionSeries = (series: { value: number }[]) => {
+  const metrics = fromSeries(series)
+  return {
+    ...metrics,
+    baselineGap: metrics.latest == null ? null : metrics.latest - 50
+  }
 }
 
 const fromSeries = (series: { value: number }[]) => {
@@ -147,6 +157,10 @@ export const useCosts = (params: ApiQuery): HookResourceState<CostsResponse> =>
 export const useLabor = (params: ApiQuery): HookResourceState<LaborResponse> =>
   useApiResource(() => getLaborSeries(params), [params.region, params.sector, params.horizon, params.tab])
 
+
+export const useMacro = (params: ApiQuery & { metric: 'construction_spending' | 'abi' | 'nahb_hmi' }): HookResourceState<MacroSeriesResponse> =>
+  useApiResource(() => getMacroSeries(params), [params.region, params.horizon, params.tab, params.metric])
+
 export const useForecasts = (params: ApiQuery): HookResourceState<ForecastsHookData> =>
   useApiResource(
     async () => {
@@ -185,10 +199,16 @@ export const buildCoreMetricCards = (resources: {
   activityStarts: HookResourceState<ActivityResponse>
   costs: HookResourceState<CostsResponse>
   equities: HookResourceState<EquitiesHookData>
+  abi: HookResourceState<MacroSeriesResponse>
+  constructionSpending: HookResourceState<MacroSeriesResponse>
+  nahbHmi: HookResourceState<MacroSeriesResponse>
 }): CoreMetricCardContract[] => {
   const permits = fromSeries(resources.activity.data?.series ?? [])
   const starts = fromSeries(resources.activityStarts.data?.series ?? [])
   const ppi = fromSeries(resources.costs.data?.series ?? [])
+  const abi = fromDiffusionSeries(resources.abi.data?.series ?? [])
+  const constructionSpending = fromSeries(resources.constructionSpending.data?.series ?? [])
+  const nahbHmi = fromDiffusionSeries(resources.nahbHmi.data?.series ?? [])
   const equityRows = resources.equities.data?.rows ?? []
   const equityLatest = equityRows.length ? equityRows.reduce((sum, row) => sum + row.ytd, 0) / equityRows.length : null
 
@@ -238,40 +258,46 @@ export const buildCoreMetricCards = (resources: {
     {
       id: 'abi',
       label: 'Architecture Billings Index (ABI)',
-      upstreamSource: 'AIA ABI diffusion index',
-      hookPath: 'pending (no typed hook bound yet)',
-      endpointPath: 'pending',
-      latestValue: null,
-      formattedValue: 'Pending source onboarding',
+      upstreamSource: 'AIA ABI diffusion index (50 = expansion threshold)',
+      hookPath: 'useMacro(metric=abi) -> getMacroSeries',
+      endpointPath: '/api/macro-series?metric=abi',
+      latestValue: abi.latest,
+      formattedValue: formatMetricValue(abi.latest, 'index'),
       unit: 'index',
-      transformSummary: 'Diffusion logic requires 50 baseline once source is integrated.',
-      growthMom: null,
-      growthYoy: null,
-      signal: 'NEUTRAL',
-      sourceStatus: 'pending',
-      readinessClassification: 'pending',
-      freshness: null,
-      safeForComposite: false,
-      modelExclusionReason: 'Source contract not implemented yet.'
+      transformSummary: `Diffusion baseline: 50.0 · Gap ${abi.baselineGap == null ? 'N/A' : abi.baselineGap.toFixed(1)} pts · MoM ${pct(abi.mom)} · YoY ${pct(abi.yoy)}`,
+      growthMom: abi.mom,
+      growthYoy: abi.yoy,
+      signal: computeSignal({ mom: abi.mom, baselineGap: abi.baselineGap }),
+      sourceStatus: resources.abi.data?.sourceStatus ?? 'pending',
+      readinessClassification: classifyReadiness({
+        sourceStatus: resources.abi.data?.sourceStatus ?? 'pending',
+        excludedFromComposite: false
+      }),
+      freshness: resources.abi.freshness,
+      safeForComposite: (resources.abi.data?.sourceStatus ?? 'pending') !== 'pending',
+      modelExclusionReason: (resources.abi.data?.sourceStatus ?? 'pending') === 'pending' ? 'ABI source is still pending.' : undefined
     },
     {
       id: 'construction_spending',
       label: 'Construction Spending',
-      upstreamSource: 'Census Value of Construction Put in Place',
-      hookPath: 'pending (no typed hook bound yet)',
-      endpointPath: 'pending',
-      latestValue: null,
-      formattedValue: 'Pending source onboarding',
+      upstreamSource: 'Census Value of Construction Put in Place (monthly nominal)',
+      hookPath: 'useMacro(metric=construction_spending) -> getMacroSeries',
+      endpointPath: '/api/macro-series?metric=construction_spending',
+      latestValue: constructionSpending.latest,
+      formattedValue: formatMetricValue(constructionSpending.latest, 'usd-billion'),
       unit: 'usd-billion',
-      transformSummary: 'Needs nominal $ billions series with MoM/YoY normalization.',
-      growthMom: null,
-      growthYoy: null,
-      signal: 'NEUTRAL',
-      sourceStatus: 'pending',
-      readinessClassification: 'pending',
-      freshness: null,
-      safeForComposite: false,
-      modelExclusionReason: 'No endpoint in API contract yet.'
+      transformSummary: `Nominal level in USD billions · MoM ${pct(constructionSpending.mom)} · YoY ${pct(constructionSpending.yoy)}`,
+      growthMom: constructionSpending.mom,
+      growthYoy: constructionSpending.yoy,
+      signal: computeSignal({ mom: constructionSpending.mom }),
+      sourceStatus: resources.constructionSpending.data?.sourceStatus ?? 'pending',
+      readinessClassification: classifyReadiness({
+        sourceStatus: resources.constructionSpending.data?.sourceStatus ?? 'pending',
+        excludedFromComposite: false
+      }),
+      freshness: resources.constructionSpending.freshness,
+      safeForComposite: (resources.constructionSpending.data?.sourceStatus ?? 'pending') !== 'pending',
+      modelExclusionReason: (resources.constructionSpending.data?.sourceStatus ?? 'pending') === 'pending' ? 'Construction spending source is still pending.' : undefined
     },
     {
       id: 'materials_ppi',
@@ -298,21 +324,24 @@ export const buildCoreMetricCards = (resources: {
     {
       id: 'nahb_hmi',
       label: 'NAHB HMI Confidence Index',
-      upstreamSource: 'NAHB/Wells Fargo Housing Market Index',
-      hookPath: 'pending (no typed hook bound yet)',
-      endpointPath: 'pending',
-      latestValue: null,
-      formattedValue: 'Pending source onboarding',
+      upstreamSource: 'NAHB/Wells Fargo Housing Market Index (50 = positive sentiment threshold)',
+      hookPath: 'useMacro(metric=nahb_hmi) -> getMacroSeries',
+      endpointPath: '/api/macro-series?metric=nahb_hmi',
+      latestValue: nahbHmi.latest,
+      formattedValue: formatMetricValue(nahbHmi.latest, 'index'),
       unit: 'index',
-      transformSummary: 'Diffusion logic requires 50 baseline once source is integrated.',
-      growthMom: null,
-      growthYoy: null,
-      signal: 'NEUTRAL',
-      sourceStatus: 'pending',
-      readinessClassification: 'pending',
-      freshness: null,
-      safeForComposite: false,
-      modelExclusionReason: 'Source contract not implemented yet.'
+      transformSummary: `Diffusion baseline: 50.0 · Gap ${nahbHmi.baselineGap == null ? 'N/A' : nahbHmi.baselineGap.toFixed(1)} pts · MoM ${pct(nahbHmi.mom)} · YoY ${pct(nahbHmi.yoy)}`,
+      growthMom: nahbHmi.mom,
+      growthYoy: nahbHmi.yoy,
+      signal: computeSignal({ mom: nahbHmi.mom, baselineGap: nahbHmi.baselineGap }),
+      sourceStatus: resources.nahbHmi.data?.sourceStatus ?? 'pending',
+      readinessClassification: classifyReadiness({
+        sourceStatus: resources.nahbHmi.data?.sourceStatus ?? 'pending',
+        excludedFromComposite: false
+      }),
+      freshness: resources.nahbHmi.freshness,
+      safeForComposite: (resources.nahbHmi.data?.sourceStatus ?? 'pending') !== 'pending',
+      modelExclusionReason: (resources.nahbHmi.data?.sourceStatus ?? 'pending') === 'pending' ? 'NAHB HMI source is still pending.' : undefined
     },
     {
       id: 'homebuilder_equity',

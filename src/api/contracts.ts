@@ -2,6 +2,7 @@ import type { GeographyLevel, MapDatum, Metadata } from '@/data/types'
 
 export type DashboardTab = 'overview' | 'leading' | 'predictive' | 'equities' | 'methodology'
 export type SectorId = 'permits' | 'starts' | 'cost_index' | 'employment'
+export type MacroMetricId = 'construction_spending' | 'abi' | 'nahb_hmi'
 export type HorizonMonths = 3 | 6 | 12
 export type ApiMode = 'live' | 'degraded' | 'offline'
 export type DataReadiness = 'live' | 'fallback' | 'pending'
@@ -16,6 +17,7 @@ export type ApiQuery = {
   sector?: SectorId
   horizon?: HorizonMonths
   tab?: DashboardTab
+  metric?: MacroMetricId
 }
 
 export type ContractMeta = {
@@ -72,6 +74,10 @@ export type ActivityResponse = SeriesResponse & {
 export type PipelineResponse = SeriesResponse
 export type CostsResponse = SeriesResponse
 export type LaborResponse = SeriesResponse
+
+export type MacroSeriesResponse = SeriesResponse & {
+  metric: MacroMetricId
+}
 
 export type ForecastsResponse = {
   meta: ContractMeta

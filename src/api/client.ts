@@ -7,6 +7,7 @@ import {
   adaptEquities,
   adaptForecasts,
   adaptLabor,
+  adaptMacroSeries,
   adaptMetadata,
   adaptPipeline
 } from '@/providers/live/adapters/contractAdapters'
@@ -21,6 +22,8 @@ import type {
   EquitiesSnapshotResponse,
   ForecastsResponse,
   LaborResponse,
+  MacroMetricId,
+  MacroSeriesResponse,
   MetadataResponse,
   PipelineResponse,
   SectorId
@@ -111,6 +114,7 @@ async function fetchWithCache<T>(
 
 const sectorToIndicator = (sector: SectorId | undefined): SectorId => sector ?? 'permits'
 const sourceStatus = (isLive: boolean, pending = false): DataReadiness => (pending ? 'pending' : isLive ? 'live' : 'fallback')
+
 
 const pickSeries = async (sector: SectorId, query: ApiQuery) => {
   const data = await localProvider.getDashboardData()
@@ -257,6 +261,23 @@ export const getEquitiesSnapshot = (params: ApiQuery) =>
         { symbol: 'LEN', price: 159.4, day: -0.3, ytd: 6.1, marketCap: '42.5B', signal: 'Neutral', sourceStatus: 'pending' },
         { symbol: 'PHM', price: 121.7, day: 0.5, ytd: 10.8, marketCap: '25.4B', signal: 'Bullish', sourceStatus: 'pending' }
       ]
+    })
+  })
+
+
+
+export const getMacroSeries = (params: ApiQuery & { metric: MacroMetricId }) =>
+  fetchWithCache<MacroSeriesResponse>('/api/macro-series', params, {
+    bootstrap: true,
+    adapter: adaptMacroSeries,
+    fallback: async () => ({
+      meta: buildMeta(API_BASE_URL ? 'degraded' : 'offline'),
+      region: params.region ?? params.geographyId ?? 'us',
+      sector: 'permits',
+      metric: params.metric,
+      horizon: params.horizon ?? 12,
+      series: [],
+      sourceStatus: 'pending'
     })
   })
 

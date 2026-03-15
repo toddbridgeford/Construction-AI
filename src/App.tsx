@@ -8,6 +8,7 @@ import {
   useCosts,
   useEquities,
   useLabor,
+  useMacro,
   useMetadata,
   usePipeline
 } from '@/hooks/dashboardHooks'
@@ -41,7 +42,10 @@ function App() {
   useLabor(params)
   const consistency = useConsistency(params)
   const equities = useEquities(params)
-  const coreMetrics = buildCoreMetricCards({ activity, activityStarts, costs, equities })
+  const abi = useMacro({ ...params, metric: 'abi' })
+  const constructionSpending = useMacro({ ...params, metric: 'construction_spending' })
+  const nahbHmi = useMacro({ ...params, metric: 'nahb_hmi' })
+  const coreMetrics = buildCoreMetricCards({ activity, activityStarts, costs, equities, abi, constructionSpending, nahbHmi })
   const compositeMethodology = computeCompositeMethodology({
     metrics: coreMetrics.map((metric) => {
       const history =
@@ -51,7 +55,13 @@ function App() {
             ? activityStarts.data?.series
             : metric.id === 'materials_ppi'
               ? costs.data?.series
-              : undefined
+              : metric.id === 'construction_spending'
+                ? constructionSpending.data?.series
+                : metric.id === 'abi'
+                  ? abi.data?.series
+                  : metric.id === 'nahb_hmi'
+                    ? nahbHmi.data?.series
+                    : undefined
 
       return {
         id: metric.id,
