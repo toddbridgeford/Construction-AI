@@ -1,5 +1,6 @@
 import { generateForecast } from '@/forecasting'
 import type { TimeSeriesPoint } from '@/api/contracts'
+import { METRIC_ORDER, METRIC_REGISTRY } from '@/lib/metricRegistry'
 
 export type CompositeMetricId =
   | 'building_permits'
@@ -24,12 +25,6 @@ export type CompositeMetricInput = {
   transformInvalidReason?: string
   modelExclusionReason?: string
   history?: TimeSeriesPoint[]
-}
-
-type MetricMethodology = {
-  id: CompositeMetricId
-  inverse: boolean
-  explicitExclusionReason?: string
 }
 
 export type CompositeHistoryPoint = {
@@ -66,16 +61,6 @@ export type CompositeMethodologyResult = {
   predictiveModel: ReturnType<typeof generateForecast> | null
 }
 
-const COMPOSITE_METHOD: MetricMethodology[] = [
-  { id: 'building_permits', inverse: false },
-  { id: 'housing_starts', inverse: false },
-  { id: 'abi', inverse: false },
-  { id: 'construction_spending', inverse: false },
-  { id: 'materials_ppi', inverse: true },
-  { id: 'nahb_hmi', inverse: false },
-  { id: 'homebuilder_equity', inverse: false, explicitExclusionReason: 'Explicitly excluded from macro composite methodology.' }
-]
-
 const CLAMP_RANGE_PCT = 20
 const MIN_REQUIRED_METRICS = 2
 const MIN_REQUIRED_HISTORY_POINTS = 3
@@ -103,7 +88,8 @@ const monthGrowthPct = (current: number | undefined, previous: number | undefine
 export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: CompositeMetricInput[]; horizon: 3 | 6 | 12 }): CompositeMethodologyResult => {
   const byId = new Map(metrics.map((metric) => [metric.id, metric]))
 
-  const audit = COMPOSITE_METHOD.map((rule): CompositeAuditItem => {
+  const audit = METRIC_ORDER.map((metricId): CompositeAuditItem => {
+    const rule = METRIC_REGISTRY[metricId]
     const metric = byId.get(rule.id)
 
     if (!metric) {
@@ -112,18 +98,18 @@ export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: Com
         label: rule.id,
         status: 'excluded',
         reason: 'Metric not present in current hook payload.',
-        inverse: rule.inverse,
+        inverse: rule.transformType === 'inverse',
         sourceStatus: 'pending'
       }
     }
 
-    if (rule.explicitExclusionReason) {
+    if (rule.policy.safeForCompositePolicy === 'always-false') {
       return {
         id: metric.id,
         label: metric.label,
         status: 'excluded',
-        reason: rule.explicitExclusionReason,
-        inverse: rule.inverse,
+        reason: metric.modelExclusionReason ?? 'Explicitly excluded by metric registry policy.',
+        inverse: metric.transformType === 'inverse',
         sourceStatus: metric.sourceStatus
       }
     }
@@ -134,7 +120,7 @@ export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: Com
         label: metric.label,
         status: 'excluded',
         reason: metric.modelExclusionReason ?? 'Pending metrics are excluded by rule.',
-        inverse: rule.inverse,
+        inverse: metric.transformType === 'inverse',
         sourceStatus: metric.sourceStatus
       }
     }
@@ -145,29 +131,29 @@ export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: Com
         label: metric.label,
         status: 'excluded',
         reason: metric.transformInvalidReason ?? 'Metric transform is invalid for composite normalization.',
-        inverse: rule.inverse,
+        inverse: metric.transformType === 'inverse',
         sourceStatus: metric.sourceStatus
       }
     }
 
-    if (rule.inverse && metric.transformType !== 'inverse') {
+    if (rule.transformType === 'inverse' && metric.transformType !== 'inverse') {
       return {
         id: metric.id,
         label: metric.label,
         status: 'excluded',
         reason: 'Inverse methodology mismatch: expected inverse transform metadata.',
-        inverse: rule.inverse,
+        inverse: false,
         sourceStatus: metric.sourceStatus
       }
     }
 
-    if (!rule.inverse && metric.transformType === 'inverse') {
+    if (rule.transformType !== 'inverse' && metric.transformType === 'inverse') {
       return {
         id: metric.id,
         label: metric.label,
         status: 'excluded',
         reason: 'Direct methodology mismatch: inverse transform metadata provided for non-inverse metric.',
-        inverse: rule.inverse,
+        inverse: metric.transformType === 'inverse',
         sourceStatus: metric.sourceStatus
       }
     }
@@ -178,7 +164,7 @@ export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: Com
         label: metric.label,
         status: 'excluded',
         reason: 'Diffusion threshold semantics invalid: baseline gap is required.',
-        inverse: rule.inverse,
+        inverse: metric.transformType === 'inverse',
         sourceStatus: metric.sourceStatus
       }
     }
@@ -189,7 +175,7 @@ export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: Com
         label: metric.label,
         status: 'excluded',
         reason: metric.modelExclusionReason ?? 'Metric flagged as not composite-eligible.',
-        inverse: rule.inverse,
+        inverse: metric.transformType === 'inverse',
         sourceStatus: metric.sourceStatus
       }
     }
@@ -200,7 +186,7 @@ export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: Com
         label: metric.label,
         status: 'excluded',
         reason: 'Latest value missing.',
-        inverse: rule.inverse,
+        inverse: metric.transformType === 'inverse',
         sourceStatus: metric.sourceStatus
       }
     }
@@ -212,7 +198,7 @@ export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: Com
         label: metric.label,
         status: 'excluded',
         reason: 'No valid YoY or MoM growth available for normalization.',
-        inverse: rule.inverse,
+        inverse: metric.transformType === 'inverse',
         sourceStatus: metric.sourceStatus
       }
     }
@@ -222,7 +208,7 @@ export const computeCompositeMethodology = ({ metrics, horizon }: { metrics: Com
       label: metric.label,
       status: 'included',
       reason: 'Included: non-pending, composite-eligible, and has valid growth input.',
-      inverse: rule.inverse,
+      inverse: metric.transformType === 'inverse',
       sourceStatus: metric.sourceStatus
     }
   })
