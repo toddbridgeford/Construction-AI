@@ -7,10 +7,10 @@ import type {
   LaborResponse,
   MetadataResponse,
   PipelineResponse,
-  SeriesPoint
+  TimeSeriesPoint
 } from '@/api/contracts'
 
-const asSeries = (input: unknown): SeriesPoint[] => {
+const asSeries = (input: unknown): TimeSeriesPoint[] => {
   if (!Array.isArray(input)) return []
   return input
     .map((item) => {
@@ -19,7 +19,7 @@ const asSeries = (input: unknown): SeriesPoint[] => {
       if (typeof row.date !== 'string' || typeof row.value !== 'number') return null
       return { date: row.date, value: row.value }
     })
-    .filter((row): row is SeriesPoint => row != null)
+    .filter((row): row is TimeSeriesPoint => row != null)
 }
 
 export const adaptMetadata = (input: unknown): MetadataResponse | null => {
